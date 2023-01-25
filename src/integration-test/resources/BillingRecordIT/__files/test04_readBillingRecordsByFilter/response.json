@@ -1,0 +1,63 @@
+{
+	"content": [
+		{
+			"id": "71258e7d-5285-46ce-b9b2-877f8cad8edd",
+			"category": "ACCESS_CARD",
+			"type": "INTERNAL",
+			"status": "NEW",
+			"invoice": {
+				"customerId": "15",
+				"description": "Passerkort utan foto för Rocky Balboa (ROC01BAL)",
+				"ourReference": "MIC00GOL",
+				"referenceId": "IN-5538-4432-36",
+				"totalAmount": 150.0,
+				"invoiceRows": [
+					{
+						"descriptions": [
+							"Ordernummer: azi-330c-3fne-33",
+							"Beställare: MIC00GOL 22940338",
+							"Användare: Rocky Balboa ROC01BAL",
+							"Passerkort utan foto"
+						],
+						"totalAmount": 150.0,
+						"costPerUnit": 150.0,
+						"quantity": 1,
+						"accountInformation": {
+							"costCenter": "1620000",
+							"subaccount": "936100",
+							"department": "910300",
+							"activity": "5247000",
+							"counterpart": "MIC00GOL"
+						}
+					}
+				]
+			},
+			"created": "2022-06-20T11:17:36.795+02:00"
+		}
+	],
+	"pageable": {
+		"sort": {
+			"empty": true,
+			"sorted": false,
+			"unsorted": true
+		},
+		"offset": 0,
+		"pageNumber": 0,
+		"pageSize": 20,
+		"unpaged": false,
+		"paged": true
+	},
+	"last": true,
+	"totalPages": 1,
+	"totalElements": 1,
+	"size": 20,
+	"number": 0,
+	"sort": {
+		"empty": true,
+		"sorted": false,
+		"unsorted": true
+	},
+	"first": true,
+	"numberOfElements": 1,
+	"empty": false
+}

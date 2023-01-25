@@ -1,0 +1,214 @@
+package se.sundsvall.billingpreprocessor.api.model;
+
+import static io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY;
+import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Objects;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Null;
+
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
+
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(description = "Invoice model")
+public class Invoice {
+
+	@Schema(description = "Customer number in Raindance", example = "16", requiredMode = REQUIRED)
+	@NotBlank
+	private String customerId;
+
+	@Schema(description = "Description of the invoice", example = "Errand number: 2113-01784", requiredMode = REQUIRED)
+	@NotBlank
+	private String description;
+
+	@Schema(description = "Our reference", example = "Harvey Kneeslapper")
+	private String ourReference;
+
+	@Schema(description = "Customer reference", example = "Alice Snuffleupagus")
+	private String customerReference;
+
+	@Schema(description = "Reference id. Mandatory for INTERNAL billing record.", example = "19-ALI22SNU")
+	private String referenceId;
+
+	@Schema(description = "Date for the invoice", example = "2022-12-24")
+	@DateTimeFormat(iso = ISO.DATE)
+	private LocalDate date;
+
+	@Schema(description = "Due date for the invoice", example = "2022-12-24")
+	@DateTimeFormat(iso = ISO.DATE)
+	private LocalDate dueDate;
+
+	@Schema(description = "Total sum of all invoice rows", example = "1399.95", accessMode = READ_ONLY)
+	@Null
+	private Float totalAmount;
+
+	@ArraySchema(schema = @Schema(implementation = InvoiceRow.class, requiredMode = REQUIRED))
+	@NotEmpty
+	@Valid
+	private List<InvoiceRow> invoiceRows;
+
+	public static Invoice create() {
+		return new Invoice();
+	}
+
+	public String getCustomerId() {
+		return customerId;
+	}
+
+	public void setCustomerId(String customerId) {
+		this.customerId = customerId;
+	}
+
+	public Invoice withCustomerId(String customerId) {
+		this.customerId = customerId;
+		return this;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Invoice withDescription(String description) {
+		this.description = description;
+		return this;
+	}
+
+	public String getOurReference() {
+		return ourReference;
+	}
+
+	public void setOurReference(String ourReference) {
+		this.ourReference = ourReference;
+	}
+
+	public Invoice withOurReference(String ourReference) {
+		this.ourReference = ourReference;
+		return this;
+	}
+
+	public String getCustomerReference() {
+		return customerReference;
+	}
+
+	public void setCustomerReference(String customerReference) {
+		this.customerReference = customerReference;
+	}
+
+	public Invoice withCustomerReference(String customerReference) {
+		this.customerReference = customerReference;
+		return this;
+	}
+
+	public String getReferenceId() {
+		return referenceId;
+	}
+
+	public void setReferenceId(String referenceId) {
+		this.referenceId = referenceId;
+	}
+
+	public Invoice withReferenceId(String referenceId) {
+		this.referenceId = referenceId;
+		return this;
+	}
+
+	public LocalDate getDate() {
+		return date;
+	}
+
+	public void setDate(LocalDate date) {
+		this.date = date;
+	}
+
+	public Invoice withDate(LocalDate date) {
+		this.date = date;
+		return this;
+	}
+
+	public LocalDate getDueDate() {
+		return dueDate;
+	}
+
+	public void setDueDate(LocalDate dueDate) {
+		this.dueDate = dueDate;
+	}
+
+	public Invoice withDueDate(LocalDate dueDate) {
+		this.dueDate = dueDate;
+		return this;
+	}
+
+	public Float getTotalAmount() {
+		return totalAmount;
+	}
+
+	public void setTotalAmount(Float totalAmount) {
+		this.totalAmount = totalAmount;
+	}
+
+	public Invoice withTotalAmount(Float totalAmount) {
+		this.totalAmount = totalAmount;
+		return this;
+	}
+
+	public List<InvoiceRow> getInvoiceRows() {
+		return invoiceRows;
+	}
+
+	public void setInvoiceRows(List<InvoiceRow> invoiceRows) {
+		this.invoiceRows = invoiceRows;
+	}
+
+	public Invoice withInvoiceRows(List<InvoiceRow> invoiceRows) {
+		this.invoiceRows = invoiceRows;
+		return this;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(customerId, customerReference, description, date, dueDate, invoiceRows, ourReference, referenceId, totalAmount);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		Invoice other = (Invoice) obj;
+		return Objects.equals(customerId, other.customerId) && Objects.equals(customerReference, other.customerReference) && Objects.equals(description, other.description) && Objects.equals(invoiceRows, other.invoiceRows) && Objects.equals(
+			ourReference, other.ourReference) && Objects.equals(referenceId, other.referenceId) && Objects.equals(date, other.date) && Objects.equals(dueDate, other.dueDate) && Objects.equals(totalAmount, other.totalAmount);
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Invoice [customerId=").append(customerId)
+			.append(", description=").append(description)
+			.append(", ourReference=").append(ourReference)
+			.append(", customerReference=").append(customerReference)
+			.append(", referenceId=").append(referenceId)
+			.append(", date=").append(date)
+			.append(", dueDate=").append(dueDate)
+			.append(", totalAmount=").append(totalAmount)
+			.append(", invoiceRows=").append(invoiceRows).append("]");
+		return builder.toString();
+	}
+}
