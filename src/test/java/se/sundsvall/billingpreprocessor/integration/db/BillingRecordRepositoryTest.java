@@ -6,7 +6,7 @@ import static java.util.stream.Collectors.toCollection;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 import static org.assertj.core.api.Assertions.within;
-import static se.sundsvall.billingpreprocessor.api.model.enums.Status.CERTIFIED;
+import static se.sundsvall.billingpreprocessor.api.model.enums.Status.APPROVED;
 import static se.sundsvall.billingpreprocessor.api.model.enums.Status.NEW;
 import static se.sundsvall.billingpreprocessor.api.model.enums.Status.REJECTED;
 import static se.sundsvall.billingpreprocessor.api.model.enums.Type.EXTERNAL;
@@ -88,9 +88,9 @@ class BillingRecordRepositoryTest {
 	private static final String PARTY_ID = "partyId";
 	private static final String USER_ID = "userId";
 	private static final String CATEGORY = "category";
-	private static final OffsetDateTime CERTIFIED_TIMESTAMP = now().plusDays(3);
-	private static final String CERTIFIED_BY = "certifiedBy";
-	private static final Status STATUS = CERTIFIED;
+	private static final OffsetDateTime APPROVED_TIMESTAMP = now().plusDays(3);
+	private static final String APPROVED_BY = "approvedBy";
+	private static final Status STATUS = APPROVED;
 	private static final Type TYPE = EXTERNAL;
 
 	@Autowired
@@ -120,8 +120,8 @@ class BillingRecordRepositoryTest {
 	private static void verifybillingRecord(final BillingRecordEntity billingRecord) {
 		assertThat(billingRecord).isNotNull();
 		assertThat(billingRecord.getCategory()).isEqualTo(CATEGORY);
-		assertThat(billingRecord.getCertified()).isEqualTo(CERTIFIED_TIMESTAMP);
-		assertThat(billingRecord.getCertifiedBy()).isEqualTo(CERTIFIED_BY);
+		assertThat(billingRecord.getApproved()).isEqualTo(APPROVED_TIMESTAMP);
+		assertThat(billingRecord.getApprovedBy()).isEqualTo(APPROVED_BY);
 		assertThat(billingRecord.getCreated()).isCloseTo(now(), within(2, SECONDS));
 		assertThat(billingRecord.getId()).isNotNull();
 		assertThat(billingRecord.getInvoice()).isNotNull();
@@ -202,7 +202,7 @@ class BillingRecordRepositoryTest {
 
 	@Test
 	void findWithSpecification() {
-		Specification<BillingRecordEntity> specification = new FilterSpecification<>("(category : 'ACCESS_CARD' and status : 'CERTIFIED')");
+		Specification<BillingRecordEntity> specification = new FilterSpecification<>("(category : 'ACCESS_CARD' and status : 'APPROVED')");
 		Pageable pageable = PageRequest.of(0, 20);
 
 		final var matches = repository.findAll(specification, pageable);
@@ -213,7 +213,7 @@ class BillingRecordRepositoryTest {
 		assertThat(matches.getTotalPages()).isEqualTo(1);
 		assertThat(matches)
 			.extracting(BillingRecordEntity::getId, BillingRecordEntity::getCategory, BillingRecordEntity::getStatus).containsExactly(
-				tuple("1310ee8b-ecf9-4fe1-ab9d-f19153b19d06", "ACCESS_CARD", CERTIFIED));
+				tuple("1310ee8b-ecf9-4fe1-ab9d-f19153b19d06", "ACCESS_CARD", APPROVED));
 	}
 
 	@Test
@@ -230,7 +230,7 @@ class BillingRecordRepositoryTest {
 		assertThat(matches)
 			.extracting(BillingRecordEntity::getId, BillingRecordEntity::getCategory, BillingRecordEntity::getStatus).containsExactlyInAnyOrder(
 				tuple("71258e7d-5285-46ce-b9b2-877f8cad8edd", "ACCESS_CARD", NEW),
-				tuple("1310ee8b-ecf9-4fe1-ab9d-f19153b19d06", "ACCESS_CARD", CERTIFIED),
+				tuple("1310ee8b-ecf9-4fe1-ab9d-f19153b19d06", "ACCESS_CARD", APPROVED),
 				tuple("83e4d599-5b4d-431c-8ebc-81192e9401ee", "SALARY_AND_PENSION", NEW));
 	}
 
@@ -342,8 +342,8 @@ class BillingRecordRepositoryTest {
 	private static BillingRecordEntity createbillingRecord() {
 		return BillingRecordEntity.create()
 			.withCategory(CATEGORY)
-			.withCertified(CERTIFIED_TIMESTAMP)
-			.withCertifiedBy(CERTIFIED_BY)
+			.withApproved(APPROVED_TIMESTAMP)
+			.withApprovedBy(APPROVED_BY)
 			.withStatus(STATUS)
 			.withType(TYPE);
 	}

@@ -50,11 +50,11 @@ public class BillingRecordEntity implements Serializable {
 	@Enumerated(STRING)
 	private Status status;
 
-	@Column(name = "certified_by")
-	private String certifiedBy;
+	@Column(name = "approved_by")
+	private String approvedBy;
 
-	@Column(name = "certified")
-	private OffsetDateTime certified;
+	@Column(name = "approved")
+	private OffsetDateTime approved;
 
 	@Column(name = "created")
 	private OffsetDateTime created;
@@ -134,29 +134,29 @@ public class BillingRecordEntity implements Serializable {
 		return this;
 	}
 
-	public String getCertifiedBy() {
-		return certifiedBy;
+	public String getApprovedBy() {
+		return approvedBy;
 	}
 
-	public void setCertifiedBy(String certifiedBy) {
-		this.certifiedBy = certifiedBy;
+	public void setApprovedBy(String approvedBy) {
+		this.approvedBy = approvedBy;
 	}
 
-	public BillingRecordEntity withCertifiedBy(String certifiedBy) {
-		this.certifiedBy = certifiedBy;
+	public BillingRecordEntity withApprovedBy(String approvedBy) {
+		this.approvedBy = approvedBy;
 		return this;
 	}
 
-	public OffsetDateTime getCertified() {
-		return certified;
+	public OffsetDateTime getApproved() {
+		return approved;
 	}
 
-	public void setCertified(OffsetDateTime certified) {
-		this.certified = certified;
+	public void setApproved(OffsetDateTime approved) {
+		this.approved = approved;
 	}
 
-	public BillingRecordEntity withCertified(OffsetDateTime certified) {
-		this.certified = certified;
+	public BillingRecordEntity withApproved(OffsetDateTime approved) {
+		this.approved = approved;
 		return this;
 	}
 
@@ -214,7 +214,7 @@ public class BillingRecordEntity implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(category, certified, certifiedBy, created, id, invoice, issuer, modified, status, type);
+		return Objects.hash(category, approved, approvedBy, created, id, invoice, issuer, modified, status, type);
 	}
 
 	@Override
@@ -229,7 +229,7 @@ public class BillingRecordEntity implements Serializable {
 			return false;
 		}
 		BillingRecordEntity other = (BillingRecordEntity) obj;
-		return Objects.equals(category, other.category) && Objects.equals(certified, other.certified) && Objects.equals(certifiedBy, other.certifiedBy) && Objects.equals(created, other.created) && Objects.equals(id, other.id) && Objects.equals(
+		return Objects.equals(category, other.category) && Objects.equals(approved, other.approved) && Objects.equals(approvedBy, other.approvedBy) && Objects.equals(created, other.created) && Objects.equals(id, other.id) && Objects.equals(
 			invoice, other.invoice) && Objects.equals(issuer, other.issuer) && Objects.equals(modified, other.modified) && Objects.equals(status, other.status) && Objects.equals(type, other.type);
 	}
 
@@ -240,8 +240,8 @@ public class BillingRecordEntity implements Serializable {
 			.append(", category=").append(category)
 			.append(", type=").append(type)
 			.append(", status=").append(status)
-			.append(", certifiedBy=").append(certifiedBy)
-			.append(", certified=").append(certified)
+			.append(", approvedBy=").append(approvedBy)
+			.append(", approved=").append(approved)
 			.append(", created=").append(created)
 			.append(", modified=").append(modified)
 			.append(", issuer=").append(issuer)

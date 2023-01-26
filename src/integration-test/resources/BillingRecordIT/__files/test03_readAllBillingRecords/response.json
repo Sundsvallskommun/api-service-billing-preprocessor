@@ -4,9 +4,9 @@
 			"id": "1310ee8b-ecf9-4fe1-ab9d-f19153b19d06",
 			"category": "ACCESS_CARD",
 			"type": "INTERNAL",
-			"status": "CERTIFIED",
-			"certifiedBy": "JOE01DOE",
-			"certified": "2022-06-30T08:52:25.112+02:00",
+			"status": "APPROVED",
+			"approvedBy": "JOE01DOE",
+			"approved": "2022-06-30T08:52:25.112+02:00",
 			"invoice": {
 				"customerId": "15",
 				"description": "Passerkort med foto för Ivan Drago (IVA02DRA)",

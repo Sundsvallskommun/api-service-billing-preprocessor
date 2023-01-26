@@ -153,7 +153,7 @@ class BillingRecordsUpdateResourceFailureTest {
 			tuple("billingRecord", "invoice.referenceId is mandatory when billing record is of type INTERNAL"),
 			tuple("billingRecord", "when accountInformation is present costCenter, subaccount, department and counterpart are mandatory"),
 			tuple("category", "must be one of ACCESS_CARD or SALARY_AND_PENSION"),
-			tuple("certified", "must be null"),
+			tuple("approved", "must be null"),
 			tuple("created", "must be null"),
 			tuple("id", "must be null"),
 			tuple("invoice.invoiceRows[0].descriptions[0]", "size must be between 1 and 30"),
@@ -195,7 +195,7 @@ class BillingRecordsUpdateResourceFailureTest {
 			tuple("billingRecord", "must contain vat code information on invoice rows when billing record is of type EXTERNAL"),
 			tuple("billingRecord", "when accountInformation is present costCenter, subaccount, department and counterpart are mandatory"),
 			tuple("category", "must be one of ACCESS_CARD or SALARY_AND_PENSION"),
-			tuple("certified", "must be null"),
+			tuple("approved", "must be null"),
 			tuple("created", "must be null"),
 			tuple("id", "must be null"),
 			tuple("invoice.invoiceRows[0].descriptions[0]", "size must be between 1 and 30"),
@@ -209,11 +209,11 @@ class BillingRecordsUpdateResourceFailureTest {
 
 	@ParameterizedTest
 	@EnumSource(value = Type.class)
-	void updateBillingRecordWithStatusCertifiedAndNoCertifiedBy(Type type) {
+	void updateBillingRecordWithStatusApprovedAndNoApprovedBy(Type type) {
 		// Parameter values
 		final var uuid = randomUUID().toString();
 		final var request = createBillingRecordInstance(type, true)
-			.withCertifiedBy(null)
+			.withApprovedBy(null)
 			.withInvoice(createInvoiceInstance(true, type).withInvoiceRows(List.of(createInvoiceRowInstance(true, type))))
 			.withIssuer(createIssuerInstance(true).withAddressDetails(createAddressDetailsInstance(true)));
 
@@ -231,7 +231,7 @@ class BillingRecordsUpdateResourceFailureTest {
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations()).extracting(Violation::getField, Violation::getMessage).containsExactlyInAnyOrder(
-			tuple("billingRecord", "certifiedBy must be present when status is CERTIFIED"));
+			tuple("billingRecord", "approvedBy must be present when status is APPROVED"));
 
 		// Verification
 		verifyNoInteractions(serviceMock);

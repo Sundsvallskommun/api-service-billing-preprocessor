@@ -17,7 +17,7 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("junit")
 class SchemaVerificationTest {
 
-	private static final String STORED_SCHEMA_FILE = "db/scripts/schema.sql";
+	private static final String STORED_SCHEMA_FILE = "db/schema/schema.sql";
 
 	@Value("${spring.jpa.properties.javax.persistence.schema-generation.scripts.create-target}")
 	private String generatedSchemaFile;

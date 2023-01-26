@@ -18,13 +18,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import se.sundsvall.billingpreprocessor.api.model.enums.Status;
 import se.sundsvall.billingpreprocessor.api.model.enums.Type;
 import se.sundsvall.billingpreprocessor.api.validation.ValidAddressDetails;
-import se.sundsvall.billingpreprocessor.api.validation.ValidCertifiedBy;
+import se.sundsvall.billingpreprocessor.api.validation.ValidApprovedBy;
 import se.sundsvall.billingpreprocessor.api.validation.ValidInvoice;
 import se.sundsvall.billingpreprocessor.api.validation.ValidInvoiceRows;
 import se.sundsvall.billingpreprocessor.api.validation.ValidIssuer;
 
 @Schema(description = "Billing record model")
-@ValidCertifiedBy
+@ValidApprovedBy
 @ValidInvoice
 @ValidInvoiceRows
 @ValidIssuer
@@ -48,13 +48,13 @@ public class BillingRecord {
 	@NotNull
 	private Status status;
 
-	@Schema(description = "Information regarding the person that has certificed the billing record", example = "Big Bird")
-	private String certifiedBy;
+	@Schema(description = "Information regarding the person that has approved the billing record", example = "Big Bird")
+	private String approvedBy;
 
-	@Schema(description = "Timestamp when the billing record got certified status", example = "2022-11-21T16:57:13.988+02:00", accessMode = READ_ONLY)
+	@Schema(description = "Timestamp when the billing record got approved status", example = "2022-11-21T16:57:13.988+02:00", accessMode = READ_ONLY)
 	@DateTimeFormat(iso = ISO.DATE_TIME)
 	@Null
-	private OffsetDateTime certified;
+	private OffsetDateTime approved;
 
 	@Schema(implementation = Issuer.class)
 	@Valid
@@ -131,29 +131,29 @@ public class BillingRecord {
 		return this;
 	}
 
-	public String getCertifiedBy() {
-		return certifiedBy;
+	public String getApprovedBy() {
+		return approvedBy;
 	}
 
-	public void setCertifiedBy(String certifiedBy) {
-		this.certifiedBy = certifiedBy;
+	public void setApprovedBy(String approvedBy) {
+		this.approvedBy = approvedBy;
 	}
 
-	public BillingRecord withCertifiedBy(String certifiedBy) {
-		this.certifiedBy = certifiedBy;
+	public BillingRecord withApprovedBy(String approvedBy) {
+		this.approvedBy = approvedBy;
 		return this;
 	}
 
-	public OffsetDateTime getCertified() {
-		return certified;
+	public OffsetDateTime getApproved() {
+		return approved;
 	}
 
-	public void setCertified(OffsetDateTime certified) {
-		this.certified = certified;
+	public void setApproved(OffsetDateTime approved) {
+		this.approved = approved;
 	}
 
-	public BillingRecord withCertified(OffsetDateTime certified) {
-		this.certified = certified;
+	public BillingRecord withApproved(OffsetDateTime approved) {
+		this.approved = approved;
 		return this;
 	}
 
@@ -211,7 +211,7 @@ public class BillingRecord {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(category, certified, certifiedBy, created, id, invoice, issuer, modified, status, type);
+		return Objects.hash(category, approved, approvedBy, created, id, invoice, issuer, modified, status, type);
 	}
 
 	@Override
@@ -226,7 +226,7 @@ public class BillingRecord {
 			return false;
 		}
 		BillingRecord other = (BillingRecord) obj;
-		return category == other.category && Objects.equals(certified, other.certified) && Objects.equals(certifiedBy, other.certifiedBy) && Objects.equals(created, other.created) && Objects.equals(id, other.id) && Objects.equals(invoice,
+		return category == other.category && Objects.equals(approved, other.approved) && Objects.equals(approvedBy, other.approvedBy) && Objects.equals(created, other.created) && Objects.equals(id, other.id) && Objects.equals(invoice,
 			other.invoice) && Objects.equals(issuer, other.issuer) && Objects.equals(modified, other.modified) && status == other.status && type == other.type;
 	}
 
@@ -237,8 +237,8 @@ public class BillingRecord {
 			.append(", category=").append(category)
 			.append(", type=").append(type)
 			.append(", status=").append(status)
-			.append(", certifiedBy=").append(certifiedBy)
-			.append(", certified=").append(certified)
+			.append(", approvedBy=").append(approvedBy)
+			.append(", approved=").append(approved)
 			.append(", issuer=").append(issuer)
 			.append(", invoice=").append(invoice)
 			.append(", created=").append(created)
