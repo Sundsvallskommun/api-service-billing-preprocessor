@@ -39,8 +39,8 @@ class BillingRecordEntityTest {
 	@Test
 	void hasValidBuilderMethods() {
 		final var category = "category";
-		final var certified = now().minusWeeks(2);
-		final var certifiedBy = "certifiedBy";
+		final var approved = now().minusWeeks(2);
+		final var approvedBy = "approvedBy";
 		final var created = now().minusWeeks(3);
 		final var id = "id";
 		final var invoice = InvoiceEntity.create();
@@ -51,8 +51,8 @@ class BillingRecordEntityTest {
 
 		final var entity = BillingRecordEntity.create()
 			.withCategory(category)
-			.withCertified(certified)
-			.withCertifiedBy(certifiedBy)
+			.withApproved(approved)
+			.withApprovedBy(approvedBy)
 			.withCreated(created)
 			.withId(id)
 			.withInvoice(invoice)
@@ -63,8 +63,8 @@ class BillingRecordEntityTest {
 
 		assertThat(entity).hasNoNullFieldsOrProperties();
 		assertThat(entity.getCategory()).isEqualTo(category);
-		assertThat(entity.getCertified()).isEqualTo(certified);
-		assertThat(entity.getCertifiedBy()).isEqualTo(certifiedBy);
+		assertThat(entity.getApproved()).isEqualTo(approved);
+		assertThat(entity.getApprovedBy()).isEqualTo(approvedBy);
 		assertThat(entity.getCreated()).isEqualTo(created);
 		assertThat(entity.getId()).isEqualTo(id);
 		assertThat(entity.getInvoice()).isEqualTo(invoice);

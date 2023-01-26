@@ -6,7 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
-import static se.sundsvall.billingpreprocessor.api.model.enums.Status.CERTIFIED;
+import static se.sundsvall.billingpreprocessor.api.model.enums.Status.APPROVED;
 
 import javax.validation.ConstraintValidatorContext;
 import javax.validation.ConstraintValidatorContext.ConstraintViolationBuilder;
@@ -22,7 +22,7 @@ import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
 import se.sundsvall.billingpreprocessor.api.model.enums.Status;
 
 @ExtendWith(MockitoExtension.class)
-class ValidCertifiedByConstraintValidatorTest {
+class ValidApprovedByConstraintValidatorTest {
 
 	@Mock
 	private ConstraintValidatorContext contextMock;
@@ -30,31 +30,31 @@ class ValidCertifiedByConstraintValidatorTest {
 	@Mock
 	private ConstraintViolationBuilder builderMock;
 
-	private ValidCertifiedByConstraintValidator validator = new ValidCertifiedByConstraintValidator();
+	private ValidApprovedByConstraintValidator validator = new ValidApprovedByConstraintValidator();
 
 	@ParameterizedTest
-	@EnumSource(mode = EXCLUDE, names = "CERTIFIED", value = Status.class)
-	void withStatusNotEqualToCertifiedAndNoCertifiedByDefined(Status status) {
+	@EnumSource(mode = EXCLUDE, names = "APPROVED", value = Status.class)
+	void withStatusNotEqualToApprovedAndNoApprovedByDefined(Status status) {
 		assertThat(validator.isValid(BillingRecord.create().withStatus(status), contextMock)).isTrue();
 
 		verifyNoInteractions(contextMock, builderMock);
 	}
 
 	@Test
-	void withStatusEqualToCertifiedAndCertifiedByDefined() {
-		assertThat(validator.isValid(BillingRecord.create().withStatus(CERTIFIED).withCertifiedBy("certifiedBy"), contextMock)).isTrue();
+	void withStatusEqualToApprovedAndApprovedByDefined() {
+		assertThat(validator.isValid(BillingRecord.create().withStatus(APPROVED).withApprovedBy("approvedBy"), contextMock)).isTrue();
 
 		verifyNoInteractions(contextMock, builderMock);
 	}
 
 	@Test
-	void withStatusEqualToCertifiedAndNoCertifiedByDefined() {
+	void withStatusEqualToApprovedAndNoApprovedByDefined() {
 		when(contextMock.buildConstraintViolationWithTemplate(any())).thenReturn(builderMock);
 
-		assertThat(validator.isValid(BillingRecord.create().withStatus(CERTIFIED), contextMock)).isFalse();
+		assertThat(validator.isValid(BillingRecord.create().withStatus(APPROVED), contextMock)).isFalse();
 
 		verify(contextMock).disableDefaultConstraintViolation();
-		verify(contextMock).buildConstraintViolationWithTemplate("certifiedBy must be present when status is CERTIFIED");
+		verify(contextMock).buildConstraintViolationWithTemplate("approvedBy must be present when status is APPROVED");
 		verify(builderMock).addConstraintViolation();
 	}
 }

@@ -39,8 +39,8 @@ class BillingRecordTest {
 	@Test
 	void testBuilderMethods() {
 		final var category = "category";
-		final var certified = now();
-		final var certifiedBy = "certifiedBy";
+		final var approved = now();
+		final var approvedBy = "approvedBy";
 		final var created = now().minusDays(14);
 		final var id = "id";
 		final var invoice = Invoice.create();
@@ -51,8 +51,8 @@ class BillingRecordTest {
 
 		final var bean = BillingRecord.create()
 			.withCategory(category)
-			.withCertified(certified)
-			.withCertifiedBy(certifiedBy)
+			.withApproved(approved)
+			.withApprovedBy(approvedBy)
 			.withCreated(created)
 			.withId(id)
 			.withInvoice(invoice)
@@ -62,8 +62,8 @@ class BillingRecordTest {
 			.withType(type);
 
 		assertThat(bean.getCategory()).isEqualTo(category);
-		assertThat(bean.getCertified()).isEqualTo(certified);
-		assertThat(bean.getCertifiedBy()).isEqualTo(certifiedBy);
+		assertThat(bean.getApproved()).isEqualTo(approved);
+		assertThat(bean.getApprovedBy()).isEqualTo(approvedBy);
 		assertThat(bean.getCreated()).isEqualTo(created);
 		assertThat(bean.getId()).isEqualTo(id);
 		assertThat(bean.getInvoice()).isEqualTo(invoice);

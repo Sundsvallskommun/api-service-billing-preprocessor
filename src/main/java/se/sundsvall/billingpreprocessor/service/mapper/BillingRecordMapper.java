@@ -9,7 +9,7 @@ import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.util.ObjectUtils.isEmpty;
-import static se.sundsvall.billingpreprocessor.api.model.enums.Status.CERTIFIED;
+import static se.sundsvall.billingpreprocessor.api.model.enums.Status.APPROVED;
 import static se.sundsvall.billingpreprocessor.integration.db.model.DescriptionType.DETAILED;
 import static se.sundsvall.billingpreprocessor.integration.db.model.DescriptionType.STANDARD;
 import static se.sundsvall.billingpreprocessor.service.util.CalculationUtil.calculateTotalInvoiceAmount;
@@ -51,8 +51,8 @@ public class BillingRecordMapper {
 		billingRecordEntity.setIssuer(toIssuerEntity(billingRecordEntity, billingRecord.getIssuer())); // Add issuer entity to billing record entity
 		billingRecordEntity.setInvoice(toInvoiceEntity(billingRecordEntity, billingRecord.getInvoice())); // Add invoice entity to billing record entity
 
-		if (CERTIFIED == billingRecordEntity.getStatus()) {
-			setCertifiedBy(billingRecordEntity, billingRecord.getCertifiedBy());
+		if (APPROVED == billingRecordEntity.getStatus()) {
+			setApprovedBy(billingRecordEntity, billingRecord.getApprovedBy());
 		}
 
 		return billingRecordEntity;
@@ -74,21 +74,20 @@ public class BillingRecordMapper {
 		billingRecordEntity.setIssuer(toIssuerEntity(billingRecordEntity, billingRecord.getIssuer())); // Update issuer entity of billing record entity with new information
 		billingRecordEntity.setInvoice(toInvoiceEntity(billingRecordEntity, billingRecord.getInvoice())); // Update invoice entity of billing record entity with new information
 
-		// Only set certified by and certified timestamp first time billing record receives certified status
-		if (CERTIFIED == billingRecordEntity.getStatus() && isNull(billingRecordEntity.getCertified())) {
-			setCertifiedBy(billingRecordEntity, billingRecord.getCertifiedBy());
+		// Only set approved by and approved timestamp first time billing record receives approved status
+		if (APPROVED == billingRecordEntity.getStatus() && isNull(billingRecordEntity.getApproved())) {
+			setApprovedBy(billingRecordEntity, billingRecord.getApprovedBy());
 		}
 
 		// Need to trigger modified date for billing record manually here as adding or modifying sub entities doesn't trigger
-		// the
-		// @preUpdate annotation
+		// the @preUpdate annotation
 		return billingRecordEntity.withModified(now().truncatedTo(MILLIS));
 	}
 
-	private static void setCertifiedBy(final BillingRecordEntity billingRecordEntity, String certifiedBy) {
+	private static void setApprovedBy(final BillingRecordEntity billingRecordEntity, String approvedBy) {
 		billingRecordEntity
-			.withCertified(now())
-			.withCertifiedBy(certifiedBy);
+			.withApproved(now())
+			.withApprovedBy(approvedBy);
 	}
 
 	private static InvoiceEntity toInvoiceEntity(final BillingRecordEntity billingRecordEntity, final Invoice invoice) {
@@ -191,8 +190,8 @@ public class BillingRecordMapper {
 	public static BillingRecord toBillingRecord(final BillingRecordEntity billingRecordEntity) {
 		return BillingRecord.create()
 			.withCategory(billingRecordEntity.getCategory())
-			.withCertified(billingRecordEntity.getCertified())
-			.withCertifiedBy(billingRecordEntity.getCertifiedBy())
+			.withApproved(billingRecordEntity.getApproved())
+			.withApprovedBy(billingRecordEntity.getApprovedBy())
 			.withCreated(billingRecordEntity.getCreated())
 			.withId(billingRecordEntity.getId())
 			.withInvoice(toInvoice(billingRecordEntity.getInvoice()))
