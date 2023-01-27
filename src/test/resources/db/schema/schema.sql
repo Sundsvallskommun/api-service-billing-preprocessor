@@ -1,9 +1,9 @@
 
     create table billing_record (
        id varchar(255) not null,
+        approved datetime(6),
+        approved_by varchar(255),
         category varchar(255) not null,
-        certified datetime(6),
-        certified_by varchar(255),
         created datetime(6),
         modified datetime(6),
         status varchar(255) not null,

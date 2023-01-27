@@ -9,13 +9,13 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
-import se.sundsvall.billingpreprocessor.api.validation.impl.ValidCertifiedByConstraintValidator;
+import se.sundsvall.billingpreprocessor.api.validation.impl.ValidApprovedByConstraintValidator;
 
 @Documented
 @Target({ ElementType.FIELD, ElementType.CONSTRUCTOR, ElementType.PARAMETER, ElementType.TYPE_USE })
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = ValidCertifiedByConstraintValidator.class)
-public @interface ValidCertifiedBy {
+@Constraint(validatedBy = ValidApprovedByConstraintValidator.class)
+public @interface ValidApprovedBy {
 	String message() default "can not be blank";
 
 	Class<?>[] groups() default {};

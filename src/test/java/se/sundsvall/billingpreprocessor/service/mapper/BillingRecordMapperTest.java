@@ -8,7 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 import static org.assertj.core.groups.Tuple.tuple;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
-import static se.sundsvall.billingpreprocessor.api.model.enums.Status.CERTIFIED;
+import static se.sundsvall.billingpreprocessor.api.model.enums.Status.APPROVED;
 import static se.sundsvall.billingpreprocessor.api.model.enums.Type.EXTERNAL;
 import static se.sundsvall.billingpreprocessor.integration.db.model.DescriptionType.DETAILED;
 import static se.sundsvall.billingpreprocessor.integration.db.model.DescriptionType.STANDARD;
@@ -45,10 +45,10 @@ class BillingRecordMapperTest {
 	// billingRecord constants
 	private static final String ID = randomUUID().toString();
 	private static final String CATEGORY = "category";
-	private static final String CERTIFIED_BY = "certifiedBy";
-	private static final Status STATUS = CERTIFIED;
+	private static final String APPROVED_BY = "approvedBy";
+	private static final Status STATUS = APPROVED;
 	private static final Type TYPE = EXTERNAL;
-	private static final OffsetDateTime CERTIFIED_TIMESTAMP = now();
+	private static final OffsetDateTime APPROVED_TIMESTAMP = now();
 	private static final OffsetDateTime CREATED_TIMESTAMP = now().minusDays(2);
 	private static final OffsetDateTime MODIFIED_TIMESTAMP = now().minusDays(1);
 
@@ -103,8 +103,8 @@ class BillingRecordMapperTest {
 
 		// Assert billing record entity values
 		assertThat(billingRecordEntity.getCategory()).isEqualTo(CATEGORY);
-		assertThat(billingRecordEntity.getCertified()).isCloseTo(now(), within(2, SECONDS));
-		assertThat(billingRecordEntity.getCertifiedBy()).isEqualTo(CERTIFIED_BY);
+		assertThat(billingRecordEntity.getApproved()).isCloseTo(now(), within(2, SECONDS));
+		assertThat(billingRecordEntity.getApprovedBy()).isEqualTo(APPROVED_BY);
 		assertThat(billingRecordEntity.getStatus()).isEqualTo(STATUS);
 		assertThat(billingRecordEntity.getType()).isEqualTo(TYPE);
 
@@ -233,48 +233,48 @@ class BillingRecordMapperTest {
 	}
 
 	@ParameterizedTest
-	@EnumSource(value = Status.class, names = "CERTIFIED", mode = EXCLUDE)
-	void verifyNoCertifiedDateOrCertifiedBy(Status status) {
+	@EnumSource(value = Status.class, names = "APPROVED", mode = EXCLUDE)
+	void verifyNoApprovedDateOrApprovedBy(Status status) {
 		final var billingRecord = createbillingRecord().withStatus(status);
 		final var billingRecordEntity = BillingRecordMapper.toBillingRecordEntity(billingRecord);
 
-		assertThat(billingRecordEntity.getCertified()).isNull();
-		assertThat(billingRecordEntity.getCertifiedBy()).isNull();
+		assertThat(billingRecordEntity.getApproved()).isNull();
+		assertThat(billingRecordEntity.getApprovedBy()).isNull();
 	}
 
 	@ParameterizedTest
-	@EnumSource(value = Status.class, names = "CERTIFIED", mode = EXCLUDE)
-	void updatebillingRecordEntityFromOtherStatusToCertifiedStatus(Status status) {
-		final var billingEntity = BillingRecordMapper.toBillingRecordEntity(createbillingRecord().withStatus(status).withCertifiedBy(null));
+	@EnumSource(value = Status.class, names = "APPROVED", mode = EXCLUDE)
+	void updatebillingRecordEntityFromOtherStatusToApprovedStatus(Status status) {
+		final var billingEntity = BillingRecordMapper.toBillingRecordEntity(createbillingRecord().withStatus(status).withApprovedBy(null));
 		final var billingRecord = createbillingRecord();
 		final var updatedEntity = BillingRecordMapper.updateEntity(billingEntity, billingRecord);
 
-		assertThat(updatedEntity.getCertified()).isCloseTo(now(), within(2, SECONDS));
-		assertThat(updatedEntity.getCertifiedBy()).isEqualTo(CERTIFIED_BY);
+		assertThat(updatedEntity.getApproved()).isCloseTo(now(), within(2, SECONDS));
+		assertThat(updatedEntity.getApprovedBy()).isEqualTo(APPROVED_BY);
 		assertThat(updatedEntity.getModified()).isCloseTo(now(), within(2, SECONDS));
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = "RANDOM_CERTIFIED_BY")
+	@ValueSource(strings = "RANDOM_APPROVED_BY")
 	@NullSource
-	void updatebillingRecordEntityWhenStatusCertified(String certifiedBy) {
+	void updatebillingRecordEntityWhenStatusApproved(String approvedBy) {
 		final var billingEntity = BillingRecordMapper.toBillingRecordEntity(createbillingRecord());
-		final var certifiedTimestamp = billingEntity.getCertified();
-		final var updatedEntity = BillingRecordMapper.updateEntity(billingEntity, createbillingRecord().withCertifiedBy(certifiedBy));
+		final var approvedTimestamp = billingEntity.getApproved();
+		final var updatedEntity = BillingRecordMapper.updateEntity(billingEntity, createbillingRecord().withApprovedBy(approvedBy));
 
-		assertThat(updatedEntity.getCertified()).isEqualTo(certifiedTimestamp);
-		assertThat(updatedEntity.getCertifiedBy()).isEqualTo(CERTIFIED_BY);
+		assertThat(updatedEntity.getApproved()).isEqualTo(approvedTimestamp);
+		assertThat(updatedEntity.getApprovedBy()).isEqualTo(APPROVED_BY);
 		assertThat(updatedEntity.getModified()).isCloseTo(now(), within(2, SECONDS));
 	}
 
 	@ParameterizedTest
-	@EnumSource(value = Status.class, names = "CERTIFIED", mode = EXCLUDE)
-	void updatebillingRecordEntityFromStatusCertifiedToOtherStatus(Status status) {
+	@EnumSource(value = Status.class, names = "APPROVED", mode = EXCLUDE)
+	void updatebillingRecordEntityFromStatusApprovedToOtherStatus(Status status) {
 		final var billingEntity = BillingRecordMapper.toBillingRecordEntity(createbillingRecord());
-		final var certifiedTimestamp = billingEntity.getCertified();
+		final var approvedTimestamp = billingEntity.getApproved();
 		final var updatedEntity = BillingRecordMapper.updateEntity(billingEntity, createbillingRecord());
 
-		assertThat(updatedEntity.getCertified()).isEqualTo(certifiedTimestamp);
+		assertThat(updatedEntity.getApproved()).isEqualTo(approvedTimestamp);
 		assertThat(updatedEntity.getModified()).isCloseTo(now(), within(2, SECONDS));
 	}
 
@@ -294,8 +294,8 @@ class BillingRecordMapperTest {
 
 		// Assert billing record values
 		assertThat(billingRecord.getCategory()).isEqualTo(CATEGORY);
-		assertThat(billingRecord.getCertified()).isEqualTo(CERTIFIED_TIMESTAMP);
-		assertThat(billingRecord.getCertifiedBy()).isEqualTo(CERTIFIED_BY);
+		assertThat(billingRecord.getApproved()).isEqualTo(APPROVED_TIMESTAMP);
+		assertThat(billingRecord.getApprovedBy()).isEqualTo(APPROVED_BY);
 		assertThat(billingRecord.getCreated()).isEqualTo(CREATED_TIMESTAMP);
 		assertThat(billingRecord.getId()).isEqualTo(ID);
 		assertThat(billingRecord.getModified()).isEqualTo(MODIFIED_TIMESTAMP);
@@ -393,8 +393,8 @@ class BillingRecordMapperTest {
 	private static BillingRecordEntity createbillingRecordEntity() {
 		final var billingRecordEntity = BillingRecordEntity.create()
 			.withCategory(CATEGORY)
-			.withCertified(CERTIFIED_TIMESTAMP)
-			.withCertifiedBy(CERTIFIED_BY)
+			.withApproved(APPROVED_TIMESTAMP)
+			.withApprovedBy(APPROVED_BY)
 			.withCreated(CREATED_TIMESTAMP)
 			.withId(ID)
 			.withModified(MODIFIED_TIMESTAMP)
@@ -511,7 +511,7 @@ class BillingRecordMapperTest {
 	private static BillingRecord createbillingRecord() {
 		return BillingRecord.create()
 			.withCategory(CATEGORY)
-			.withCertifiedBy(CERTIFIED_BY)
+			.withApprovedBy(APPROVED_BY)
 			.withInvoice(createInvoice())
 			.withIssuer(createIssuer())
 			.withStatus(STATUS)
