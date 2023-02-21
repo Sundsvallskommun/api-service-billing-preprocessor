@@ -51,8 +51,8 @@ public class ValidInvoiceRowsConstraintValidator implements ConstraintValidator<
 	/**
 	 * Verify that vat codes exists for all provided invoice rows with a defined cost
 	 */
-	private boolean isValidExternalInvoiceRows(BillingRecord record) {
-		return record.getInvoice().getInvoiceRows().stream()
+	private boolean isValidExternalInvoiceRows(final BillingRecord billingRecord) {
+		return billingRecord.getInvoice().getInvoiceRows().stream()
 			.filter(row -> nonNull(row.getCostPerUnit()))
 			.map(InvoiceRow::getVatCode)
 			.allMatch(Objects::nonNull);
@@ -61,8 +61,8 @@ public class ValidInvoiceRowsConstraintValidator implements ConstraintValidator<
 	/**
 	 * Verify that no vat codes exists for any of the provided invoice rows
 	 */
-	private boolean isValidInternalInvoiceRows(BillingRecord record) {
-		return record.getInvoice().getInvoiceRows().stream()
+	private boolean isValidInternalInvoiceRows(final BillingRecord billingRecord) {
+		return billingRecord.getInvoice().getInvoiceRows().stream()
 			.filter(row -> nonNull(row.getCostPerUnit()))
 			.map(InvoiceRow::getVatCode)
 			.allMatch(Objects::isNull);
@@ -71,28 +71,28 @@ public class ValidInvoiceRowsConstraintValidator implements ConstraintValidator<
 	/**
 	 * Verify that at least one row has accountInformation
 	 */
-	private boolean accountInformationIsPresent(BillingRecord record) {
-		return record.getInvoice().getInvoiceRows().stream()
-				.map(InvoiceRow::getAccountInformation)
-				.anyMatch(Objects::nonNull);
+	private boolean accountInformationIsPresent(final BillingRecord billingRecord) {
+		return billingRecord.getInvoice().getInvoiceRows().stream()
+			.map(InvoiceRow::getAccountInformation)
+			.anyMatch(Objects::nonNull);
 
 	}
 
 	/**
 	 * Verify that all row that has accountInformation is complete
 	 */
-	private boolean isValidAccountInformation(BillingRecord record) {
-		return record.getInvoice().getInvoiceRows().stream()
-				.map(InvoiceRow::getAccountInformation)
-				.filter(Objects::nonNull)
-				.allMatch(accountInformation -> allNotNull(
-						accountInformation.getCostCenter(),
-						accountInformation.getSubaccount(),
-						accountInformation.getDepartment(),
-						accountInformation.getCounterpart()));
+	private boolean isValidAccountInformation(final BillingRecord billingRecord) {
+		return billingRecord.getInvoice().getInvoiceRows().stream()
+			.map(InvoiceRow::getAccountInformation)
+			.filter(Objects::nonNull)
+			.allMatch(accountInformation -> allNotNull(
+				accountInformation.getCostCenter(),
+				accountInformation.getSubaccount(),
+				accountInformation.getDepartment(),
+				accountInformation.getCounterpart()));
 	}
 
-	private void useCustomMessageForValidation(ConstraintValidatorContext constraintContext, String message) {
+	private void useCustomMessageForValidation(final ConstraintValidatorContext constraintContext, final String message) {
 		constraintContext.disableDefaultConstraintViolation();
 		constraintContext.buildConstraintViolationWithTemplate(message).addConstraintViolation();
 	}
