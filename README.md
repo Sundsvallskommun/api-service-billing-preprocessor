@@ -19,7 +19,7 @@ till systemet Raindance för fakturering och bokföring.
 |`spring.datasource.url`|JDBC-URL för anslutning till databas|
 |`spring.datasource.username`|Användarnamn för anslutning till databas|
 |`spring.datasource.password`|Lösenord för anslutning till databas|
-|`spring.jpa.properties.javax.persistence.schema-generation.database.action`|Action är default none, men bör ändras till önskat värde (tex update eller verify)|
+|`spring.jpa.properties.jakarta.persistence.schema-generation.database.action`|Action är default none, men bör ändras till önskat värde (tex update eller verify)|
 |`spring.flyway.enabled`|Flyway är avslagen default, men kan slås på ifall versionshantering via Flyway önskas|
 |**Integration mot Party**|
 |`integration.party.url`|URL för endpoint till Party service i WSO2|

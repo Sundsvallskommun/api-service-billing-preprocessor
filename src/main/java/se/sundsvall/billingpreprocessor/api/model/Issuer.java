@@ -1,13 +1,12 @@
 package se.sundsvall.billingpreprocessor.api.model;
 
-import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
+import se.sundsvall.dept44.common.validators.annotation.ValidUuid;
 
 import java.util.Objects;
 
-import javax.validation.Valid;
-
-import io.swagger.v3.oas.annotations.media.Schema;
-import se.sundsvall.dept44.common.validators.annotation.ValidUuid;
+import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 @Schema(description = "Billing issuer model")
 public class Issuer {

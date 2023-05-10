@@ -1,5 +1,32 @@
 package se.sundsvall.billingpreprocessor.integration.db;
 
+import com.turkraft.springfilter.converter.FilterSpecificationConverter;
+import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
+import se.sundsvall.billingpreprocessor.api.model.enums.Status;
+import se.sundsvall.billingpreprocessor.api.model.enums.Type;
+import se.sundsvall.billingpreprocessor.integration.db.model.AccountInformationEmbeddable;
+import se.sundsvall.billingpreprocessor.integration.db.model.AddressDetailsEmbeddable;
+import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
+import se.sundsvall.billingpreprocessor.integration.db.model.DescriptionEntity;
+import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceEntity;
+import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;
+import se.sundsvall.billingpreprocessor.integration.db.model.IssuerEntity;
+
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import static java.time.OffsetDateTime.now;
 import static java.time.temporal.ChronoUnit.SECONDS;
 import static java.util.stream.Collectors.toCollection;
@@ -12,36 +39,6 @@ import static se.sundsvall.billingpreprocessor.api.model.enums.Status.REJECTED;
 import static se.sundsvall.billingpreprocessor.api.model.enums.Type.EXTERNAL;
 import static se.sundsvall.billingpreprocessor.integration.db.model.DescriptionType.DETAILED;
 import static se.sundsvall.billingpreprocessor.integration.db.model.DescriptionType.STANDARD;
-
-import java.time.LocalDate;
-import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.transaction.Transactional;
-
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-
-import com.turkraft.springfilter.boot.FilterSpecification;
-
-import se.sundsvall.billingpreprocessor.api.model.enums.Status;
-import se.sundsvall.billingpreprocessor.api.model.enums.Type;
-import se.sundsvall.billingpreprocessor.integration.db.model.AccountInformationEmbeddable;
-import se.sundsvall.billingpreprocessor.integration.db.model.AddressDetailsEmbeddable;
-import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
-import se.sundsvall.billingpreprocessor.integration.db.model.DescriptionEntity;
-import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceEntity;
-import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;
-import se.sundsvall.billingpreprocessor.integration.db.model.IssuerEntity;
 
 /**
  * billingRecord repository tests
@@ -95,6 +92,9 @@ class BillingRecordRepositoryTest {
 
 	@Autowired
 	private BillingRecordRepository repository;
+
+	@Autowired
+	private FilterSpecificationConverter filterSpecificationConverter;
 
 	@Test
 	void create() {
@@ -202,7 +202,7 @@ class BillingRecordRepositoryTest {
 
 	@Test
 	void findWithSpecification() {
-		Specification<BillingRecordEntity> specification = new FilterSpecification<>("(category : 'ACCESS_CARD' and status : 'APPROVED')");
+		Specification<BillingRecordEntity> specification = filterSpecificationConverter.convert("(category : 'ACCESS_CARD' and status : 'APPROVED')");
 		Pageable pageable = PageRequest.of(0, 20);
 
 		final var matches = repository.findAll(specification, pageable);
@@ -218,7 +218,7 @@ class BillingRecordRepositoryTest {
 
 	@Test
 	void findWithEmptySpecification() {
-		Specification<BillingRecordEntity> specification = new FilterSpecification<>("");
+		Specification<BillingRecordEntity> specification = Specification.where(null);
 		Pageable pageable = PageRequest.of(0, 20);
 
 		final var matches = repository.findAll(specification, pageable);
@@ -236,7 +236,7 @@ class BillingRecordRepositoryTest {
 
 	@Test
 	void findWithPagingAndSorting() {
-		Specification<BillingRecordEntity> specification = new FilterSpecification<>("");
+		Specification<BillingRecordEntity> specification = Specification.where(null);
 		Pageable pageable = PageRequest.of(0, 1).withSort(Sort.by(Direction.ASC, "created"));
 
 		final var matches = repository.findAll(specification, pageable);
