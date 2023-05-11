@@ -1,15 +1,14 @@
 package se.sundsvall.billingpreprocessor.api.validation.impl;
 
-import static org.apache.commons.lang3.StringUtils.isNoneBlank;
-import static se.sundsvall.billingpreprocessor.api.model.enums.Type.EXTERNAL;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
+import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
+import se.sundsvall.billingpreprocessor.api.validation.ValidAddressDetails;
 
 import java.util.Optional;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
-
-import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
-import se.sundsvall.billingpreprocessor.api.validation.ValidAddressDetails;
+import static org.apache.commons.lang3.StringUtils.isNoneBlank;
+import static se.sundsvall.billingpreprocessor.api.model.enums.Type.EXTERNAL;
 
 public class ValidAddressDetailsConstraintValidator implements ConstraintValidator<ValidAddressDetails, BillingRecord> {
 	@Override

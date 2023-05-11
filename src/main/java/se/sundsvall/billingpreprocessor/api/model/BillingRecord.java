@@ -1,20 +1,12 @@
 package se.sundsvall.billingpreprocessor.api.model;
 
-import static io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY;
-import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
-
-import java.time.OffsetDateTime;
-import java.util.Objects;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
-import javax.validation.constraints.Pattern;
-
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
+import jakarta.validation.constraints.Pattern;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
-
-import io.swagger.v3.oas.annotations.media.Schema;
 import se.sundsvall.billingpreprocessor.api.model.enums.Status;
 import se.sundsvall.billingpreprocessor.api.model.enums.Type;
 import se.sundsvall.billingpreprocessor.api.validation.ValidAddressDetails;
@@ -22,6 +14,12 @@ import se.sundsvall.billingpreprocessor.api.validation.ValidApprovedBy;
 import se.sundsvall.billingpreprocessor.api.validation.ValidInvoice;
 import se.sundsvall.billingpreprocessor.api.validation.ValidInvoiceRows;
 import se.sundsvall.billingpreprocessor.api.validation.ValidIssuer;
+
+import java.time.OffsetDateTime;
+import java.util.Objects;
+
+import static io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY;
+import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 @Schema(description = "Billing record model")
 @ValidApprovedBy
@@ -226,8 +224,8 @@ public class BillingRecord {
 			return false;
 		}
 		BillingRecord other = (BillingRecord) obj;
-		return category == other.category && Objects.equals(approved, other.approved) && Objects.equals(approvedBy, other.approvedBy) && Objects.equals(created, other.created) && Objects.equals(id, other.id) && Objects.equals(invoice,
-			other.invoice) && Objects.equals(issuer, other.issuer) && Objects.equals(modified, other.modified) && status == other.status && type == other.type;
+		return Objects.equals(category, other.category) && Objects.equals(approved, other.approved) && Objects.equals(approvedBy, other.approvedBy) && Objects.equals(created, other.created) && Objects.equals(id, other.id) && Objects.equals(invoice,
+			other.invoice) && Objects.equals(issuer, other.issuer) && Objects.equals(modified, other.modified) && Objects.equals(status, other.status) && Objects.equals(type, other.type);
 	}
 
 	@Override

@@ -1,5 +1,29 @@
 package se.sundsvall.billingpreprocessor.service;
 
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.zalando.problem.ThrowableProblem;
+import se.sundsvall.billingpreprocessor.api.model.AccountInformation;
+import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
+import se.sundsvall.billingpreprocessor.api.model.Invoice;
+import se.sundsvall.billingpreprocessor.api.model.InvoiceRow;
+import se.sundsvall.billingpreprocessor.api.model.enums.Status;
+import se.sundsvall.billingpreprocessor.integration.db.BillingRecordRepository;
+import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
+import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceEntity;
+
+import java.util.List;
+
 import static java.util.Collections.emptyList;
 import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -15,33 +39,6 @@ import static org.zalando.problem.Status.NOT_FOUND;
 import static se.sundsvall.billingpreprocessor.api.model.enums.Status.NEW;
 import static se.sundsvall.billingpreprocessor.api.model.enums.Type.INTERNAL;
 
-import java.util.List;
-
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
-import org.zalando.problem.ThrowableProblem;
-
-import com.turkraft.springfilter.boot.FilterSpecification;
-
-import se.sundsvall.billingpreprocessor.api.model.AccountInformation;
-import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
-import se.sundsvall.billingpreprocessor.api.model.Invoice;
-import se.sundsvall.billingpreprocessor.api.model.InvoiceRow;
-import se.sundsvall.billingpreprocessor.api.model.enums.Status;
-import se.sundsvall.billingpreprocessor.integration.db.BillingRecordRepository;
-import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
-import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceEntity;
-
 @ExtendWith(MockitoExtension.class)
 class BillingRecordServiceTest {
 	private final static String ID = randomUUID().toString();
@@ -49,8 +46,12 @@ class BillingRecordServiceTest {
 	@Mock
 	private BillingRecordRepository repositoryMock;
 
+	@Mock
+	private Specification<BillingRecordEntity> specificationMock;
+
 	@InjectMocks
 	private BillingRecordService service;
+
 
 	@Test
 	void createBillingRecord() {
@@ -72,16 +73,15 @@ class BillingRecordServiceTest {
 	@Test
 	void findBillingRecordsWithMatches() {
 		// Setup
-		final Specification<BillingRecordEntity> filter = new FilterSpecification<>("id: '" + ID + "'");
 		final var sort = Sort.by(DESC, "attribute.1", "attribute.2");
 		final Pageable pageable = PageRequest.of(1, 2, sort);
 
 		// Mock
-		when(repositoryMock.findAll(filter, pageable)).thenReturn(new PageImpl<>(List.of(createBillingRecordEntityInstance(), createBillingRecordEntityInstance()), pageable, 2L));
-		when(repositoryMock.count(filter)).thenReturn(10L);
+		when(repositoryMock.findAll(specificationMock, pageable)).thenReturn(new PageImpl<>(List.of(createBillingRecordEntityInstance(), createBillingRecordEntityInstance()), pageable, 2L));
+		when(repositoryMock.count(specificationMock)).thenReturn(10L);
 
 		// Call
-		final var matches = service.findBillingIRecords(filter, pageable);
+		final var matches = service.findBillingIRecords(specificationMock, pageable);
 
 		// Assertions and verifications
 		assertThat(matches.getContent()).isNotEmpty().hasSize(2);
@@ -91,23 +91,22 @@ class BillingRecordServiceTest {
 		assertThat(matches.getPageable()).usingRecursiveComparison().isEqualTo(pageable);
 		assertThat(matches.getSort()).usingRecursiveComparison().isEqualTo(sort);
 
-		verify(repositoryMock).findAll(filter, pageable);
-		verify(repositoryMock).count(filter);
+		verify(repositoryMock).findAll(specificationMock, pageable);
+		verify(repositoryMock).count(specificationMock);
 		verifyNoMoreInteractions(repositoryMock);
 	}
 
 	@Test
 	void findBillingRecordsWithoutMatches() {
 		// Setup
-		final Specification<BillingRecordEntity> filter = new FilterSpecification<>("id: '" + ID + "'");
 		final var sort = Sort.by(DESC, "attribute.1", "attribute.2");
 		final Pageable pageable = PageRequest.of(3, 7, sort);
 
 		// Mock
-		when(repositoryMock.findAll(filter, pageable)).thenReturn(new PageImpl<>(emptyList()));
+		when(repositoryMock.findAll(specificationMock, pageable)).thenReturn(new PageImpl<>(emptyList()));
 
 		// Call
-		final var matches = service.findBillingIRecords(filter, pageable);
+		final var matches = service.findBillingIRecords(specificationMock, pageable);
 
 		// Assertions and verifications
 		assertThat(matches.getContent()).isEmpty();
@@ -117,8 +116,8 @@ class BillingRecordServiceTest {
 		assertThat(matches.getPageable()).usingRecursiveComparison().isEqualTo(pageable);
 		assertThat(matches.getSort()).usingRecursiveComparison().isEqualTo(sort);
 
-		verify(repositoryMock).findAll(filter, pageable);
-		verify(repositoryMock).count(filter);
+		verify(repositoryMock).findAll(specificationMock, pageable);
+		verify(repositoryMock).count(specificationMock);
 		verifyNoMoreInteractions(repositoryMock);
 	}
 

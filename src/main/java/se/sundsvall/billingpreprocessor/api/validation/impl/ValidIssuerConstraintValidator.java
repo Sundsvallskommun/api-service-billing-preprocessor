@@ -1,16 +1,15 @@
 package se.sundsvall.billingpreprocessor.api.validation.impl;
 
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
+import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
+import se.sundsvall.billingpreprocessor.api.model.Issuer;
+import se.sundsvall.billingpreprocessor.api.validation.ValidIssuer;
+
 import static java.util.Objects.isNull;
 import static org.apache.commons.lang3.StringUtils.isAllBlank;
 import static org.apache.commons.lang3.StringUtils.isNoneBlank;
 import static se.sundsvall.billingpreprocessor.api.model.enums.Type.EXTERNAL;
-
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
-
-import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
-import se.sundsvall.billingpreprocessor.api.model.Issuer;
-import se.sundsvall.billingpreprocessor.api.validation.ValidIssuer;
 
 public class ValidIssuerConstraintValidator implements ConstraintValidator<ValidIssuer, BillingRecord> {
 	private static final String CUSTOM_ERROR_ISSUER_MISSING_MESSAGE = "issuer can not be null when billing record is of type " + EXTERNAL;

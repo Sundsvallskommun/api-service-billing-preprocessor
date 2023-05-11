@@ -1,5 +1,21 @@
 package se.sundsvall.billingpreprocessor.api.validation.impl;
 
+import jakarta.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidatorContext.ConstraintViolationBuilder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import se.sundsvall.billingpreprocessor.api.model.AccountInformation;
+import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
+import se.sundsvall.billingpreprocessor.api.model.Invoice;
+import se.sundsvall.billingpreprocessor.api.model.InvoiceRow;
+import se.sundsvall.billingpreprocessor.api.model.enums.Type;
+
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -8,24 +24,6 @@ import static org.mockito.Mockito.when;
 import static se.sundsvall.billingpreprocessor.api.BillingRecordRequestUtil.createAccountInformationInstance;
 import static se.sundsvall.billingpreprocessor.api.model.enums.Type.EXTERNAL;
 import static se.sundsvall.billingpreprocessor.api.model.enums.Type.INTERNAL;
-
-import java.util.List;
-
-import javax.validation.ConstraintValidatorContext;
-import javax.validation.ConstraintValidatorContext.ConstraintViolationBuilder;
-
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import se.sundsvall.billingpreprocessor.api.model.AccountInformation;
-import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
-import se.sundsvall.billingpreprocessor.api.model.Invoice;
-import se.sundsvall.billingpreprocessor.api.model.InvoiceRow;
-import se.sundsvall.billingpreprocessor.api.model.enums.Type;
 
 @ExtendWith(MockitoExtension.class)
 class ValidInvoiceRowsConstraintValidatorTest {
@@ -36,7 +34,7 @@ class ValidInvoiceRowsConstraintValidatorTest {
 	@Mock
 	private ConstraintViolationBuilder builderMock;
 
-	private ValidInvoiceRowsConstraintValidator validator = new ValidInvoiceRowsConstraintValidator();
+	private final ValidInvoiceRowsConstraintValidator validator = new ValidInvoiceRowsConstraintValidator();
 
 	@Test
 	void withNoInvoices() {

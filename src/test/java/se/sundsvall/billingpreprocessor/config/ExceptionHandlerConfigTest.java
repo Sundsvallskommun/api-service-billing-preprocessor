@@ -1,6 +1,6 @@
 package se.sundsvall.billingpreprocessor.config;
 
-import com.turkraft.springfilter.exception.BadFilterSyntaxException;
+import com.turkraft.springfilter.parser.InvalidSyntaxException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,7 +17,7 @@ class ExceptionHandlerConfigTest {
 
 	@Test
 	void badFilterSyntaxExceptionIsParsedCorrectly() {
-		var response = controllerExceptionHandler.handleBadFilterSyntaxException(new BadFilterSyntaxException("test exception"));
+		var response = controllerExceptionHandler.handleBadFilterSyntaxException(new InvalidSyntaxException("test exception"));
 
 		assertThat(response).isNotNull();
 		assertThat(response.getStatusCode()).isEqualTo(BAD_REQUEST);
