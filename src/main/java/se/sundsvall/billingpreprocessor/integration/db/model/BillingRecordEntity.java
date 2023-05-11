@@ -16,6 +16,7 @@ import se.sundsvall.billingpreprocessor.api.model.enums.Type;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.Objects;
 
 import static jakarta.persistence.CascadeType.ALL;
@@ -68,12 +69,12 @@ public class BillingRecordEntity implements Serializable {
 
 	@PrePersist
 	void onCreate() {
-		created = now().truncatedTo(MILLIS);
+		created = now(ZoneId.systemDefault()).truncatedTo(MILLIS);
 	}
 
 	@PreUpdate
 	protected void onUpdate() {
-		modified = now().truncatedTo(MILLIS);
+		modified = now(ZoneId.systemDefault()).truncatedTo(MILLIS);
 	}
 
 	public static BillingRecordEntity create() {

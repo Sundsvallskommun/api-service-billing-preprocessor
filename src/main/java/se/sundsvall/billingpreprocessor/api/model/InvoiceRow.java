@@ -153,7 +153,7 @@ public class InvoiceRow {
 		}
 		InvoiceRow other = (InvoiceRow) obj;
 		return Objects.equals(accountInformation, other.accountInformation) && Objects.equals(costPerUnit, other.costPerUnit) && Objects.equals(descriptions, other.descriptions) && Objects.equals(detailedDescriptions, other.detailedDescriptions)
-			&& Objects.equals(quantity, other.quantity) && Objects.equals(totalAmount, other.totalAmount) && vatCode == other.vatCode;
+			&& Objects.equals(quantity, other.quantity) && Objects.equals(totalAmount, other.totalAmount) && Objects.equals(vatCode, other.vatCode);
 	}
 
 	@Override

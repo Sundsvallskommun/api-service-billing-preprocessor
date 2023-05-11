@@ -224,8 +224,8 @@ public class BillingRecord {
 			return false;
 		}
 		BillingRecord other = (BillingRecord) obj;
-		return category == other.category && Objects.equals(approved, other.approved) && Objects.equals(approvedBy, other.approvedBy) && Objects.equals(created, other.created) && Objects.equals(id, other.id) && Objects.equals(invoice,
-			other.invoice) && Objects.equals(issuer, other.issuer) && Objects.equals(modified, other.modified) && status == other.status && type == other.type;
+		return Objects.equals(category, other.category) && Objects.equals(approved, other.approved) && Objects.equals(approvedBy, other.approvedBy) && Objects.equals(created, other.created) && Objects.equals(id, other.id) && Objects.equals(invoice,
+			other.invoice) && Objects.equals(issuer, other.issuer) && Objects.equals(modified, other.modified) && Objects.equals(status, other.status) && Objects.equals(type, other.type);
 	}
 
 	@Override
