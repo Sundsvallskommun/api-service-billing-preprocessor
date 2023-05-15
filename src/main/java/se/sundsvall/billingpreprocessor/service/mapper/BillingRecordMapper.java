@@ -60,6 +60,20 @@ public class BillingRecordMapper {
 	}
 
 	/**
+	 * Method for mapping a list of BillingRecordEntity objects to a BillingRecord objects
+	 *
+	 * @param billingRecords a list of billing records represented by the BillingRecordEntity class
+	 * @return a list of objects of class BillingRecord representing the incoming BillingRecordEntity objects
+	 */
+	public static List<BillingRecordEntity> toBillingRecordEntities(final List<BillingRecord> billingRecords) {
+		return ofNullable(billingRecords)
+			.map(records -> records.stream()
+				.map(BillingRecordMapper::toBillingRecordEntity)
+				.collect(toList()))
+			.orElse(emptyList());
+	}
+
+	/**
 	 * Method for updating an existing BillingRecordEntity object with information from a BillingRecord object
 	 * 
 	 * @param billingRecordEntity the entity object that will be updated with new information
