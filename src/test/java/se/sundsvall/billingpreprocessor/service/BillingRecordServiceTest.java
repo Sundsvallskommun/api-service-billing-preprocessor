@@ -71,6 +71,24 @@ class BillingRecordServiceTest {
 	}
 
 	@Test
+	void createBillingRecords(){
+		// Setup
+		final var record = createBillingRecordInstance();
+
+		// Mock
+		when(repositoryMock.saveAll(any())).thenReturn(List.of(BillingRecordEntity.create().withId(ID)));
+
+		// Call
+		final var result = service.createBillingRecords(List.of(record));
+
+		// Assertions and verifications
+		assertThat(result).isNotEmpty().hasSize(1);
+		assertThat(result.get(0)).isEqualTo(ID);
+		verify(repositoryMock).saveAll(any());
+		verifyNoMoreInteractions(repositoryMock);
+	}
+
+	@Test
 	void findBillingRecordsWithMatches() {
 		// Setup
 		final var sort = Sort.by(DESC, "attribute.1", "attribute.2");

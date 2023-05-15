@@ -62,6 +62,9 @@ class BillingRecordsResourceTest {
 	@Captor
 	private ArgumentCaptor<BillingRecord> billingRecordCaptor;
 
+	@Captor
+	private ArgumentCaptor<List<BillingRecord>> billingRecordsCaptor;
+
 	@Test
 	void createBillingRecord() {
 		// Parameter values
@@ -83,6 +86,40 @@ class BillingRecordsResourceTest {
 		// Verification
 		verify(serviceMock).createBillingRecord(billingRecordCaptor.capture());
 		assertThat(billingRecordCaptor.getValue()).usingRecursiveComparison().isEqualTo(instance);
+	}
+
+
+	@Test
+	void createBillingRecords(){
+		// Parameter values
+		final var uuid = "c9242a01-e7bd-4f59-b4cd-66210c427904";
+		final var instance = createBillingRecordInstance();
+		final var instance2 = createBillingRecordInstance();
+		final var instance3 = createBillingRecordInstance();
+		final var instance4 = createBillingRecordInstance();
+
+		List<BillingRecord> billingRecords = new ArrayList<>();
+		billingRecords.add(instance);
+		billingRecords.add(instance2);
+		billingRecords.add(instance3);
+		billingRecords.add(instance4);
+
+		// Mock
+		when(serviceMock.createBillingRecords(any())).thenReturn(List.of(uuid,uuid,uuid,uuid));
+
+		// Call
+		var result = webTestClient.post().uri(PATH.concat("/batch")).contentType(APPLICATION_JSON)
+			.bodyValue(billingRecords)
+			.exchange()
+			.expectStatus().isCreated()
+			.expectHeader().contentType(APPLICATION_JSON)
+			.expectBody(String[].class)
+				.returnResult().getResponseBody();
+
+		// Verification
+		verify(serviceMock).createBillingRecords(billingRecordsCaptor.capture());
+		assertThat(billingRecordsCaptor.getValue()).usingRecursiveComparison().isEqualTo(billingRecords);
+		assertThat(result).isNotNull().hasSize(4).contains(uuid,uuid,uuid,uuid);
 	}
 
 	@Test
