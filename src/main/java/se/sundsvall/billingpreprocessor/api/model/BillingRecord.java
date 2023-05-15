@@ -34,7 +34,7 @@ public class BillingRecord {
 	private String id;
 
 	@Schema(description = "Billing category", requiredMode = REQUIRED)
-	@Pattern(regexp = "ACCESS_CARD|SALARY_AND_PENSION|ISYCASE", message = "must be one of ACCESS_CARD or SALARY_AND_PENSION or ISYCASE")
+	@Pattern(regexp = "ACCESS_CARD|SALARY_AND_PENSION", message = "must be one of ACCESS_CARD or SALARY_AND_PENSION")
 	@NotNull
 	private String category;
 

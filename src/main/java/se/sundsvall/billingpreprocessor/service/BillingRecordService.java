@@ -1,9 +1,5 @@
 package se.sundsvall.billingpreprocessor.service;
 
-import static se.sundsvall.billingpreprocessor.service.mapper.BillingRecordMapper.toBillingRecordEntities;
-
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -34,10 +30,6 @@ public class BillingRecordService {
 	public String createBillingRecord(final BillingRecord billingRecord) {
 		return repository.save(toBillingRecordEntity(billingRecord)).getId();
 	}
-
-	public List<String> createBillingRecords(final List<BillingRecord> billingRecords) {
-		return repository.saveAll(toBillingRecordEntities(billingRecords)).stream().map(BillingRecordEntity::getId).toList();
-    }
 
 	public BillingRecord readBillingRecord(final String id) {
 		verifyExistingId(id);
