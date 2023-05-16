@@ -15,7 +15,7 @@
        id bigint not null auto_increment,
         text varchar(255),
         type ENUM('DETAILED', 'STANDARD'),
-        invoice_row_id bigint not null,
+        `invoice_row_id` bigint not null,
         primary key (id)
     ) engine=InnoDB;
 
@@ -23,12 +23,12 @@
        id varchar(255) not null,
         customer_id varchar(255),
         customer_reference varchar(255),
-       	`date` date,
+        `date` date,
         description varchar(255),
         due_date date,
         our_reference varchar(255),
         reference_id varchar(255),
-        total_amount float,
+        total_amount float(23),
         primary key (id)
     ) engine=InnoDB;
 
@@ -42,11 +42,11 @@
         department varchar(255),
         project varchar(255),
         subaccount varchar(255),
-        cost_per_unit float,
+        cost_per_unit float(23),
         quantity integer,
-        total_amount float,
+        total_amount float(23),
         vat_code varchar(255),
-        invoice_id varchar(255) not null,
+        `invoice_id` varchar(255) not null,
         primary key (id)
     ) engine=InnoDB;
 
@@ -65,22 +65,22 @@
     ) engine=InnoDB;
 create index idx_billing_record_category_status on billing_record (category, status);
 
-    alter table description 
-       add constraint fk_invoice_row_id_description 
-       foreign key (invoice_row_id) 
+    alter table if exists description
+       add constraint fk_invoice_row_id_description
+       foreign key (`invoice_row_id`)
        references invoice_row (id);
 
-    alter table invoice 
-       add constraint fk_billing_record_id_invoice 
-       foreign key (id) 
+    alter table if exists invoice
+       add constraint fk_billing_record_id_invoice
+       foreign key (id)
        references billing_record (id);
 
-    alter table invoice_row 
-       add constraint fk_invoice_id_invoice_row 
-       foreign key (invoice_id) 
+    alter table if exists invoice_row
+       add constraint fk_invoice_id_invoice_row
+       foreign key (`invoice_id`)
        references invoice (id);
 
-    alter table issuer 
+    alter table if exists issuer
        add constraint fk_billing_record_id_issuer 
        foreign key (id) 
        references billing_record (id);

@@ -1,6 +1,6 @@
 package se.sundsvall.billingpreprocessor.config;
 
-import com.turkraft.springfilter.exception.BadFilterSyntaxException;
+import com.turkraft.springfilter.parser.InvalidSyntaxException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
@@ -27,7 +27,7 @@ public class ExceptionHandlerConfig {
 
 		@ExceptionHandler
 		@ResponseBody
-		public ResponseEntity<Problem> handleBadFilterSyntaxException(BadFilterSyntaxException exception) {
+		public ResponseEntity<Problem> handleBadFilterSyntaxException(InvalidSyntaxException exception) {
 			LOGGER.info(LOG_MESSAGE, exception);
 
 			final var errorResponse = Problem.builder()

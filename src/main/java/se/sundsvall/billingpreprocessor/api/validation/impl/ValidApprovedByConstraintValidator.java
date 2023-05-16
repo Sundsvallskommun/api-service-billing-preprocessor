@@ -1,13 +1,12 @@
 package se.sundsvall.billingpreprocessor.api.validation.impl;
 
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static se.sundsvall.billingpreprocessor.api.model.enums.Status.APPROVED;
-
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
-
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
 import se.sundsvall.billingpreprocessor.api.validation.ValidApprovedBy;
+
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static se.sundsvall.billingpreprocessor.api.model.enums.Status.APPROVED;
 
 public class ValidApprovedByConstraintValidator implements ConstraintValidator<ValidApprovedBy, BillingRecord> {
 	private static final String CUSTOM_ERROR_MESSAGE = "approvedBy must be present when status is " + APPROVED;

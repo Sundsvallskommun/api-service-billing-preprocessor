@@ -1,6 +1,10 @@
 package se.sundsvall.billingpreprocessor.integration.db;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -8,18 +12,17 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace.NONE;
 
-@SpringBootTest
+@DataJpaTest
+@AutoConfigureTestDatabase(replace = NONE)
 @ActiveProfiles("junit")
 class SchemaVerificationTest {
 
 	private static final String STORED_SCHEMA_FILE = "db/schema/schema.sql";
 
-	@Value("${spring.jpa.properties.javax.persistence.schema-generation.scripts.create-target}")
+	@Value("${spring.jpa.properties.jakarta.persistence.schema-generation.scripts.create-target}")
 	private String generatedSchemaFile;
 
 	@Test

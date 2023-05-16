@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>se.sundsvall.dept44</groupId>
 		<artifactId>dept44-service-parent</artifactId>
-		<version>1.35</version>
+		<version>2.0.2</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>se.sundsvall</groupId>
@@ -20,8 +20,8 @@
 		<sandbox.db>true</sandbox.db>
 		<sandbox.wiremock>true</sandbox.wiremock>
   		<!-- Service properties -->
-		<spring-filter.version>2.1.5</spring-filter.version>
-		<testcontainers.version>1.18.0</testcontainers.version>
+		<spring-filter.version>3.0.7</spring-filter.version>
+		<testcontainers.version>1.18.1</testcontainers.version>
 		<failsafeArgLine>-Dfile.encoding=${project.build.sourceEncoding}</failsafeArgLine>
 	</properties>
 	<dependencies>
@@ -52,8 +52,8 @@
 			<artifactId>flyway-mysql</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.turkraft</groupId>
-			<artifactId>spring-filter</artifactId>
+			<groupId>com.turkraft.springfilter</groupId>
+			<artifactId>jpa</artifactId>
 			<version>${spring-filter.version}</version>
 		</dependency>
 

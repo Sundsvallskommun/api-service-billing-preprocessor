@@ -1,23 +1,5 @@
 package se.sundsvall.billingpreprocessor.service.mapper;
 
-import static java.time.OffsetDateTime.now;
-import static java.time.temporal.ChronoUnit.MILLIS;
-import static java.util.Collections.emptyList;
-import static java.util.Objects.isNull;
-import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.collectingAndThen;
-import static java.util.stream.Collectors.toCollection;
-import static java.util.stream.Collectors.toList;
-import static org.springframework.util.ObjectUtils.isEmpty;
-import static se.sundsvall.billingpreprocessor.api.model.enums.Status.APPROVED;
-import static se.sundsvall.billingpreprocessor.integration.db.model.DescriptionType.DETAILED;
-import static se.sundsvall.billingpreprocessor.integration.db.model.DescriptionType.STANDARD;
-import static se.sundsvall.billingpreprocessor.service.util.CalculationUtil.calculateTotalInvoiceAmount;
-import static se.sundsvall.billingpreprocessor.service.util.CalculationUtil.calculateTotalInvoiceRowAmount;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import se.sundsvall.billingpreprocessor.api.model.AccountInformation;
 import se.sundsvall.billingpreprocessor.api.model.AddressDetails;
 import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
@@ -32,6 +14,25 @@ import se.sundsvall.billingpreprocessor.integration.db.model.DescriptionType;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.IssuerEntity;
+
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.time.OffsetDateTime.now;
+import static java.time.temporal.ChronoUnit.MILLIS;
+import static java.util.Collections.emptyList;
+import static java.util.Objects.isNull;
+import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toCollection;
+import static java.util.stream.Collectors.toList;
+import static org.springframework.util.ObjectUtils.isEmpty;
+import static se.sundsvall.billingpreprocessor.api.model.enums.Status.APPROVED;
+import static se.sundsvall.billingpreprocessor.integration.db.model.DescriptionType.DETAILED;
+import static se.sundsvall.billingpreprocessor.integration.db.model.DescriptionType.STANDARD;
+import static se.sundsvall.billingpreprocessor.service.util.CalculationUtil.calculateTotalInvoiceAmount;
+import static se.sundsvall.billingpreprocessor.service.util.CalculationUtil.calculateTotalInvoiceRowAmount;
 
 public class BillingRecordMapper {
 	private BillingRecordMapper() {}
@@ -81,12 +82,12 @@ public class BillingRecordMapper {
 
 		// Need to trigger modified date for billing record manually here as adding or modifying sub entities doesn't trigger
 		// the @preUpdate annotation
-		return billingRecordEntity.withModified(now().truncatedTo(MILLIS));
+		return billingRecordEntity.withModified(now(ZoneId.systemDefault()).truncatedTo(MILLIS));
 	}
 
 	private static void setApprovedBy(final BillingRecordEntity billingRecordEntity, String approvedBy) {
 		billingRecordEntity
-			.withApproved(now())
+			.withApproved(now(ZoneId.systemDefault()))
 			.withApprovedBy(approvedBy);
 	}
 
