@@ -69,7 +69,7 @@ public class BillingRecordMapper {
 		return ofNullable(billingRecords)
 			.map(records -> records.stream()
 				.map(BillingRecordMapper::toBillingRecordEntity)
-				.collect(toList()))
+				.toList())
 			.orElse(emptyList());
 	}
 

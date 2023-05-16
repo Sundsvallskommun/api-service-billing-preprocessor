@@ -10,6 +10,7 @@ import static org.springframework.http.ResponseEntity.ok;
 
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
@@ -68,13 +69,13 @@ public class BillingRecordsResource {
 
     @PostMapping(path = "/batch", consumes = APPLICATION_JSON_VALUE, produces = {APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE})
     @Operation(summary = "Create billing records", description = "Creates new billing records defined by the supplied attributes")
-    @ApiResponse(responseCode = "201", headers = @Header(name = LOCATION, schema = @Schema(type = "string")), description = "Successful operation", content = @Content(mediaType = ALL_VALUE, schema = @Schema(implementation = Void.class)))
+    @ApiResponse(responseCode = "201", headers = @Header(name = LOCATION, schema = @Schema(type = "string")), description = "Successful operation", content = @Content(mediaType = APPLICATION_JSON_VALUE, array = @ArraySchema(schema = @Schema(implementation = String.class))))
     @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(oneOf = {Problem.class, ConstraintViolationProblem.class})))
     @ApiResponse(responseCode = "500", description = "Internal Server error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
     public ResponseEntity<List<String>> createBillingRecords(final UriComponentsBuilder uriComponentsBuilder, @Valid @NotNull @RequestBody final List<BillingRecord> billingRecords) {
 
-        var uuid = service.createBillingRecords(billingRecords);
-        return ResponseEntity.created(uriComponentsBuilder.path("/billingrecords/").buildAndExpand().toUri()).body(uuid);
+        var uuidList = service.createBillingRecords(billingRecords);
+        return ResponseEntity.created(uriComponentsBuilder.path("/billingrecords/").buildAndExpand().toUri()).body(uuidList);
     }
 
 	@GetMapping(path = "/{id}", produces = { APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE })
