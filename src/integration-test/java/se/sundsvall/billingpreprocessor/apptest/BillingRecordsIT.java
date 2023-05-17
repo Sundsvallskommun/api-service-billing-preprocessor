@@ -131,4 +131,15 @@ class BillingRecordsIT extends AbstractAppTest {
 
 		assertThat(repository.existsById(id)).isFalse();
 	}
+
+	@Test
+	void test08_createBillingRecords() {
+		setupCall()
+			.withServicePath("/billingrecords/batch")
+			.withHttpMethod(POST)
+			.withRequest(REQUEST_FILE)
+			.withExpectedResponseStatus(CREATED)
+			.withExpectedResponseHeader(LOCATION, of("^http://(.*)/billingrecords/(.*)$"))
+			.sendRequestAndVerifyResponse();
+	}
 }
