@@ -16,8 +16,8 @@ import java.util.Objects;
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
-@Table(name = "issuer")
-public class IssuerEntity implements Serializable {
+@Table(name = "recipient")
+public class RecipientEntity implements Serializable {
 	private static final long serialVersionUID = -5163409193887622123L;
 
 	@Id
@@ -26,11 +26,13 @@ public class IssuerEntity implements Serializable {
 
 	@OneToOne(fetch = LAZY)
 	@MapsId
-	@JoinColumn(name = "id", foreignKey = @ForeignKey(name = "fk_billing_record_id_issuer"))
+	@JoinColumn(name = "id", foreignKey = @ForeignKey(name = "fk_billing_record_id_recipient"))
 	private BillingRecordEntity billingRecord;
 
-	@Column(name = "party_id", nullable = false)
+	@Column(name = "party_id")
 	private String partyId;
+	@Column(name = "organization_number")
+	private String organizationNumber;
 
 	@Column(name = "organization_name")
 	private String organizationName;
@@ -47,8 +49,8 @@ public class IssuerEntity implements Serializable {
 	@Embedded
 	private AddressDetailsEmbeddable addressDetails;
 
-	public static IssuerEntity create() {
-		return new IssuerEntity();
+	public static RecipientEntity create() {
+		return new RecipientEntity();
 	}
 
 	public String getId() {
@@ -59,7 +61,7 @@ public class IssuerEntity implements Serializable {
 		this.id = id;
 	}
 
-	public IssuerEntity withId(String id) {
+	public RecipientEntity withId(String id) {
 		this.id = id;
 		return this;
 	}
@@ -72,7 +74,7 @@ public class IssuerEntity implements Serializable {
 		this.billingRecord = billingRecord;
 	}
 
-	public IssuerEntity withBillingRecord(BillingRecordEntity billingRecord) {
+	public RecipientEntity withBillingRecord(BillingRecordEntity billingRecord) {
 		this.billingRecord = billingRecord;
 		return this;
 	}
@@ -85,8 +87,21 @@ public class IssuerEntity implements Serializable {
 		this.partyId = partyId;
 	}
 
-	public IssuerEntity withPartyId(String partyId) {
+	public RecipientEntity withPartyId(String partyId) {
 		this.partyId = partyId;
+		return this;
+	}
+
+	public String getOrganizationNumber() {
+		return organizationNumber;
+	}
+
+	public void setOrganizationNumber(String organizationNumber) {
+		this.organizationNumber = organizationNumber;
+	}
+
+	public RecipientEntity withOrganizationNumber(String organizationNumber) {
+		this.organizationNumber = organizationNumber;
 		return this;
 	}
 
@@ -98,7 +113,7 @@ public class IssuerEntity implements Serializable {
 		this.organizationName = organizationName;
 	}
 
-	public IssuerEntity withOrganizationName(String organizationName) {
+	public RecipientEntity withOrganizationName(String organizationName) {
 		this.organizationName = organizationName;
 		return this;
 	}
@@ -111,7 +126,7 @@ public class IssuerEntity implements Serializable {
 		this.firstName = firstName;
 	}
 
-	public IssuerEntity withFirstName(String firstName) {
+	public RecipientEntity withFirstName(String firstName) {
 		this.firstName = firstName;
 		return this;
 	}
@@ -124,7 +139,7 @@ public class IssuerEntity implements Serializable {
 		this.lastName = lastName;
 	}
 
-	public IssuerEntity withLastName(String lastName) {
+	public RecipientEntity withLastName(String lastName) {
 		this.lastName = lastName;
 		return this;
 	}
@@ -137,7 +152,7 @@ public class IssuerEntity implements Serializable {
 		this.userId = userId;
 	}
 
-	public IssuerEntity withUserId(String userId) {
+	public RecipientEntity withUserId(String userId) {
 		this.userId = userId;
 		return this;
 	}
@@ -150,14 +165,14 @@ public class IssuerEntity implements Serializable {
 		this.addressDetails = addressDetails;
 	}
 
-	public IssuerEntity withAddressDetails(AddressDetailsEmbeddable addressDetails) {
+	public RecipientEntity withAddressDetails(AddressDetailsEmbeddable addressDetails) {
 		this.addressDetails = addressDetails;
 		return this;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(addressDetails, billingRecord, firstName, id, lastName, organizationName, partyId, userId);
+		return Objects.hash(addressDetails, billingRecord, firstName, id, lastName, organizationName, partyId, organizationNumber, userId);
 	}
 
 	@Override
@@ -171,18 +186,26 @@ public class IssuerEntity implements Serializable {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		IssuerEntity other = (IssuerEntity) obj;
-		return Objects.equals(addressDetails, other.addressDetails) && Objects.equals(billingRecord, other.billingRecord) && Objects.equals(firstName, other.firstName) && Objects.equals(id, other.id) && Objects.equals(lastName, other.lastName) && Objects
-			.equals(organizationName, other.organizationName) && Objects.equals(partyId, other.partyId) && Objects.equals(userId, other.userId);
+		RecipientEntity other = (RecipientEntity) obj;
+		return Objects.equals(addressDetails, other.addressDetails)
+			&& Objects.equals(billingRecord, other.billingRecord)
+			&& Objects.equals(firstName, other.firstName)
+			&& Objects.equals(id, other.id)
+			&& Objects.equals(lastName, other.lastName)
+			&& Objects.equals(organizationName, other.organizationName)
+			&& Objects.equals(partyId, other.partyId)
+			&& Objects.equals(organizationNumber, other.organizationNumber)
+			&& Objects.equals(userId, other.userId);
 	}
 
 	@Override
 	public String toString() {
 		final var billingRecordId = billingRecord == null ? null : billingRecord.getId();
 		StringBuilder builder = new StringBuilder();
-		builder.append("IssuerEntity [id=").append(id)
+		builder.append("RecipientEntity [id=").append(id)
 			.append(", billingRecord=").append(billingRecordId)
 			.append(", partyId=").append(partyId)
+			.append(", organizationNumber=").append(organizationNumber)
 			.append(", organizationName=").append(organizationName)
 			.append(", firstName=").append(firstName)
 			.append(", lastName=").append(lastName)

@@ -50,7 +50,7 @@
         primary key (id)
     ) engine=InnoDB;
 
-    create table issuer (
+    create table recipient (
        id varchar(255) not null,
         care_of varchar(255),
         city varchar(255),
@@ -59,7 +59,8 @@
         first_name varchar(255),
         last_name varchar(255),
         organization_name varchar(255),
-        party_id varchar(255) not null,
+        organization_number varchar(255),
+        party_id varchar(255),
         user_id varchar(255),
         primary key (id)
     ) engine=InnoDB;
@@ -80,7 +81,7 @@ create index idx_billing_record_category_status on billing_record (category, sta
        foreign key (`invoice_id`)
        references invoice (id);
 
-    alter table if exists issuer
-       add constraint fk_billing_record_id_issuer 
+    alter table if exists recipient
+       add constraint fk_billing_record_id_recipient 
        foreign key (id) 
        references billing_record (id);

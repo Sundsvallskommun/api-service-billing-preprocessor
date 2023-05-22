@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import se.sundsvall.billingpreprocessor.api.model.AddressDetails;
 import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
-import se.sundsvall.billingpreprocessor.api.model.Issuer;
+import se.sundsvall.billingpreprocessor.api.model.Recipient;
 
 class ValidAddressDetailsConstraintValidatorTest {
 
@@ -16,14 +16,14 @@ class ValidAddressDetailsConstraintValidatorTest {
 
 	@Test
 	void withInternalType() {
-		assertThat(validator.isValid(BillingRecord.create().withType(INTERNAL).withIssuer(Issuer.create()), null)).isTrue();
+		assertThat(validator.isValid(BillingRecord.create().withType(INTERNAL).withRecipient(Recipient.create()), null)).isTrue();
 	}
 
 	@Test
 	void withExternalTypeAndValidAddressDetails() {
 		assertThat(validator.isValid(BillingRecord.create()
 					.withType(EXTERNAL)
-					.withIssuer(Issuer.create().withAddressDetails(AddressDetails.create()
+					.withRecipient(Recipient.create().withAddressDetails(AddressDetails.create()
 							.withCity("City")
 							.withStreet("Street")
 							.withtPostalCode("Postal code"))), null))
@@ -34,7 +34,7 @@ class ValidAddressDetailsConstraintValidatorTest {
 	void withExternalTypeAndMissingCity() {
 		assertThat(validator.isValid(BillingRecord.create()
 				.withType(EXTERNAL)
-				.withIssuer(Issuer.create().withAddressDetails(AddressDetails.create()
+				.withRecipient(Recipient.create().withAddressDetails(AddressDetails.create()
 						.withStreet("Street")
 						.withtPostalCode("Postal code"))), null))
 				.isFalse();
@@ -44,7 +44,7 @@ class ValidAddressDetailsConstraintValidatorTest {
 	void withExternalTypeAndMissingStreet() {
 		assertThat(validator.isValid(BillingRecord.create()
 				.withType(EXTERNAL)
-				.withIssuer(Issuer.create().withAddressDetails(AddressDetails.create()
+				.withRecipient(Recipient.create().withAddressDetails(AddressDetails.create()
 						.withCity("City")
 						.withtPostalCode("Postal code"))), null))
 				.isFalse();
@@ -54,7 +54,7 @@ class ValidAddressDetailsConstraintValidatorTest {
 	void withExternalTypeAndMissingPostalCode() {
 		assertThat(validator.isValid(BillingRecord.create()
 				.withType(EXTERNAL)
-				.withIssuer(Issuer.create().withAddressDetails(AddressDetails.create()
+				.withRecipient(Recipient.create().withAddressDetails(AddressDetails.create()
 						.withCity("City")
 						.withStreet("Street"))), null))
 				.isFalse();

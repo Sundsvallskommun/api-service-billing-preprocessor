@@ -11,11 +11,11 @@ import static org.hamcrest.core.AllOf.allOf;
 
 import org.junit.jupiter.api.Test;
 
-class IssuerEntityTest {
+class RecipientEntityTest {
 
 	@Test
 	void testBean() {
-		assertThat(IssuerEntity.class, allOf(
+		assertThat(RecipientEntity.class, allOf(
 			hasValidBeanConstructor(),
 			hasValidGettersAndSetters(),
 			hasValidBeanHashCode(),
@@ -32,9 +32,10 @@ class IssuerEntityTest {
 		final var lastName = "lastName";
 		final var organizationName = "organizationName";
 		final var partyId = "partyId";
+		final var organizationNumber = "organizationNumber";
 		final var userId = "userId";
 
-		final var entity = IssuerEntity.create()
+		final var entity = RecipientEntity.create()
 			.withAddressDetails(addressDetails)
 			.withBillingRecord(billingRecord)
 			.withFirstName(firstName)
@@ -42,6 +43,7 @@ class IssuerEntityTest {
 			.withLastName(lastName)
 			.withOrganizationName(organizationName)
 			.withPartyId(partyId)
+			.withOrganizationNumber(organizationNumber)
 			.withUserId(userId);
 
 		assertThat(entity).hasNoNullFieldsOrProperties();
@@ -52,12 +54,13 @@ class IssuerEntityTest {
 		assertThat(entity.getLastName()).isEqualTo(lastName);
 		assertThat(entity.getOrganizationName()).isEqualTo(organizationName);
 		assertThat(entity.getPartyId()).isEqualTo(partyId);
+		assertThat(entity.getOrganizationNumber()).isEqualTo(organizationNumber);
 		assertThat(entity.getUserId()).isEqualTo(userId);
 	}
 
 	@Test
 	void hasNoDirtOnCreatedBean() {
-		assertThat(IssuerEntity.create()).hasAllNullFieldsOrProperties();
-		assertThat(new IssuerEntity()).hasAllNullFieldsOrProperties();
+		assertThat(RecipientEntity.create()).hasAllNullFieldsOrProperties();
+		assertThat(new RecipientEntity()).hasAllNullFieldsOrProperties();
 	}
 }

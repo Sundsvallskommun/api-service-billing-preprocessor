@@ -44,7 +44,7 @@ class BillingRecordTest {
 		final var created = now().minusDays(14);
 		final var id = "id";
 		final var invoice = Invoice.create();
-		final var issuer = Issuer.create();
+		final var recipient = Recipient.create();
 		final var modified = now().minusDays(7);
 		final var status = REJECTED;
 		final var type = INTERNAL;
@@ -56,7 +56,7 @@ class BillingRecordTest {
 			.withCreated(created)
 			.withId(id)
 			.withInvoice(invoice)
-			.withIssuer(issuer)
+			.withRecipient(recipient)
 			.withModified(modified)
 			.withStatus(status)
 			.withType(type);
@@ -67,7 +67,7 @@ class BillingRecordTest {
 		assertThat(bean.getCreated()).isEqualTo(created);
 		assertThat(bean.getId()).isEqualTo(id);
 		assertThat(bean.getInvoice()).isEqualTo(invoice);
-		assertThat(bean.getIssuer()).isEqualTo(issuer);
+		assertThat(bean.getRecipient()).isEqualTo(recipient);
 		assertThat(bean.getModified()).isEqualTo(modified);
 		assertThat(bean.getStatus()).isEqualTo(status);
 		assertThat(bean.getType()).isEqualTo(type);
