@@ -20,7 +20,7 @@
 		<sandbox.db>true</sandbox.db>
 		<sandbox.wiremock>true</sandbox.wiremock>
   		<!-- Service properties -->
-		<spring-filter.version>3.0.7</spring-filter.version>
+		<spring-filter.version>3.1.0</spring-filter.version>
 		<testcontainers.version>1.18.1</testcontainers.version>
 		<failsafeArgLine>-Dfile.encoding=${project.build.sourceEncoding}</failsafeArgLine>
 	</properties>
