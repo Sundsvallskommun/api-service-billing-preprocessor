@@ -2,7 +2,7 @@
 	"category": "SALARY_AND_PENSION",
 	"type": "EXTERNAL",
 	"status": "NEW",
-	"issuer": {
+	"recipient": {
 		"partyId": "970cd619-51b0-40b9-9132-579e2f937c07",
 		"firstName": "Yuri",
 		"lastName": "Karpov",

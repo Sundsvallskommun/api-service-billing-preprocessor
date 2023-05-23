@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = ValidAddressDetailsConstraintValidator.class)
 public @interface ValidAddressDetails {
-	String message() default "Street, postal code and city must all be present in issuer.addressDetails for EXTERNAL billing record";
+	String message() default "Street, postal code and city must all be present in recipient.addressDetails for EXTERNAL billing record";
 
 	Class<?>[] groups() default {};
 
