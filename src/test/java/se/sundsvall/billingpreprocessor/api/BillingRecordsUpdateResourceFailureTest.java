@@ -131,7 +131,7 @@ class BillingRecordsUpdateResourceFailureTest {
 		final var uuid = randomUUID().toString();
 		final var request = createBillingRecordInstance(INTERNAL, false)
 			.withInvoice(createInvoiceInstance(false, INTERNAL).withInvoiceRows(List.of(createInvoiceRowInstance(false, INTERNAL))))
-			.withRecipient(Recipient.create().withPartyId("invalid").withAddressDetails(createAddressDetailsInstance(false)));
+			.withRecipient(Recipient.create().withPartyId("invalid").withLegalId("invalid").withAddressDetails(createAddressDetailsInstance(false)));
 
 		// Call
 		final var response = webTestClient.put().uri(builder -> builder.path(PATH).build(Map.of("id", uuid)))
@@ -191,7 +191,7 @@ class BillingRecordsUpdateResourceFailureTest {
 			tuple("billingRecord", "Street, postal code and city must all be present in recipient.addressDetails for EXTERNAL billing record"),
 			tuple("billingRecord", "invoice.customerReference is mandatory when billing record is of type EXTERNAL"),
 			tuple("billingRecord", "recipient must either have an organization name or a first and last name defined"),
-			tuple("billingRecord", "recipient must have partyId or organizationNumber when billing record is of type EXTERNAL"),
+			tuple("billingRecord", "recipient must have partyId or legalId when billing record is of type EXTERNAL"),
 			tuple("billingRecord", "must contain vat code information on invoice rows when billing record is of type EXTERNAL"),
 			tuple("billingRecord", "when accountInformation is present costCenter, subaccount, department and counterpart are mandatory"),
 			tuple("category", "must be one of ACCESS_CARD or SALARY_AND_PENSION or ISYCASE"),

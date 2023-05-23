@@ -14,7 +14,7 @@ import se.sundsvall.billingpreprocessor.api.validation.ValidRecipient;
 
 public class ValidRecipientConstraintValidator implements ConstraintValidator<ValidRecipient, BillingRecord> {
     private static final String CUSTOM_ERROR_RECIPIENT_MISSING_MESSAGE = "recipient can not be null when billing record is of type " + EXTERNAL;
-    private static final String CUSTOM_ERROR_INVALID_PARTY_ID_OR_ORGANIZATION_NUMBER_MESSAGE = "recipient must have partyId or organizationNumber when billing record is of type " + EXTERNAL;
+    private static final String CUSTOM_ERROR_INVALID_PARTY_ID_OR_LEGAL_ID_MESSAGE = "recipient must have partyId or legalId when billing record is of type " + EXTERNAL;
 
     private static final String CUSTOM_ERROR_INVALID_RECIPIENT_NAME_MESSAGE = "recipient must either have an organization name or a first and last name defined";
 
@@ -31,8 +31,8 @@ public class ValidRecipientConstraintValidator implements ConstraintValidator<Va
                 useCustomMessageForValidation(context, CUSTOM_ERROR_INVALID_RECIPIENT_NAME_MESSAGE);
                 isValid = false;
             }
-            if (!isValidPartyId(billingRecord.getRecipient()) && !isValidOrganizationNumber(billingRecord.getRecipient())) {
-                useCustomMessageForValidation(context, CUSTOM_ERROR_INVALID_PARTY_ID_OR_ORGANIZATION_NUMBER_MESSAGE);
+            if (!isValidPartyId(billingRecord.getRecipient()) && !isValidLegalId(billingRecord.getRecipient())) {
+                useCustomMessageForValidation(context, CUSTOM_ERROR_INVALID_PARTY_ID_OR_LEGAL_ID_MESSAGE);
                 isValid = false;
             }
 
@@ -45,8 +45,8 @@ public class ValidRecipientConstraintValidator implements ConstraintValidator<Va
         return isNoneBlank(recipient.getPartyId());
     }
 
-    private boolean isValidOrganizationNumber(Recipient recipient) {
-        return isNoneBlank(recipient.getOrganizationNumber());
+    private boolean isValidLegalId(Recipient recipient) {
+        return isNoneBlank(recipient.getLegalId());
     }
 
     private boolean isValidOrganizationName(Recipient recipient) {

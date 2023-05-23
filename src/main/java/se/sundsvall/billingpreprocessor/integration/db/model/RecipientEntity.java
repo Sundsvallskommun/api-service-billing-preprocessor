@@ -31,8 +31,8 @@ public class RecipientEntity implements Serializable {
 
 	@Column(name = "party_id")
 	private String partyId;
-	@Column(name = "organization_number")
-	private String organizationNumber;
+	@Column(name = "legal_id")
+	private String legalId;
 
 	@Column(name = "organization_name")
 	private String organizationName;
@@ -92,16 +92,16 @@ public class RecipientEntity implements Serializable {
 		return this;
 	}
 
-	public String getOrganizationNumber() {
-		return organizationNumber;
+	public String getLegalId() {
+		return legalId;
 	}
 
-	public void setOrganizationNumber(String organizationNumber) {
-		this.organizationNumber = organizationNumber;
+	public void setLegalId(String legalId) {
+		this.legalId = legalId;
 	}
 
-	public RecipientEntity withOrganizationNumber(String organizationNumber) {
-		this.organizationNumber = organizationNumber;
+	public RecipientEntity withLegalId(String legalId) {
+		this.legalId = legalId;
 		return this;
 	}
 
@@ -172,7 +172,7 @@ public class RecipientEntity implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(addressDetails, billingRecord, firstName, id, lastName, organizationName, partyId, organizationNumber, userId);
+		return Objects.hash(addressDetails, billingRecord, firstName, id, lastName, organizationName, partyId, legalId, userId);
 	}
 
 	@Override
@@ -194,7 +194,7 @@ public class RecipientEntity implements Serializable {
 			&& Objects.equals(lastName, other.lastName)
 			&& Objects.equals(organizationName, other.organizationName)
 			&& Objects.equals(partyId, other.partyId)
-			&& Objects.equals(organizationNumber, other.organizationNumber)
+			&& Objects.equals(legalId, other.legalId)
 			&& Objects.equals(userId, other.userId);
 	}
 
@@ -205,7 +205,7 @@ public class RecipientEntity implements Serializable {
 		builder.append("RecipientEntity [id=").append(id)
 			.append(", billingRecord=").append(billingRecordId)
 			.append(", partyId=").append(partyId)
-			.append(", organizationNumber=").append(organizationNumber)
+			.append(", legalId=").append(legalId)
 			.append(", organizationName=").append(organizationName)
 			.append(", firstName=").append(firstName)
 			.append(", lastName=").append(lastName)

@@ -29,7 +29,7 @@ class RecipientTest {
 		final var firstName = "firstName";
 		final var lastName = "lastName";
 		final var partyId = "partyId";
-		final var organizationNumber = "organizationNumber";
+		final var legalId = "legalId";
 		final var organizationName = "organizationName";
 		final var userId = "userId";
 
@@ -39,7 +39,7 @@ class RecipientTest {
 			.withLastName(lastName)
 			.withOrganizationName(organizationName)
 			.withPartyId(partyId)
-			.withOrganizationNumber(organizationNumber)
+			.withLegalId(legalId)
 			.withUserId(userId);
 
 		assertThat(bean.getAddressDetails()).isEqualTo(addressDetails);
@@ -47,7 +47,7 @@ class RecipientTest {
 		assertThat(bean.getLastName()).isEqualTo(lastName);
 		assertThat(bean.getOrganizationName()).isEqualTo(organizationName);
 		assertThat(bean.getPartyId()).isEqualTo(partyId);
-		assertThat(bean.getOrganizationNumber()).isEqualTo(organizationNumber);
+		assertThat(bean.getLegalId()).isEqualTo(legalId);
 		assertThat(bean.getUserId()).isEqualTo(userId);
 	}
 

@@ -172,7 +172,7 @@ public class BillingRecordMapper {
 			.withLastName(recipient.getLastName())
 			.withOrganizationName(recipient.getOrganizationName())
 			.withPartyId(recipient.getPartyId())
-			.withOrganizationNumber(recipient.getOrganizationNumber())
+			.withLegalId(recipient.getLegalId())
 			.withUserId(recipient.getUserId());
 	}
 	
@@ -228,7 +228,7 @@ public class BillingRecordMapper {
 			.withLastName(recipientEntity.getLastName())
 			.withOrganizationName(recipientEntity.getOrganizationName())
 			.withPartyId(recipientEntity.getPartyId())
-			.withOrganizationNumber(recipientEntity.getOrganizationNumber())
+			.withLegalId(recipientEntity.getLegalId())
 			.withUserId(recipientEntity.getUserId());
 	}
 

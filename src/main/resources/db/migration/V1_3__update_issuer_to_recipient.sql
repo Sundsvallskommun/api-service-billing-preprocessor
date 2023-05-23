@@ -9,7 +9,7 @@ alter table recipient
     references billing_record (id);
 
 alter table recipient
-    add column organization_number varchar(255);
+    add column legal_id varchar(255);
 
 alter table recipient
     modify party_id varchar(255);

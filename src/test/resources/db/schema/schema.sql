@@ -58,8 +58,8 @@
         street varchar(255),
         first_name varchar(255),
         last_name varchar(255),
+        legal_id varchar(255),
         organization_name varchar(255),
-        organization_number varchar(255),
         party_id varchar(255),
         user_id varchar(255),
         primary key (id)

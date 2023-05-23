@@ -83,7 +83,7 @@ class BillingRecordRepositoryTest {
 	private static final String LAST_NAME = "lastName";
 	private static final String ORGANIZATION_NAME = "organizationName";
 	private static final String PARTY_ID = "partyId";
-	private static final String ORGANIZATION_NUMBER = "organizationNumber";
+	private static final String LEGAL_ID = "legalId";
 	private static final String USER_ID = "userId";
 	private static final String CATEGORY = "category";
 	private static final OffsetDateTime APPROVED_TIMESTAMP = now().plusDays(3);
@@ -188,7 +188,7 @@ class BillingRecordRepositoryTest {
 		assertThat(Recipient.getLastName()).isEqualTo(LAST_NAME);
 		assertThat(Recipient.getOrganizationName()).isEqualTo(ORGANIZATION_NAME);
 		assertThat(Recipient.getPartyId()).isEqualTo(PARTY_ID);
-		assertThat(Recipient.getOrganizationNumber()).isEqualTo(ORGANIZATION_NUMBER);
+		assertThat(Recipient.getLegalId()).isEqualTo(LEGAL_ID);
 		assertThat(Recipient.getUserId()).isEqualTo(USER_ID);
 	}
 
@@ -338,7 +338,7 @@ class BillingRecordRepositoryTest {
 			.withLastName(LAST_NAME)
 			.withOrganizationName(ORGANIZATION_NAME)
 			.withPartyId(PARTY_ID)
-			.withOrganizationNumber(ORGANIZATION_NUMBER)
+			.withLegalId(LEGAL_ID)
 			.withUserId(USER_ID);
 	}
 

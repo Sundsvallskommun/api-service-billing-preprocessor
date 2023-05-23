@@ -32,7 +32,7 @@ class RecipientEntityTest {
 		final var lastName = "lastName";
 		final var organizationName = "organizationName";
 		final var partyId = "partyId";
-		final var organizationNumber = "organizationNumber";
+		final var legalId = "partyId";
 		final var userId = "userId";
 
 		final var entity = RecipientEntity.create()
@@ -43,7 +43,7 @@ class RecipientEntityTest {
 			.withLastName(lastName)
 			.withOrganizationName(organizationName)
 			.withPartyId(partyId)
-			.withOrganizationNumber(organizationNumber)
+			.withLegalId(legalId)
 			.withUserId(userId);
 
 		assertThat(entity).hasNoNullFieldsOrProperties();
@@ -54,7 +54,7 @@ class RecipientEntityTest {
 		assertThat(entity.getLastName()).isEqualTo(lastName);
 		assertThat(entity.getOrganizationName()).isEqualTo(organizationName);
 		assertThat(entity.getPartyId()).isEqualTo(partyId);
-		assertThat(entity.getOrganizationNumber()).isEqualTo(organizationNumber);
+		assertThat(entity.getLegalId()).isEqualTo(legalId);
 		assertThat(entity.getUserId()).isEqualTo(userId);
 	}
 

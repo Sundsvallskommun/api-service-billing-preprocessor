@@ -51,7 +51,7 @@
 		"type": "EXTERNAL",
 		"status": "NEW",
 		"recipient": {
-			"organizationNumber": "3456789123",
+			"legalId": "3456789123",
 			"firstName": "Alice",
 			"lastName": "Snuffleupagus",
 			"userId": "ALI23SNU",

@@ -88,7 +88,7 @@ class BillingRecordMapperTest {
 	private static final String LAST_NAME = "lastName";
 	private static final String ORGANIZATION_NAME = "organizationName";
 	private static final String PARTY_ID = "partyId";
-	private static final String ORGANIZATION_NUMBER = "organizationNumber";
+	private static final String LEGAL_ID = "legalId";
 	private static final String USER_ID = "userId";
 
 	// Address details constants
@@ -125,7 +125,7 @@ class BillingRecordMapperTest {
 				RecipientEntity::getLastName,
 				RecipientEntity::getOrganizationName,
 				RecipientEntity::getPartyId,
-				RecipientEntity::getOrganizationNumber,
+				RecipientEntity::getLegalId,
 				RecipientEntity::getUserId)
 			.containsExactly(
 				billingRecordEntity,
@@ -134,7 +134,7 @@ class BillingRecordMapperTest {
 				LAST_NAME,
 				ORGANIZATION_NAME,
 				PARTY_ID,
-				ORGANIZATION_NUMBER,
+				LEGAL_ID,
 				USER_ID);
 
 		// Assert address details embeddable values
@@ -277,7 +277,7 @@ class BillingRecordMapperTest {
 				RecipientEntity::getLastName,
 				RecipientEntity::getOrganizationName,
 				RecipientEntity::getPartyId,
-				RecipientEntity::getOrganizationNumber,
+				RecipientEntity::getLegalId,
 				RecipientEntity::getUserId)
 			.containsExactly(
 				billingRecordEntity,
@@ -286,7 +286,7 @@ class BillingRecordMapperTest {
 				LAST_NAME,
 				ORGANIZATION_NAME,
 				PARTY_ID,
-				ORGANIZATION_NUMBER,
+				LEGAL_ID,
 				USER_ID);
 
 		// Assert address details embeddable values
@@ -455,14 +455,14 @@ class BillingRecordMapperTest {
 				Recipient::getLastName,
 				Recipient::getOrganizationName,
 				Recipient::getPartyId,
-				Recipient::getOrganizationNumber,
+				Recipient::getLegalId,
 				Recipient::getUserId)
 			.containsExactly(
 				FIRST_NAME,
 				LAST_NAME,
 				ORGANIZATION_NAME,
 				PARTY_ID,
-				ORGANIZATION_NUMBER,
+				LEGAL_ID,
 				USER_ID);
 
 		// Assert address details values
@@ -645,7 +645,7 @@ class BillingRecordMapperTest {
 			.withLastName(LAST_NAME)
 			.withOrganizationName(ORGANIZATION_NAME)
 			.withPartyId(PARTY_ID)
-			.withOrganizationNumber(ORGANIZATION_NUMBER)
+			.withLegalId(LEGAL_ID)
 			.withUserId(USER_ID);
 	}
 
@@ -708,7 +708,7 @@ class BillingRecordMapperTest {
 			.withLastName(LAST_NAME)
 			.withOrganizationName(ORGANIZATION_NAME)
 			.withPartyId(PARTY_ID)
-			.withOrganizationNumber(ORGANIZATION_NUMBER)
+			.withLegalId(LEGAL_ID)
 			.withUserId(USER_ID);
 	}
 

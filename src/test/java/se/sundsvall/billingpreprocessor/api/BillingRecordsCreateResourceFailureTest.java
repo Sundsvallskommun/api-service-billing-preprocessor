@@ -156,7 +156,7 @@ class BillingRecordsCreateResourceFailureTest {
 			tuple("billingRecord", "invoice.customerReference is mandatory when billing record is of type EXTERNAL"),
 			tuple("billingRecord", "must contain vat code information on invoice rows when billing record is of type EXTERNAL"),
 			tuple("billingRecord", "recipient must either have an organization name or a first and last name defined"),
-			tuple("billingRecord", "recipient must have partyId or organizationNumber when billing record is of type EXTERNAL"),
+			tuple("billingRecord", "recipient must have partyId or legalId when billing record is of type EXTERNAL"),
 			tuple("billingRecord", "when accountInformation is present costCenter, subaccount, department and counterpart are mandatory"),
 			tuple("category", "must be one of ACCESS_CARD or SALARY_AND_PENSION or ISYCASE"),
 			tuple("approved", "must be null"),
