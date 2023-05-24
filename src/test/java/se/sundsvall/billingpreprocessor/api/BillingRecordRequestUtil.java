@@ -13,7 +13,7 @@ import se.sundsvall.billingpreprocessor.api.model.AddressDetails;
 import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
 import se.sundsvall.billingpreprocessor.api.model.Invoice;
 import se.sundsvall.billingpreprocessor.api.model.InvoiceRow;
-import se.sundsvall.billingpreprocessor.api.model.Issuer;
+import se.sundsvall.billingpreprocessor.api.model.Recipient;
 import se.sundsvall.billingpreprocessor.api.model.enums.Type;
 
 public class BillingRecordRequestUtil {
@@ -33,9 +33,9 @@ public class BillingRecordRequestUtil {
 			.withType(type);
 	}
 
-	public static Issuer createIssuerInstance(boolean validIssuer) {
-		return Issuer.create()
-			.withFirstName(validIssuer ? "firstName" : null)
+	public static Recipient createRecipientInstance(boolean validRecipient) {
+		return Recipient.create()
+			.withFirstName(validRecipient ? "firstName" : null)
 			.withPartyId(randomUUID().toString())
 			.withLastName("lastName")
 			.withUserId("userId");

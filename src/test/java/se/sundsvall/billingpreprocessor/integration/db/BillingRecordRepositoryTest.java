@@ -20,7 +20,7 @@ import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity
 import se.sundsvall.billingpreprocessor.integration.db.model.DescriptionEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;
-import se.sundsvall.billingpreprocessor.integration.db.model.IssuerEntity;
+import se.sundsvall.billingpreprocessor.integration.db.model.RecipientEntity;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
@@ -83,6 +83,7 @@ class BillingRecordRepositoryTest {
 	private static final String LAST_NAME = "lastName";
 	private static final String ORGANIZATION_NAME = "organizationName";
 	private static final String PARTY_ID = "partyId";
+	private static final String LEGAL_ID = "legalId";
 	private static final String USER_ID = "userId";
 	private static final String CATEGORY = "category";
 	private static final OffsetDateTime APPROVED_TIMESTAMP = now().plusDays(3);
@@ -99,7 +100,7 @@ class BillingRecordRepositoryTest {
 	@Test
 	void create() {
 		final var billingRecord = createbillingRecord(); // Create billingRecord entity
-		billingRecord.withInvoice(createInvoice(billingRecord)).withIssuer(createIssuer(billingRecord)); // Connect issuer and invoice to it
+		billingRecord.withInvoice(createInvoice(billingRecord)).withRecipient(createRecipient(billingRecord)); // Connect Recipient and invoice to it
 		billingRecord.getInvoice().withInvoiceRows(createInvoiceRows(billingRecord.getInvoice())); // Connect invoice rows to connected invoice
 		billingRecord.getInvoice().getInvoiceRows().forEach(row -> row.withDescriptions(createDescriptions(row))); // Connect descriptions to connected invoice rows
 		repository.save(billingRecord); // Save entity
@@ -113,8 +114,8 @@ class BillingRecordRepositoryTest {
 		// Verify invoice row data
 		verifyInvoiceRow(billingRecord);
 
-		// Verify issuer data
-		verifyIssuer(billingRecord);
+		// Verify Recipient data
+		verifyRecipient(billingRecord);
 	}
 
 	private static void verifybillingRecord(final BillingRecordEntity billingRecord) {
@@ -125,7 +126,7 @@ class BillingRecordRepositoryTest {
 		assertThat(billingRecord.getCreated()).isCloseTo(now(), within(2, SECONDS));
 		assertThat(billingRecord.getId()).isNotNull();
 		assertThat(billingRecord.getInvoice()).isNotNull();
-		assertThat(billingRecord.getIssuer()).isNotNull();
+		assertThat(billingRecord.getRecipient()).isNotNull();
 		assertThat(billingRecord.getModified()).isNull();
 		assertThat(billingRecord.getStatus()).isEqualTo(STATUS);
 		assertThat(billingRecord.getType()).isEqualTo(TYPE);
@@ -174,20 +175,21 @@ class BillingRecordRepositoryTest {
 		assertThat(invoiceRow.getVatCode()).isEqualTo(VAT_CODE);
 	}
 
-	private static void verifyIssuer(final BillingRecordEntity billingRecord) {
-		final var issuer = billingRecord.getIssuer();
-		assertThat(issuer.getAddressDetails()).isNotNull();
-		assertThat(issuer.getAddressDetails().getCareOf()).isEqualTo(CARE_OF);
-		assertThat(issuer.getAddressDetails().getCity()).isEqualTo(CITY);
-		assertThat(issuer.getAddressDetails().getStreet()).isEqualTo(STREET);
-		assertThat(issuer.getAddressDetails().getPostalCode()).isEqualTo(POSTAL_CODE);
-		assertThat(issuer.getBillingRecord()).isEqualTo(billingRecord);
-		assertThat(issuer.getFirstName()).isEqualTo(FIRST_NAME);
-		assertThat(issuer.getId()).isEqualTo(billingRecord.getId());
-		assertThat(issuer.getLastName()).isEqualTo(LAST_NAME);
-		assertThat(issuer.getOrganizationName()).isEqualTo(ORGANIZATION_NAME);
-		assertThat(issuer.getPartyId()).isEqualTo(PARTY_ID);
-		assertThat(issuer.getUserId()).isEqualTo(USER_ID);
+	private static void verifyRecipient(final BillingRecordEntity billingRecord) {
+		final var Recipient = billingRecord.getRecipient();
+		assertThat(Recipient.getAddressDetails()).isNotNull();
+		assertThat(Recipient.getAddressDetails().getCareOf()).isEqualTo(CARE_OF);
+		assertThat(Recipient.getAddressDetails().getCity()).isEqualTo(CITY);
+		assertThat(Recipient.getAddressDetails().getStreet()).isEqualTo(STREET);
+		assertThat(Recipient.getAddressDetails().getPostalCode()).isEqualTo(POSTAL_CODE);
+		assertThat(Recipient.getBillingRecord()).isEqualTo(billingRecord);
+		assertThat(Recipient.getFirstName()).isEqualTo(FIRST_NAME);
+		assertThat(Recipient.getId()).isEqualTo(billingRecord.getId());
+		assertThat(Recipient.getLastName()).isEqualTo(LAST_NAME);
+		assertThat(Recipient.getOrganizationName()).isEqualTo(ORGANIZATION_NAME);
+		assertThat(Recipient.getPartyId()).isEqualTo(PARTY_ID);
+		assertThat(Recipient.getLegalId()).isEqualTo(LEGAL_ID);
+		assertThat(Recipient.getUserId()).isEqualTo(USER_ID);
 	}
 
 	@Test
@@ -328,14 +330,15 @@ class BillingRecordRepositoryTest {
 			.withPostalCode(POSTAL_CODE);
 	}
 
-	private static IssuerEntity createIssuer(final BillingRecordEntity billingRecord) {
-		return IssuerEntity.create()
+	private static RecipientEntity createRecipient(final BillingRecordEntity billingRecord) {
+		return RecipientEntity.create()
 			.withAddressDetails(createAddressDetails())
 			.withBillingRecord(billingRecord)
 			.withFirstName(FIRST_NAME)
 			.withLastName(LAST_NAME)
 			.withOrganizationName(ORGANIZATION_NAME)
 			.withPartyId(PARTY_ID)
+			.withLegalId(LEGAL_ID)
 			.withUserId(USER_ID);
 	}
 

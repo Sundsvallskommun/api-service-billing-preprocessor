@@ -5,7 +5,7 @@ import se.sundsvall.billingpreprocessor.api.model.AddressDetails;
 import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
 import se.sundsvall.billingpreprocessor.api.model.Invoice;
 import se.sundsvall.billingpreprocessor.api.model.InvoiceRow;
-import se.sundsvall.billingpreprocessor.api.model.Issuer;
+import se.sundsvall.billingpreprocessor.api.model.Recipient;
 import se.sundsvall.billingpreprocessor.integration.db.model.AccountInformationEmbeddable;
 import se.sundsvall.billingpreprocessor.integration.db.model.AddressDetailsEmbeddable;
 import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
@@ -13,7 +13,7 @@ import se.sundsvall.billingpreprocessor.integration.db.model.DescriptionEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.DescriptionType;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;
-import se.sundsvall.billingpreprocessor.integration.db.model.IssuerEntity;
+import se.sundsvall.billingpreprocessor.integration.db.model.RecipientEntity;
 
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -49,7 +49,7 @@ public class BillingRecordMapper {
 			.withStatus(billingRecord.getStatus())
 			.withType(billingRecord.getType());
 
-		billingRecordEntity.setIssuer(toIssuerEntity(billingRecordEntity, billingRecord.getIssuer())); // Add issuer entity to billing record entity
+		billingRecordEntity.setRecipient(toRecipientEntity(billingRecordEntity, billingRecord.getRecipient())); // Add recipient entity to billing record entity
 		billingRecordEntity.setInvoice(toInvoiceEntity(billingRecordEntity, billingRecord.getInvoice())); // Add invoice entity to billing record entity
 
 		if (APPROVED == billingRecordEntity.getStatus()) {
@@ -57,6 +57,20 @@ public class BillingRecordMapper {
 		}
 
 		return billingRecordEntity;
+	}
+
+	/**
+	 * Method for mapping a list of BillingRecordEntity objects to a BillingRecord objects
+	 *
+	 * @param billingRecords a list of billing records represented by the BillingRecordEntity class
+	 * @return a list of objects of class BillingRecord representing the incoming BillingRecordEntity objects
+	 */
+	public static List<BillingRecordEntity> toBillingRecordEntities(final List<BillingRecord> billingRecords) {
+		return ofNullable(billingRecords)
+			.map(records -> records.stream()
+				.map(BillingRecordMapper::toBillingRecordEntity)
+				.toList())
+			.orElse(emptyList());
 	}
 
 	/**
@@ -72,7 +86,7 @@ public class BillingRecordMapper {
 			.withStatus(billingRecord.getStatus())
 			.withType(billingRecord.getType());
 
-		billingRecordEntity.setIssuer(toIssuerEntity(billingRecordEntity, billingRecord.getIssuer())); // Update issuer entity of billing record entity with new information
+		billingRecordEntity.setRecipient(toRecipientEntity(billingRecordEntity, billingRecord.getRecipient())); // Update recipient entity of billing record entity with new information
 		billingRecordEntity.setInvoice(toInvoiceEntity(billingRecordEntity, billingRecord.getInvoice())); // Update invoice entity of billing record entity with new information
 
 		// Only set approved by and approved timestamp first time billing record receives approved status
@@ -147,18 +161,19 @@ public class BillingRecordMapper {
 			.withSubaccount(accountInformation.getSubaccount());
 	}
 
-	private static IssuerEntity toIssuerEntity(final BillingRecordEntity billingRecord, final Issuer issuer) {
-		if (isNull(issuer)) {
+	private static RecipientEntity toRecipientEntity(final BillingRecordEntity billingRecord, final Recipient recipient) {
+		if (isNull(recipient)) {
 			return null;
 		}
 
-		return ofNullable(billingRecord.getIssuer()).orElse(IssuerEntity.create().withBillingRecord(billingRecord))
-			.withAddressDetails(toAddressDetailsEmbeddable(issuer.getAddressDetails()))
-			.withFirstName(issuer.getFirstName())
-			.withLastName(issuer.getLastName())
-			.withOrganizationName(issuer.getOrganizationName())
-			.withPartyId(issuer.getPartyId())
-			.withUserId(issuer.getUserId());
+		return ofNullable(billingRecord.getRecipient()).orElse(RecipientEntity.create().withBillingRecord(billingRecord))
+			.withAddressDetails(toAddressDetailsEmbeddable(recipient.getAddressDetails()))
+			.withFirstName(recipient.getFirstName())
+			.withLastName(recipient.getLastName())
+			.withOrganizationName(recipient.getOrganizationName())
+			.withPartyId(recipient.getPartyId())
+			.withLegalId(recipient.getLegalId())
+			.withUserId(recipient.getUserId());
 	}
 	
 	private static AddressDetailsEmbeddable toAddressDetailsEmbeddable(final AddressDetails addressDetails) {
@@ -196,24 +211,25 @@ public class BillingRecordMapper {
 			.withCreated(billingRecordEntity.getCreated())
 			.withId(billingRecordEntity.getId())
 			.withInvoice(toInvoice(billingRecordEntity.getInvoice()))
-			.withIssuer(toIssuer(billingRecordEntity.getIssuer()))
+			.withRecipient(toRecipient(billingRecordEntity.getRecipient()))
 			.withModified(billingRecordEntity.getModified())
 			.withStatus(billingRecordEntity.getStatus())
 			.withType(billingRecordEntity.getType());
 	}
 
-	private static Issuer toIssuer(IssuerEntity issuerEntity) {
-		if (isNull(issuerEntity)) {
+	private static Recipient toRecipient(RecipientEntity recipientEntity) {
+		if (isNull(recipientEntity)) {
 			return null;
 		}
 
-		return Issuer.create()
-			.withAddressDetails(toAddressDetails(issuerEntity.getAddressDetails()))
-			.withFirstName(issuerEntity.getFirstName())
-			.withLastName(issuerEntity.getLastName())
-			.withOrganizationName(issuerEntity.getOrganizationName())
-			.withPartyId(issuerEntity.getPartyId())
-			.withUserId(issuerEntity.getUserId());
+		return Recipient.create()
+			.withAddressDetails(toAddressDetails(recipientEntity.getAddressDetails()))
+			.withFirstName(recipientEntity.getFirstName())
+			.withLastName(recipientEntity.getLastName())
+			.withOrganizationName(recipientEntity.getOrganizationName())
+			.withPartyId(recipientEntity.getPartyId())
+			.withLegalId(recipientEntity.getLegalId())
+			.withUserId(recipientEntity.getUserId());
 	}
 
 	private static AddressDetails toAddressDetails(AddressDetailsEmbeddable addressDetailsEmbeddable) {

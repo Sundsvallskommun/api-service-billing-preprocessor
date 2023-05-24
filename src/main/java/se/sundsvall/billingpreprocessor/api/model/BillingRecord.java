@@ -13,7 +13,7 @@ import se.sundsvall.billingpreprocessor.api.validation.ValidAddressDetails;
 import se.sundsvall.billingpreprocessor.api.validation.ValidApprovedBy;
 import se.sundsvall.billingpreprocessor.api.validation.ValidInvoice;
 import se.sundsvall.billingpreprocessor.api.validation.ValidInvoiceRows;
-import se.sundsvall.billingpreprocessor.api.validation.ValidIssuer;
+import se.sundsvall.billingpreprocessor.api.validation.ValidRecipient;
 
 import java.time.OffsetDateTime;
 import java.util.Objects;
@@ -25,7 +25,7 @@ import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 @ValidApprovedBy
 @ValidInvoice
 @ValidInvoiceRows
-@ValidIssuer
+@ValidRecipient
 @ValidAddressDetails
 public class BillingRecord {
 
@@ -34,7 +34,7 @@ public class BillingRecord {
 	private String id;
 
 	@Schema(description = "Billing category", requiredMode = REQUIRED)
-	@Pattern(regexp = "ACCESS_CARD|SALARY_AND_PENSION", message = "must be one of ACCESS_CARD or SALARY_AND_PENSION")
+	@Pattern(regexp = "ACCESS_CARD|SALARY_AND_PENSION|ISYCASE", message = "must be one of ACCESS_CARD or SALARY_AND_PENSION or ISYCASE")
 	@NotNull
 	private String category;
 
@@ -54,9 +54,9 @@ public class BillingRecord {
 	@Null
 	private OffsetDateTime approved;
 
-	@Schema(implementation = Issuer.class)
+	@Schema(implementation = Recipient.class)
 	@Valid
-	private Issuer issuer;
+	private Recipient recipient;
 
 	@Schema(implementation = Invoice.class, requiredMode = REQUIRED)
 	@NotNull
@@ -155,16 +155,16 @@ public class BillingRecord {
 		return this;
 	}
 
-	public Issuer getIssuer() {
-		return issuer;
+	public Recipient getRecipient() {
+		return recipient;
 	}
 
-	public void setIssuer(Issuer issuer) {
-		this.issuer = issuer;
+	public void setRecipient(Recipient recipient) {
+		this.recipient = recipient;
 	}
 
-	public BillingRecord withIssuer(Issuer issuer) {
-		this.issuer = issuer;
+	public BillingRecord withRecipient(Recipient recipient) {
+		this.recipient = recipient;
 		return this;
 	}
 
@@ -209,7 +209,7 @@ public class BillingRecord {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(category, approved, approvedBy, created, id, invoice, issuer, modified, status, type);
+		return Objects.hash(category, approved, approvedBy, created, id, invoice, recipient, modified, status, type);
 	}
 
 	@Override
@@ -225,7 +225,7 @@ public class BillingRecord {
 		}
 		BillingRecord other = (BillingRecord) obj;
 		return Objects.equals(category, other.category) && Objects.equals(approved, other.approved) && Objects.equals(approvedBy, other.approvedBy) && Objects.equals(created, other.created) && Objects.equals(id, other.id) && Objects.equals(invoice,
-			other.invoice) && Objects.equals(issuer, other.issuer) && Objects.equals(modified, other.modified) && Objects.equals(status, other.status) && Objects.equals(type, other.type);
+			other.invoice) && Objects.equals(recipient, other.recipient) && Objects.equals(modified, other.modified) && Objects.equals(status, other.status) && Objects.equals(type, other.type);
 	}
 
 	@Override
@@ -237,7 +237,7 @@ public class BillingRecord {
 			.append(", status=").append(status)
 			.append(", approvedBy=").append(approvedBy)
 			.append(", approved=").append(approved)
-			.append(", issuer=").append(issuer)
+			.append(", recipient=").append(recipient)
 			.append(", invoice=").append(invoice)
 			.append(", created=").append(created)
 			.append(", modified=").append(modified).append("]");

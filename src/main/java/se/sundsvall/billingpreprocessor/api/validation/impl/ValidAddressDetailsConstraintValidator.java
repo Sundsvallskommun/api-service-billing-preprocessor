@@ -26,18 +26,18 @@ public class ValidAddressDetailsConstraintValidator implements ConstraintValidat
 	}
 
 	private boolean isNonNullAddressDetails(final BillingRecord billingRecord) {
-		return billingRecord.getIssuer() != null && billingRecord.getIssuer().getAddressDetails() != null;
+		return billingRecord.getRecipient() != null && billingRecord.getRecipient().getAddressDetails() != null;
 	}
 
 	private boolean isValidStreet(final BillingRecord billingRecord) {
-		return isNoneBlank(billingRecord.getIssuer().getAddressDetails().getStreet());
+		return isNoneBlank(billingRecord.getRecipient().getAddressDetails().getStreet());
 	}
 
 	private boolean isValidPostalCode(final BillingRecord billingRecord) {
-		return isNoneBlank(billingRecord.getIssuer().getAddressDetails().getPostalCode());
+		return isNoneBlank(billingRecord.getRecipient().getAddressDetails().getPostalCode());
 	}
 
 	private boolean isValidCity(final BillingRecord billingRecord) {
-		return isNoneBlank(billingRecord.getIssuer().getAddressDetails().getCity());
+		return isNoneBlank(billingRecord.getRecipient().getAddressDetails().getCity());
 	}
 }

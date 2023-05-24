@@ -36,7 +36,7 @@ VALUES	('Ordernummer: azi-330c-3fne-33', 'STANDARD', 100),
 		('Passerkort med foto', 'STANDARD', 200);
 
 -------------------------------------
--- Issuers
+-- Recipients
 -------------------------------------
-INSERT INTO issuer (id, care_of, city, street, postal_code, first_name, last_name, organization_name, party_id, user_id)
+INSERT INTO recipient (id, care_of, city, street, postal_code, first_name, last_name, organization_name, party_id, user_id)
 VALUES	('83e4d599-5b4d-431c-8ebc-81192e9401ee', NULL, 'Louiseville', 'Beachland avenue 3308', 'KY 40211', 'Yuri', 'Karpov', NULL, '970cd619-51b0-40b9-9132-579e2f937c07', NULL);

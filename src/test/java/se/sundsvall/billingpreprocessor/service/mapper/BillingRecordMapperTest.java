@@ -28,7 +28,7 @@ import se.sundsvall.billingpreprocessor.api.model.AddressDetails;
 import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
 import se.sundsvall.billingpreprocessor.api.model.Invoice;
 import se.sundsvall.billingpreprocessor.api.model.InvoiceRow;
-import se.sundsvall.billingpreprocessor.api.model.Issuer;
+import se.sundsvall.billingpreprocessor.api.model.Recipient;
 import se.sundsvall.billingpreprocessor.api.model.enums.Status;
 import se.sundsvall.billingpreprocessor.api.model.enums.Type;
 import se.sundsvall.billingpreprocessor.integration.db.model.AccountInformationEmbeddable;
@@ -38,7 +38,7 @@ import se.sundsvall.billingpreprocessor.integration.db.model.DescriptionEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.DescriptionType;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;
-import se.sundsvall.billingpreprocessor.integration.db.model.IssuerEntity;
+import se.sundsvall.billingpreprocessor.integration.db.model.RecipientEntity;
 
 class BillingRecordMapperTest {
 
@@ -83,11 +83,12 @@ class BillingRecordMapperTest {
 	private static final String PROJECT = "project";
 	private static final String SUBACCOUNT = "subaccount";
 
-	// Issuer constants
+	// Recipient constants
 	private static final String FIRST_NAME = "firstName";
 	private static final String LAST_NAME = "lastName";
 	private static final String ORGANIZATION_NAME = "organizationName";
 	private static final String PARTY_ID = "partyId";
+	private static final String LEGAL_ID = "legalId";
 	private static final String USER_ID = "userId";
 
 	// Address details constants
@@ -115,16 +116,17 @@ class BillingRecordMapperTest {
 				BillingRecordEntity::getModified)
 			.containsOnlyNulls();
 
-		// Assert issuer entity values
-		assertThat(billingRecordEntity.getIssuer()).isNotNull()
+		// Assert Recipient entity values
+		assertThat(billingRecordEntity.getRecipient()).isNotNull()
 			.extracting(
-				IssuerEntity::getBillingRecord,
-				IssuerEntity::getFirstName,
-				IssuerEntity::getId,
-				IssuerEntity::getLastName,
-				IssuerEntity::getOrganizationName,
-				IssuerEntity::getPartyId,
-				IssuerEntity::getUserId)
+				RecipientEntity::getBillingRecord,
+				RecipientEntity::getFirstName,
+				RecipientEntity::getId,
+				RecipientEntity::getLastName,
+				RecipientEntity::getOrganizationName,
+				RecipientEntity::getPartyId,
+				RecipientEntity::getLegalId,
+				RecipientEntity::getUserId)
 			.containsExactly(
 				billingRecordEntity,
 				FIRST_NAME,
@@ -132,10 +134,11 @@ class BillingRecordMapperTest {
 				LAST_NAME,
 				ORGANIZATION_NAME,
 				PARTY_ID,
+				LEGAL_ID,
 				USER_ID);
 
 		// Assert address details embeddable values
-		assertThat(billingRecordEntity.getIssuer().getAddressDetails()).isNotNull()
+		assertThat(billingRecordEntity.getRecipient().getAddressDetails()).isNotNull()
 			.extracting(
 				AddressDetailsEmbeddable::getCareOf,
 				AddressDetailsEmbeddable::getCity,
@@ -225,11 +228,11 @@ class BillingRecordMapperTest {
 	}
 
 	@Test
-	void tobillingRecordEntityWithNoIssuer() {
-		final var billingRecord = createbillingRecord().withIssuer(null);
+	void tobillingRecordEntityWithNoRecipient() {
+		final var billingRecord = createbillingRecord().withRecipient(null);
 		final var billingRecordEntity = BillingRecordMapper.toBillingRecordEntity(billingRecord);
 
-		assertThat(billingRecordEntity.getIssuer()).isNull();
+		assertThat(billingRecordEntity.getRecipient()).isNull();
 	}
 
 	@ParameterizedTest
@@ -240,6 +243,149 @@ class BillingRecordMapperTest {
 
 		assertThat(billingRecordEntity.getApproved()).isNull();
 		assertThat(billingRecordEntity.getApprovedBy()).isNull();
+	}
+
+
+	@Test
+	void toBillingRecordEntitiesForFullInstance(){
+		final var billingRecord = createbillingRecord();
+		final var billingRecordEntities = BillingRecordMapper.toBillingRecordEntities(List.of(billingRecord));
+
+		assertThat(billingRecordEntities).isNotNull().hasSize(1);
+		final var billingRecordEntity = billingRecordEntities.get(0);
+
+		// Assert billing record entity values
+		assertThat(billingRecordEntity.getCategory()).isEqualTo(CATEGORY);
+		assertThat(billingRecordEntity.getApproved()).isCloseTo(now(), within(2, SECONDS));
+		assertThat(billingRecordEntity.getApprovedBy()).isEqualTo(APPROVED_BY);
+		assertThat(billingRecordEntity.getStatus()).isEqualTo(STATUS);
+		assertThat(billingRecordEntity.getType()).isEqualTo(TYPE);
+
+		assertThat(billingRecordEntity)
+			.extracting(
+				BillingRecordEntity::getCreated,
+				BillingRecordEntity::getId,
+				BillingRecordEntity::getModified)
+			.containsOnlyNulls();
+
+		// Assert recipient entity values
+		assertThat(billingRecordEntity.getRecipient()).isNotNull()
+			.extracting(
+				RecipientEntity::getBillingRecord,
+				RecipientEntity::getFirstName,
+				RecipientEntity::getId,
+				RecipientEntity::getLastName,
+				RecipientEntity::getOrganizationName,
+				RecipientEntity::getPartyId,
+				RecipientEntity::getLegalId,
+				RecipientEntity::getUserId)
+			.containsExactly(
+				billingRecordEntity,
+				FIRST_NAME,
+				null,
+				LAST_NAME,
+				ORGANIZATION_NAME,
+				PARTY_ID,
+				LEGAL_ID,
+				USER_ID);
+
+		// Assert address details embeddable values
+		assertThat(billingRecordEntity.getRecipient().getAddressDetails()).isNotNull()
+			.extracting(
+				AddressDetailsEmbeddable::getCareOf,
+				AddressDetailsEmbeddable::getCity,
+				AddressDetailsEmbeddable::getPostalCode,
+				AddressDetailsEmbeddable::getStreet)
+			.containsExactly(
+				CARE_OF,
+				CITY,
+				POSTAL_CODE,
+				STREET);
+
+		// Assert invoice entity values
+		assertThat(billingRecordEntity.getInvoice()).isNotNull()
+			.extracting(
+				InvoiceEntity::getBillingRecord,
+				InvoiceEntity::getCustomerId,
+				InvoiceEntity::getCustomerReference,
+				InvoiceEntity::getDescription,
+				InvoiceEntity::getDate,
+				InvoiceEntity::getDueDate,
+				InvoiceEntity::getId,
+				InvoiceEntity::getOurReference,
+				InvoiceEntity::getReferenceId,
+				InvoiceEntity::getTotalAmount)
+			.containsExactly(
+				billingRecordEntity,
+				CUSTOMER_ID,
+				CUSTOMER_REFERENCE,
+				DESCRIPTION,
+				DATE,
+				DUE_DATE,
+				null,
+				OUR_REFERENCE,
+				REFERENCE_ID,
+				INVOICE_TOTAL_AMOUNT);
+
+		// Assert invoice row entity values
+		assertThat(billingRecordEntity.getInvoice().getInvoiceRows()).isNotNull()
+			.extracting(
+				InvoiceRowEntity::getCostPerUnit,
+				InvoiceRowEntity::getId,
+				InvoiceRowEntity::getQuantity,
+				InvoiceRowEntity::getTotalAmount,
+				InvoiceRowEntity::getVatCode)
+			.containsExactly(
+				tuple(COST_PER_UNIT, 0l, QUANTITY, COST_PER_UNIT * QUANTITY, VAT_CODE),
+				tuple(COST_PER_UNIT, 0l, QUANTITY, COST_PER_UNIT * QUANTITY, VAT_CODE));
+
+		assertThat(billingRecordEntity.getInvoice().getInvoiceRows())
+			.extracting(InvoiceRowEntity::getInvoice).isNotNull().allMatch(invoice -> invoice == billingRecordEntity.getInvoice());
+
+		billingRecordEntity.getInvoice().getInvoiceRows().forEach(invoiceRow -> {
+			// Assert invoice row account information embeddable values
+			assertThat(invoiceRow.getAccountInformation()).isNotNull()
+				.extracting(
+					AccountInformationEmbeddable::getAccuralKey,
+					AccountInformationEmbeddable::getActivity,
+					AccountInformationEmbeddable::getArticle,
+					AccountInformationEmbeddable::getCostCenter,
+					AccountInformationEmbeddable::getCounterpart,
+					AccountInformationEmbeddable::getDepartment,
+					AccountInformationEmbeddable::getProject,
+					AccountInformationEmbeddable::getSubaccount)
+				.containsExactly(
+					ACCURAL_KEY,
+					ACTIVITY,
+					ARTICLE,
+					COST_CENTER,
+					COUNTERPART,
+					DEPARTMENT,
+					PROJECT,
+					SUBACCOUNT);
+
+			// Assert invoice row description entity values
+			assertThat(invoiceRow.getDescriptions()).isNotEmpty()
+				.extracting(
+					DescriptionEntity::getId,
+					DescriptionEntity::getInvoiceRow,
+					DescriptionEntity::getText,
+					DescriptionEntity::getType)
+				.containsExactly(
+					tuple(0l, invoiceRow, DESCRIPTION_1, STANDARD),
+					tuple(0l, invoiceRow, DESCRIPTION_2, STANDARD),
+					tuple(0l, invoiceRow, DETAILED_DESCRIPTION_1, DETAILED),
+					tuple(0l, invoiceRow, DETAILED_DESCRIPTION_2, DETAILED));
+		});
+	}
+
+
+	@Test
+	void tobillingRecordEntitiesWithNoRecipient() {
+		final var billingRecord = createbillingRecord().withRecipient(null);
+		final var billingRecordEntity = BillingRecordMapper.toBillingRecordEntities(List.of(billingRecord));
+
+		assertThat(billingRecordEntity.get(0).getRecipient()).isNull();
 	}
 
 	@ParameterizedTest
@@ -302,23 +448,25 @@ class BillingRecordMapperTest {
 		assertThat(billingRecord.getStatus()).isEqualTo(STATUS);
 		assertThat(billingRecord.getType()).isEqualTo(TYPE);
 
-		// Assert issuer values
-		assertThat(billingRecord.getIssuer()).isNotNull()
+		// Assert Recipient values
+		assertThat(billingRecord.getRecipient()).isNotNull()
 			.extracting(
-				Issuer::getFirstName,
-				Issuer::getLastName,
-				Issuer::getOrganizationName,
-				Issuer::getPartyId,
-				Issuer::getUserId)
+				Recipient::getFirstName,
+				Recipient::getLastName,
+				Recipient::getOrganizationName,
+				Recipient::getPartyId,
+				Recipient::getLegalId,
+				Recipient::getUserId)
 			.containsExactly(
 				FIRST_NAME,
 				LAST_NAME,
 				ORGANIZATION_NAME,
 				PARTY_ID,
+				LEGAL_ID,
 				USER_ID);
 
 		// Assert address details values
-		assertThat(billingRecord.getIssuer().getAddressDetails()).isNotNull()
+		assertThat(billingRecord.getRecipient().getAddressDetails()).isNotNull()
 			.extracting(
 				AddressDetails::getCareOf,
 				AddressDetails::getCity,
@@ -403,7 +551,7 @@ class BillingRecordMapperTest {
 
 		billingRecordEntity
 			.withInvoice(createInvoiceEntity(billingRecordEntity))
-			.withIssuer(createIssuerEntity(billingRecordEntity));
+			.withRecipient(createRecipientEntity(billingRecordEntity));
 
 		return billingRecordEntity;
 	}
@@ -418,11 +566,11 @@ class BillingRecordMapperTest {
 	}
 
 	@Test
-	void tobillingRecordWhenNoIssuer() {
-		final var billingRecordEntity = createbillingRecordEntity().withIssuer(null);
+	void tobillingRecordWhenNoRecipient() {
+		final var billingRecordEntity = createbillingRecordEntity().withRecipient(null);
 		final var billingRecord = BillingRecordMapper.toBillingRecord(billingRecordEntity);
 
-		assertThat(billingRecord.getIssuer()).isNull();
+		assertThat(billingRecord.getRecipient()).isNull();
 	}
 
 	@Test
@@ -488,8 +636,8 @@ class BillingRecordMapperTest {
 			.withSubaccount(SUBACCOUNT);
 	}
 
-	private static IssuerEntity createIssuerEntity(BillingRecordEntity billingRecordEntity) {
-		return IssuerEntity.create()
+	private static RecipientEntity createRecipientEntity(BillingRecordEntity billingRecordEntity) {
+		return RecipientEntity.create()
 			.withAddressDetails(createAddressDetailsEmbeddable())
 			.withBillingRecord(billingRecordEntity)
 			.withFirstName(FIRST_NAME)
@@ -497,6 +645,7 @@ class BillingRecordMapperTest {
 			.withLastName(LAST_NAME)
 			.withOrganizationName(ORGANIZATION_NAME)
 			.withPartyId(PARTY_ID)
+			.withLegalId(LEGAL_ID)
 			.withUserId(USER_ID);
 	}
 
@@ -513,7 +662,7 @@ class BillingRecordMapperTest {
 			.withCategory(CATEGORY)
 			.withApprovedBy(APPROVED_BY)
 			.withInvoice(createInvoice())
-			.withIssuer(createIssuer())
+			.withRecipient(createRecipient())
 			.withStatus(STATUS)
 			.withType(TYPE);
 	}
@@ -552,13 +701,14 @@ class BillingRecordMapperTest {
 			.withSubaccount(SUBACCOUNT);
 	}
 
-	private static Issuer createIssuer() {
-		return Issuer.create()
+	private static Recipient createRecipient() {
+		return Recipient.create()
 			.withAddressDetails(createAddressDetails())
 			.withFirstName(FIRST_NAME)
 			.withLastName(LAST_NAME)
 			.withOrganizationName(ORGANIZATION_NAME)
 			.withPartyId(PARTY_ID)
+			.withLegalId(LEGAL_ID)
 			.withUserId(USER_ID);
 	}
 
