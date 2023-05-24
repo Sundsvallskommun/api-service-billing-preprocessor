@@ -3,7 +3,7 @@
 		"category": "SALARY_AND_PENSION",
 		"type": "EXTERNAL",
 		"status": "NEW",
-		"issuer": {
+		"recipient": {
 			"partyId": "f0882f1d-06bc-47fd-b017-1d8307f5ce95",
 			"firstName": "Alice",
 			"lastName": "Snuffleupagus",
@@ -50,8 +50,8 @@
 		"category": "SALARY_AND_PENSION",
 		"type": "EXTERNAL",
 		"status": "NEW",
-		"issuer": {
-			"partyId": "f0882f1d-06bc-47fd-b017-1d8307f5ce95",
+		"recipient": {
+			"legalId": "3456789123",
 			"firstName": "Alice",
 			"lastName": "Snuffleupagus",
 			"userId": "ALI23SNU",

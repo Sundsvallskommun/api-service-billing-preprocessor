@@ -9,7 +9,7 @@ import static se.sundsvall.billingpreprocessor.api.BillingRecordRequestUtil.crea
 import static se.sundsvall.billingpreprocessor.api.BillingRecordRequestUtil.createBillingRecordInstance;
 import static se.sundsvall.billingpreprocessor.api.BillingRecordRequestUtil.createInvoiceInstance;
 import static se.sundsvall.billingpreprocessor.api.BillingRecordRequestUtil.createInvoiceRowInstance;
-import static se.sundsvall.billingpreprocessor.api.BillingRecordRequestUtil.createIssuerInstance;
+import static se.sundsvall.billingpreprocessor.api.BillingRecordRequestUtil.createRecipientInstance;
 import static se.sundsvall.billingpreprocessor.api.model.enums.Type.EXTERNAL;
 import static se.sundsvall.billingpreprocessor.api.model.enums.Type.INTERNAL;
 
@@ -29,7 +29,7 @@ import org.zalando.problem.violations.Violation;
 
 import se.sundsvall.billingpreprocessor.Application;
 import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
-import se.sundsvall.billingpreprocessor.api.model.Issuer;
+import se.sundsvall.billingpreprocessor.api.model.Recipient;
 import se.sundsvall.billingpreprocessor.api.model.enums.Type;
 import se.sundsvall.billingpreprocessor.service.BillingRecordService;
 
@@ -96,7 +96,7 @@ class BillingRecordsCreateResourceFailureTest {
 		// Parameter values
 		final var request = createBillingRecordInstance(INTERNAL, false)
 			.withInvoice(createInvoiceInstance(false, INTERNAL).withInvoiceRows(List.of(createInvoiceRowInstance(false, INTERNAL))))
-			.withIssuer(Issuer.create().withPartyId("invalid").withAddressDetails(createAddressDetailsInstance(false)));
+			.withRecipient(Recipient.create().withPartyId("invalid").withAddressDetails(createAddressDetailsInstance(false)));
 
 		// Call
 		final var response = webTestClient.post().uri(PATH)
@@ -124,7 +124,7 @@ class BillingRecordsCreateResourceFailureTest {
 			tuple("invoice.invoiceRows[0].descriptions[0]", "size must be between 1 and 30"),
 			tuple("invoice.invoiceRows[0].totalAmount", "must be null"),
 			tuple("invoice.totalAmount", "must be null"),
-			tuple("issuer.partyId", "not a valid UUID"),
+			tuple("recipient.partyId", "not a valid UUID"),
 			tuple("modified", "must be null"));
 
 		// Verification
@@ -136,7 +136,7 @@ class BillingRecordsCreateResourceFailureTest {
 		// Parameter values
 		final var request = createBillingRecordInstance(EXTERNAL, false)
 			.withInvoice(createInvoiceInstance(false, EXTERNAL).withInvoiceRows(List.of(createInvoiceRowInstance(false, EXTERNAL))))
-			.withIssuer(Issuer.create().withAddressDetails(createAddressDetailsInstance(false)));
+			.withRecipient(Recipient.create().withAddressDetails(createAddressDetailsInstance(false)));
 
 		// Call
 		final var response = webTestClient.post().uri(PATH)
@@ -152,11 +152,11 @@ class BillingRecordsCreateResourceFailureTest {
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations()).extracting(Violation::getField, Violation::getMessage).containsExactlyInAnyOrder(
-			tuple("billingRecord", "Street, postal code and city must all be present in issuer.addressDetails for EXTERNAL billing record"),
+			tuple("billingRecord", "Street, postal code and city must all be present in recipient.addressDetails for EXTERNAL billing record"),
 			tuple("billingRecord", "invoice.customerReference is mandatory when billing record is of type EXTERNAL"),
 			tuple("billingRecord", "must contain vat code information on invoice rows when billing record is of type EXTERNAL"),
-			tuple("billingRecord", "issuer must either have an organization name or a first and last name defined"),
-			tuple("billingRecord", "issuer must have partyId when billing record is of type EXTERNAL"),
+			tuple("billingRecord", "recipient must either have an organization name or a first and last name defined"),
+			tuple("billingRecord", "recipient must have partyId or legalId when billing record is of type EXTERNAL"),
 			tuple("billingRecord", "when accountInformation is present costCenter, subaccount, department and counterpart are mandatory"),
 			tuple("category", "must be one of ACCESS_CARD or SALARY_AND_PENSION or ISYCASE"),
 			tuple("approved", "must be null"),
@@ -178,7 +178,7 @@ class BillingRecordsCreateResourceFailureTest {
 		final var request = createBillingRecordInstance(type, true)
 			.withApprovedBy(null)
 			.withInvoice(createInvoiceInstance(true, type).withInvoiceRows(List.of(createInvoiceRowInstance(true, type))))
-			.withIssuer(createIssuerInstance(true).withAddressDetails(createAddressDetailsInstance(true)));
+			.withRecipient(createRecipientInstance(true).withAddressDetails(createAddressDetailsInstance(true)));
 
 		// Call
 		final var response = webTestClient.post().uri(PATH)
@@ -201,7 +201,7 @@ class BillingRecordsCreateResourceFailureTest {
 	}
 
 	@Test
-	void createExternalBillingRecordWithNoIssuer() {
+	void createExternalBillingRecordWithNoRecipient() {
 		// Parameter values
 		final var request = createBillingRecordInstance(EXTERNAL, true)
 			.withInvoice(createInvoiceInstance(true, EXTERNAL).withInvoiceRows(List.of(createInvoiceRowInstance(true, EXTERNAL))));
@@ -220,8 +220,8 @@ class BillingRecordsCreateResourceFailureTest {
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations()).extracting(Violation::getField, Violation::getMessage).containsExactlyInAnyOrder(
-			tuple("billingRecord", "Street, postal code and city must all be present in issuer.addressDetails for EXTERNAL billing record"),
-			tuple("billingRecord", "issuer can not be null when billing record is of type EXTERNAL"));
+			tuple("billingRecord", "Street, postal code and city must all be present in recipient.addressDetails for EXTERNAL billing record"),
+			tuple("billingRecord", "recipient can not be null when billing record is of type EXTERNAL"));
 
 		// Verification
 		verifyNoInteractions(serviceMock);
@@ -232,7 +232,7 @@ class BillingRecordsCreateResourceFailureTest {
 		// Parameter values
 		final var request = createBillingRecordInstance(EXTERNAL, true)
 			.withInvoice(createInvoiceInstance(true, EXTERNAL).withInvoiceRows(List.of(createInvoiceRowInstance(true, EXTERNAL).withVatCode("INVALID"))))
-			.withIssuer(createIssuerInstance(true).withAddressDetails(createAddressDetailsInstance(true)));
+			.withRecipient(createRecipientInstance(true).withAddressDetails(createAddressDetailsInstance(true)));
 
 		// Call
 		final var response = webTestClient.post().uri(PATH)
@@ -259,7 +259,7 @@ class BillingRecordsCreateResourceFailureTest {
 		// Parameter values
 		final var request = createBillingRecordInstance(EXTERNAL, true)
 			.withInvoice(createInvoiceInstance(true, EXTERNAL).withInvoiceRows(List.of(createInvoiceRowInstance(true, EXTERNAL))))
-			.withIssuer(createIssuerInstance(true));
+			.withRecipient(createRecipientInstance(true));
 
 		// Call
 		final var response = webTestClient.post().uri(PATH)
@@ -275,7 +275,7 @@ class BillingRecordsCreateResourceFailureTest {
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations()).extracting(Violation::getField, Violation::getMessage).containsExactlyInAnyOrder(
-			tuple("billingRecord", "Street, postal code and city must all be present in issuer.addressDetails for EXTERNAL billing record"));
+			tuple("billingRecord", "Street, postal code and city must all be present in recipient.addressDetails for EXTERNAL billing record"));
 
 		// Verification
 		verifyNoInteractions(serviceMock);

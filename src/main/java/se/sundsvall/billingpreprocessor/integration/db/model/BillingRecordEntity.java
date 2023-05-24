@@ -67,7 +67,7 @@ public class BillingRecordEntity implements Serializable {
 	private OffsetDateTime modified;
 
 	@OneToOne(mappedBy = "billingRecord", cascade = ALL, fetch = LAZY, orphanRemoval = true)
-	private IssuerEntity issuer;
+	private RecipientEntity recipient;
 
 	@OneToOne(mappedBy = "billingRecord", cascade = ALL, fetch = LAZY, optional = false)
 	private InvoiceEntity invoice;
@@ -190,16 +190,16 @@ public class BillingRecordEntity implements Serializable {
 		return this;
 	}
 
-	public IssuerEntity getIssuer() {
-		return issuer;
+	public RecipientEntity getRecipient() {
+		return recipient;
 	}
 
-	public void setIssuer(IssuerEntity issuer) {
-		this.issuer = issuer;
+	public void setRecipient(RecipientEntity recipient) {
+		this.recipient = recipient;
 	}
 
-	public BillingRecordEntity withIssuer(IssuerEntity issuer) {
-		this.issuer = issuer;
+	public BillingRecordEntity withRecipient(RecipientEntity recipient) {
+		this.recipient = recipient;
 		return this;
 	}
 
@@ -218,7 +218,7 @@ public class BillingRecordEntity implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(category, approved, approvedBy, created, id, invoice, issuer, modified, status, type);
+		return Objects.hash(category, approved, approvedBy, created, id, invoice, recipient, modified, status, type);
 	}
 
 	@Override
@@ -234,7 +234,7 @@ public class BillingRecordEntity implements Serializable {
 		}
 		final BillingRecordEntity other = (BillingRecordEntity) obj;
 		return Objects.equals(category, other.category) && Objects.equals(approved, other.approved) && Objects.equals(approvedBy, other.approvedBy) && Objects.equals(created, other.created) && Objects.equals(id, other.id) && Objects.equals(
-			invoice, other.invoice) && Objects.equals(issuer, other.issuer) && Objects.equals(modified, other.modified) && Objects.equals(status, other.status) && Objects.equals(type, other.type);
+			invoice, other.invoice) && Objects.equals(recipient, other.recipient) && Objects.equals(modified, other.modified) && Objects.equals(status, other.status) && Objects.equals(type, other.type);
 	}
 
 	@Override
@@ -248,7 +248,7 @@ public class BillingRecordEntity implements Serializable {
 			.append(", approved=").append(approved)
 			.append(", created=").append(created)
 			.append(", modified=").append(modified)
-			.append(", issuer=").append(issuer)
+			.append(", recipient=").append(recipient)
 			.append(", invoice=").append(invoice).append("]");
 		return builder.toString();
 	}
