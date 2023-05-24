@@ -1,36 +1,5 @@
 package se.sundsvall.billingpreprocessor.api;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.JsonNode;
-import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.ArgumentMatchers;
-import org.mockito.Captor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.reactive.server.WebTestClient;
-import se.sundsvall.billingpreprocessor.Application;
-import se.sundsvall.billingpreprocessor.api.model.AccountInformation;
-import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
-import se.sundsvall.billingpreprocessor.api.model.Invoice;
-import se.sundsvall.billingpreprocessor.api.model.InvoiceRow;
-import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
-import se.sundsvall.billingpreprocessor.service.BillingRecordService;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import static com.fasterxml.jackson.annotation.JsonCreator.Mode.PROPERTIES;
 import static java.util.Collections.emptyMap;
 import static java.util.UUID.randomUUID;
@@ -44,6 +13,39 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static se.sundsvall.billingpreprocessor.api.model.enums.Status.NEW;
 import static se.sundsvall.billingpreprocessor.api.model.enums.Type.INTERNAL;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatchers;
+import org.mockito.Captor;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.reactive.server.WebTestClient;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.JsonNode;
+
+import se.sundsvall.billingpreprocessor.Application;
+import se.sundsvall.billingpreprocessor.api.model.AccountInformation;
+import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
+import se.sundsvall.billingpreprocessor.api.model.Invoice;
+import se.sundsvall.billingpreprocessor.api.model.InvoiceRow;
+import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
+import se.sundsvall.billingpreprocessor.service.BillingRecordService;
 
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("junit")
@@ -88,9 +90,8 @@ class BillingRecordsResourceTest {
 		assertThat(billingRecordCaptor.getValue()).usingRecursiveComparison().isEqualTo(instance);
 	}
 
-
 	@Test
-	void createBillingRecords(){
+	void createBillingRecords() {
 		// Parameter values
 		final var uuid = "c9242a01-e7bd-4f59-b4cd-66210c427904";
 		final var instance = createBillingRecordInstance();
@@ -98,28 +99,28 @@ class BillingRecordsResourceTest {
 		final var instance3 = createBillingRecordInstance();
 		final var instance4 = createBillingRecordInstance();
 
-		List<BillingRecord> billingRecords = new ArrayList<>();
+		final List<BillingRecord> billingRecords = new ArrayList<>();
 		billingRecords.add(instance);
 		billingRecords.add(instance2);
 		billingRecords.add(instance3);
 		billingRecords.add(instance4);
 
 		// Mock
-		when(serviceMock.createBillingRecords(any())).thenReturn(List.of(uuid,uuid,uuid,uuid));
+		when(serviceMock.createBillingRecords(any())).thenReturn(List.of(uuid, uuid, uuid, uuid));
 
 		// Call
-		var result = webTestClient.post().uri(PATH.concat("/batch")).contentType(APPLICATION_JSON)
+		final var result = webTestClient.post().uri(PATH.concat("/batch")).contentType(APPLICATION_JSON)
 			.bodyValue(billingRecords)
 			.exchange()
 			.expectStatus().isCreated()
 			.expectHeader().contentType(APPLICATION_JSON)
 			.expectBody(String[].class)
-				.returnResult().getResponseBody();
+			.returnResult().getResponseBody();
 
 		// Verification
 		verify(serviceMock).createBillingRecords(billingRecordsCaptor.capture());
 		assertThat(billingRecordsCaptor.getValue()).usingRecursiveComparison().isEqualTo(billingRecords);
-		assertThat(result).isNotNull().hasSize(4).contains(uuid,uuid,uuid,uuid);
+		assertThat(result).isNotNull().hasSize(4).contains(uuid, uuid, uuid, uuid);
 	}
 
 	@Test
@@ -152,7 +153,7 @@ class BillingRecordsResourceTest {
 		final var matches = new PageImpl<>(List.of(BillingRecord.create()), pageable, 1);
 
 		// Mock
-		when(serviceMock.findBillingIRecords(ArgumentMatchers.any(Specification.class), eq(pageable))).thenReturn(matches);
+		when(serviceMock.findBillingIRecords(Mockito.<Specification<BillingRecordEntity>>any(), eq(pageable))).thenReturn(matches);
 
 		// Call
 		final var response = webTestClient.get().uri(builder -> builder.path(PATH).build(emptyMap()))
@@ -164,7 +165,7 @@ class BillingRecordsResourceTest {
 			.blockFirst();
 
 		// Verification
-		verify(serviceMock).findBillingIRecords(any(Specification.class), eq(pageable));
+		verify(serviceMock).findBillingIRecords(Mockito.<Specification<BillingRecordEntity>>any(), eq(pageable));
 		assertThat(response).isNotNull().isEqualTo(matches);
 		assertThat(response.getContent()).hasSize(1);
 	}

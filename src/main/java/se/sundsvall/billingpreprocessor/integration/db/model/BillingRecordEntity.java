@@ -1,40 +1,42 @@
 package se.sundsvall.billingpreprocessor.integration.db.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Index;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
-import jakarta.persistence.Table;
-import org.hibernate.annotations.GenericGenerator;
-import se.sundsvall.billingpreprocessor.api.model.enums.Status;
-import se.sundsvall.billingpreprocessor.api.model.enums.Type;
+import static jakarta.persistence.CascadeType.ALL;
+import static jakarta.persistence.EnumType.STRING;
+import static jakarta.persistence.FetchType.LAZY;
+import static java.time.OffsetDateTime.now;
+import static java.time.temporal.ChronoUnit.MILLIS;
+import static org.hibernate.annotations.TimeZoneStorageType.NORMALIZE;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.Objects;
 
-import static jakarta.persistence.CascadeType.ALL;
-import static jakarta.persistence.EnumType.STRING;
-import static jakarta.persistence.FetchType.LAZY;
-import static java.time.OffsetDateTime.now;
-import static java.time.temporal.ChronoUnit.MILLIS;
+import org.hibernate.annotations.TimeZoneStorage;
+import org.hibernate.annotations.UuidGenerator;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import jakarta.persistence.Table;
+import se.sundsvall.billingpreprocessor.api.model.enums.Status;
+import se.sundsvall.billingpreprocessor.api.model.enums.Type;
 
 @Entity
-@Table(name = "billing_record", indexes = {
-	@Index(name = "idx_billing_record_category_status", columnList = "category, status")
-})
+@Table(name = "billing_record",
+	indexes = {
+		@Index(name = "idx_billing_record_category_status", columnList = "category, status")
+	})
 public class BillingRecordEntity implements Serializable {
 	private static final long serialVersionUID = -1199591346011106014L;
 
 	@Id
-	@GeneratedValue(generator = "uuid2")
-	@GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
+	@UuidGenerator
 	@Column(name = "id")
 	private String id;
 
@@ -53,12 +55,15 @@ public class BillingRecordEntity implements Serializable {
 	private String approvedBy;
 
 	@Column(name = "approved")
+	@TimeZoneStorage(NORMALIZE)
 	private OffsetDateTime approved;
 
 	@Column(name = "created")
+	@TimeZoneStorage(NORMALIZE)
 	private OffsetDateTime created;
 
 	@Column(name = "modified")
+	@TimeZoneStorage(NORMALIZE)
 	private OffsetDateTime modified;
 
 	@OneToOne(mappedBy = "billingRecord", cascade = ALL, fetch = LAZY, orphanRemoval = true)
@@ -227,14 +232,14 @@ public class BillingRecordEntity implements Serializable {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		BillingRecordEntity other = (BillingRecordEntity) obj;
+		final BillingRecordEntity other = (BillingRecordEntity) obj;
 		return Objects.equals(category, other.category) && Objects.equals(approved, other.approved) && Objects.equals(approvedBy, other.approvedBy) && Objects.equals(created, other.created) && Objects.equals(id, other.id) && Objects.equals(
 			invoice, other.invoice) && Objects.equals(recipient, other.recipient) && Objects.equals(modified, other.modified) && Objects.equals(status, other.status) && Objects.equals(type, other.type);
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder();
 		builder.append("BillingRecordEntity [id=").append(id)
 			.append(", category=").append(category)
 			.append(", type=").append(type)
