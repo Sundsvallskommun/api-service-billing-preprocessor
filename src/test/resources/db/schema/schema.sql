@@ -51,7 +51,6 @@
     ) engine=InnoDB;
 
     create table recipient (
-       id varchar(255) not null,
         care_of varchar(255),
         city varchar(255),
         first_name varchar(255),
@@ -59,7 +58,7 @@
         last_name varchar(255),
         legal_id varchar(255),
         organization_name varchar(255),
-        party_id varchar(255) not null,
+        party_id varchar(255),
         postal_code varchar(255),
         street varchar(255),
         user_id varchar(255),
@@ -84,7 +83,7 @@
        foreign key (`invoice_id`) 
        references invoice (id);
 
-    alter table if exists recipient
+    alter table if exists recipient 
        add constraint fk_billing_record_id_recipient 
        foreign key (id) 
        references billing_record (id);
