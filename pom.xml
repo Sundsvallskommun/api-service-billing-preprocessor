@@ -14,11 +14,8 @@
 	<properties>
 		<!-- Pipeline properties -->
 		<docker.image.name>ms-billing-preprocessor</docker.image.name>
-		<published.container.port.sandbox>9105</published.container.port.sandbox>
 		<published.container.port.test>9104</published.container.port.test>
 		<published.container.port.production>9104</published.container.port.production>
-		<sandbox.db>true</sandbox.db>
-		<sandbox.wiremock>true</sandbox.wiremock>
   		<!-- Service properties -->
 		<spring-filter.version>3.1.3</spring-filter.version>
 		<failsafeArgLine>-Dfile.encoding=${project.build.sourceEncoding}</failsafeArgLine>
