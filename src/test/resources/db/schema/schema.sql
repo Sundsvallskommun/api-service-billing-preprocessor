@@ -6,7 +6,7 @@
         approved_by varchar(255),
         category varchar(255) not null,
         id varchar(255) not null,
-        status enum ('APPROVED','INVOICED','NEW','REJECTED') not null,
+        status enum ('NEW','APPROVED','INVOICED','REJECTED') not null,
         type enum ('EXTERNAL','INTERNAL') not null,
         primary key (id)
     ) engine=InnoDB;
@@ -15,7 +15,7 @@
         id bigint not null auto_increment,
         `invoice_row_id` bigint not null,
         text varchar(255),
-        type enum ('DETAILED','STANDARD'),
+        type ENUM('DETAILED', 'STANDARD'),
         primary key (id)
     ) engine=InnoDB;
 
