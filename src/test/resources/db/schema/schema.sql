@@ -6,8 +6,8 @@
         approved_by varchar(255),
         category varchar(255) not null,
         id varchar(255) not null,
-        status enum ('NEW','APPROVED','INVOICED','REJECTED') not null,
-        type enum ('EXTERNAL','INTERNAL') not null,
+        status varchar(255) not null,
+        type varchar(255) not null,
         primary key (id)
     ) engine=InnoDB;
 
