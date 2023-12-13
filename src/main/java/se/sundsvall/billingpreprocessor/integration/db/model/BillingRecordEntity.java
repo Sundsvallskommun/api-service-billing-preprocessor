@@ -43,11 +43,11 @@ public class BillingRecordEntity implements Serializable {
 	@Column(name = "category", nullable = false)
 	private String category;
 
-	@Column(name = "type", nullable = false)
+	@Column(name = "type", nullable = false, columnDefinition = "varchar(255)")
 	@Enumerated(STRING)
 	private Type type;
 
-	@Column(name = "status", nullable = false)
+	@Column(name = "status", nullable = false, columnDefinition = "varchar(255)")
 	@Enumerated(STRING)
 	private Status status;
 
