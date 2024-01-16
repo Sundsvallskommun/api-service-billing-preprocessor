@@ -17,7 +17,7 @@
 		<published.container.port.test>9104</published.container.port.test>
 		<published.container.port.production>9104</published.container.port.production>
   		<!-- Service properties -->
-		<spring-filter.version>3.1.6</spring-filter.version>
+		<spring-filter.version>3.1.7</spring-filter.version>
 		<failsafeArgLine>-Dfile.encoding=${project.build.sourceEncoding}</failsafeArgLine>
 	</properties>
 	<dependencies>
