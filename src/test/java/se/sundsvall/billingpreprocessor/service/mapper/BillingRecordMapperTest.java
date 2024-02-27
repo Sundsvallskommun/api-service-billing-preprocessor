@@ -10,8 +10,8 @@ import static org.assertj.core.groups.Tuple.tuple;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
 import static se.sundsvall.billingpreprocessor.api.model.enums.Status.APPROVED;
 import static se.sundsvall.billingpreprocessor.api.model.enums.Type.EXTERNAL;
-import static se.sundsvall.billingpreprocessor.integration.db.model.DescriptionType.DETAILED;
-import static se.sundsvall.billingpreprocessor.integration.db.model.DescriptionType.STANDARD;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.DETAILED;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.STANDARD;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
@@ -35,10 +35,10 @@ import se.sundsvall.billingpreprocessor.integration.db.model.AccountInformationE
 import se.sundsvall.billingpreprocessor.integration.db.model.AddressDetailsEmbeddable;
 import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.DescriptionEntity;
-import se.sundsvall.billingpreprocessor.integration.db.model.DescriptionType;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.RecipientEntity;
+import se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType;
 
 class BillingRecordMapperTest {
 

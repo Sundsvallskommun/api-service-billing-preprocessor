@@ -10,8 +10,7 @@ import static java.time.OffsetDateTime.now;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.AllOf.allOf;
-import static se.sundsvall.billingpreprocessor.api.model.enums.Status.REJECTED;
-import static se.sundsvall.billingpreprocessor.api.model.enums.Type.INTERNAL;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileStatus.SEND_SUCCESSFUL;
 
 import java.time.OffsetDateTime;
 import java.util.Random;
@@ -19,7 +18,7 @@ import java.util.Random;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-class BillingRecordEntityTest {
+class InvoiceFileEntityTest {
 
 	@BeforeAll
 	static void setup() {
@@ -28,7 +27,7 @@ class BillingRecordEntityTest {
 
 	@Test
 	void testBean() {
-		assertThat(BillingRecordEntity.class, allOf(
+		assertThat(InvoiceFileEntity.class, allOf(
 			hasValidBeanConstructor(),
 			hasValidGettersAndSetters(),
 			hasValidBeanHashCode(),
@@ -38,45 +37,38 @@ class BillingRecordEntityTest {
 
 	@Test
 	void hasValidBuilderMethods() {
-		final var category = "category";
-		final var approved = now().minusWeeks(2);
-		final var approvedBy = "approvedBy";
-		final var created = now().minusWeeks(3);
-		final var id = "id";
-		final var invoice = InvoiceEntity.create();
-		final var Recipient = RecipientEntity.create();
-		final var modified = now().minusWeeks(1);
-		final var status = REJECTED;
-		final var type = INTERNAL;
 
-		final var entity = BillingRecordEntity.create()
-			.withCategory(category)
-			.withApproved(approved)
-			.withApprovedBy(approvedBy)
+		BillingRecordEntity.create();
+		final var content = "content";
+		final var created = OffsetDateTime.now();
+		final var id = 1;
+		final var name = "name";
+		final var sent = OffsetDateTime.now();
+		final var status = SEND_SUCCESSFUL;
+		final var type = "type";
+
+		final var entity = InvoiceFileEntity.create()
+			.withContent(content)
 			.withCreated(created)
 			.withId(id)
-			.withInvoice(invoice)
-			.withRecipient(Recipient)
-			.withModified(modified)
+			.withName(name)
+			.withSent(sent)
 			.withStatus(status)
 			.withType(type);
 
 		assertThat(entity).hasNoNullFieldsOrProperties();
-		assertThat(entity.getCategory()).isEqualTo(category);
-		assertThat(entity.getApproved()).isEqualTo(approved);
-		assertThat(entity.getApprovedBy()).isEqualTo(approvedBy);
+		assertThat(entity.getContent()).isEqualTo(content);
 		assertThat(entity.getCreated()).isEqualTo(created);
 		assertThat(entity.getId()).isEqualTo(id);
-		assertThat(entity.getInvoice()).isEqualTo(invoice);
-		assertThat(entity.getRecipient()).isEqualTo(Recipient);
-		assertThat(entity.getModified()).isEqualTo(modified);
+		assertThat(entity.getName()).isEqualTo(name);
+		assertThat(entity.getSent()).isEqualTo(sent);
 		assertThat(entity.getStatus()).isEqualTo(status);
 		assertThat(entity.getType()).isEqualTo(type);
 	}
 
 	@Test
 	void hasNoDirtOnCreatedBean() {
-		assertThat(BillingRecordEntity.create()).hasAllNullFieldsOrProperties();
-		assertThat(new BillingRecordEntity()).hasAllNullFieldsOrProperties();
+		assertThat(InvoiceFileEntity.create()).hasAllNullFieldsOrPropertiesExcept("id");
+		assertThat(new InvoiceFileEntity()).hasAllNullFieldsOrPropertiesExcept("id");
 	}
 }

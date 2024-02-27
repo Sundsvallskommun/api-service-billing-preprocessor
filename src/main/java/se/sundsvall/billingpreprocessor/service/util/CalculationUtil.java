@@ -11,7 +11,8 @@ import se.sundsvall.billingpreprocessor.api.model.InvoiceRow;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;
 
-public class CalculationUtil {
+public final class CalculationUtil {
+
 	private CalculationUtil() {}
 
 	public static Float calculateTotalInvoiceRowAmount(final InvoiceRow invoiceRow) {
