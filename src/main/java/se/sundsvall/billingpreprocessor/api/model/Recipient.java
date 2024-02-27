@@ -21,13 +21,13 @@ public class Recipient {
 	@Schema(description = "Name of issuing organization of the billing record if the recipient is an organization", example = "Sesame Merc AB")
 	private String organizationName;
 
-	@Schema(description = "First name of recipient of the billing record", example = "Alice")
+	@Schema(description = "First name of the billing record recipient", example = "Alice")
 	private String firstName;
 
-	@Schema(description = "Last name of recipient of the billing record", example = "Snuffleupagus")
+	@Schema(description = "Last name of the billing record recipient", example = "Snuffleupagus")
 	private String lastName;
 
-	@Schema(description = "User id of recipient of the billing record", example = "ALI22SNU")
+	@Schema(description = "User id of the billing record recipient", example = "ALI22SNU")
 	private String userId;
 
 	@Schema(implementation = AddressDetails.class, requiredMode = REQUIRED)
