@@ -1,5 +1,5 @@
 {
 	"title": "Method Not Allowed",
 	"status": 405,
-	"detail": "The billing record does not have status NEW and is therefore not possible to delete"
+	"detail": "The billing record does not have status NEW and is therefore not possible to delete!"
 }

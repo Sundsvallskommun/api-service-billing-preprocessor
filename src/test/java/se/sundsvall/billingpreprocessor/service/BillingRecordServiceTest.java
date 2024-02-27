@@ -1,29 +1,5 @@
 package se.sundsvall.billingpreprocessor.service;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
-import org.zalando.problem.ThrowableProblem;
-import se.sundsvall.billingpreprocessor.api.model.AccountInformation;
-import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
-import se.sundsvall.billingpreprocessor.api.model.Invoice;
-import se.sundsvall.billingpreprocessor.api.model.InvoiceRow;
-import se.sundsvall.billingpreprocessor.api.model.enums.Status;
-import se.sundsvall.billingpreprocessor.integration.db.BillingRecordRepository;
-import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
-import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceEntity;
-
-import java.util.List;
-
 import static java.util.Collections.emptyList;
 import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,6 +15,31 @@ import static org.zalando.problem.Status.NOT_FOUND;
 import static se.sundsvall.billingpreprocessor.api.model.enums.Status.NEW;
 import static se.sundsvall.billingpreprocessor.api.model.enums.Type.INTERNAL;
 
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.zalando.problem.ThrowableProblem;
+
+import se.sundsvall.billingpreprocessor.api.model.AccountInformation;
+import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
+import se.sundsvall.billingpreprocessor.api.model.Invoice;
+import se.sundsvall.billingpreprocessor.api.model.InvoiceRow;
+import se.sundsvall.billingpreprocessor.api.model.enums.Status;
+import se.sundsvall.billingpreprocessor.integration.db.BillingRecordRepository;
+import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
+import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceEntity;
+
 @ExtendWith(MockitoExtension.class)
 class BillingRecordServiceTest {
 	private final static String ID = randomUUID().toString();
@@ -51,7 +52,6 @@ class BillingRecordServiceTest {
 
 	@InjectMocks
 	private BillingRecordService service;
-
 
 	@Test
 	void createBillingRecord() {
@@ -71,7 +71,7 @@ class BillingRecordServiceTest {
 	}
 
 	@Test
-	void createBillingRecords(){
+	void createBillingRecords() {
 		// Setup
 		final var record = createBillingRecordInstance();
 
@@ -163,7 +163,7 @@ class BillingRecordServiceTest {
 		// Assertions and verifications
 		assertThat(exception.getStatus()).isEqualTo(NOT_FOUND);
 		assertThat(exception.getTitle()).isEqualTo(NOT_FOUND.getReasonPhrase());
-		assertThat(exception.getMessage()).isEqualTo("Not Found: A billing record with id " + ID + " could not be found");
+		assertThat(exception.getMessage()).isEqualTo("Not Found: A billing record with id '" + ID + "' could not be found!");
 
 		verify(repositoryMock).existsById(ID);
 		verifyNoMoreInteractions(repositoryMock);
@@ -202,7 +202,7 @@ class BillingRecordServiceTest {
 		// Assertions and verifications
 		assertThat(exception.getStatus()).isEqualTo(NOT_FOUND);
 		assertThat(exception.getTitle()).isEqualTo(NOT_FOUND.getReasonPhrase());
-		assertThat(exception.getMessage()).isEqualTo("Not Found: A billing record with id " + ID + " could not be found");
+		assertThat(exception.getMessage()).isEqualTo("Not Found: A billing record with id '" + ID + "' could not be found!");
 
 		verify(repositoryMock).existsById(ID);
 		verifyNoMoreInteractions(repositoryMock);
@@ -237,7 +237,7 @@ class BillingRecordServiceTest {
 		// Assertions and verifications
 		assertThat(exception.getStatus()).isEqualTo(METHOD_NOT_ALLOWED);
 		assertThat(exception.getTitle()).isEqualTo(METHOD_NOT_ALLOWED.getReasonPhrase());
-		assertThat(exception.getMessage()).isEqualTo("Method Not Allowed: The billing record does not have status NEW and is therefore not possible to delete");
+		assertThat(exception.getMessage()).isEqualTo("Method Not Allowed: The billing record does not have status NEW and is therefore not possible to delete!");
 
 		verify(repositoryMock).existsById(ID);
 		verifyNoMoreInteractions(repositoryMock);
@@ -251,7 +251,7 @@ class BillingRecordServiceTest {
 		// Assertions and verifications
 		assertThat(exception.getStatus()).isEqualTo(NOT_FOUND);
 		assertThat(exception.getTitle()).isEqualTo(NOT_FOUND.getReasonPhrase());
-		assertThat(exception.getMessage()).isEqualTo("Not Found: A billing record with id " + ID + " could not be found");
+		assertThat(exception.getMessage()).isEqualTo("Not Found: A billing record with id '" + ID + "' could not be found!");
 
 		verify(repositoryMock).existsById(ID);
 		verifyNoMoreInteractions(repositoryMock);
