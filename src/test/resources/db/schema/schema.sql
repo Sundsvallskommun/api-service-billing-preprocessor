@@ -32,6 +32,17 @@
         primary key (id)
     ) engine=InnoDB;
 
+    create table invoice_file (
+        created datetime(6),
+        id bigint not null auto_increment,
+        sent datetime(6),
+        name varchar(255),
+        type varchar(255),
+        content tinytext,
+        status enum ('GENERATED','SEND_SUCCESSFUL','SEND_FAILED'),
+        primary key (id)
+    ) engine=InnoDB;
+
     create table invoice_row (
         cost_per_unit float(23),
         quantity integer,
@@ -67,6 +78,12 @@
 
     create index idx_billing_record_category_status 
        on billing_record (category, status);
+
+    create index idx_invoice_file_status 
+       on invoice_file (status);
+
+    alter table if exists invoice_file 
+       add constraint uq_file_name unique (name);
 
     alter table if exists description 
        add constraint fk_invoice_row_id_description 

@@ -1,8 +1,8 @@
-package se.sundsvall.billingpreprocessor.integration.db.model;
+package se.sundsvall.billingpreprocessor.integration.db.model.enums;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static se.sundsvall.billingpreprocessor.integration.db.model.DescriptionType.DETAILED;
-import static se.sundsvall.billingpreprocessor.integration.db.model.DescriptionType.STANDARD;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.DETAILED;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.STANDARD;
 
 import org.junit.jupiter.api.Test;
 

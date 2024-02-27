@@ -1,10 +1,6 @@
 package se.sundsvall.billingpreprocessor.integration.db;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.ActiveProfiles;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -12,11 +8,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace.NONE;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
-@DataJpaTest
-@AutoConfigureTestDatabase(replace = NONE)
+@SpringBootTest
 @ActiveProfiles("junit")
 class SchemaVerificationTest {
 
