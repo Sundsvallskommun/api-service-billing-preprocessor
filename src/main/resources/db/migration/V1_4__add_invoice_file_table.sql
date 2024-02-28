@@ -11,9 +11,9 @@ create table invoice_file (
     primary key (id)
 ) engine=InnoDB;
 
-create index idx_invoice_file_status 
+create index idx_invoice_file_status
    on invoice_file (status);
 
-alter table if exists invoice_file 
-   add constraint uq_name unique (name);
-   
+    alter table if exists invoice_file 
+       add constraint uq_file_name unique (name);
+       

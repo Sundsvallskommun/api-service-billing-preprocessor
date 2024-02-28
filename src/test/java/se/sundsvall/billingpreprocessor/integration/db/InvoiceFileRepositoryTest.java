@@ -24,7 +24,7 @@ import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceFileEntity;
  * @see /src/test/resources/db/testdata-junit.sql for data setup.
  */
 @SpringBootTest
-@ActiveProfiles("junit")
+@ActiveProfiles("it")
 @Transactional
 @Sql(scripts = {
 	"/db/scripts/truncate.sql",

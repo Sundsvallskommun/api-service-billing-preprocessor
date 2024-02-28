@@ -5,4 +5,5 @@ TRUNCATE table invoice;
 TRUNCATE table recipient;
 TRUNCATE table billing_record;
 TRUNCATE table invoice_file;
+TRUNCATE table file_configuration;
 SET FOREIGN_KEY_CHECKS = 1;
