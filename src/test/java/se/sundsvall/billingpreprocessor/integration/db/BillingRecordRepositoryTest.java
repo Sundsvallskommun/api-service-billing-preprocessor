@@ -6,12 +6,12 @@ import static java.util.stream.Collectors.toCollection;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 import static org.assertj.core.api.Assertions.within;
-import static se.sundsvall.billingpreprocessor.api.model.enums.Status.APPROVED;
-import static se.sundsvall.billingpreprocessor.api.model.enums.Status.NEW;
-import static se.sundsvall.billingpreprocessor.api.model.enums.Status.REJECTED;
-import static se.sundsvall.billingpreprocessor.api.model.enums.Type.EXTERNAL;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.DETAILED;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.STANDARD;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.APPROVED;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.NEW;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.REJECTED;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.EXTERNAL;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
@@ -32,8 +32,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.turkraft.springfilter.converter.FilterSpecificationConverter;
 
-import se.sundsvall.billingpreprocessor.api.model.enums.Status;
-import se.sundsvall.billingpreprocessor.api.model.enums.Type;
 import se.sundsvall.billingpreprocessor.integration.db.model.AccountInformationEmbeddable;
 import se.sundsvall.billingpreprocessor.integration.db.model.AddressDetailsEmbeddable;
 import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
@@ -41,6 +39,8 @@ import se.sundsvall.billingpreprocessor.integration.db.model.DescriptionEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.RecipientEntity;
+import se.sundsvall.billingpreprocessor.integration.db.model.enums.Status;
+import se.sundsvall.billingpreprocessor.integration.db.model.enums.Type;
 
 /**
  * billingRecord repository tests

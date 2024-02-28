@@ -10,8 +10,8 @@ import static java.time.OffsetDateTime.now;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.AllOf.allOf;
-import static se.sundsvall.billingpreprocessor.api.model.enums.Status.REJECTED;
-import static se.sundsvall.billingpreprocessor.api.model.enums.Type.INTERNAL;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.REJECTED;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.INTERNAL;
 
 import java.time.OffsetDateTime;
 import java.util.Random;

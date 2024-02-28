@@ -12,8 +12,6 @@ import static org.mockito.Mockito.when;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 import static org.zalando.problem.Status.METHOD_NOT_ALLOWED;
 import static org.zalando.problem.Status.NOT_FOUND;
-import static se.sundsvall.billingpreprocessor.api.model.enums.Status.NEW;
-import static se.sundsvall.billingpreprocessor.api.model.enums.Type.INTERNAL;
 
 import java.util.List;
 
@@ -35,10 +33,11 @@ import se.sundsvall.billingpreprocessor.api.model.AccountInformation;
 import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
 import se.sundsvall.billingpreprocessor.api.model.Invoice;
 import se.sundsvall.billingpreprocessor.api.model.InvoiceRow;
-import se.sundsvall.billingpreprocessor.api.model.enums.Status;
 import se.sundsvall.billingpreprocessor.integration.db.BillingRecordRepository;
 import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceEntity;
+import se.sundsvall.billingpreprocessor.integration.db.model.enums.Status;
+import se.sundsvall.billingpreprocessor.integration.db.model.enums.Type;
 
 @ExtendWith(MockitoExtension.class)
 class BillingRecordServiceTest {
@@ -212,7 +211,7 @@ class BillingRecordServiceTest {
 	void deleteBillingRecordWithDeletableStatus() {
 		// Mock
 		when(repositoryMock.existsById(ID)).thenReturn(true);
-		when(repositoryMock.getReferenceById(ID)).thenReturn(createBillingRecordEntityInstance().withStatus(NEW));
+		when(repositoryMock.getReferenceById(ID)).thenReturn(createBillingRecordEntityInstance().withStatus(Status.NEW));
 
 		// Call
 		service.deleteBillingRecord(ID);
@@ -261,8 +260,8 @@ class BillingRecordServiceTest {
 		return BillingRecord.create()
 			.withCategory("ACCESS_CARD")
 			.withInvoice(createInvoiceInstance())
-			.withStatus(NEW)
-			.withType(INTERNAL);
+			.withStatus(se.sundsvall.billingpreprocessor.api.model.enums.Status.NEW)
+			.withType(se.sundsvall.billingpreprocessor.api.model.enums.Type.INTERNAL);
 	}
 
 	private static Invoice createInvoiceInstance() {
@@ -301,6 +300,10 @@ class BillingRecordServiceTest {
 	}
 
 	private static BillingRecordEntity createBillingRecordEntityInstance() {
-		return BillingRecordEntity.create().withId(ID).withInvoice(InvoiceEntity.create());
+		return BillingRecordEntity.create()
+			.withId(ID)
+			.withInvoice(InvoiceEntity.create())
+			.withStatus(Status.APPROVED)
+			.withType(Type.EXTERNAL);
 	}
 }

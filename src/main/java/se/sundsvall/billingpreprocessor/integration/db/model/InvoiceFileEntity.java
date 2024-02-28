@@ -1,6 +1,5 @@
 package se.sundsvall.billingpreprocessor.integration.db.model;
 
-import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static java.time.OffsetDateTime.now;
 import static java.time.ZoneId.systemDefault;
@@ -12,15 +11,14 @@ import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 
+import org.hibernate.Length;
 import org.hibernate.annotations.TimeZoneStorage;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
-import jakarta.persistence.Lob;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -42,12 +40,10 @@ public class InvoiceFileEntity implements Serializable {
 	@Column(name = "name")
 	private String name;
 
-	@Lob
-	@Column(name = "content")
+	@Column(name = "content", length = Length.LONG32)
 	private String content;
 
 	@Column(name = "status")
-	@Enumerated(STRING)
 	private InvoiceFileStatus status;
 
 	@Column(name = "type")

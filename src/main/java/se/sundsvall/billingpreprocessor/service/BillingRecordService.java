@@ -2,7 +2,6 @@ package se.sundsvall.billingpreprocessor.service;
 
 import static org.zalando.problem.Status.METHOD_NOT_ALLOWED;
 import static org.zalando.problem.Status.NOT_FOUND;
-import static se.sundsvall.billingpreprocessor.api.model.enums.Status.NEW;
 import static se.sundsvall.billingpreprocessor.service.mapper.BillingRecordMapper.toBillingRecord;
 import static se.sundsvall.billingpreprocessor.service.mapper.BillingRecordMapper.toBillingRecordEntities;
 import static se.sundsvall.billingpreprocessor.service.mapper.BillingRecordMapper.toBillingRecordEntity;
@@ -67,7 +66,7 @@ public class BillingRecordService {
 		verifyExistingId(id);
 
 		final var status = repository.getReferenceById(id).getStatus();
-		if (NEW != status) {
+		if (se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.NEW != status) {
 			throw Problem.valueOf(METHOD_NOT_ALLOWED, ENTITY_CAN_NOT_BE_DELETED);
 		}
 	}

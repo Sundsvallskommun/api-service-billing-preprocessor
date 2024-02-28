@@ -1,8 +1,10 @@
 package se.sundsvall.billingpreprocessor.integration.db.model;
 
+import java.io.Serializable;
+import java.util.Objects;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
@@ -12,11 +14,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType;
-
-import java.io.Serializable;
-import java.util.Objects;
-
-import static jakarta.persistence.EnumType.STRING;
 
 @Entity
 @Table(name = "description")
@@ -33,7 +30,6 @@ public class DescriptionEntity implements Serializable {
 	private InvoiceRowEntity invoiceRow;
 
 	@Column(name = "type", columnDefinition = "ENUM('DETAILED', 'STANDARD')")
-	@Enumerated(STRING)
 	private DescriptionType type;
 
 	@Column(name = "text")
@@ -111,14 +107,14 @@ public class DescriptionEntity implements Serializable {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		DescriptionEntity other = (DescriptionEntity) obj;
-		return id == other.id && Objects.equals(invoiceRow, other.invoiceRow) && Objects.equals(text, other.text) && type == other.type;
+		final DescriptionEntity other = (DescriptionEntity) obj;
+		return (id == other.id) && Objects.equals(invoiceRow, other.invoiceRow) && Objects.equals(text, other.text) && (type == other.type);
 	}
 
 	@Override
 	public String toString() {
 		final var invoiceRowId = invoiceRow == null ? null : invoiceRow.getId();
-		StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder();
 		builder.append("DescriptionEntity [id=").append(id)
 			.append(", invoiceRow=").append(invoiceRowId)
 			.append(", type=").append(type)
