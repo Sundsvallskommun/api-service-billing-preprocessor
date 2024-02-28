@@ -19,6 +19,14 @@
         primary key (id)
     ) engine=InnoDB;
 
+    create table file_configuration (
+            id bigint not null auto_increment,
+            category_tag varchar(255),
+            file_name_pattern varchar(255),
+            type varchar(255),
+            primary key (id)
+    ) engine=InnoDB;
+
     create table invoice (
         `date` date,
         due_date date,
@@ -78,6 +86,12 @@
 
     create index idx_billing_record_category_status 
        on billing_record (category, status);
+
+    create index idx_file_configuration_type_category_tag
+       on file_configuration (type, category_tag);
+
+    alter table if exists file_configuration
+       add constraint uq_type_category_tag unique (type, category_tag);
 
     create index idx_invoice_file_status 
        on invoice_file (status);

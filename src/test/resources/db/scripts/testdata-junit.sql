@@ -51,3 +51,10 @@ VALUES
 	('2024-02-24 14:45:00.000000', 'File content', NULL, 'INVOICE_FILE_3.txt', 'INTERNAL', 'GENERATED'),
 	('2024-02-23 16:20:00.000000', 'File content', NULL, 'INVOICE_FILE_4.txt', 'INTERNAL', 'SEND_SUCCESSFUL'),
 	('2024-02-22 11:10:00.000000', 'File content', '2024-02-22 11:15:00.000000', 'INVOICE_FILE_5.txt', 'EXTERNAL', 'SEND_SUCCESSFUL');
+
+
+INSERT INTO file_configuration(type, category_tag, file_name_pattern)
+VALUES
+    ('type1', 'category_tag1', 'file_name_pattern1'),
+    ('type1', 'category_tag2', 'file_name_pattern2'),
+    ('type3', 'category_tag3', 'file_name_pattern3');
