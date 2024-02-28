@@ -9,7 +9,6 @@ import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.util.ObjectUtils.isEmpty;
-import static se.sundsvall.billingpreprocessor.api.model.enums.Status.APPROVED;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.DETAILED;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.STANDARD;
 import static se.sundsvall.billingpreprocessor.service.util.CalculationUtil.calculateTotalInvoiceAmount;
@@ -47,13 +46,13 @@ public final class BillingRecordMapper {
 	public static BillingRecordEntity toBillingRecordEntity(final BillingRecord billingRecord) {
 		final var billingRecordEntity = BillingRecordEntity.create() // Create billing record entity
 			.withCategory(billingRecord.getCategory())
-			.withStatus(billingRecord.getStatus())
-			.withType(billingRecord.getType());
+			.withStatus(se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.valueOf(billingRecord.getStatus().toString()))
+			.withType(se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.valueOf(billingRecord.getType().toString()));
 
 		billingRecordEntity.setRecipient(toRecipientEntity(billingRecordEntity, billingRecord.getRecipient())); // Add recipient entity to billing record entity
 		billingRecordEntity.setInvoice(toInvoiceEntity(billingRecordEntity, billingRecord.getInvoice())); // Add invoice entity to billing record entity
 
-		if (APPROVED == billingRecordEntity.getStatus()) {
+		if (se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.APPROVED == billingRecordEntity.getStatus()) {
 			setApprovedBy(billingRecordEntity, billingRecord.getApprovedBy());
 		}
 
@@ -84,14 +83,14 @@ public final class BillingRecordMapper {
 	public static BillingRecordEntity updateEntity(final BillingRecordEntity billingRecordEntity, final BillingRecord billingRecord) {
 		billingRecordEntity // Update billing record entity with request data
 			.withCategory(billingRecord.getCategory())
-			.withStatus(billingRecord.getStatus())
-			.withType(billingRecord.getType());
+			.withStatus(se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.valueOf(billingRecord.getStatus().toString()))
+			.withType(se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.valueOf(billingRecord.getType().toString()));
 
 		billingRecordEntity.setRecipient(toRecipientEntity(billingRecordEntity, billingRecord.getRecipient())); // Update recipient entity of billing record entity with new information
 		billingRecordEntity.setInvoice(toInvoiceEntity(billingRecordEntity, billingRecord.getInvoice())); // Update invoice entity of billing record entity with new information
 
 		// Only set approved by and approved timestamp first time billing record receives approved status
-		if ((APPROVED == billingRecordEntity.getStatus()) && isNull(billingRecordEntity.getApproved())) {
+		if ((se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.APPROVED == billingRecordEntity.getStatus()) && isNull(billingRecordEntity.getApproved())) {
 			setApprovedBy(billingRecordEntity, billingRecord.getApprovedBy());
 		}
 
@@ -216,8 +215,8 @@ public final class BillingRecordMapper {
 			.withInvoice(toInvoice(billingRecordEntity.getInvoice()))
 			.withRecipient(toRecipient(billingRecordEntity.getRecipient()))
 			.withModified(billingRecordEntity.getModified())
-			.withStatus(billingRecordEntity.getStatus())
-			.withType(billingRecordEntity.getType());
+			.withStatus(se.sundsvall.billingpreprocessor.api.model.enums.Status.valueOf(billingRecordEntity.getStatus().toString()))
+			.withType(se.sundsvall.billingpreprocessor.api.model.enums.Type.valueOf(billingRecordEntity.getType().toString()));
 	}
 
 	private static Recipient toRecipient(RecipientEntity recipientEntity) {

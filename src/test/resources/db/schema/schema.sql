@@ -37,9 +37,9 @@
         id bigint not null auto_increment,
         sent datetime(6),
         name varchar(255),
+        status varchar(255),
         type varchar(255),
-        content tinytext,
-        status enum ('GENERATED','SEND_SUCCESSFUL','SEND_FAILED'),
+        content longtext,
         primary key (id)
     ) engine=InnoDB;
 
