@@ -82,7 +82,7 @@ class BillingRecordsResourceTest {
 			.exchange()
 			.expectStatus().isCreated()
 			.expectHeader().contentType(ALL)
-			.expectHeader().location("http://localhost:".concat(String.valueOf(port)).concat(PATH).concat("/").concat(uuid))
+			.expectHeader().location("/billingrecords/" + uuid)
 			.expectBody().isEmpty();
 
 		// Verification
@@ -114,6 +114,7 @@ class BillingRecordsResourceTest {
 			.exchange()
 			.expectStatus().isCreated()
 			.expectHeader().contentType(APPLICATION_JSON)
+			.expectHeader().location("/billingrecords/")
 			.expectBody(String[].class)
 			.returnResult().getResponseBody();
 
