@@ -37,7 +37,7 @@ import se.sundsvall.billingpreprocessor.service.BillingRecordService;
 @ActiveProfiles("junit")
 class BillingRecordsCreateResourceFailureTest {
 	private static final String PATH = "/billingrecords";
-	
+
 	@Autowired
 	private WebTestClient webTestClient;
 
@@ -59,8 +59,7 @@ class BillingRecordsCreateResourceFailureTest {
 		assertThat(response.getTitle()).isEqualTo("Bad Request");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getDetail()).isEqualTo("Required request body is missing: public org.springframework.http.ResponseEntity<java.lang.Void> "
-			+ "se.sundsvall.billingpreprocessor.api.BillingRecordsResource.createBillingRecord(org.springframework.web.util.UriComponentsBuilder,"
-			+ "se.sundsvall.billingpreprocessor.api.model.BillingRecord)");
+			+ "se.sundsvall.billingpreprocessor.api.BillingRecordsResource.createBillingRecord(se.sundsvall.billingpreprocessor.api.model.BillingRecord)");
 
 		// Verification
 		verifyNoInteractions(serviceMock);
