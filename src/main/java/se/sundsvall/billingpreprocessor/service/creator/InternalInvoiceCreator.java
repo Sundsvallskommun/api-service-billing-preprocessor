@@ -45,9 +45,7 @@ public class InternalInvoiceCreator {
 			BeanWriter invoiceWriter = factory.createWriter(INTERNAL_INVOICE_BUILDER, new OutputStreamWriter(byteArrayOutputStream))) {
 
 			invoiceWriter.write(toFileHeader());
-			billingRecords.forEach(billingRecord -> {
-				handleInvoice(invoiceWriter, billingRecord);
-			});
+			billingRecords.forEach(billingRecord -> handleInvoice(invoiceWriter, billingRecord));
 
 			invoiceWriter.flush();
 			return byteArrayOutputStream.toByteArray();

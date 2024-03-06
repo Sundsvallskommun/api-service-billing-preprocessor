@@ -1,6 +1,9 @@
 package se.sundsvall.billingpreprocessor.config;
 
-import com.turkraft.springfilter.parser.InvalidSyntaxException;
+import static org.zalando.problem.Status.BAD_REQUEST;
+
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
@@ -11,12 +14,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.zalando.problem.Problem;
 
-import java.util.Optional;
-
-import static org.zalando.problem.Status.BAD_REQUEST;
+import com.turkraft.springfilter.parser.InvalidSyntaxException;
 
 @Configuration
 public class ExceptionHandlerConfig {
+	ExceptionHandlerConfig() {}
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ExceptionHandlerConfig.class);
 	private static final String LOG_MESSAGE = "Mapping exception into Problem";

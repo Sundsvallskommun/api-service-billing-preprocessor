@@ -302,7 +302,8 @@ class ExternalInvoiceMapperTest {
 
 	@Test
 	void toInvoiceFooterWhenMissingVitalData() {
-		final var e = assertThrows(ThrowableProblem.class, () -> ExternalInvoiceMapper.toInvoiceFooter(createbillingRecordEntity().withInvoice(null)));
+		final var billingRecordEntity = createbillingRecordEntity().withInvoice(null);
+		final var e = assertThrows(ThrowableProblem.class, () -> ExternalInvoiceMapper.toInvoiceFooter(billingRecordEntity));
 
 		assertThat(e.getStatus()).isEqualTo(INTERNAL_SERVER_ERROR);
 		assertThat(e.getMessage()).isEqualTo("Internal Server Error: Invoice is not present");
