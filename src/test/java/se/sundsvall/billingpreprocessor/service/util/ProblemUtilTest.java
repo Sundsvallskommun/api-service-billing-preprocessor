@@ -12,7 +12,7 @@ class ProblemUtilTest {
 	@Test
 	void testCreateProblem() {
 		final var message = RandomStringUtils.randomAlphabetic(10);
-		final var problem = createProblem(message);
+		final var problem = createProblem(message).get();
 
 		assertThat(problem).isNotNull();
 		assertThat(problem.getStatus()).isEqualTo(Status.INTERNAL_SERVER_ERROR);

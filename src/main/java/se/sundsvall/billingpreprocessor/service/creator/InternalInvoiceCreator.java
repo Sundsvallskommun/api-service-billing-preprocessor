@@ -1,7 +1,7 @@
 package se.sundsvall.billingpreprocessor.service.creator;
 
+import static java.util.Objects.isNull;
 import static java.util.Optional.ofNullable;
-import static org.springframework.util.CollectionUtils.isEmpty;
 import static se.sundsvall.billingpreprocessor.Constants.EMPTY_ARRAY;
 import static se.sundsvall.billingpreprocessor.service.creator.config.InvoiceCreatorConfig.INTERNAL_INVOICE_BUILDER;
 import static se.sundsvall.billingpreprocessor.service.mapper.InternalInvoiceMapper.toFileHeader;
@@ -15,7 +15,6 @@ import static se.sundsvall.billingpreprocessor.service.util.ProblemUtil.createPr
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.util.List;
 
 import org.beanio.BeanWriter;
 import org.beanio.StreamFactory;
@@ -36,35 +35,54 @@ public class InternalInvoiceCreator {
 		this.factory.define(builder);
 	}
 
-	public byte[] toBytes(List<BillingRecordEntity> billingRecords) throws IOException {
-		if (isEmpty(billingRecords)) {
-			return EMPTY_ARRAY;
-		}
-
+	/**
+	 * Method creates a file header according to the specification for internal invoices
+	 * 
+	 * @return bytearray representing the file header
+	 * @throws IOException if byte array output stream can not be closed
+	 */
+	public byte[] createFileHeader() throws IOException {
 		try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 			BeanWriter invoiceWriter = factory.createWriter(INTERNAL_INVOICE_BUILDER, new OutputStreamWriter(byteArrayOutputStream))) {
-
 			invoiceWriter.write(toFileHeader());
-			billingRecords.forEach(billingRecord -> handleInvoice(invoiceWriter, billingRecord));
-
 			invoiceWriter.flush();
 			return byteArrayOutputStream.toByteArray();
 		}
 	}
 
-	private void handleInvoice(BeanWriter invoiceWriter, BillingRecordEntity billingRecord) {
+	/**
+	 * Method creates a invoice data section according to the specification for internal invoices
+	 * 
+	 * @param billingRecord containing the billing record to produce a invoice data section for
+	 * @return bytearray representing the invoice data section
+	 * @throws IOException if byte array output stream can not be closed
+	 */
+	public byte[] createInvoiceData(BillingRecordEntity billingRecord) throws IOException {
+		if (isNull(billingRecord)) {
+			return EMPTY_ARRAY;
+		}
+
+		try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+			BeanWriter invoiceWriter = factory.createWriter(INTERNAL_INVOICE_BUILDER, new OutputStreamWriter(byteArrayOutputStream))) {
+			processInvoice(invoiceWriter, billingRecord);
+			invoiceWriter.flush();
+			return byteArrayOutputStream.toByteArray();
+		}
+	}
+
+	private void processInvoice(BeanWriter invoiceWriter, BillingRecordEntity billingRecord) {
 		invoiceWriter.write(toInvoiceHeader(billingRecord));
 		invoiceWriter.write(toInvoiceDescriptionRow(billingRecord));
 
 		ofNullable(billingRecord.getInvoice())
-			.orElseThrow(() -> createProblem("Invoice is not present"))
+			.orElseThrow(createProblem("Invoice is not present"))
 			.getInvoiceRows()
-			.forEach(row -> handleInvoiceRow(invoiceWriter, row));
+			.forEach(row -> processInvoiceRow(invoiceWriter, row));
 
 		invoiceWriter.write(toInvoiceFooter(billingRecord));
 	}
 
-	private void handleInvoiceRow(BeanWriter invoiceWriter, InvoiceRowEntity invoiceRow) {
+	private void processInvoiceRow(BeanWriter invoiceWriter, InvoiceRowEntity invoiceRow) {
 		invoiceWriter.write(toInvoiceRow(invoiceRow));
 		invoiceWriter.write(toInvoiceAccountingRow(invoiceRow));
 	}

@@ -49,14 +49,14 @@ public class InternalInvoiceMapper {
 	 * @throws ThrowableProblem if any mandatory data is missing
 	 */
 	public static InvoiceHeaderRow toInvoiceHeader(BillingRecordEntity billingRecordEntity) {
-		final var invoiceEntity = ofNullable(billingRecordEntity.getInvoice()).orElseThrow(() -> createProblem(ERROR_INVOICE_NOT_PRESENT));
+		final var invoiceEntity = ofNullable(billingRecordEntity.getInvoice()).orElseThrow(createProblem(ERROR_INVOICE_NOT_PRESENT));
 
 		return InvoiceHeaderRow.create()
-			.withCustomerId(ofNullable(invoiceEntity.getCustomerId()).orElseThrow(() -> createProblem(ERROR_CUSTOMER_ID_NOT_PRESENT)))
+			.withCustomerId(ofNullable(invoiceEntity.getCustomerId()).orElseThrow(createProblem(ERROR_CUSTOMER_ID_NOT_PRESENT)))
 			.withDate(invoiceEntity.getDate())
 			.withDueDate(invoiceEntity.getDueDate())
-			.withCustomerReference(ofNullable(invoiceEntity.getCustomerReference()).orElseThrow(() -> createProblem(ERROR_CUSTOMER_REFERENCE_NOT_PRESENT)))
-			.withOurReference(ofNullable(invoiceEntity.getOurReference()).orElseThrow(() -> createProblem(ERROR_OUR_REFERENCE_NOT_PRESENT)));
+			.withCustomerReference(ofNullable(invoiceEntity.getCustomerReference()).orElseThrow(createProblem(ERROR_CUSTOMER_REFERENCE_NOT_PRESENT)))
+			.withOurReference(ofNullable(invoiceEntity.getOurReference()).orElseThrow(createProblem(ERROR_OUR_REFERENCE_NOT_PRESENT)));
 	}
 
 	/**
@@ -67,7 +67,7 @@ public class InternalInvoiceMapper {
 	 * @throws ThrowableProblem if any mandatory data is missing
 	 */
 	public static InvoiceDescriptionRow toInvoiceDescriptionRow(BillingRecordEntity billingRecordEntity) {
-		final var invoiceEntity = ofNullable(billingRecordEntity.getInvoice()).orElseThrow(() -> createProblem(ERROR_INVOICE_NOT_PRESENT));
+		final var invoiceEntity = ofNullable(billingRecordEntity.getInvoice()).orElseThrow(createProblem(ERROR_INVOICE_NOT_PRESENT));
 
 		return InvoiceDescriptionRow.create()
 			.withDescription(invoiceEntity.getDescription());
@@ -82,10 +82,10 @@ public class InternalInvoiceMapper {
 	 */
 	public static InvoiceRow toInvoiceRow(InvoiceRowEntity invoiceRowEntity) {
 		return InvoiceRow.create()
-			.withDescription(ofNullable(extractDescription(invoiceRowEntity)).orElseThrow(() -> createProblem(ERROR_DESCRIPTION_NOT_PRESENT)))
+			.withDescription(ofNullable(extractDescription(invoiceRowEntity)).orElseThrow(createProblem(ERROR_DESCRIPTION_NOT_PRESENT)))
 			.withCostPerUnit(invoiceRowEntity.getCostPerUnit())
-			.withQuantity(invoiceRowEntity.getQuantity().floatValue())
-			.withTotalAmount(ofNullable(invoiceRowEntity.getTotalAmount()).orElseThrow(() -> createProblem(ERROR_TOTAL_AMOUNT_NOT_PRESENT)));
+			.withQuantity(ofNullable(invoiceRowEntity.getQuantity()).map(Integer::floatValue).orElse(null))
+			.withTotalAmount(ofNullable(invoiceRowEntity.getTotalAmount()).orElseThrow(createProblem(ERROR_TOTAL_AMOUNT_NOT_PRESENT)));
 	}
 
 	/**
@@ -96,16 +96,16 @@ public class InternalInvoiceMapper {
 	 * @throws ThrowableProblem if any mandatory data is missing
 	 */
 	public static InvoiceAccountingRow toInvoiceAccountingRow(InvoiceRowEntity invoiceRowEntity) {
-		final var accountInformationEmbeddable = ofNullable(invoiceRowEntity.getAccountInformation()).orElseThrow(() -> createProblem(ERROR_ACCOUNT_INFORMATION_NOT_PRESENT));
+		final var accountInformationEmbeddable = ofNullable(invoiceRowEntity.getAccountInformation()).orElseThrow(createProblem(ERROR_ACCOUNT_INFORMATION_NOT_PRESENT));
 
 		return InvoiceAccountingRow.create()
-			.withCostCenter(ofNullable(accountInformationEmbeddable.getCostCenter()).orElseThrow(() -> createProblem(ERROR_COSTCENTER_NOT_PRESENT)))
-			.withSubAccount(ofNullable(accountInformationEmbeddable.getSubaccount()).orElseThrow(() -> createProblem(ERROR_SUBACCOUNT_NOT_PRESENT)))
-			.withDepartment(ofNullable(accountInformationEmbeddable.getDepartment()).orElseThrow(() -> createProblem(ERROR_DEPARTMENT_NOT_PRESENT)))
+			.withCostCenter(ofNullable(accountInformationEmbeddable.getCostCenter()).orElseThrow(createProblem(ERROR_COSTCENTER_NOT_PRESENT)))
+			.withSubAccount(ofNullable(accountInformationEmbeddable.getSubaccount()).orElseThrow(createProblem(ERROR_SUBACCOUNT_NOT_PRESENT)))
+			.withDepartment(ofNullable(accountInformationEmbeddable.getDepartment()).orElseThrow(createProblem(ERROR_DEPARTMENT_NOT_PRESENT)))
 			.withActivity(accountInformationEmbeddable.getActivity())
 			.withProject(accountInformationEmbeddable.getProject())
 			.withObject(accountInformationEmbeddable.getArticle())
-			.withCounterpart(ofNullable(accountInformationEmbeddable.getCounterpart()).orElseThrow(() -> createProblem(ERROR_COUNTERPART_NOT_PRESENT)))
+			.withCounterpart(ofNullable(accountInformationEmbeddable.getCounterpart()).orElseThrow(createProblem(ERROR_COUNTERPART_NOT_PRESENT)))
 			.withTotalAmount(invoiceRowEntity.getTotalAmount())
 			.withAccuralKey(accountInformationEmbeddable.getAccuralKey());
 	}
@@ -116,7 +116,7 @@ public class InternalInvoiceMapper {
 	 * @return
 	 */
 	public static InvoiceFooterRow toInvoiceFooter(BillingRecordEntity billingRecordEntity) {
-		final var invoiceEntity = ofNullable(billingRecordEntity.getInvoice()).orElseThrow(() -> createProblem(ERROR_INVOICE_NOT_PRESENT));
+		final var invoiceEntity = ofNullable(billingRecordEntity.getInvoice()).orElseThrow(createProblem(ERROR_INVOICE_NOT_PRESENT));
 
 		return InvoiceFooterRow.create()
 			.withTotalAmount(invoiceEntity.getTotalAmount());

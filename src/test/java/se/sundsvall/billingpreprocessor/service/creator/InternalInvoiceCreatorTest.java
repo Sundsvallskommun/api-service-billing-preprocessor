@@ -12,8 +12,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Collections;
 import java.util.List;
 
 import org.beanio.StreamFactory;
@@ -73,25 +71,31 @@ class InternalInvoiceCreatorTest {
 	}
 
 	@Test
-	void toBytesFromEmptyList() throws Exception {
-		assertThat(creator.toBytes(Collections.emptyList())).isEmpty();
+	void createInvoiceHeader() throws Exception {
+		final var result = creator.createFileHeader();
+		final var expected = getResource("validation/expected_internal_header_format.txt");
+
+		assertThat(new String(result, StandardCharsets.UTF_8)).isEqualTo(expected);
 	}
 
 	@Test
-	void toBytesWhenInvoiceMissing() throws Exception {
-		final var input = List.of(createbillingRecordEntity().withInvoice(null));
-		final var e = assertThrows(ThrowableProblem.class, () -> creator.toBytes(input));
+	void createInvoiceDataFromNull() throws Exception {
+		assertThat(creator.createInvoiceData(null)).isEmpty();
+	}
+
+	@Test
+	void createInvoiceDataWhenInvoiceMissing() throws Exception {
+		final var input = createbillingRecordEntity().withInvoice(null);
+		final var e = assertThrows(ThrowableProblem.class, () -> creator.createInvoiceData(input));
 
 		assertThat(e.getStatus()).isEqualTo(INTERNAL_SERVER_ERROR);
 		assertThat(e.getMessage()).isEqualTo("Internal Server Error: Invoice is not present");
 	}
 
 	@Test
-	void toBytesFromEntity() throws Exception {
-		final var result = creator.toBytes(List.of(createbillingRecordEntity()));
-
-		final var expected = getResource("validation/expected_internal_format.txt")
-			.replace("yyMMdd", LocalDate.now().format(DateTimeFormatter.ofPattern("yyMMdd")));
+	void createInvoiceDataFromEntity() throws Exception {
+		final var result = creator.createInvoiceData(createbillingRecordEntity());
+		final var expected = getResource("validation/expected_internal_invoicedata_format.txt");
 
 		assertThat(new String(result, StandardCharsets.UTF_8)).isEqualTo(expected);
 	}

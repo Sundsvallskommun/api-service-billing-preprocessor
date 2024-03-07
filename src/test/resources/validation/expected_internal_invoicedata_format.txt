@@ -1,4 +1,3 @@
-01300SKC
 H 16        2024030620240330           5ABC30DEF                                                      Johnny Bråttom                
 R Extra utbetalning - Direktinsättning                                                                
 R Uppdrag: ABC-123                                    1.00   1500.00                     1500.00        
