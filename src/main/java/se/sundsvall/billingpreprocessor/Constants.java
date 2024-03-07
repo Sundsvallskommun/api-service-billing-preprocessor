@@ -3,8 +3,6 @@ package se.sundsvall.billingpreprocessor;
 public final class Constants {
 	private Constants() {}
 
-	public static final String GENERATING_SYSTEM = "BillingPreProcessor";
-	public static final String EXTERNAL_INVOICE_TYPE = "Extern debitering";
 	public static final byte[] EMPTY_ARRAY = new byte[0];
 
 	public static final String ERROR_ACCOUNT_INFORMATION_NOT_PRESENT = "Account information is not present";
@@ -28,4 +26,7 @@ public final class Constants {
 	public static final String ERROR_SUBACCOUNT_NOT_PRESENT = "Sub account is not present";
 	public static final String ERROR_TOTAL_AMOUNT_NOT_PRESENT = "Total amount is not present";
 	public static final String ERROR_VAT_CODE_NOT_PRESENT = "Vat code is not present";
+
+	public static final String EXTERNAL_INVOICE_TYPE = "Extern debitering";
+	public static final String GENERATING_SYSTEM = "BillingPreProcessor";
 }

@@ -10,7 +10,7 @@ import static se.sundsvall.billingpreprocessor.service.mapper.InternalInvoiceMap
 import static se.sundsvall.billingpreprocessor.service.mapper.InternalInvoiceMapper.toInvoiceFooter;
 import static se.sundsvall.billingpreprocessor.service.mapper.InternalInvoiceMapper.toInvoiceHeader;
 import static se.sundsvall.billingpreprocessor.service.mapper.InternalInvoiceMapper.toInvoiceRow;
-import static se.sundsvall.billingpreprocessor.service.util.ProblemUtil.createProblem;
+import static se.sundsvall.billingpreprocessor.service.util.ProblemUtil.createInternalServerErrorProblem;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -75,7 +75,7 @@ public class InternalInvoiceCreator {
 		invoiceWriter.write(toInvoiceDescriptionRow(billingRecord));
 
 		ofNullable(billingRecord.getInvoice())
-			.orElseThrow(createProblem("Invoice is not present"))
+			.orElseThrow(createInternalServerErrorProblem("Invoice is not present"))
 			.getInvoiceRows()
 			.forEach(row -> processInvoiceRow(invoiceWriter, row));
 

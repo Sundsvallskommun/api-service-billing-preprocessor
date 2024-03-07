@@ -12,10 +12,17 @@ spring:
             database:
               action: validate
 
+  security:
+    oauth2:
+      client:
+        registration:
+          party:
+            client-id: someClientId
+            client-secret: someClientSecret
+        provider:
+          party:
+            token-uri: http://localhost:${wiremock.server.port}/token
+
 integration:
   party:
     url: http://localhost:${wiremock.server.port}/party
-    oauth2:
-      token-uri: http://localhost:${wiremock.server.port}/token
-      client-id: someClientId
-      client-secret: someClientSecret

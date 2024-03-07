@@ -19,3 +19,9 @@ spring:
           schema-generation:
             database:
               action: none
+  security:
+    oauth2:
+      client:
+        registration:
+          party:
+            authorization-grant-type: client_credentials
