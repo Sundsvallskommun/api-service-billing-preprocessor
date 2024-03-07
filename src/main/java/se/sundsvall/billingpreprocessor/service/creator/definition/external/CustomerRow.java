@@ -43,7 +43,7 @@ public class CustomerRow {
 	}
 
 	public CustomerRow withLegalId(String legalId) {
-		setLegalId(legalId);
+		this.legalId = legalId;
 		return this;
 	}
 
@@ -56,7 +56,7 @@ public class CustomerRow {
 	}
 
 	public CustomerRow withCustomerName(String customerName) {
-		setCustomerName(customerName);
+		this.customerName = customerName;
 		return this;
 	}
 
@@ -69,7 +69,7 @@ public class CustomerRow {
 	}
 
 	public CustomerRow withCareOf(String careOf) {
-		setCareOf(careOf);
+		this.careOf = careOf;
 		return this;
 	}
 
@@ -82,7 +82,7 @@ public class CustomerRow {
 	}
 
 	public CustomerRow withStreetAddress(String streetAddress) {
-		setStreetAddress(streetAddress);
+		this.streetAddress = streetAddress;
 		return this;
 	}
 
@@ -95,7 +95,7 @@ public class CustomerRow {
 	}
 
 	public CustomerRow withZipCodeAndCity(String zipCodeAndCity) {
-		setZipCodeAndCity(zipCodeAndCity);
+		this.zipCodeAndCity = zipCodeAndCity;
 		return this;
 	}
 
@@ -108,7 +108,7 @@ public class CustomerRow {
 	}
 
 	public CustomerRow withCounterpart(String counterpart) {
-		setCounterpart(counterpart);
+		this.counterpart = counterpart;
 		return this;
 	}
 

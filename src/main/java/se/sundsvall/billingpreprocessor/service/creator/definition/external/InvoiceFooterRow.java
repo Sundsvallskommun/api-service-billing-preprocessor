@@ -32,7 +32,7 @@ public class InvoiceFooterRow {
 	}
 
 	public InvoiceFooterRow withTotalAmount(Float totalAmount) {
-		setTotalAmount(totalAmount);
+		this.totalAmount = totalAmount;
 		return this;
 	}
 

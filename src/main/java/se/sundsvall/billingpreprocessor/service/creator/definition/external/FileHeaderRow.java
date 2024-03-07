@@ -35,7 +35,7 @@ public class FileHeaderRow {
 	}
 
 	public FileHeaderRow withGeneratingSystem(String generatingSystem) {
-		setGeneratingSystem(generatingSystem);
+		this.generatingSystem = generatingSystem;
 		return this;
 	}
 
@@ -48,7 +48,7 @@ public class FileHeaderRow {
 	}
 
 	public FileHeaderRow withCreatedDate(LocalDate createdDate) {
-		setCreatedDate(createdDate);
+		this.createdDate = createdDate;
 		return this;
 	}
 
@@ -61,7 +61,7 @@ public class FileHeaderRow {
 	}
 
 	public FileHeaderRow withInvoiceType(String invoiceType) {
-		setInvoiceType(invoiceType);
+		this.invoiceType = invoiceType;
 		return this;
 	}
 

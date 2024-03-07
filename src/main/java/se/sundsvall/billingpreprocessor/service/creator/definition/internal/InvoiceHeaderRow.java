@@ -41,7 +41,7 @@ public class InvoiceHeaderRow {
 	}
 
 	public InvoiceHeaderRow withCustomerId(String customerId) {
-		setCustomerId(customerId);
+		this.customerId = customerId;
 		return this;
 	}
 
@@ -54,7 +54,7 @@ public class InvoiceHeaderRow {
 	}
 
 	public InvoiceHeaderRow withDate(LocalDate date) {
-		setDate(date);
+		this.date = date;
 		return this;
 	}
 
@@ -67,7 +67,7 @@ public class InvoiceHeaderRow {
 	}
 
 	public InvoiceHeaderRow withDueDate(LocalDate dueDate) {
-		setDueDate(dueDate);
+		this.dueDate = dueDate;
 		return this;
 	}
 
@@ -80,7 +80,7 @@ public class InvoiceHeaderRow {
 	}
 
 	public InvoiceHeaderRow withCustomerReference(String customerReference) {
-		setCustomerReference(customerReference);
+		this.customerReference = customerReference;
 		return this;
 	}
 
@@ -93,7 +93,7 @@ public class InvoiceHeaderRow {
 	}
 
 	public InvoiceHeaderRow withOurReference(String ourReference) {
-		setOurReference(ourReference);
+		this.ourReference = ourReference;
 		return this;
 	}
 

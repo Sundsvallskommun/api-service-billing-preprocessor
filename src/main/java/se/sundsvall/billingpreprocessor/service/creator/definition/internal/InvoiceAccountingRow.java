@@ -54,7 +54,7 @@ public class InvoiceAccountingRow {
 	}
 
 	public InvoiceAccountingRow withCostCenter(String costCenter) {
-		setCostCenter(costCenter);
+		this.costCenter = costCenter;
 		return this;
 	}
 
@@ -67,7 +67,7 @@ public class InvoiceAccountingRow {
 	}
 
 	public InvoiceAccountingRow withSubAccount(String subAccount) {
-		setSubAccount(subAccount);
+		this.subAccount = subAccount;
 		return this;
 	}
 
@@ -80,7 +80,7 @@ public class InvoiceAccountingRow {
 	}
 
 	public InvoiceAccountingRow withDepartment(String department) {
-		setDepartment(department);
+		this.department = department;
 		return this;
 	}
 
@@ -93,7 +93,7 @@ public class InvoiceAccountingRow {
 	}
 
 	public InvoiceAccountingRow withActivity(String activity) {
-		setActivity(activity);
+		this.activity = activity;
 		return this;
 	}
 
@@ -106,7 +106,7 @@ public class InvoiceAccountingRow {
 	}
 
 	public InvoiceAccountingRow withProject(String project) {
-		setProject(project);
+		this.project = project;
 		return this;
 	}
 
@@ -119,7 +119,7 @@ public class InvoiceAccountingRow {
 	}
 
 	public InvoiceAccountingRow withObject(String object) {
-		setObject(object);
+		this.object = object;
 		return this;
 	}
 
@@ -132,7 +132,7 @@ public class InvoiceAccountingRow {
 	}
 
 	public InvoiceAccountingRow withCounterpart(String counterpart) {
-		setCounterpart(counterpart);
+		this.counterpart = counterpart;
 		return this;
 	}
 
@@ -145,7 +145,7 @@ public class InvoiceAccountingRow {
 	}
 
 	public InvoiceAccountingRow withTotalAmount(Float totalAmount) {
-		setTotalAmount(totalAmount);
+		this.totalAmount = totalAmount;
 		return this;
 	}
 
@@ -158,7 +158,7 @@ public class InvoiceAccountingRow {
 	}
 
 	public InvoiceAccountingRow withAccuralKey(String accuralKey) {
-		setAccuralKey(accuralKey);
+		this.accuralKey = accuralKey;
 		return this;
 	}
 

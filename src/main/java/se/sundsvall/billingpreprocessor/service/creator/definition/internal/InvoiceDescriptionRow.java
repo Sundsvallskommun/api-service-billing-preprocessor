@@ -28,7 +28,7 @@ public class InvoiceDescriptionRow {
 	}
 
 	public InvoiceDescriptionRow withDescription(String description) {
-		setDescription(description);
+		this.description = description;
 		return this;
 	}
 

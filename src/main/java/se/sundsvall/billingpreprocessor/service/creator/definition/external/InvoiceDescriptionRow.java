@@ -31,7 +31,7 @@ public class InvoiceDescriptionRow {
 	}
 
 	public InvoiceDescriptionRow withLegalId(String legalId) {
-		setLegalId(legalId);
+		this.legalId = legalId;
 		return this;
 	}
 
@@ -44,7 +44,7 @@ public class InvoiceDescriptionRow {
 	}
 
 	public InvoiceDescriptionRow withDescription(String description) {
-		setDescription(description);
+		this.description = description;
 		return this;
 	}
 

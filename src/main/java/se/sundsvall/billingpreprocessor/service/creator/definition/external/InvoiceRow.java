@@ -45,7 +45,7 @@ public class InvoiceRow {
 	}
 
 	public InvoiceRow withLegalId(String legalId) {
-		setLegalId(legalId);
+		this.legalId = legalId;
 		return this;
 	}
 
@@ -58,7 +58,7 @@ public class InvoiceRow {
 	}
 
 	public InvoiceRow withText(String text) {
-		setText(text);
+		this.text = text;
 		return this;
 	}
 
@@ -66,13 +66,13 @@ public class InvoiceRow {
 		return quantity;
 	}
 
-	public InvoiceRow withQuantity(Float quantity) {
-		setQuantity(quantity);
-		return this;
-	}
-
 	public void setQuantity(Float quantity) {
 		this.quantity = quantity;
+	}
+
+	public InvoiceRow withQuantity(Float quantity) {
+		this.quantity = quantity;
+		return this;
 	}
 
 	public Float getCostPerUnit() {
@@ -84,7 +84,7 @@ public class InvoiceRow {
 	}
 
 	public InvoiceRow withCostPerUnit(Float costPerUnit) {
-		setCostPerUnit(costPerUnit);
+		this.costPerUnit = costPerUnit;
 		return this;
 	}
 
@@ -97,7 +97,7 @@ public class InvoiceRow {
 	}
 
 	public InvoiceRow withTotalAmount(Float totalAmount) {
-		setTotalAmount(totalAmount);
+		this.totalAmount = totalAmount;
 		return this;
 	}
 
@@ -110,7 +110,7 @@ public class InvoiceRow {
 	}
 
 	public InvoiceRow withVatCode(String vatCode) {
-		setVatCode(vatCode);
+		this.vatCode = vatCode;
 		return this;
 	}
 
