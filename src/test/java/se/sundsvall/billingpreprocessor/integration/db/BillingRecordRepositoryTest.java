@@ -48,7 +48,7 @@ import se.sundsvall.billingpreprocessor.integration.db.model.enums.Type;
  * @see /src/test/resources/db/testdata-junit.sql for data setup.
  */
 @SpringBootTest
-@ActiveProfiles("it")
+@ActiveProfiles("junit")
 @Transactional
 @Sql(scripts = {
 	"/db/scripts/truncate.sql",

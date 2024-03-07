@@ -18,6 +18,7 @@
 		<published.container.port.production>9104</published.container.port.production>
   		<!-- Service properties -->
 		<spring-filter.version>3.1.7</spring-filter.version>
+		<beanio.version>3.0.0</beanio.version>
 		<generated-sources-path>${project.build.directory}/generated-sources</generated-sources-path>
 		<failsafeArgLine>-Dfile.encoding=${project.build.sourceEncoding}</failsafeArgLine>
 	</properties>
@@ -53,6 +54,12 @@
 			<artifactId>jpa</artifactId>
 			<version>${spring-filter.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.github.beanio</groupId>
+			<artifactId>beanio</artifactId>
+			<version>${beanio.version}</version>
+		</dependency>
+
 		<!-- Test -->
 		<dependency>
 			<groupId>se.sundsvall.dept44</groupId>
