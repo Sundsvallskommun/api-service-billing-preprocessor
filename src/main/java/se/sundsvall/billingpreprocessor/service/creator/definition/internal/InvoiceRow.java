@@ -39,7 +39,7 @@ public class InvoiceRow {
 	}
 
 	public InvoiceRow withDescription(String description) {
-		setDescription(description);
+		this.description = description;
 		return this;
 	}
 
@@ -52,7 +52,7 @@ public class InvoiceRow {
 	}
 
 	public InvoiceRow withQuantity(Float quantity) {
-		setQuantity(quantity);
+		this.quantity = quantity;
 		return this;
 	}
 
@@ -65,7 +65,7 @@ public class InvoiceRow {
 	}
 
 	public InvoiceRow withCostPerUnit(Float costPerUnit) {
-		setCostPerUnit(costPerUnit);
+		this.costPerUnit = costPerUnit;
 		return this;
 	}
 
@@ -78,7 +78,7 @@ public class InvoiceRow {
 	}
 
 	public InvoiceRow withTotalAmount(Float totalAmount) {
-		setTotalAmount(totalAmount);
+		this.totalAmount = totalAmount;
 		return this;
 	}
 
