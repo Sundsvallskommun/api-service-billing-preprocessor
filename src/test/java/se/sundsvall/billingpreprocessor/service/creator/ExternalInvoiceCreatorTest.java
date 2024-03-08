@@ -4,6 +4,10 @@ import static java.time.OffsetDateTime.now;
 import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.DETAILED;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.STANDARD;
@@ -24,6 +28,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.zalando.problem.ThrowableProblem;
 
@@ -75,6 +80,7 @@ class ExternalInvoiceCreatorTest {
 
 	// Recipient constants
 	private static final String ORGANIZATION_NAME = "Testbolaget AB";
+	private static final String PARTY_ID = "5cd1d415-9d7f-4e12-a1ec-011c1d0e37ad";
 	private static final String LEGAL_ID = "3456789123";
 
 	// Address details constants
@@ -82,6 +88,9 @@ class ExternalInvoiceCreatorTest {
 	private static final String CITY = "Sundsvall";
 	private static final String STREET = "Testgatan 12";
 	private static final String POSTAL_CODE = "85643";
+
+	@MockBean
+	private LegalIdProvider legalIdProviderMock;
 
 	@Autowired
 	private ExternalInvoiceCreator creator;
@@ -110,11 +119,26 @@ class ExternalInvoiceCreatorTest {
 	}
 
 	@Test
-	void createInvoiceDataFromEntity() throws Exception {
+	void createInvoiceDataFromEntityWithLegalId() throws Exception {
 		final var result = creator.createInvoiceData(createbillingRecordEntity());
 		final var expected = getResource("validation/expected_external_invoicedata_format.txt");
 
 		assertThat(new String(result, StandardCharsets.UTF_8)).isEqualTo(expected);
+		verify(legalIdProviderMock, never()).translateToLegalId(any());
+	}
+
+	@Test
+	void createInvoiceDataFromEntityWithoutLegalId() throws Exception {
+		final var input = createbillingRecordEntity();
+		input.getRecipient().withLegalId(null).withPartyId(PARTY_ID);
+
+		when(legalIdProviderMock.translateToLegalId(PARTY_ID)).thenReturn(LEGAL_ID);
+
+		final var result = creator.createInvoiceData(input);
+		final var expected = getResource("validation/expected_external_invoicedata_format.txt");
+
+		assertThat(new String(result, StandardCharsets.UTF_8)).isEqualTo(expected);
+		verify(legalIdProviderMock).translateToLegalId(PARTY_ID);
 	}
 
 	private String getResource(final String fileName) throws IOException, URISyntaxException {

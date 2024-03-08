@@ -13,12 +13,16 @@ class StringUtilTest {
 	@ParameterizedTest
 	@MethodSource("removeHyphenArgumentProvider")
 	void removeHyphen(String input, String expectedResponse) {
-		assertThat(StringUtil.removeHyphensFromNumericString(input)).isEqualTo(expectedResponse);
+		assertThat(StringUtil.formatLegalId(input)).isEqualTo(expectedResponse);
 	}
 
 	private static Stream<Arguments> removeHyphenArgumentProvider() {
 		return Stream.of(
 			Arguments.of(null, null),
+			Arguments.of("123456789012", "3456789012"),
+			Arguments.of("1234567890", "1234567890"),
+			Arguments.of("12345678-9012", "3456789012"),
+			Arguments.of("123456-7890", "1234567890"),
 			Arguments.of("123456", "123456"),
 			Arguments.of("ABCDEF", "ABCDEF"),
 			Arguments.of("1-2-3-4-5-6", "123456"),

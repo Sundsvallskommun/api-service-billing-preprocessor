@@ -20,12 +20,19 @@ spring:
               action: create
               create-target: target/database/generated-schema.sql
 
+  security:
+    oauth2:
+      client:
+        registration:
+          party:
+            client-id: someClientId
+            client-secret: someClientSecret
+        provider:
+          party:
+            token-uri: http://someTokenUri
+
 integration:
   party:
-    url: someUrl
-    oauth2:
-      token-uri: someTokenUri
-      client-id: someClientId
-      client-secret: someClientSecret
+    url: http://someUrl
     connect-timeout: 11
     read-timeout: 22

@@ -13,7 +13,8 @@ import static se.sundsvall.billingpreprocessor.service.mapper.ExternalInvoiceMap
 import static se.sundsvall.billingpreprocessor.service.mapper.ExternalInvoiceMapper.toInvoiceFooter;
 import static se.sundsvall.billingpreprocessor.service.mapper.ExternalInvoiceMapper.toInvoiceHeader;
 import static se.sundsvall.billingpreprocessor.service.mapper.ExternalInvoiceMapper.toInvoiceRow;
-import static se.sundsvall.billingpreprocessor.service.util.ProblemUtil.createProblem;
+import static se.sundsvall.billingpreprocessor.service.util.ProblemUtil.createInternalServerErrorProblem;
+import static se.sundsvall.billingpreprocessor.service.util.StringUtil.formatLegalId;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -27,15 +28,16 @@ import org.springframework.stereotype.Component;
 
 import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;
-import se.sundsvall.billingpreprocessor.service.util.StringUtil;
 
 @Component
 public class ExternalInvoiceCreator {
 	private final StreamFactory factory;
+	private final LegalIdProvider legalIdProvider;
 
-	public ExternalInvoiceCreator(@Qualifier(EXTERNAL_INVOICE_BUILDER) StreamBuilder builder) {
+	public ExternalInvoiceCreator(@Qualifier(EXTERNAL_INVOICE_BUILDER) StreamBuilder builder, LegalIdProvider legalIdProvider) {
 		this.factory = StreamFactory.newInstance();
 		this.factory.define(builder);
+		this.legalIdProvider = legalIdProvider;
 	}
 
 	/**
@@ -80,7 +82,7 @@ public class ExternalInvoiceCreator {
 		invoiceWriter.write(toInvoiceHeader(recipientLegalId, billingRecord));
 
 		ofNullable(billingRecord.getInvoice())
-			.orElseThrow(createProblem("Invoice is not present"))
+			.orElseThrow(createInternalServerErrorProblem("Invoice is not present"))
 			.getInvoiceRows()
 			.forEach(row -> processInvoiceRow(invoiceWriter, recipientLegalId, row));
 
@@ -94,8 +96,9 @@ public class ExternalInvoiceCreator {
 	}
 
 	private String extractLegalId(BillingRecordEntity billingRecord) {
-		return ofNullable(billingRecord.getRecipient().getLegalId())
-			.map(StringUtil::removeHyphensFromNumericString)
-			.orElse("1234567890"); // TODO: Integration to party for converting partyId to legald (done in other task)
+		final var legalId = ofNullable(billingRecord.getRecipient().getLegalId())
+			.orElseGet(() -> legalIdProvider.translateToLegalId(billingRecord.getRecipient().getPartyId()));
+
+		return formatLegalId(legalId);
 	}
 }
