@@ -26,7 +26,7 @@ import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;
 
 @Component
-public class InternalInvoiceCreator {
+public class InternalInvoiceCreator implements InvoiceCreator {
 
 	private final StreamFactory factory;
 
