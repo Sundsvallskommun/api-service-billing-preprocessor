@@ -73,7 +73,7 @@ class InternalInvoiceCreatorTest {
 	@Test
 	void createInvoiceHeader() throws Exception {
 		final var result = creator.createFileHeader();
-		final var expected = getResource("validation/expected_internal_header_format.txt");
+		final var expected = getResource("validation/internal_header_expected_format.txt");
 
 		assertThat(new String(result, StandardCharsets.UTF_8)).isEqualTo(expected);
 	}
@@ -95,7 +95,7 @@ class InternalInvoiceCreatorTest {
 	@Test
 	void createInvoiceDataFromEntity() throws Exception {
 		final var result = creator.createInvoiceData(createbillingRecordEntity());
-		final var expected = getResource("validation/expected_internal_invoicedata_format.txt");
+		final var expected = getResource("validation/internal_invoicedata_expected_format.txt");
 
 		assertThat(new String(result, StandardCharsets.UTF_8)).isEqualTo(expected);
 	}
