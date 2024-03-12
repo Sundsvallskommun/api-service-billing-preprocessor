@@ -64,7 +64,7 @@ public class BillingRecordService {
 		return toBillingRecord(billingRecordRepository.getReferenceById(id));
 	}
 
-	public Page<BillingRecord> findBillingIRecords(final Specification<BillingRecordEntity> filter, final Pageable pageable) {
+	public Page<BillingRecord> findBillingRecords(final Specification<BillingRecordEntity> filter, final Pageable pageable) {
 		final var matches = billingRecordRepository.findAll(filter, pageable);
 		return new PageImpl<>(toBillingRecords(matches.getContent()), pageable, billingRecordRepository.count(filter));
 	}
