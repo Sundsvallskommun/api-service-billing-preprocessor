@@ -1,6 +1,7 @@
 package se.sundsvall.billingpreprocessor.service;
 
 import static java.time.Instant.now;
+import static java.util.Objects.isNull;
 import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
 import static se.sundsvall.billingpreprocessor.Constants.ERROR_INVOICE_FILE_NAME_GENERATION_FAILURE;
 import static se.sundsvall.billingpreprocessor.Constants.ERROR_NO_INVOICE_FILE_CONFIGURATION_FOUND;
@@ -38,6 +39,10 @@ public class InvoiceFileConfigurationService {
 	}
 
 	private String applyDatePattern(String template) {
+
+		if (isNull(template)) {
+			throw Problem.valueOf(INTERNAL_SERVER_ERROR, ERROR_INVOICE_FILE_NAME_GENERATION_FAILURE.formatted("null"));
+		}
 
 		final var pattern = Pattern.compile("\\{[^\\}]*\\}");
 		final var matcher = pattern.matcher(template);

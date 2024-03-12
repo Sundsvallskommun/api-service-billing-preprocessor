@@ -52,3 +52,11 @@ VALUES
 	('2024-02-23 16:20:00.000000', 'File content', NULL, 'INVOICE_FILE_4.txt', 'INTERNAL', 'SEND_SUCCESSFUL'),
 	('2024-02-22 11:10:00.000000', 'File content', '2024-02-22 11:15:00.000000', 'INVOICE_FILE_5.txt', 'EXTERNAL', 'SEND_SUCCESSFUL');
 	
+-------------------------------------
+-- Invoice file configuration
+-------------------------------------
+INSERT INTO file_configuration (`type`,category_tag,file_name_pattern) 
+VALUES
+	 ('EXTERNAL','ISYCASE','KRISYCASE_{yyyyMMdd}'),
+	 ('INTERNAL','ISYCASE','IPKISYCASE_{yyyyMMdd}');
+	 

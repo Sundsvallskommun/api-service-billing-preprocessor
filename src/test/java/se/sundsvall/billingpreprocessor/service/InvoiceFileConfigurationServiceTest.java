@@ -104,4 +104,27 @@ class InvoiceFileConfigurationServiceTest {
 		verify(invoiceFileConfigurationRepositoryMock).findByTypeAndCategoryTag(type, categoryTag);
 		verifyNoMoreInteractions(invoiceFileConfigurationRepositoryMock);
 	}
+
+	@Test
+	void generateInvoiceFileNameWhenFileNameTemplateIsNull() {
+
+		// Arrange
+		final var type = "SOME_TYPE";
+		final var categoryTag = "SOME_CATEGORY";
+		final var entity = InvoiceFileConfigurationEntity.create()
+			.withType(type)
+			.withCategoryTag(categoryTag)
+			.withFileNamePattern(null);
+
+		when(invoiceFileConfigurationRepositoryMock.findByTypeAndCategoryTag(any(), any())).thenReturn(Optional.of(entity));
+
+		// Act
+		final var exception = assertThrows(ThrowableProblem.class, () -> service.getInvoiceFileNameBy(type, categoryTag));
+
+		// Assert
+		assertThat(exception).isNotNull();
+		assertThat(exception.getMessage()).isEqualTo("Internal Server Error: Could not generate filename from template: 'null'");
+		verify(invoiceFileConfigurationRepositoryMock).findByTypeAndCategoryTag(type, categoryTag);
+		verifyNoMoreInteractions(invoiceFileConfigurationRepositoryMock);
+	}
 }
