@@ -147,7 +147,7 @@ class BillingRecordsResourceTest {
 		final var matches = new PageImpl<>(List.of(BillingRecord.create()), pageable, 1);
 
 		// Mock
-		when(serviceMock.findBillingIRecords(Mockito.<Specification<BillingRecordEntity>>any(), eq(pageable))).thenReturn(matches);
+		when(serviceMock.findBillingRecords(Mockito.<Specification<BillingRecordEntity>>any(), eq(pageable))).thenReturn(matches);
 
 		// Call
 		final var response = webTestClient.get().uri(builder -> builder.path(PATH).build(emptyMap()))
@@ -159,7 +159,7 @@ class BillingRecordsResourceTest {
 			.getResponseBody();
 
 		// Verification
-		verify(serviceMock).findBillingIRecords(Mockito.<Specification<BillingRecordEntity>>any(), eq(pageable));
+		verify(serviceMock).findBillingRecords(Mockito.<Specification<BillingRecordEntity>>any(), eq(pageable));
 		assertThat(response).isNotNull().isEqualTo(matches);
 		assertThat(response.getContent()).hasSize(1);
 	}
@@ -174,7 +174,7 @@ class BillingRecordsResourceTest {
 		final var filter = "category:'ACCESS_CARD' and status:'NEW'";
 
 		// Mock
-		when(serviceMock.findBillingIRecords(ArgumentMatchers.<Specification<BillingRecordEntity>>any(), eq(pageable))).thenReturn(matches);
+		when(serviceMock.findBillingRecords(ArgumentMatchers.<Specification<BillingRecordEntity>>any(), eq(pageable))).thenReturn(matches);
 
 		// Call
 		final var response = webTestClient.get().uri(builder -> builder.path(PATH)
@@ -189,7 +189,7 @@ class BillingRecordsResourceTest {
 			.getResponseBody();
 
 		// Verification
-		verify(serviceMock).findBillingIRecords(ArgumentMatchers.<Specification<BillingRecordEntity>>any(), eq(pageable));
+		verify(serviceMock).findBillingRecords(ArgumentMatchers.<Specification<BillingRecordEntity>>any(), eq(pageable));
 		assertThat(response).isNotNull().isEqualTo(matches);
 		assertThat(response.getContent()).hasSize(1);
 	}

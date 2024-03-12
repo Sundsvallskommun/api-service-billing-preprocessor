@@ -99,7 +99,7 @@ public class BillingRecordsResource {
 			example = "category : 'ACCESS_CARD' and status : 'NEW'",
 			schema = @Schema(implementation = String.class)) @Filter final Specification<BillingRecordEntity> filter,
 		@ParameterObject final Pageable pageable) {
-		return ok(service.findBillingIRecords(filter, pageable));
+		return ok(service.findBillingRecords(filter, pageable));
 	}
 
 	@PutMapping(path = "/{id}", consumes = APPLICATION_JSON_VALUE, produces = { APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE })
