@@ -30,7 +30,7 @@ import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;
 
 @Component
-public class ExternalInvoiceCreator {
+public class ExternalInvoiceCreator implements InvoiceCreator {
 	private final StreamFactory factory;
 	private final LegalIdProvider legalIdProvider;
 
