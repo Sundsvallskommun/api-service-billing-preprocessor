@@ -149,7 +149,7 @@ class BillingRecordServiceTest {
 		when(billingRecordRepositoryMock.count(specificationMock)).thenReturn(10L);
 
 		// Call
-		final var matches = service.findBillingIRecords(specificationMock, pageable);
+		final var matches = service.findBillingRecords(specificationMock, pageable);
 
 		// Assertions and verifications
 		assertThat(matches.getContent()).isNotEmpty().hasSize(2);
@@ -174,7 +174,7 @@ class BillingRecordServiceTest {
 		when(billingRecordRepositoryMock.findAll(specificationMock, pageable)).thenReturn(new PageImpl<>(emptyList()));
 
 		// Call
-		final var matches = service.findBillingIRecords(specificationMock, pageable);
+		final var matches = service.findBillingRecords(specificationMock, pageable);
 
 		// Assertions and verifications
 		assertThat(matches.getContent()).isEmpty();
