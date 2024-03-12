@@ -1,4 +1,11 @@
 -------------------------------------
+-- File configuration
+-------------------------------------
+INSERT INTO file_configuration(id, type, category_tag, file_name_pattern)
+VALUES (1, 'INTERNAL', 'ACCESS_CARD', 'ACCESSCARDFILE_{yyyyMMdd}.txt'),
+       (2, 'EXTERNAL', 'SALARY_AND_PENSION', 'SALARYFILE_{yyyyMMdd}.txt');
+       
+-------------------------------------
 -- Billling records
 -------------------------------------
 INSERT INTO billing_record (id, category, approved, approved_by, created, modified, status, `type`)
