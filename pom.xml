@@ -19,6 +19,7 @@
   		<!-- Service properties -->
 		<spring-filter.version>3.1.7</spring-filter.version>
 		<beanio.version>3.0.0</beanio.version>
+		<commons-text.version>1.11.0</commons-text.version>
 		<generated-sources-path>${project.build.directory}/generated-sources</generated-sources-path>
 		<failsafeArgLine>-Dfile.encoding=${project.build.sourceEncoding}</failsafeArgLine>
 	</properties>
@@ -58,6 +59,12 @@
 			<groupId>com.github.beanio</groupId>
 			<artifactId>beanio</artifactId>
 			<version>${beanio.version}</version>
+		</dependency>
+<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-text -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-text</artifactId>
+			<version>${commons-text.version}</version>
 		</dependency>
 
 		<!-- Test -->

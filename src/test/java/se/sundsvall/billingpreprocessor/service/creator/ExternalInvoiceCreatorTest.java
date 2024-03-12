@@ -98,7 +98,7 @@ class ExternalInvoiceCreatorTest {
 	@Test
 	void createInvoiceHeader() throws Exception {
 		final var result = creator.createFileHeader();
-		final var expected = getResource("validation/expected_external_header_format.txt")
+		final var expected = getResource("validation/external_header_expected_format.txt")
 			.replace("yyMMdd", LocalDate.now().format(DateTimeFormatter.ofPattern("yyMMdd")));
 
 		assertThat(new String(result, StandardCharsets.UTF_8)).isEqualTo(expected);
@@ -121,7 +121,7 @@ class ExternalInvoiceCreatorTest {
 	@Test
 	void createInvoiceDataFromEntityWithLegalId() throws Exception {
 		final var result = creator.createInvoiceData(createbillingRecordEntity());
-		final var expected = getResource("validation/expected_external_invoicedata_format.txt");
+		final var expected = getResource("validation/external_invoicedata_expected_format.txt");
 
 		assertThat(new String(result, StandardCharsets.UTF_8)).isEqualTo(expected);
 		verify(legalIdProviderMock, never()).translateToLegalId(any());
@@ -135,7 +135,7 @@ class ExternalInvoiceCreatorTest {
 		when(legalIdProviderMock.translateToLegalId(PARTY_ID)).thenReturn(LEGAL_ID);
 
 		final var result = creator.createInvoiceData(input);
-		final var expected = getResource("validation/expected_external_invoicedata_format.txt");
+		final var expected = getResource("validation/external_invoicedata_expected_format.txt");
 
 		assertThat(new String(result, StandardCharsets.UTF_8)).isEqualTo(expected);
 		verify(legalIdProviderMock).translateToLegalId(PARTY_ID);

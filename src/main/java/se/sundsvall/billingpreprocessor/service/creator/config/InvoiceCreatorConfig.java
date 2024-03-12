@@ -1,5 +1,7 @@
 package se.sundsvall.billingpreprocessor.service.creator.config;
 
+import static org.apache.commons.text.StringEscapeUtils.unescapeJava;
+
 import org.beanio.builder.FixedLengthParserBuilder;
 import org.beanio.builder.StreamBuilder;
 import org.springframework.context.annotation.Bean;
@@ -12,10 +14,10 @@ public class InvoiceCreatorConfig {
 	private static final String FIXED_LENGTH = "fixedlength";
 
 	@Bean(INTERNAL_INVOICE_BUILDER)
-	StreamBuilder internalInvoiceStreamBuilder() {
+	StreamBuilder internalInvoiceStreamBuilder(InvoiceCreatorProperties properties) {
 		return new StreamBuilder(INTERNAL_INVOICE_BUILDER)
 			.format(FIXED_LENGTH)
-			.parser(new FixedLengthParserBuilder())
+			.parser(new FixedLengthParserBuilder().recordTerminator(unescapeJava(properties.recordTerminator())))
 			.addTypeHandler(InternalInvoiceFloatTypeHandler.NAME, new InternalInvoiceFloatTypeHandler())
 			.addTypeHandler(InternalInvoiceIntegerTypeHandler.NAME, new InternalInvoiceIntegerTypeHandler())
 			.addRecord(se.sundsvall.billingpreprocessor.service.creator.definition.internal.FileHeaderRow.class)
@@ -27,10 +29,11 @@ public class InvoiceCreatorConfig {
 	}
 
 	@Bean(EXTERNAL_INVOICE_BUILDER)
-	StreamBuilder externalInvoiceStreamBuilder() {
+	StreamBuilder externalInvoiceStreamBuilder(InvoiceCreatorProperties properties) {
+
 		return new StreamBuilder(EXTERNAL_INVOICE_BUILDER)
 			.format(FIXED_LENGTH)
-			.parser(new FixedLengthParserBuilder())
+			.parser(new FixedLengthParserBuilder().recordTerminator(unescapeJava(properties.recordTerminator())))
 			.addTypeHandler(ExternalInvoiceFloatTypeHandler.NAME, new ExternalInvoiceFloatTypeHandler())
 			.addRecord(se.sundsvall.billingpreprocessor.service.creator.definition.external.FileHeaderRow.class)
 			.addRecord(se.sundsvall.billingpreprocessor.service.creator.definition.external.CustomerRow.class)
