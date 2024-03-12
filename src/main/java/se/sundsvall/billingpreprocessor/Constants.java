@@ -27,6 +27,9 @@ public final class Constants {
 	public static final String ERROR_TOTAL_AMOUNT_NOT_PRESENT = "Total amount is not present";
 	public static final String ERROR_VAT_CODE_NOT_PRESENT = "Vat code is not present";
 
+	public static final String ERROR_NO_INVOICE_FILE_CONFIGURATION_FOUND = "No invoice file configuration found by type: '%s' and categoryTag: '%s'";
+	public static final String ERROR_INVOICE_FILE_NAME_GENERATION_FAILURE = "Could not generate filename from template: '%s'";
+
 	public static final String EXTERNAL_INVOICE_TYPE = "Extern debitering";
 	public static final String GENERATING_SYSTEM = "BillingPreProcessor";
 }

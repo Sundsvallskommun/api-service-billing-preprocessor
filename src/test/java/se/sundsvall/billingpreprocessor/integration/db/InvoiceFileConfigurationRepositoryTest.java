@@ -28,12 +28,12 @@ class InvoiceFileConfigurationRepositoryTest {
 	@Test
 	void createSuccessful() {
 
-		var config = InvoiceFileConfigurationEntity.create()
+		final var config = InvoiceFileConfigurationEntity.create()
 			.withType("type")
 			.withCategoryTag("categoryTag")
 			.withFileNamePattern("fileNamePattern");
 
-		var result = repository.saveAndFlush(config);
+		final var result = repository.saveAndFlush(config);
 
 		assertThat(result).isNotNull();
 		assertThat(result.getId()).isPositive();
@@ -45,19 +45,19 @@ class InvoiceFileConfigurationRepositoryTest {
 	@Test
 	void createFailsDueToUniqueConstraint() {
 
-		var config1 = InvoiceFileConfigurationEntity.create()
+		final var config1 = InvoiceFileConfigurationEntity.create()
 			.withType("type")
 			.withCategoryTag("categoryTag")
 			.withFileNamePattern("fileNamePattern1");
 
-		var config2 = InvoiceFileConfigurationEntity.create()
+		final var config2 = InvoiceFileConfigurationEntity.create()
 			.withType("type")
 			.withCategoryTag("categoryTag")
 			.withFileNamePattern("fileNamePattern2");
 
 		repository.save(config1);
 
-		var exception = assertThrows(DataIntegrityViolationException.class, () -> repository.save(config2));
+		final var exception = assertThrows(DataIntegrityViolationException.class, () -> repository.save(config2));
 
 		assertThat(exception.getMessage()).contains("Duplicate entry 'type-categoryTag' for key 'uq_type_category_tag");
 	}
@@ -65,7 +65,7 @@ class InvoiceFileConfigurationRepositoryTest {
 	@Test
 	void findByTypeAndCategoryTag() {
 
-		var result = repository.findByTypeAndCategoryTag("type1", "category_tag1");
+		final var result = repository.findByTypeAndCategoryTag("type1", "category_tag1").get();
 
 		assertThat(result).isNotNull();
 		assertThat(result.getFileNamePattern()).isEqualTo("file_name_pattern1");
