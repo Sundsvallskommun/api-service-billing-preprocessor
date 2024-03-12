@@ -12,7 +12,7 @@ public class InvoiceCreatorConfig {
 	private static final String FIXED_LENGTH = "fixedlength";
 
 	@Bean(INTERNAL_INVOICE_BUILDER)
-	public StreamBuilder internalInvoiceStreamBuilder() {
+	StreamBuilder internalInvoiceStreamBuilder() {
 		return new StreamBuilder(INTERNAL_INVOICE_BUILDER)
 			.format(FIXED_LENGTH)
 			.parser(new FixedLengthParserBuilder())
@@ -27,7 +27,7 @@ public class InvoiceCreatorConfig {
 	}
 
 	@Bean(EXTERNAL_INVOICE_BUILDER)
-	public StreamBuilder externalInvoiceStreamBuilder() {
+	StreamBuilder externalInvoiceStreamBuilder() {
 		return new StreamBuilder(EXTERNAL_INVOICE_BUILDER)
 			.format(FIXED_LENGTH)
 			.parser(new FixedLengthParserBuilder())
