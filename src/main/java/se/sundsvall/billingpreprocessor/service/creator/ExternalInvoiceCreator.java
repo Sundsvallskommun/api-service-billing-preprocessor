@@ -55,11 +55,11 @@ public class ExternalInvoiceCreator implements InvoiceCreator {
 	}
 
 	/**
-	 * Method returns the categories handled by this creator
+	 * Method for determining if creator can handle requested category
 	 */
 	@Override
-	public List<String> handledCategories() {
-		return VALID_CAGTEGORIES;
+	public boolean canHandle(String category) {
+		return VALID_CAGTEGORIES.contains(category);
 	}
 
 	/**
