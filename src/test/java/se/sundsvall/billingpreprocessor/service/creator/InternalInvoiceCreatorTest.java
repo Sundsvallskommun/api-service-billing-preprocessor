@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.STANDARD;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.EXTERNAL;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.INTERNAL;
 import static se.sundsvall.billingpreprocessor.service.creator.config.InvoiceCreatorConfig.INTERNAL_INVOICE_BUILDER;
 
 import java.io.IOException;
@@ -68,6 +70,22 @@ class InternalInvoiceCreatorTest {
 	@BeforeAll
 	static void setUpFactory(@Qualifier(INTERNAL_INVOICE_BUILDER) StreamBuilder builder) {
 		FACTORY.define(builder);
+	}
+
+	@Test
+	void validateImplementation() {
+		assertThat(creator).isInstanceOf(InvoiceCreator.class);
+	}
+
+	@Test
+	void canHandle() {
+		assertThat(creator.canHandle(INTERNAL)).isTrue();
+		assertThat(creator.canHandle(EXTERNAL)).isFalse();
+	}
+
+	@Test
+	void handledCategories() {
+		assertThat(creator.handledCategories()).containsExactly("ISYCASE");
 	}
 
 	@Test

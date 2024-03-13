@@ -13,6 +13,7 @@ import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Descri
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.STANDARD;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.APPROVED;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.EXTERNAL;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.INTERNAL;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -94,6 +95,22 @@ class ExternalInvoiceCreatorTest {
 
 	@Autowired
 	private ExternalInvoiceCreator creator;
+
+	@Test
+	void validateImplementation() {
+		assertThat(creator).isInstanceOf(InvoiceCreator.class);
+	}
+
+	@Test
+	void canHandle() {
+		assertThat(creator.canHandle(EXTERNAL)).isTrue();
+		assertThat(creator.canHandle(INTERNAL)).isFalse();
+	}
+
+	@Test
+	void handledCategories() {
+		assertThat(creator.handledCategories()).containsExactly("ISYCASE");
+	}
 
 	@Test
 	void createInvoiceHeader() throws Exception {
