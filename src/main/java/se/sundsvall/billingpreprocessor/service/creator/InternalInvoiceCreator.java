@@ -42,6 +42,9 @@ public class InternalInvoiceCreator implements InvoiceCreator {
 
 	/**
 	 * Method for determining if creator can handle requested type
+	 * 
+	 * @param type type to determin if the creator is applicable for
+	 * @return true if creator can handle the type, false otherwise
 	 */
 	@Override
 	public boolean canHandle(Type type) {
@@ -50,6 +53,9 @@ public class InternalInvoiceCreator implements InvoiceCreator {
 
 	/**
 	 * Method for determining if creator can handle requested category
+	 * 
+	 * @param category category to determin if the creator is applicable for
+	 * @return true if creator can handle the category, false otherwise
 	 */
 	@Override
 	public boolean canHandle(String category) {
