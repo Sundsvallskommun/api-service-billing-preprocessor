@@ -29,8 +29,10 @@ import se.sundsvall.billingpreprocessor.service.creator.InvoiceCreator;
 
 @Service
 public class InvoiceFileService {
-	private static final String FILE_CREATION_ERROR = "%s occurred during creation of %s invoice billing file";
 	private static final Logger LOG = LoggerFactory.getLogger(InvoiceFileService.class);
+	private static final String FILE_CREATION_ERROR = "%s occurred during creation of %s invoice billing file";
+	private static final String NO_CREATOR_FOR_TYPE = "No creator is defined to handle type %s";
+	private static final String NO_CREATOR_FOR_CATEGORY = "No creator is defined to handle type %s and category %s";
 
 	private final BillingRecordRepository billingRecordRepository;
 	private final InvoiceFileRepository invoiceFileRepository;
@@ -69,9 +71,7 @@ public class InvoiceFileService {
 			try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
 				final var invoiceCreator = getCreatorFor(type);
 				outputStream.write(invoiceCreator.createFileHeader());
-				billingRecordsToProcess.forEach(billingRecord -> createBillingRecord(outputStream, billingRecord, invoiceCreator).ifPresent(error -> {
-					billingRecordErrors.put(billingRecord.getId(), error);
-				}));
+				billingRecordsToProcess.forEach(billingRecord -> createBillingRecord(outputStream, billingRecord, invoiceCreator).ifPresent(error -> billingRecordErrors.put(billingRecord.getId(), error)));
 
 				if (billingRecordsToProcess.size() > billingRecordErrors.size()) { // At least one of the records should be successful for the file to be created
 					final var filename = invoiceFileConfigurationService.getInvoiceFileNameBy(type.name(), billingRecordsToProcess.getFirst().getCategory());
@@ -84,12 +84,12 @@ public class InvoiceFileService {
 
 	private Optional<String> createBillingRecord(final ByteArrayOutputStream outputStream, BillingRecordEntity entity, InvoiceCreator invoiceCreator) {
 		try {
-			if (invoiceCreator.handledCategories().contains(entity.getCategory())) {
+			if (invoiceCreator.canHandle(entity.getCategory())) {
 				outputStream.write(invoiceCreator.createInvoiceData(entity));
 				billingRecordRepository.save(entity.withStatus(INVOICED));
 				return Optional.empty();
 			}
-			throw Problem.valueOf(INTERNAL_SERVER_ERROR, "No creator is defined to handle type %s and category %s".formatted(entity.getType(), entity.getCategory()));
+			throw Problem.valueOf(INTERNAL_SERVER_ERROR, NO_CREATOR_FOR_CATEGORY.formatted(entity.getType(), entity.getCategory()));
 		} catch (Exception e) {
 			LOG.warn("{} occurred when persisting record with id {} to file'", e.getClass().getSimpleName(), entity.getId(), e);
 			return Optional.of(e.getMessage());
@@ -107,7 +107,7 @@ public class InvoiceFileService {
 		return invoiceCreators.stream()
 			.filter(c -> c.canHandle(type))
 			.findFirst()
-			.orElseThrow(createInternalServerErrorProblem("No creator is defined to handle type %s".formatted(type)));
+			.orElseThrow(createInternalServerErrorProblem(NO_CREATOR_FOR_TYPE.formatted(type)));
 	}
 
 	private void checkAndSendErrorMail(Map<String, String> entitiesWithErrors) {

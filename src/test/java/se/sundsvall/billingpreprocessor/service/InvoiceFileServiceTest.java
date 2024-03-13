@@ -91,7 +91,7 @@ class InvoiceFileServiceTest {
 		when(externalInvoiceCreatorMock.createFileHeader()).thenReturn(FILE_HEADER);
 		when(externalInvoiceCreatorMock.createInvoiceData(any())).thenReturn(INVOICE_DATA);
 		when(externalInvoiceCreatorMock.canHandle(EXTERNAL)).thenReturn(true);
-		when(externalInvoiceCreatorMock.handledCategories()).thenReturn(List.of(CATEGORY));
+		when(externalInvoiceCreatorMock.canHandle(CATEGORY)).thenReturn(true);
 
 		// Act
 		service.createFileEntities();
@@ -124,7 +124,7 @@ class InvoiceFileServiceTest {
 		when(internalInvoiceCreatorMock.createFileHeader()).thenReturn(FILE_HEADER);
 		when(internalInvoiceCreatorMock.createInvoiceData(any())).thenReturn(INVOICE_DATA);
 		when(internalInvoiceCreatorMock.canHandle(INTERNAL)).thenReturn(true);
-		when(internalInvoiceCreatorMock.handledCategories()).thenReturn(List.of(CATEGORY));
+		when(internalInvoiceCreatorMock.canHandle(CATEGORY)).thenReturn(true);
 
 		// Act
 		service.createFileEntities();
@@ -174,12 +174,12 @@ class InvoiceFileServiceTest {
 		when(internalInvoiceCreatorMock.createInvoiceData(internalEntity)).thenReturn(internalInvoiceData);
 		when(internalInvoiceCreatorMock.createInvoiceData(invalidInternalEntity)).thenThrow(Problem.valueOf(INTERNAL_SERVER_ERROR));
 		when(internalInvoiceCreatorMock.canHandle(INTERNAL)).thenReturn(true);
-		when(internalInvoiceCreatorMock.handledCategories()).thenReturn(List.of(CATEGORY));
+		when(internalInvoiceCreatorMock.canHandle(CATEGORY)).thenReturn(true);
 		when(externalInvoiceCreatorMock.createFileHeader()).thenReturn(externalFileHeader);
 		when(externalInvoiceCreatorMock.createInvoiceData(externalEntity)).thenReturn(externalInvoiceData);
 		when(externalInvoiceCreatorMock.createInvoiceData(invalidExternalEntity)).thenThrow(Problem.valueOf(INTERNAL_SERVER_ERROR));
 		when(externalInvoiceCreatorMock.canHandle(EXTERNAL)).thenReturn(true);
-		when(externalInvoiceCreatorMock.handledCategories()).thenReturn(List.of(CATEGORY));
+		when(externalInvoiceCreatorMock.canHandle(CATEGORY)).thenReturn(true);
 
 		// Act
 		service.createFileEntities();
@@ -190,14 +190,14 @@ class InvoiceFileServiceTest {
 		verify(internalInvoiceCreatorMock).canHandle(INTERNAL);
 		verify(internalInvoiceCreatorMock, atMostOnce()).canHandle(EXTERNAL);
 		verify(internalInvoiceCreatorMock).createFileHeader();
-		verify(internalInvoiceCreatorMock, times(2)).handledCategories();
+		verify(internalInvoiceCreatorMock, times(2)).canHandle(CATEGORY);
 		verify(internalInvoiceCreatorMock).createInvoiceData(invalidInternalEntity);
 		verify(internalInvoiceCreatorMock).createInvoiceData(internalEntity);
 
 		verify(externalInvoiceCreatorMock, atMostOnce()).canHandle(INTERNAL);
 		verify(externalInvoiceCreatorMock).canHandle(EXTERNAL);
 		verify(externalInvoiceCreatorMock).createFileHeader();
-		verify(externalInvoiceCreatorMock, times(2)).handledCategories();
+		verify(externalInvoiceCreatorMock, times(2)).canHandle(CATEGORY);
 		verify(externalInvoiceCreatorMock).createInvoiceData(invalidExternalEntity);
 		verify(externalInvoiceCreatorMock).createInvoiceData(externalEntity);
 
@@ -279,7 +279,6 @@ class InvoiceFileServiceTest {
 		when(billingRecordRepositoryMock.findAllByStatus(APPROVED)).thenReturn(List.of(entity));
 		when(externalInvoiceCreatorMock.canHandle(EXTERNAL)).thenReturn(true);
 		when(externalInvoiceCreatorMock.createFileHeader()).thenReturn(FILE_HEADER);
-		when(externalInvoiceCreatorMock.handledCategories()).thenReturn(List.of("OTHER_CATEGORY"));
 
 		// Act
 		service.createFileEntities();
@@ -288,6 +287,8 @@ class InvoiceFileServiceTest {
 		verify(billingRecordRepositoryMock).findAllByStatus(APPROVED);
 		verify(externalInvoiceCreatorMock).canHandle(EXTERNAL);
 		verify(internalInvoiceCreatorMock, atMostOnce()).canHandle(EXTERNAL);
+		verify(externalInvoiceCreatorMock).canHandle(CATEGORY);
+		verify(internalInvoiceCreatorMock, atMostOnce()).canHandle(CATEGORY);
 		verify(externalInvoiceCreatorMock).createFileHeader();
 		verifyNoMoreInteractions(billingRecordRepositoryMock, invoiceFileRepositoryMock, externalInvoiceCreatorMock, internalInvoiceCreatorMock, invoiceFileConfigurationServiceMock);
 

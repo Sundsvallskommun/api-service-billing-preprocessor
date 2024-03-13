@@ -102,14 +102,15 @@ class ExternalInvoiceCreatorTest {
 	}
 
 	@Test
-	void canHandle() {
+	void canHandleType() {
 		assertThat(creator.canHandle(EXTERNAL)).isTrue();
 		assertThat(creator.canHandle(INTERNAL)).isFalse();
 	}
 
 	@Test
-	void handledCategories() {
-		assertThat(creator.handledCategories()).containsExactly("ISYCASE");
+	void canHandleCategory() {
+		assertThat(creator.canHandle("ISYCASE")).isTrue();
+		assertThat(creator.canHandle("UNHANDLED_CATEGORY")).isFalse();
 	}
 
 	@Test
