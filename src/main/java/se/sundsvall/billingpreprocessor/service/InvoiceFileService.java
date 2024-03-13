@@ -9,8 +9,6 @@ import static se.sundsvall.billingpreprocessor.service.mapper.InvoiceFileMapper.
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.zalando.problem.Problem;
-import org.zalando.problem.ThrowableProblem;
 
 import jakarta.transaction.Transactional;
 import se.sundsvall.billingpreprocessor.integration.db.BillingRecordRepository;
@@ -34,24 +31,27 @@ import se.sundsvall.billingpreprocessor.service.creator.InvoiceCreator;
 
 @Service
 public class InvoiceFileService {
-	private static final String FILE_CREATION_ERROR = "%s occurred during creation of billing file";
+	private static final String FILE_CREATION_ERROR = "%s occurred during creation of invoice billing file";
 	private static final Logger LOG = LoggerFactory.getLogger(InvoiceFileService.class);
 
 	private final BillingRecordRepository billingRecordRepository;
 	private final InvoiceFileRepository invoiceFileRepository;
 	private final ExternalInvoiceCreator externalInvoiceCreator;
 	private final InternalInvoiceCreator internalInvoiceCreator;
+	private final InvoiceFileConfigurationService invoiceFileConfigurationService;
 
 	public InvoiceFileService(
 		BillingRecordRepository billingRecordRepository,
 		InvoiceFileRepository invoiceFileRepository,
 		ExternalInvoiceCreator externalInvoiceCreator,
-		InternalInvoiceCreator internalInvoiceCreator) {
+		InternalInvoiceCreator internalInvoiceCreator,
+		InvoiceFileConfigurationService invoiceFileConfigurationService) {
 
 		this.billingRecordRepository = billingRecordRepository;
 		this.invoiceFileRepository = invoiceFileRepository;
 		this.externalInvoiceCreator = externalInvoiceCreator;
 		this.internalInvoiceCreator = internalInvoiceCreator;
+		this.invoiceFileConfigurationService = invoiceFileConfigurationService;
 	}
 
 	@Transactional
@@ -60,34 +60,39 @@ public class InvoiceFileService {
 		try {
 			createFileEntity(billingRecords, EXTERNAL, externalInvoiceCreator);
 			createFileEntity(billingRecords, INTERNAL, internalInvoiceCreator);
-		} catch (IOException e) {
+		} catch (Exception e) {
+			// TODO: Integrate with messaging and send error mail that error has occurred (task UF-7461)
+			if (LOG.isErrorEnabled()) {
+				LOG.error("{} occurred during creation of invoice billing file", e.getClass().getSimpleName(), e);
+			}
 			throw Problem.valueOf(INTERNAL_SERVER_ERROR, FILE_CREATION_ERROR.formatted(e.getClass().getSimpleName()));
 		}
 	}
 
 	private void createFileEntity(List<BillingRecordEntity> billingRecords, Type type, InvoiceCreator invoiceCreator) throws IOException {
-		final var entitiesToProcess = filterByType(billingRecords, type);
-		if (!entitiesToProcess.isEmpty()) {
-			final Map<String, String> errors = new HashMap<>();
+		final var billingRecordsToProcess = filterByType(billingRecords, type);
+		if (!billingRecordsToProcess.isEmpty()) {
+			final Map<String, String> billingRecordErrors = new HashMap<>();
 			try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
 				outputStream.write(invoiceCreator.createFileHeader());
-				entitiesToProcess.forEach(entity -> createExternalBillingRecord(outputStream, entity, invoiceCreator).ifPresent(error -> {
-					errors.put(entity.getId(), error);
+				billingRecordsToProcess.forEach(billingRecord -> createBillingRecord(outputStream, billingRecord, invoiceCreator).ifPresent(error -> {
+					billingRecordErrors.put(billingRecord.getId(), error);
 				}));
 
-				invoiceFileRepository.save(toInvoiceFileEntity(type.name() + LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME), type.name(), outputStream.toByteArray())); // TODO: Change to correct name when UF-7423 is done
-				alertErrors(errors);
+				final var filename = invoiceFileConfigurationService.getInvoiceFileNameBy(type.name(), billingRecordsToProcess.getFirst().getCategory());
+				invoiceFileRepository.save(toInvoiceFileEntity(filename, type.name(), outputStream.toByteArray()));
+				checkAndSendErrorMail(billingRecordErrors);
 			}
 		}
 	}
 
-	private Optional<String> createExternalBillingRecord(final ByteArrayOutputStream outputStream, BillingRecordEntity entity, InvoiceCreator invoiceCreator) {
+	private Optional<String> createBillingRecord(final ByteArrayOutputStream outputStream, BillingRecordEntity entity, InvoiceCreator invoiceCreator) {
 		try {
 			outputStream.write(invoiceCreator.createInvoiceData(entity));
 			billingRecordRepository.save(entity.withStatus(INVOICED));
 			return Optional.empty();
-		} catch (IOException | ThrowableProblem e) {
-			LOG.warn("{} occurred when persisting record with id %s to file. Message is '{}'", e.getClass().getSimpleName(), e.getMessage());
+		} catch (Exception e) {
+			LOG.warn("{} occurred when persisting record with id {} to file'", e.getClass().getSimpleName(), entity.getId(), e);
 			return Optional.of(e.getMessage());
 		}
 	}
@@ -99,9 +104,9 @@ public class InvoiceFileService {
 			.toList();
 	}
 
-	private void alertErrors(Map<String, String> entitiesWithErrors) {
+	private void checkAndSendErrorMail(Map<String, String> entitiesWithErrors) {
 		if (!entitiesWithErrors.isEmpty()) {
-			// TODO: Integrate with messaging and send email regarding the problems that has occurred during file creation?
+			// TODO: Integrate with messaging and send email with problems that has occurred during file creation (task UF-7461)
 		}
 	}
 }
