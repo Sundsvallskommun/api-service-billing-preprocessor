@@ -60,7 +60,6 @@
 			<artifactId>beanio</artifactId>
 			<version>${beanio.version}</version>
 		</dependency>
-<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-text -->
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-text</artifactId>

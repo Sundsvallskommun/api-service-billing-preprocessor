@@ -20,7 +20,7 @@ import se.sundsvall.billingpreprocessor.service.InvoiceFileService;
 
 @RestController
 @Validated
-@RequestMapping("/invoicefile")
+@RequestMapping("/invoicefiles")
 @Tag(name = "Invoice", description = "Invoice file operations")
 public class InvoiceFileResource {
 
