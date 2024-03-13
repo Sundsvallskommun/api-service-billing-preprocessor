@@ -5,6 +5,7 @@ import static java.util.Optional.ofNullable;
 import static se.sundsvall.billingpreprocessor.Constants.EMPTY_ARRAY;
 import static se.sundsvall.billingpreprocessor.Constants.EXTERNAL_INVOICE_TYPE;
 import static se.sundsvall.billingpreprocessor.Constants.GENERATING_SYSTEM;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.EXTERNAL;
 import static se.sundsvall.billingpreprocessor.service.creator.config.InvoiceCreatorConfig.EXTERNAL_INVOICE_BUILDER;
 import static se.sundsvall.billingpreprocessor.service.mapper.ExternalInvoiceMapper.toCustomer;
 import static se.sundsvall.billingpreprocessor.service.mapper.ExternalInvoiceMapper.toFileHeader;
@@ -19,6 +20,8 @@ import static se.sundsvall.billingpreprocessor.service.util.StringUtil.formatLeg
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.List;
+import java.util.Objects;
 
 import org.beanio.BeanWriter;
 import org.beanio.StreamFactory;
@@ -28,9 +31,12 @@ import org.springframework.stereotype.Component;
 
 import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;
+import se.sundsvall.billingpreprocessor.integration.db.model.enums.Type;
 
 @Component
 public class ExternalInvoiceCreator implements InvoiceCreator {
+	private static final List<String> VALID_CAGTEGORIES = List.of("ISYCASE");
+
 	private final StreamFactory factory;
 	private final LegalIdProvider legalIdProvider;
 
@@ -41,11 +47,28 @@ public class ExternalInvoiceCreator implements InvoiceCreator {
 	}
 
 	/**
+	 * Method for determining if creator can handle requested type
+	 */
+	@Override
+	public boolean canHandle(Type type) {
+		return Objects.equals(EXTERNAL, type);
+	}
+
+	/**
+	 * Method returns the categories handled by this creator
+	 */
+	@Override
+	public List<String> handledCategories() {
+		return VALID_CAGTEGORIES;
+	}
+
+	/**
 	 * Method creates a file header according to the specification for external invoices
 	 * 
 	 * @return bytearray representing the file header
 	 * @throws IOException if byte array output stream can not be closed
 	 */
+	@Override
 	public byte[] createFileHeader() throws IOException {
 		try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 			BeanWriter invoiceWriter = factory.createWriter(EXTERNAL_INVOICE_BUILDER, new OutputStreamWriter(byteArrayOutputStream))) {
@@ -62,6 +85,7 @@ public class ExternalInvoiceCreator implements InvoiceCreator {
 	 * @return bytearray representing the invoice data section
 	 * @throws IOException if byte array output stream can not be closed
 	 */
+	@Override
 	public byte[] createInvoiceData(BillingRecordEntity billingRecord) throws IOException {
 		if (isNull(billingRecord)) {
 			return EMPTY_ARRAY;
