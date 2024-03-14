@@ -13,7 +13,6 @@ import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Descri
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.STANDARD;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.APPROVED;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.EXTERNAL;
-import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.INTERNAL;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -102,19 +101,17 @@ class ExternalInvoiceCreatorTest {
 	}
 
 	@Test
-	void canHandleType() {
-		assertThat(creator.canHandle(EXTERNAL)).isTrue();
-		assertThat(creator.canHandle(INTERNAL)).isFalse();
+	void getProcessableTypes() {
+		assertThat(creator.getProcessableTypes()).containsExactly(EXTERNAL);
 	}
 
 	@Test
-	void canHandleCategory() {
-		assertThat(creator.canHandle("ISYCASE")).isTrue();
-		assertThat(creator.canHandle("UNHANDLED_CATEGORY")).isFalse();
+	void getProcessableCategories() {
+		assertThat(creator.getProcessableCategories()).containsExactly("ISYCASE");
 	}
 
 	@Test
-	void createInvoiceHeader() throws Exception {
+	void createFileHeader() throws Exception {
 		final var result = creator.createFileHeader();
 		final var expected = getResource("validation/external_header_expected_format.txt")
 			.replace("yyMMdd", LocalDate.now().format(DateTimeFormatter.ofPattern("yyMMdd")));

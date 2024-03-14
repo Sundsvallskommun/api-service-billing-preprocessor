@@ -21,7 +21,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.List;
-import java.util.Objects;
 
 import org.beanio.BeanWriter;
 import org.beanio.StreamFactory;
@@ -47,25 +46,21 @@ public class ExternalInvoiceCreator implements InvoiceCreator {
 	}
 
 	/**
-	 * Method for determining if creator can handle requested type
+	 * Method returning the types that the creator can handle
 	 * 
-	 * @param type type to determin if the creator is applicable for
-	 * @return true if creator can handle the type, false otherwise
+	 * @return list of types that the creator can handle
 	 */
-	@Override
-	public boolean canHandle(Type type) {
-		return Objects.equals(EXTERNAL, type);
+	public List<Type> getProcessableTypes() {
+		return List.of(EXTERNAL);
 	}
 
 	/**
-	 * Method for determining if creator can handle requested category
+	 * Method returning the categories that the creator can handle
 	 * 
-	 * @param category category to determin if the creator is applicable for
-	 * @return true if creator can handle the category, false otherwise
+	 * @return list of categories that the creator can handle
 	 */
-	@Override
-	public boolean canHandle(String category) {
-		return VALID_CAGTEGORIES.contains(category);
+	public List<String> getProcessableCategories() {
+		return VALID_CAGTEGORIES;
 	}
 
 	/**

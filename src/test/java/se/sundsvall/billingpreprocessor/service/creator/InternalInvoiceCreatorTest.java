@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.STANDARD;
-import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.EXTERNAL;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.INTERNAL;
 import static se.sundsvall.billingpreprocessor.service.creator.config.InvoiceCreatorConfig.INTERNAL_INVOICE_BUILDER;
 
@@ -78,19 +77,17 @@ class InternalInvoiceCreatorTest {
 	}
 
 	@Test
-	void canHandleType() {
-		assertThat(creator.canHandle(INTERNAL)).isTrue();
-		assertThat(creator.canHandle(EXTERNAL)).isFalse();
+	void getProcessableTypes() {
+		assertThat(creator.getProcessableTypes()).containsExactly(INTERNAL);
 	}
 
 	@Test
-	void canHandleCategory() {
-		assertThat(creator.canHandle("ISYCASE")).isTrue();
-		assertThat(creator.canHandle("UNHANDLED_CATEGORY")).isFalse();
+	void getProcessableCategories() {
+		assertThat(creator.getProcessableCategories()).containsExactly("ISYCASE");
 	}
 
 	@Test
-	void createInvoiceHeader() throws Exception {
+	void createFileHeader() throws Exception {
 		final var result = creator.createFileHeader();
 		final var expected = getResource("validation/internal_header_expected_format.txt");
 
