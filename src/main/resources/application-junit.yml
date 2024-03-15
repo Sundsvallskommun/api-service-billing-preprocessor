@@ -19,3 +19,10 @@ spring:
             scripts:
               action: create
               create-target: target/database/generated-schema.sql
+integration:
+  sftp:
+    host: 127.0.0.1
+    user: user
+    password: pass
+    remoteDir: "/upload/"
+    allowUnknownKeys: false
