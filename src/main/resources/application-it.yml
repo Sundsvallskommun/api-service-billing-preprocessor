@@ -16,13 +16,20 @@ spring:
     oauth2:
       client:
         registration:
+          messaging:
+            client-id: someClientId
+            client-secret: someClientSecret
           party:
             client-id: someClientId
             client-secret: someClientSecret
         provider:
+          messaging:
+            token-uri: http://localhost:${wiremock.server.port}/token
           party:
             token-uri: http://localhost:${wiremock.server.port}/token
 
 integration:
+  messaging:
+    url: http://localhost:${wiremock.server.port}/messaging
   party:
     url: http://localhost:${wiremock.server.port}/party

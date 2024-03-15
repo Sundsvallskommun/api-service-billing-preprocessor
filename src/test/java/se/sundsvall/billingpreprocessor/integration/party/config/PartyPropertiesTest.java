@@ -1,4 +1,4 @@
-package se.sundsvall.billingpreprocessor.integration.party;
+package se.sundsvall.billingpreprocessor.integration.party.config;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.MOCK;
@@ -17,9 +17,9 @@ class PartyPropertiesTest {
     @Autowired
     private PartyProperties properties;
 
-    @Test
+	@Test
     void testProperties() {
-        assertThat(properties.connectTimeout()).isEqualTo(11);
-        assertThat(properties.readTimeout()).isEqualTo(22);
+		assertThat(properties.connectTimeout()).isEqualTo(11);
+		assertThat(properties.readTimeout()).isEqualTo(22);
     }
 }

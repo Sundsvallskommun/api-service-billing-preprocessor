@@ -1,4 +1,4 @@
-package se.sundsvall.billingpreprocessor.integration.party;
+package se.sundsvall.billingpreprocessor.integration.party.config;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
@@ -14,9 +14,9 @@ import se.sundsvall.dept44.configuration.feign.FeignMultiCustomizer;
 import se.sundsvall.dept44.configuration.feign.decoder.ProblemErrorDecoder;
 
 @Import(FeignConfiguration.class)
-class PartyConfiguration {
+public class PartyConfiguration {
 
-    static final String CLIENT_ID = "party";
+	public static final String CLIENT_ID = "party";
 
     @Bean
 	FeignBuilderCustomizer feignBuilderCustomizer(final PartyProperties partyProperties, ClientRegistrationRepository clientRegistrationRepository) {

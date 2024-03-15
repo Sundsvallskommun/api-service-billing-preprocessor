@@ -1,4 +1,4 @@
-package se.sundsvall.billingpreprocessor.integration.party;
+package se.sundsvall.billingpreprocessor.integration.party.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.bind.DefaultValue;
