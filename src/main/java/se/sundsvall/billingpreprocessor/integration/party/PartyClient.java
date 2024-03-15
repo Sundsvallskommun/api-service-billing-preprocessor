@@ -2,7 +2,7 @@ package se.sundsvall.billingpreprocessor.integration.party;
 
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
 import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
-import static se.sundsvall.billingpreprocessor.integration.party.PartyConfiguration.CLIENT_ID;
+import static se.sundsvall.billingpreprocessor.integration.party.config.PartyConfiguration.CLIENT_ID;
 
 import java.util.Optional;
 
@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import generated.se.sundsvall.party.PartyType;
+import se.sundsvall.billingpreprocessor.integration.party.config.PartyConfiguration;
 
 @FeignClient(
     name = CLIENT_ID,

@@ -1,8 +1,4 @@
-package se.sundsvall.billingpreprocessor.integration.party;
-
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-
-import java.util.List;
+package se.sundsvall.billingpreprocessor.integration.messaging.config;
 
 import org.springframework.cloud.openfeign.FeignBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
@@ -14,15 +10,15 @@ import se.sundsvall.dept44.configuration.feign.FeignMultiCustomizer;
 import se.sundsvall.dept44.configuration.feign.decoder.ProblemErrorDecoder;
 
 @Import(FeignConfiguration.class)
-class PartyConfiguration {
+public class MessagingConfiguration {
 
-    static final String CLIENT_ID = "party";
+	public static final String CLIENT_ID = "messaging";
 
-    @Bean
-	FeignBuilderCustomizer feignBuilderCustomizer(final PartyProperties partyProperties, ClientRegistrationRepository clientRegistrationRepository) {
+	@Bean
+	FeignBuilderCustomizer feignBuilderCustomizer(MessagingProperties messagingProperties, ClientRegistrationRepository clientRegistrationRepository) {
 		return FeignMultiCustomizer.create()
-            .withErrorDecoder(new ProblemErrorDecoder(CLIENT_ID, List.of(NOT_FOUND.value())))
-			.withRequestTimeoutsInSeconds(partyProperties.connectTimeout(), partyProperties.readTimeout())
+			.withErrorDecoder(new ProblemErrorDecoder(CLIENT_ID))
+			.withRequestTimeoutsInSeconds(messagingProperties.connectTimeout(), messagingProperties.readTimeout())
 			.withRetryableOAuth2InterceptorForClientRegistration(clientRegistrationRepository.findByRegistrationId(CLIENT_ID))
 			.composeCustomizersToOne();
 	}

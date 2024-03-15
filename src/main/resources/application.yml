@@ -23,5 +23,7 @@ spring:
     oauth2:
       client:
         registration:
+          messaging:
+            authorization-grant-type: client_credentials
           party:
             authorization-grant-type: client_credentials

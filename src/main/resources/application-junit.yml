@@ -24,15 +24,24 @@ spring:
     oauth2:
       client:
         registration:
+          messaging:
+            client-id: messagingClientId
+            client-secret: messagingClientSecret
           party:
-            client-id: someClientId
-            client-secret: someClientSecret
+            client-id: partyClientId
+            client-secret: partyClientSecret
         provider:
+          messaging:
+            token-uri: http://token.url
           party:
-            token-uri: http://someTokenUri
+            token-uri: http://token.url
 
 integration:
+  messaging:
+    url: http://messaging.url
+    connectTimeout: 12
+    readTimeout: 23
   party:
-    url: http://someUrl
+    url: http://party.url
     connect-timeout: 11
     read-timeout: 22

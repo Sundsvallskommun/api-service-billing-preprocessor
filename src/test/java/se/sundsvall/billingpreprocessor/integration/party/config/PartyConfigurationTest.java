@@ -1,11 +1,11 @@
-package se.sundsvall.billingpreprocessor.integration.party;
+package se.sundsvall.billingpreprocessor.integration.party.config;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static se.sundsvall.billingpreprocessor.integration.party.PartyConfiguration.CLIENT_ID;
+import static se.sundsvall.billingpreprocessor.integration.party.config.PartyConfiguration.CLIENT_ID;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
