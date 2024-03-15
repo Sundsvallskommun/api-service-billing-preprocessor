@@ -42,9 +42,8 @@ public class SftpConfiguration {
 		handler.setFileNameGenerator(message -> {
 			if (message.getPayload() instanceof Resource) {
 				return ((Resource) message.getPayload()).getFilename();
-			} else {
-				throw new IllegalArgumentException("Resource expected as payload.");
 			}
+			throw new IllegalArgumentException("Resource expected as payload.");
 		});
 		return handler;
 	}
