@@ -18,10 +18,10 @@ public class PartyConfiguration {
 
 	public static final String CLIENT_ID = "party";
 
-    @Bean
+	@Bean
 	FeignBuilderCustomizer feignBuilderCustomizer(final PartyProperties partyProperties, ClientRegistrationRepository clientRegistrationRepository) {
 		return FeignMultiCustomizer.create()
-            .withErrorDecoder(new ProblemErrorDecoder(CLIENT_ID, List.of(NOT_FOUND.value())))
+			.withErrorDecoder(new ProblemErrorDecoder(CLIENT_ID, List.of(NOT_FOUND.value())))
 			.withRequestTimeoutsInSeconds(partyProperties.connectTimeout(), partyProperties.readTimeout())
 			.withRetryableOAuth2InterceptorForClientRegistration(clientRegistrationRepository.findByRegistrationId(CLIENT_ID))
 			.composeCustomizersToOne();
