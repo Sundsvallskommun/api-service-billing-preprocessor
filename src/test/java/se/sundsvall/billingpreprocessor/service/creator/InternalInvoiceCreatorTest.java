@@ -1,5 +1,6 @@
 package se.sundsvall.billingpreprocessor.service.creator;
 
+import static org.apache.commons.text.StringEscapeUtils.unescapeJava;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
@@ -33,6 +34,7 @@ import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceFileConfigurationEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType;
+import se.sundsvall.billingpreprocessor.service.creator.config.InvoiceCreatorProperties;
 
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
 @ActiveProfiles("junit")
@@ -67,6 +69,9 @@ class InternalInvoiceCreatorTest {
 
 	@Autowired
 	private InternalInvoiceCreator creator;
+
+	@Autowired
+	private InvoiceCreatorProperties properties;
 
 	@Test
 	void validateImplementation() {
@@ -137,7 +142,8 @@ class InternalInvoiceCreatorTest {
 	}
 
 	private String getResource(final String fileName) throws IOException, URISyntaxException {
-		return Files.readString(Paths.get(getClass().getClassLoader().getResource(fileName).toURI()), StandardCharsets.UTF_8);
+		return Files.readString(Paths.get(getClass().getClassLoader().getResource(fileName).toURI()), StandardCharsets.UTF_8)
+			.replaceAll(System.lineSeparator(), unescapeJava(properties.recordTerminator()));
 	}
 
 	private static BillingRecordEntity createbillingRecordEntity() {

@@ -2,6 +2,7 @@ package se.sundsvall.billingpreprocessor.service.creator;
 
 import static java.time.OffsetDateTime.now;
 import static java.util.UUID.randomUUID;
+import static org.apache.commons.text.StringEscapeUtils.unescapeJava;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -45,6 +46,7 @@ import se.sundsvall.billingpreprocessor.integration.db.model.RecipientEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType;
 import se.sundsvall.billingpreprocessor.integration.db.model.enums.Status;
 import se.sundsvall.billingpreprocessor.integration.db.model.enums.Type;
+import se.sundsvall.billingpreprocessor.service.creator.config.InvoiceCreatorProperties;
 
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
 @ActiveProfiles("junit")
@@ -100,6 +102,9 @@ class ExternalInvoiceCreatorTest {
 
 	@Autowired
 	private ExternalInvoiceCreator creator;
+
+	@Autowired
+	private InvoiceCreatorProperties properties;
 
 	@Test
 	void validateImplementation() {
@@ -186,7 +191,8 @@ class ExternalInvoiceCreatorTest {
 	}
 
 	private String getResource(final String fileName) throws IOException, URISyntaxException {
-		return Files.readString(Paths.get(getClass().getClassLoader().getResource(fileName).toURI()), StandardCharsets.UTF_8);
+		return Files.readString(Paths.get(getClass().getClassLoader().getResource(fileName).toURI()), StandardCharsets.UTF_8)
+			.replaceAll(System.lineSeparator(), unescapeJava(properties.recordTerminator()));
 	}
 
 	private static BillingRecordEntity createbillingRecordEntity() {
