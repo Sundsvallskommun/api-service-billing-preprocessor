@@ -1,26 +1,26 @@
 package se.sundsvall.billingpreprocessor.service.creator;
 
 import java.io.IOException;
-import java.util.List;
 
 import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.enums.Type;
 
 public interface InvoiceCreator {
+	static final String CONFIGURATION_NOT_PRESENT = "No configuration available for invoice creator with name %s";
 
 	/**
-	 * Method returning the types that the creator can handle
+	 * Method returning the type that the creator can handle
 	 * 
-	 * @return list of types that the creator can handle
+	 * @return type that the creator can handle
 	 */
-	List<Type> getProcessableTypes();
+	Type getProcessableType();
 
 	/**
-	 * Method returning the categories that the creator can handle
+	 * Method returning the category that the creator can handle
 	 * 
-	 * @return list of categories that the creator can handle
+	 * @return the category that the creator can handle
 	 */
-	List<String> getProcessableCategories();
+	String getProcessableCategory();
 
 	/**
 	 * Method for creating a file header

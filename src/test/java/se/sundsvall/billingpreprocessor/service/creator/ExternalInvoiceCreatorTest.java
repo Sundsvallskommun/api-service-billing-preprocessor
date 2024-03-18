@@ -23,6 +23,7 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +33,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.zalando.problem.ThrowableProblem;
 
+import se.sundsvall.billingpreprocessor.integration.db.InvoiceFileConfigurationRepository;
 import se.sundsvall.billingpreprocessor.integration.db.model.AccountInformationEmbeddable;
 import se.sundsvall.billingpreprocessor.integration.db.model.AddressDetailsEmbeddable;
 import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.DescriptionEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceEntity;
+import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceFileConfigurationEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.RecipientEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType;
@@ -92,6 +95,9 @@ class ExternalInvoiceCreatorTest {
 	@MockBean
 	private LegalIdProvider legalIdProviderMock;
 
+	@MockBean
+	private InvoiceFileConfigurationRepository invoiceFileConfigurationRepositoryMock;
+
 	@Autowired
 	private ExternalInvoiceCreator creator;
 
@@ -101,13 +107,36 @@ class ExternalInvoiceCreatorTest {
 	}
 
 	@Test
-	void getProcessableTypes() {
-		assertThat(creator.getProcessableTypes()).containsExactly(EXTERNAL);
+	void getProcessableCategory() {
+		final var category = "category";
+		final var config = InvoiceFileConfigurationEntity.create().withCategoryTag(category);
+
+		when(invoiceFileConfigurationRepositoryMock.findByCreatorName("ExternalInvoiceCreator")).thenReturn(Optional.of(config));
+
+		assertThat(creator.getProcessableCategory()).isEqualTo(category);
+		verify(invoiceFileConfigurationRepositoryMock).findByCreatorName("ExternalInvoiceCreator");
 	}
 
 	@Test
-	void getProcessableCategories() {
-		assertThat(creator.getProcessableCategories()).containsExactly("ISYCASE");
+	void getProcessableType() {
+		final var type = EXTERNAL;
+		final var config = InvoiceFileConfigurationEntity.create().withType(type.toString());
+
+		when(invoiceFileConfigurationRepositoryMock.findByCreatorName("ExternalInvoiceCreator")).thenReturn(Optional.of(config));
+
+		assertThat(creator.getProcessableType()).isEqualTo(type);
+		verify(invoiceFileConfigurationRepositoryMock).findByCreatorName("ExternalInvoiceCreator");
+	}
+
+	@Test
+	void getProcessablesWhenNoConfigFound() {
+		final var e1 = assertThrows(ThrowableProblem.class, () -> creator.getProcessableCategory());
+		final var e2 = assertThrows(ThrowableProblem.class, () -> creator.getProcessableType());
+
+		assertThat(List.of(e1, e2)).allSatisfy(e -> {
+			assertThat(e.getStatus()).isEqualTo(INTERNAL_SERVER_ERROR);
+			assertThat(e.getMessage()).isEqualTo("Internal Server Error: No configuration available for invoice creator with name ExternalInvoiceCreator");
+		});
 	}
 
 	@Test

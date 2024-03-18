@@ -3,7 +3,6 @@ package se.sundsvall.billingpreprocessor.service.creator;
 import static java.util.Objects.isNull;
 import static java.util.Optional.ofNullable;
 import static se.sundsvall.billingpreprocessor.Constants.EMPTY_ARRAY;
-import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.INTERNAL;
 import static se.sundsvall.billingpreprocessor.service.creator.config.InvoiceCreatorConfig.INTERNAL_INVOICE_BUILDER;
 import static se.sundsvall.billingpreprocessor.service.mapper.InternalInvoiceMapper.toFileHeader;
 import static se.sundsvall.billingpreprocessor.service.mapper.InternalInvoiceMapper.toInvoiceAccountingRow;
@@ -16,7 +15,6 @@ import static se.sundsvall.billingpreprocessor.service.util.ProblemUtil.createIn
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.util.List;
 
 import org.beanio.BeanWriter;
 import org.beanio.StreamFactory;
@@ -24,39 +22,45 @@ import org.beanio.builder.StreamBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import se.sundsvall.billingpreprocessor.integration.db.InvoiceFileConfigurationRepository;
 import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
+import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceFileConfigurationEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.enums.Type;
 
 @Component
 public class InternalInvoiceCreator implements InvoiceCreator {
-	private static final List<String> VALID_CAGTEGORIES = List.of("ISYCASE");
-
+	private final InvoiceFileConfigurationRepository configurationRepository;
 	private final StreamFactory factory;
 
-	public InternalInvoiceCreator(@Qualifier(INTERNAL_INVOICE_BUILDER) StreamBuilder builder) {
+	public InternalInvoiceCreator(@Qualifier(INTERNAL_INVOICE_BUILDER) StreamBuilder builder, InvoiceFileConfigurationRepository configurationRepository) {
 		this.factory = StreamFactory.newInstance();
 		this.factory.define(builder);
+		this.configurationRepository = configurationRepository;
 	}
 
 	/**
-	 * Method returning the types that the creator can handle
+	 * Method returning the type that the creator can handle
 	 * 
-	 * @return list of types that the creator can handle
+	 * @return the type that the creator can handle
 	 */
-	public List<Type> getProcessableTypes() {
-		return List.of(INTERNAL);
+	public Type getProcessableType() {
+		return configurationRepository.findByCreatorName(this.getClass().getSimpleName())
+			.map(InvoiceFileConfigurationEntity::getType)
+			.map(Type::valueOf)
+			.orElseThrow(createInternalServerErrorProblem(CONFIGURATION_NOT_PRESENT.formatted(this.getClass().getSimpleName())));
 	}
 
 	/**
-	 * Method returning the categories that the creator can handle
+	 * Method returning the category that the creator can handle
 	 * 
-	 * @return list of categories that the creator can handle
+	 * @return the category that the creator can handle
 	 */
-	public List<String> getProcessableCategories() {
-		return VALID_CAGTEGORIES;
+	public String getProcessableCategory() {
+		return configurationRepository.findByCreatorName(this.getClass().getSimpleName())
+			.map(InvoiceFileConfigurationEntity::getCategoryTag)
+			.orElseThrow(createInternalServerErrorProblem(CONFIGURATION_NOT_PRESENT.formatted(this.getClass().getSimpleName())));
 	}
-
 
 	/**
 	 * Method creates a file header according to the specification for internal invoices

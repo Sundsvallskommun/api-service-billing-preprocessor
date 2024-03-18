@@ -5,7 +5,6 @@ import static java.util.Optional.ofNullable;
 import static se.sundsvall.billingpreprocessor.Constants.EMPTY_ARRAY;
 import static se.sundsvall.billingpreprocessor.Constants.EXTERNAL_INVOICE_TYPE;
 import static se.sundsvall.billingpreprocessor.Constants.GENERATING_SYSTEM;
-import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.EXTERNAL;
 import static se.sundsvall.billingpreprocessor.service.creator.config.InvoiceCreatorConfig.EXTERNAL_INVOICE_BUILDER;
 import static se.sundsvall.billingpreprocessor.service.mapper.ExternalInvoiceMapper.toCustomer;
 import static se.sundsvall.billingpreprocessor.service.mapper.ExternalInvoiceMapper.toFileHeader;
@@ -20,7 +19,6 @@ import static se.sundsvall.billingpreprocessor.service.util.StringUtil.formatLeg
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.util.List;
 
 import org.beanio.BeanWriter;
 import org.beanio.StreamFactory;
@@ -28,39 +26,46 @@ import org.beanio.builder.StreamBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import se.sundsvall.billingpreprocessor.integration.db.InvoiceFileConfigurationRepository;
 import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
+import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceFileConfigurationEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.enums.Type;
 
 @Component
 public class ExternalInvoiceCreator implements InvoiceCreator {
-	private static final List<String> VALID_CAGTEGORIES = List.of("ISYCASE");
-
 	private final StreamFactory factory;
 	private final LegalIdProvider legalIdProvider;
+	private final InvoiceFileConfigurationRepository configurationRepository;
 
-	public ExternalInvoiceCreator(@Qualifier(EXTERNAL_INVOICE_BUILDER) StreamBuilder builder, LegalIdProvider legalIdProvider) {
+	public ExternalInvoiceCreator(@Qualifier(EXTERNAL_INVOICE_BUILDER) StreamBuilder builder, LegalIdProvider legalIdProvider, InvoiceFileConfigurationRepository configurationRepository) {
 		this.factory = StreamFactory.newInstance();
 		this.factory.define(builder);
 		this.legalIdProvider = legalIdProvider;
+		this.configurationRepository = configurationRepository;
 	}
 
 	/**
-	 * Method returning the types that the creator can handle
+	 * Method returning the type that the creator can handle
 	 * 
-	 * @return list of types that the creator can handle
+	 * @return the type that the creator can handle
 	 */
-	public List<Type> getProcessableTypes() {
-		return List.of(EXTERNAL);
+	public Type getProcessableType() {
+		return configurationRepository.findByCreatorName(this.getClass().getSimpleName())
+			.map(InvoiceFileConfigurationEntity::getType)
+			.map(Type::valueOf)
+			.orElseThrow(createInternalServerErrorProblem(CONFIGURATION_NOT_PRESENT.formatted(this.getClass().getSimpleName())));
 	}
 
 	/**
-	 * Method returning the categories that the creator can handle
+	 * Method returning the category that the creator can handle
 	 * 
-	 * @return list of categories that the creator can handle
+	 * @return the category that the creator can handle
 	 */
-	public List<String> getProcessableCategories() {
-		return VALID_CAGTEGORIES;
+	public String getProcessableCategory() {
+		return configurationRepository.findByCreatorName(this.getClass().getSimpleName())
+			.map(InvoiceFileConfigurationEntity::getCategoryTag)
+			.orElseThrow(createInternalServerErrorProblem(CONFIGURATION_NOT_PRESENT.formatted(this.getClass().getSimpleName())));
 	}
 
 	/**

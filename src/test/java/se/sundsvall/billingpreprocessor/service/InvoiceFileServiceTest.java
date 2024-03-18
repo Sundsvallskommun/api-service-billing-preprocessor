@@ -3,7 +3,7 @@ package se.sundsvall.billingpreprocessor.service;
 import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.atMostOnce;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -79,8 +79,10 @@ class InvoiceFileServiceTest {
 
 		// Verify and assert
 		verify(billingRecordRepositoryMock).findAllByStatus(APPROVED);
-		verify(externalInvoiceCreatorMock).getProcessableTypes();
-		verify(internalInvoiceCreatorMock).getProcessableTypes();
+		verify(externalInvoiceCreatorMock).getProcessableType();
+		verify(externalInvoiceCreatorMock).getProcessableCategory();
+		verify(internalInvoiceCreatorMock).getProcessableType();
+		verify(internalInvoiceCreatorMock).getProcessableCategory();
 		verifyNoMoreInteractions(billingRecordRepositoryMock, invoiceFileRepositoryMock, externalInvoiceCreatorMock, internalInvoiceCreatorMock, invoiceFileConfigurationServiceMock);
 	}
 
@@ -93,17 +95,18 @@ class InvoiceFileServiceTest {
 		when(invoiceFileConfigurationServiceMock.getInvoiceFileNameBy(EXTERNAL.name(), CATEGORY)).thenReturn(FILENAME);
 		when(externalInvoiceCreatorMock.createFileHeader()).thenReturn(FILE_HEADER);
 		when(externalInvoiceCreatorMock.createInvoiceData(any())).thenReturn(INVOICE_DATA);
-		when(externalInvoiceCreatorMock.getProcessableTypes()).thenReturn(List.of(EXTERNAL));
-		when(externalInvoiceCreatorMock.getProcessableCategories()).thenReturn(List.of(CATEGORY));
+		when(externalInvoiceCreatorMock.getProcessableType()).thenReturn(EXTERNAL);
+		when(externalInvoiceCreatorMock.getProcessableCategory()).thenReturn(CATEGORY);
 
 		// Act
 		service.createFileEntities();
 
 		// Verify and assert
 		verify(billingRecordRepositoryMock).findAllByStatus(APPROVED);
-		verify(internalInvoiceCreatorMock).getProcessableTypes();
-		verify(externalInvoiceCreatorMock).getProcessableTypes();
-		verify(externalInvoiceCreatorMock).getProcessableCategories();
+		verify(internalInvoiceCreatorMock).getProcessableType();
+		verify(internalInvoiceCreatorMock).getProcessableCategory();
+		verify(externalInvoiceCreatorMock).getProcessableType();
+		verify(externalInvoiceCreatorMock).getProcessableCategory();
 		verify(externalInvoiceCreatorMock).createFileHeader();
 		verify(externalInvoiceCreatorMock).createInvoiceData(entity);
 		verify(billingRecordRepositoryMock).save(billingRecordArgumentCaptor.capture());
@@ -129,17 +132,18 @@ class InvoiceFileServiceTest {
 		when(invoiceFileConfigurationServiceMock.getInvoiceFileNameBy(INTERNAL.name(), CATEGORY)).thenReturn(FILENAME);
 		when(internalInvoiceCreatorMock.createFileHeader()).thenReturn(FILE_HEADER);
 		when(internalInvoiceCreatorMock.createInvoiceData(any())).thenReturn(INVOICE_DATA);
-		when(internalInvoiceCreatorMock.getProcessableTypes()).thenReturn(List.of(INTERNAL));
-		when(internalInvoiceCreatorMock.getProcessableCategories()).thenReturn(List.of(CATEGORY));
+		when(internalInvoiceCreatorMock.getProcessableType()).thenReturn(INTERNAL);
+		when(internalInvoiceCreatorMock.getProcessableCategory()).thenReturn(CATEGORY);
 
 		// Act
 		service.createFileEntities();
 
 		// Verify and assert
 		verify(billingRecordRepositoryMock).findAllByStatus(APPROVED);
-		verify(externalInvoiceCreatorMock).getProcessableTypes();
-		verify(internalInvoiceCreatorMock).getProcessableTypes();
-		verify(internalInvoiceCreatorMock).getProcessableCategories();
+		verify(externalInvoiceCreatorMock).getProcessableType();
+		verify(externalInvoiceCreatorMock).getProcessableCategory();
+		verify(internalInvoiceCreatorMock).getProcessableType();
+		verify(internalInvoiceCreatorMock).getProcessableCategory();
 		verify(internalInvoiceCreatorMock).createFileHeader();
 		verify(internalInvoiceCreatorMock).createInvoiceData(entity);
 		verify(billingRecordRepositoryMock).save(billingRecordArgumentCaptor.capture());
@@ -157,36 +161,23 @@ class InvoiceFileServiceTest {
 	}
 
 	@Test
-	void createBillingFilesWhenInvalidEntitiesExists() throws Exception {
+	void createExternalBillingFilesWhenInvalidEntitiesExists() throws Exception {
 		// Arrange
-		final var internalFileName = "internalFileName";
 		final var externalFileName = "externalFileName";
-		final var internalFileHeader = "internalFileHeader".getBytes();
 		final var externalFileHeader = "externalFileHeader".getBytes();
-		final var internalInvoiceData = "internalInvoiceData".getBytes();
 		final var externalInvoiceData = "externalInvoiceData".getBytes();
-		final var invalidInternalEntity = createBillingRecordEntity(randomUUID().toString(), INTERNAL);
-		final var internalEntity = createBillingRecordEntity(randomUUID().toString(), INTERNAL);
 		final var invalidExternalEntity = createBillingRecordEntity(randomUUID().toString(), EXTERNAL);
 		final var externalEntity = createBillingRecordEntity(randomUUID().toString(), EXTERNAL);
 
 		when(billingRecordRepositoryMock.findAllByStatus(APPROVED)).thenReturn(List.of(
-			invalidInternalEntity, 
-			internalEntity,
 			invalidExternalEntity,
 			externalEntity));
-		when(invoiceFileConfigurationServiceMock.getInvoiceFileNameBy(INTERNAL.name(), CATEGORY)).thenReturn(internalFileName);
 		when(invoiceFileConfigurationServiceMock.getInvoiceFileNameBy(EXTERNAL.name(), CATEGORY)).thenReturn(externalFileName);
-		when(internalInvoiceCreatorMock.createFileHeader()).thenReturn(internalFileHeader);
-		when(internalInvoiceCreatorMock.createInvoiceData(internalEntity)).thenReturn(internalInvoiceData);
-		when(internalInvoiceCreatorMock.createInvoiceData(invalidInternalEntity)).thenThrow(Problem.valueOf(INTERNAL_SERVER_ERROR));
-		when(internalInvoiceCreatorMock.getProcessableTypes()).thenReturn(List.of(INTERNAL));
-		when(internalInvoiceCreatorMock.getProcessableCategories()).thenReturn(List.of(CATEGORY));
 		when(externalInvoiceCreatorMock.createFileHeader()).thenReturn(externalFileHeader);
 		when(externalInvoiceCreatorMock.createInvoiceData(externalEntity)).thenReturn(externalInvoiceData);
 		when(externalInvoiceCreatorMock.createInvoiceData(invalidExternalEntity)).thenThrow(Problem.valueOf(INTERNAL_SERVER_ERROR));
-		when(externalInvoiceCreatorMock.getProcessableTypes()).thenReturn(List.of(EXTERNAL));
-		when(externalInvoiceCreatorMock.getProcessableCategories()).thenReturn(List.of(CATEGORY));
+		when(externalInvoiceCreatorMock.getProcessableType()).thenReturn(EXTERNAL);
+		when(externalInvoiceCreatorMock.getProcessableCategory()).thenReturn(CATEGORY);
 
 		// Act
 		service.createFileEntities();
@@ -194,19 +185,67 @@ class InvoiceFileServiceTest {
 		// Verify and assert
 		verify(billingRecordRepositoryMock).findAllByStatus(APPROVED);
 
-		verifyInvoiceCreatorMock(internalInvoiceCreatorMock, invalidInternalEntity, internalEntity);
+		verify(internalInvoiceCreatorMock, atMostOnce()).getProcessableCategory();
+		verify(internalInvoiceCreatorMock, atMostOnce()).getProcessableType();
 		verifyInvoiceCreatorMock(externalInvoiceCreatorMock, invalidExternalEntity, externalEntity);
-		verify(billingRecordRepositoryMock, times(2)).save(billingRecordArgumentCaptor.capture());
-		verify(invoiceFileRepositoryMock, times(2)).save(invoiceFileArgumentCaptor.capture());
+		verify(billingRecordRepositoryMock).save(billingRecordArgumentCaptor.capture());
+		verify(invoiceFileRepositoryMock).save(invoiceFileArgumentCaptor.capture());
+		verifyNoMoreInteractions(billingRecordRepositoryMock, invoiceFileRepositoryMock, externalInvoiceCreatorMock, internalInvoiceCreatorMock, invoiceFileConfigurationServiceMock);
+
+		// TODO: Add verifications and assertions to mail component (task UF-7461)
+
+		assertThat(billingRecordArgumentCaptor.getAllValues()).satisfiesOnlyOnce(billingEntity -> {
+			assertThat(billingEntity).usingRecursiveComparison().ignoringFields("status").isEqualTo(externalEntity);
+			assertThat(billingEntity.getStatus()).isEqualTo(INVOICED);
+		});
+
+		assertThat(invoiceFileArgumentCaptor.getAllValues())
+			.satisfiesOnlyOnce(fileEntity -> {
+				assertThat(fileEntity.getType()).isEqualTo(EXTERNAL.name());
+				assertThat(fileEntity.getName()).isEqualTo(externalFileName);
+				assertThat(fileEntity.getContent()).isEqualTo(new String(ArrayUtils.addAll(externalFileHeader, externalInvoiceData), StandardCharsets.UTF_8));
+				assertThat(fileEntity.getStatus()).isEqualTo(GENERATED);
+			});
+	}
+
+	@Test
+	void createInternalBillingFilesWhenInvalidEntitiesExists() throws Exception {
+		// Arrange
+		final var internalFileName = "internalFileName";
+		final var internalFileHeader = "internalFileHeader".getBytes();
+		final var internalInvoiceData = "internalInvoiceData".getBytes();
+		final var invalidInternalEntity = createBillingRecordEntity(randomUUID().toString(), INTERNAL);
+		final var internalEntity = createBillingRecordEntity(randomUUID().toString(), INTERNAL);
+
+		when(billingRecordRepositoryMock.findAllByStatus(APPROVED)).thenReturn(List.of(
+			invalidInternalEntity,
+			internalEntity));
+		when(invoiceFileConfigurationServiceMock.getInvoiceFileNameBy(INTERNAL.name(), CATEGORY)).thenReturn(internalFileName);
+		when(internalInvoiceCreatorMock.createFileHeader()).thenReturn(internalFileHeader);
+		when(internalInvoiceCreatorMock.createInvoiceData(internalEntity)).thenReturn(internalInvoiceData);
+		when(internalInvoiceCreatorMock.createInvoiceData(invalidInternalEntity)).thenThrow(Problem.valueOf(INTERNAL_SERVER_ERROR));
+		when(internalInvoiceCreatorMock.getProcessableType()).thenReturn(INTERNAL);
+		when(internalInvoiceCreatorMock.getProcessableCategory()).thenReturn(CATEGORY);
+		when(externalInvoiceCreatorMock.getProcessableType()).thenReturn(EXTERNAL);
+		when(externalInvoiceCreatorMock.getProcessableCategory()).thenReturn(CATEGORY);
+
+		// Act
+		service.createFileEntities();
+
+		// Verify and assert
+		verify(billingRecordRepositoryMock).findAllByStatus(APPROVED);
+
+		verify(externalInvoiceCreatorMock, atMostOnce()).getProcessableCategory();
+		verify(externalInvoiceCreatorMock, atMostOnce()).getProcessableType();
+		verifyInvoiceCreatorMock(internalInvoiceCreatorMock, invalidInternalEntity, internalEntity);
+		verify(billingRecordRepositoryMock).save(billingRecordArgumentCaptor.capture());
+		verify(invoiceFileRepositoryMock).save(invoiceFileArgumentCaptor.capture());
 		verifyNoMoreInteractions(billingRecordRepositoryMock, invoiceFileRepositoryMock, externalInvoiceCreatorMock, internalInvoiceCreatorMock, invoiceFileConfigurationServiceMock);
 
 		// TODO: Add verifications and assertions to mail component (task UF-7461)
 
 		assertThat(billingRecordArgumentCaptor.getAllValues()).satisfiesOnlyOnce(billingEntity -> {
 			assertThat(billingEntity).usingRecursiveComparison().ignoringFields("status").isEqualTo(internalEntity);
-			assertThat(billingEntity.getStatus()).isEqualTo(INVOICED);
-		}).satisfiesOnlyOnce(billingEntity -> {
-			assertThat(billingEntity).usingRecursiveComparison().ignoringFields("status").isEqualTo(externalEntity);
 			assertThat(billingEntity.getStatus()).isEqualTo(INVOICED);
 		});
 
@@ -216,17 +255,12 @@ class InvoiceFileServiceTest {
 				assertThat(fileEntity.getName()).isEqualTo(internalFileName);
 				assertThat(fileEntity.getContent()).isEqualTo(new String(ArrayUtils.addAll(internalFileHeader, internalInvoiceData), StandardCharsets.UTF_8));
 				assertThat(fileEntity.getStatus()).isEqualTo(GENERATED);
-			}).satisfiesOnlyOnce(fileEntity -> {
-				assertThat(fileEntity.getType()).isEqualTo(EXTERNAL.name());
-				assertThat(fileEntity.getName()).isEqualTo(externalFileName);
-				assertThat(fileEntity.getContent()).isEqualTo(new String(ArrayUtils.addAll(externalFileHeader, externalInvoiceData), StandardCharsets.UTF_8));
-				assertThat(fileEntity.getStatus()).isEqualTo(GENERATED);
 			});
 	}
 
 	private void verifyInvoiceCreatorMock(final InvoiceCreator invoiceCreatorMock, final BillingRecordEntity invalidInternalEntity, final BillingRecordEntity internalEntity) throws IOException {
-		verify(invoiceCreatorMock).getProcessableTypes();
-		verify(invoiceCreatorMock).getProcessableCategories();
+		verify(invoiceCreatorMock).getProcessableType();
+		verify(invoiceCreatorMock).getProcessableCategory();
 		verify(invoiceCreatorMock).createFileHeader();
 		verify(invoiceCreatorMock).createInvoiceData(invalidInternalEntity);
 		verify(invoiceCreatorMock).createInvoiceData(internalEntity);
@@ -237,8 +271,8 @@ class InvoiceFileServiceTest {
 		// Arrange
 		final var entity = createBillingRecordEntity(randomUUID().toString(), INTERNAL);
 
-		when(internalInvoiceCreatorMock.getProcessableTypes()).thenReturn(List.of(INTERNAL));
-		when(internalInvoiceCreatorMock.getProcessableCategories()).thenReturn(List.of(CATEGORY));
+		when(internalInvoiceCreatorMock.getProcessableType()).thenReturn(INTERNAL);
+		when(internalInvoiceCreatorMock.getProcessableCategory()).thenReturn(CATEGORY);
 		when(billingRecordRepositoryMock.findAllByStatus(APPROVED)).thenReturn(List.of(entity));
 		// Not mocking createFileHeader on CreatorMock will cause NPE to be thrown on
 		// outputStream.write(invoiceCreator.createFileHeader())
@@ -248,9 +282,10 @@ class InvoiceFileServiceTest {
 
 		// Verify and assert
 		verify(billingRecordRepositoryMock).findAllByStatus(APPROVED);
-		verify(internalInvoiceCreatorMock).getProcessableTypes();
-		verify(internalInvoiceCreatorMock).getProcessableCategories();
-		verify(externalInvoiceCreatorMock).getProcessableTypes();
+		verify(externalInvoiceCreatorMock).getProcessableType();
+		verify(externalInvoiceCreatorMock).getProcessableCategory();
+		verify(internalInvoiceCreatorMock).getProcessableType();
+		verify(internalInvoiceCreatorMock).getProcessableCategory();
 		verify(internalInvoiceCreatorMock).createFileHeader();
 		verify(invoiceFileConfigurationServiceMock).getInvoiceFileNameBy(INTERNAL.name(), CATEGORY);
 
@@ -271,8 +306,10 @@ class InvoiceFileServiceTest {
 
 		// Verify and assert
 		verify(billingRecordRepositoryMock).findAllByStatus(APPROVED);
-		verify(externalInvoiceCreatorMock).getProcessableTypes();
-		verify(internalInvoiceCreatorMock).getProcessableTypes();
+		verify(externalInvoiceCreatorMock).getProcessableType();
+		verify(externalInvoiceCreatorMock).getProcessableCategory();
+		verify(internalInvoiceCreatorMock).getProcessableType();
+		verify(internalInvoiceCreatorMock).getProcessableCategory();
 		verifyNoMoreInteractions(billingRecordRepositoryMock, invoiceFileRepositoryMock, externalInvoiceCreatorMock, internalInvoiceCreatorMock, invoiceFileConfigurationServiceMock);
 
 		// TODO: Add verifications and assertions to mail component (task UF-7461)
@@ -284,16 +321,17 @@ class InvoiceFileServiceTest {
 		final var entity = createBillingRecordEntity(randomUUID().toString(), EXTERNAL);
 
 		when(billingRecordRepositoryMock.findAllByStatus(APPROVED)).thenReturn(List.of(entity));
-		when(externalInvoiceCreatorMock.getProcessableTypes()).thenReturn(List.of(EXTERNAL));
+		when(externalInvoiceCreatorMock.getProcessableType()).thenReturn(EXTERNAL);
 
 		// Act
 		service.createFileEntities();
 
 		// Verify and assert
 		verify(billingRecordRepositoryMock).findAllByStatus(APPROVED);
-		verify(externalInvoiceCreatorMock).getProcessableTypes();
-		verify(externalInvoiceCreatorMock).getProcessableCategories();
-		verify(internalInvoiceCreatorMock).getProcessableTypes();
+		verify(externalInvoiceCreatorMock).getProcessableType();
+		verify(externalInvoiceCreatorMock).getProcessableCategory();
+		verify(internalInvoiceCreatorMock).getProcessableType();
+		verify(internalInvoiceCreatorMock).getProcessableCategory();
 		verifyNoMoreInteractions(billingRecordRepositoryMock, invoiceFileRepositoryMock, externalInvoiceCreatorMock, internalInvoiceCreatorMock, invoiceFileConfigurationServiceMock);
 
 		// TODO: Add verifications and assertions to mail component (task UF-7461)

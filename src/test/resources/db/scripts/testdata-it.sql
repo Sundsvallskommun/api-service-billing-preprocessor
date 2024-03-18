@@ -1,17 +1,10 @@
 -------------------------------------
--- File configuration
--------------------------------------
-INSERT INTO file_configuration(id, type, category_tag, file_name_pattern)
-VALUES (1, 'INTERNAL', 'ACCESS_CARD', 'ACCESSCARDFILE_{yyyyMMdd}.txt'),
-       (2, 'EXTERNAL', 'SALARY_AND_PENSION', 'SALARYFILE_{yyyyMMdd}.txt');
-       
--------------------------------------
 -- Billling records
 -------------------------------------
 INSERT INTO billing_record (id, category, approved, approved_by, created, modified, status, `type`)
-VALUES	('71258e7d-5285-46ce-b9b2-877f8cad8edd', 'ACCESS_CARD', NULL, NULL, '2022-06-20 11:17:36.795', NULL, 'NEW', 'INTERNAL'),
-		('1310ee8b-ecf9-4fe1-ab9d-f19153b19d06', 'ACCESS_CARD', '2022-06-30 08:52:25.112', 'JOE01DOE', '2022-06-25 16:43:12.553', '2022-06-30 08:52:25.112', 'APPROVED', 'INTERNAL'),
-		('83e4d599-5b4d-431c-8ebc-81192e9401ee', 'SALARY_AND_PENSION', NULL, NULL, '2022-06-25 16:43:12.553', NULL, 'NEW', 'EXTERNAL');
+VALUES	('71258e7d-5285-46ce-b9b2-877f8cad8edd', 'ISYCASE', NULL, NULL, '2022-06-20 11:17:36.795', NULL, 'NEW', 'INTERNAL'),
+		('1310ee8b-ecf9-4fe1-ab9d-f19153b19d06', 'ISYCASE', '2022-06-30 08:52:25.112', 'JOE01DOE', '2022-06-25 16:43:12.553', '2022-06-30 08:52:25.112', 'APPROVED', 'INTERNAL'),
+		('83e4d599-5b4d-431c-8ebc-81192e9401ee', 'ISYCASE', NULL, NULL, '2022-06-25 16:43:12.553', NULL, 'NEW', 'EXTERNAL');
 
 -------------------------------------
 -- Invoices
@@ -62,8 +55,7 @@ VALUES
 -------------------------------------
 -- Invoice file configuration
 -------------------------------------
-INSERT INTO file_configuration (`type`,category_tag,file_name_pattern) 
+INSERT INTO file_configuration (`type`,category_tag,file_name_pattern, creator_name) 
 VALUES
-	 ('EXTERNAL','ISYCASE','KRISYCASE_{yyyyMMdd}'),
-	 ('INTERNAL','ISYCASE','IPKISYCASE_{yyyyMMdd}');
-	 
+	 ('EXTERNAL','ISYCASE','KRISYCASE_{yyyyMMdd}', 'ExternalInvoiceCreator'),
+	 ('INTERNAL','ISYCASE','IPKISYCASE_{yyyyMMdd}', 'InternalInvoiceCreator');

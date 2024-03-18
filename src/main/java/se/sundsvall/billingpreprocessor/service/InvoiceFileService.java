@@ -59,20 +59,12 @@ public class InvoiceFileService {
 	}
 
 	private List<CreationError> processBillingRecords(List<BillingRecordEntity> billingRecords, InvoiceCreator invoiceCreator) {
-		final var totalErrors = new ArrayList<CreationError>();
-
-		invoiceCreator.getProcessableTypes()
-			.forEach(type -> invoiceCreator.getProcessableCategories()
-				.forEach(category -> totalErrors.addAll(createBillingFile(billingRecords, invoiceCreator, type, category))));
-
-		return totalErrors;
-	}
-
-	private List<CreationError> createBillingFile(List<BillingRecordEntity> billingRecords, InvoiceCreator invoiceCreator, Type type, String category) {
-		final var billingRecordsToProcess = filterByTypeAndCategory(billingRecords, type, category);
+		final var type = invoiceCreator.getProcessableType();
+		final var category = invoiceCreator.getProcessableCategory();
 		final List<CreationError> billingRecordProcessErrors = new ArrayList<>();
 		final List<CreationError> commonErrors = new ArrayList<>();
 
+		final var billingRecordsToProcess = filterByTypeAndCategory(billingRecords, type, category);
 		if (!billingRecordsToProcess.isEmpty()) {
 			billingRecords.removeAll(billingRecordsToProcess); // Remove processed records from the original list and send mejl if unprocessed records exists at end of execution
 

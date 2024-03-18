@@ -2,10 +2,11 @@ package se.sundsvall.billingpreprocessor.service.creator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.STANDARD;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.INTERNAL;
-import static se.sundsvall.billingpreprocessor.service.creator.config.InvoiceCreatorConfig.INTERNAL_INVOICE_BUILDER;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -14,22 +15,22 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
-import org.beanio.StreamFactory;
-import org.beanio.builder.StreamBuilder;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.zalando.problem.ThrowableProblem;
 
+import se.sundsvall.billingpreprocessor.integration.db.InvoiceFileConfigurationRepository;
 import se.sundsvall.billingpreprocessor.integration.db.model.AccountInformationEmbeddable;
 import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.DescriptionEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceEntity;
+import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceFileConfigurationEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType;
 
@@ -61,15 +62,11 @@ class InternalInvoiceCreatorTest {
 	private static final String PROJECT = "11041";
 	private static final String SUBACCOUNT = "936300";
 
+	@MockBean
+	private InvoiceFileConfigurationRepository invoiceFileConfigurationRepositoryMock;
+
 	@Autowired
 	private InternalInvoiceCreator creator;
-
-	private static final StreamFactory FACTORY = StreamFactory.newInstance();
-
-	@BeforeAll
-	static void setUpFactory(@Qualifier(INTERNAL_INVOICE_BUILDER) StreamBuilder builder) {
-		FACTORY.define(builder);
-	}
 
 	@Test
 	void validateImplementation() {
@@ -77,13 +74,36 @@ class InternalInvoiceCreatorTest {
 	}
 
 	@Test
-	void getProcessableTypes() {
-		assertThat(creator.getProcessableTypes()).containsExactly(INTERNAL);
+	void getProcessableCategory() {
+		final var category = "category";
+		final var config = InvoiceFileConfigurationEntity.create().withCategoryTag(category);
+
+		when(invoiceFileConfigurationRepositoryMock.findByCreatorName("InternalInvoiceCreator")).thenReturn(Optional.of(config));
+
+		assertThat(creator.getProcessableCategory()).isEqualTo(category);
+		verify(invoiceFileConfigurationRepositoryMock).findByCreatorName("InternalInvoiceCreator");
 	}
 
 	@Test
-	void getProcessableCategories() {
-		assertThat(creator.getProcessableCategories()).containsExactly("ISYCASE");
+	void getProcessableType() {
+		final var type = INTERNAL;
+		final var config = InvoiceFileConfigurationEntity.create().withType(type.toString());
+
+		when(invoiceFileConfigurationRepositoryMock.findByCreatorName("InternalInvoiceCreator")).thenReturn(Optional.of(config));
+
+		assertThat(creator.getProcessableType()).isEqualTo(type);
+		verify(invoiceFileConfigurationRepositoryMock).findByCreatorName("InternalInvoiceCreator");
+	}
+
+	@Test
+	void getProcessablesWhenNoConfigFound() {
+		final var e1 = assertThrows(ThrowableProblem.class, () -> creator.getProcessableCategory());
+		final var e2 = assertThrows(ThrowableProblem.class, () -> creator.getProcessableType());
+
+		assertThat(List.of(e1, e2)).allSatisfy(e -> {
+			assertThat(e.getStatus()).isEqualTo(INTERNAL_SERVER_ERROR);
+			assertThat(e.getMessage()).isEqualTo("Internal Server Error: No configuration available for invoice creator with name InternalInvoiceCreator");
+		});
 	}
 
 	@Test

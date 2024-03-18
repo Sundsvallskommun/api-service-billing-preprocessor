@@ -64,6 +64,7 @@ class InvoiceFileConfigurationRepositoryTest {
 
 	@Test
 	void findByTypeAndCategoryTag() {
+		System.out.println(repository.findAll());
 
 		final var result = repository.findByTypeAndCategoryTag("type1", "category_tag1").get();
 

@@ -81,7 +81,7 @@ class BillingRecordsIT extends AbstractAppTest {
 	@Test
 	void test04_readBillingRecordsByFilter() {
 		setupCall()
-			.withServicePath("/billingrecords?filter=category : 'ACCESS_CARD' and status : 'NEW'")
+			.withServicePath("/billingrecords?filter=category : 'ISYCASE' and status : 'APPROVED'")
 			.withHttpMethod(GET)
 			.withExpectedResponseStatus(OK)
 			.withExpectedResponseHeader(CONTENT_TYPE, CONTENT_TYPE_JSON)
