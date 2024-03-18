@@ -53,6 +53,9 @@ VALUES
 	('2024-02-22 11:10:00.000000', 'File content', '2024-02-22 11:15:00.000000', 'INVOICE_FILE_5.txt', 'EXTERNAL', 'SEND_SUCCESSFUL');
 
 
+-------------------------------------
+-- Invoice file configuration
+-------------------------------------
 INSERT INTO file_configuration(type, category_tag, file_name_pattern)
 VALUES
     ('type1', 'category_tag1', 'file_name_pattern1'),

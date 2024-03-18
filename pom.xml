@@ -9,7 +9,7 @@
 	</parent>
 	<groupId>se.sundsvall</groupId>
 	<artifactId>api-service-billing-preprocessor</artifactId>
-	<version>1.3</version>
+	<version>1.4</version>
 	<name>api-service-billing-preprocessor</name>
 	<properties>
 		<!-- Pipeline properties -->
@@ -19,6 +19,7 @@
   		<!-- Service properties -->
 		<spring-filter.version>3.1.7</spring-filter.version>
 		<beanio.version>3.0.0</beanio.version>
+		<commons-text.version>1.11.0</commons-text.version>
 		<generated-sources-path>${project.build.directory}/generated-sources</generated-sources-path>
 		<failsafeArgLine>-Dfile.encoding=${project.build.sourceEncoding}</failsafeArgLine>
 	</properties>
@@ -58,6 +59,11 @@
 			<groupId>com.github.beanio</groupId>
 			<artifactId>beanio</artifactId>
 			<version>${beanio.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-text</artifactId>
+			<version>${commons-text.version}</version>
 		</dependency>
 
 		<!-- Test -->

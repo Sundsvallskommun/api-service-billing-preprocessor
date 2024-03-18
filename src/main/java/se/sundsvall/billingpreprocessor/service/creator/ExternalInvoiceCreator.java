@@ -26,18 +26,46 @@ import org.beanio.builder.StreamBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import se.sundsvall.billingpreprocessor.integration.db.InvoiceFileConfigurationRepository;
 import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
+import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceFileConfigurationEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;
+import se.sundsvall.billingpreprocessor.integration.db.model.enums.Type;
 
 @Component
-public class ExternalInvoiceCreator {
+public class ExternalInvoiceCreator implements InvoiceCreator {
 	private final StreamFactory factory;
 	private final LegalIdProvider legalIdProvider;
+	private final InvoiceFileConfigurationRepository configurationRepository;
 
-	public ExternalInvoiceCreator(@Qualifier(EXTERNAL_INVOICE_BUILDER) StreamBuilder builder, LegalIdProvider legalIdProvider) {
+	public ExternalInvoiceCreator(@Qualifier(EXTERNAL_INVOICE_BUILDER) StreamBuilder builder, LegalIdProvider legalIdProvider, InvoiceFileConfigurationRepository configurationRepository) {
 		this.factory = StreamFactory.newInstance();
 		this.factory.define(builder);
 		this.legalIdProvider = legalIdProvider;
+		this.configurationRepository = configurationRepository;
+	}
+
+	/**
+	 * Method returning the type that the creator can handle
+	 * 
+	 * @return the type that the creator can handle
+	 */
+	public Type getProcessableType() {
+		return configurationRepository.findByCreatorName(this.getClass().getSimpleName())
+			.map(InvoiceFileConfigurationEntity::getType)
+			.map(Type::valueOf)
+			.orElseThrow(createInternalServerErrorProblem(CONFIGURATION_NOT_PRESENT.formatted(this.getClass().getSimpleName())));
+	}
+
+	/**
+	 * Method returning the category that the creator can handle
+	 * 
+	 * @return the category that the creator can handle
+	 */
+	public String getProcessableCategory() {
+		return configurationRepository.findByCreatorName(this.getClass().getSimpleName())
+			.map(InvoiceFileConfigurationEntity::getCategoryTag)
+			.orElseThrow(createInternalServerErrorProblem(CONFIGURATION_NOT_PRESENT.formatted(this.getClass().getSimpleName())));
 	}
 
 	/**
@@ -46,6 +74,7 @@ public class ExternalInvoiceCreator {
 	 * @return bytearray representing the file header
 	 * @throws IOException if byte array output stream can not be closed
 	 */
+	@Override
 	public byte[] createFileHeader() throws IOException {
 		try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 			BeanWriter invoiceWriter = factory.createWriter(EXTERNAL_INVOICE_BUILDER, new OutputStreamWriter(byteArrayOutputStream))) {
@@ -62,6 +91,7 @@ public class ExternalInvoiceCreator {
 	 * @return bytearray representing the invoice data section
 	 * @throws IOException if byte array output stream can not be closed
 	 */
+	@Override
 	public byte[] createInvoiceData(BillingRecordEntity billingRecord) throws IOException {
 		if (isNull(billingRecord)) {
 			return EMPTY_ARRAY;

@@ -2,7 +2,7 @@
 	"content": [
 		{
 			"id": "1310ee8b-ecf9-4fe1-ab9d-f19153b19d06",
-			"category": "ACCESS_CARD",
+			"category": "ISYCASE",
 			"type": "INTERNAL",
 			"status": "APPROVED",
 			"approvedBy": "JOE01DOE",
@@ -39,7 +39,7 @@
 		},
 		{
 			"id": "71258e7d-5285-46ce-b9b2-877f8cad8edd",
-			"category": "ACCESS_CARD",
+			"category": "ISYCASE",
 			"type": "INTERNAL",
 			"status": "NEW",
 			"invoice": {
@@ -73,7 +73,7 @@
 		},
 		{
 			"id": "83e4d599-5b4d-431c-8ebc-81192e9401ee",
-			"category": "SALARY_AND_PENSION",
+			"category": "ISYCASE",
 			"type": "EXTERNAL",
 			"status": "NEW",
 			"recipient": {

@@ -27,3 +27,6 @@ spring:
             authorization-grant-type: client_credentials
           party:
             authorization-grant-type: client_credentials
+
+invoicecreator:
+  record-terminator: \n

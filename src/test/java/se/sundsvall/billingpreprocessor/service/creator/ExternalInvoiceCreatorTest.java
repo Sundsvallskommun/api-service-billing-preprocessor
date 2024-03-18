@@ -2,6 +2,7 @@ package se.sundsvall.billingpreprocessor.service.creator;
 
 import static java.time.OffsetDateTime.now;
 import static java.util.UUID.randomUUID;
+import static org.apache.commons.text.StringEscapeUtils.unescapeJava;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -23,6 +24,7 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,16 +34,19 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.zalando.problem.ThrowableProblem;
 
+import se.sundsvall.billingpreprocessor.integration.db.InvoiceFileConfigurationRepository;
 import se.sundsvall.billingpreprocessor.integration.db.model.AccountInformationEmbeddable;
 import se.sundsvall.billingpreprocessor.integration.db.model.AddressDetailsEmbeddable;
 import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.DescriptionEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceEntity;
+import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceFileConfigurationEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.RecipientEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType;
 import se.sundsvall.billingpreprocessor.integration.db.model.enums.Status;
 import se.sundsvall.billingpreprocessor.integration.db.model.enums.Type;
+import se.sundsvall.billingpreprocessor.service.creator.config.InvoiceCreatorProperties;
 
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
 @ActiveProfiles("junit")
@@ -92,13 +97,57 @@ class ExternalInvoiceCreatorTest {
 	@MockBean
 	private LegalIdProvider legalIdProviderMock;
 
+	@MockBean
+	private InvoiceFileConfigurationRepository invoiceFileConfigurationRepositoryMock;
+
 	@Autowired
 	private ExternalInvoiceCreator creator;
 
+	@Autowired
+	private InvoiceCreatorProperties properties;
+
 	@Test
-	void createInvoiceHeader() throws Exception {
+	void validateImplementation() {
+		assertThat(creator).isInstanceOf(InvoiceCreator.class);
+	}
+
+	@Test
+	void getProcessableCategory() {
+		final var category = "category";
+		final var config = InvoiceFileConfigurationEntity.create().withCategoryTag(category);
+
+		when(invoiceFileConfigurationRepositoryMock.findByCreatorName("ExternalInvoiceCreator")).thenReturn(Optional.of(config));
+
+		assertThat(creator.getProcessableCategory()).isEqualTo(category);
+		verify(invoiceFileConfigurationRepositoryMock).findByCreatorName("ExternalInvoiceCreator");
+	}
+
+	@Test
+	void getProcessableType() {
+		final var type = EXTERNAL;
+		final var config = InvoiceFileConfigurationEntity.create().withType(type.toString());
+
+		when(invoiceFileConfigurationRepositoryMock.findByCreatorName("ExternalInvoiceCreator")).thenReturn(Optional.of(config));
+
+		assertThat(creator.getProcessableType()).isEqualTo(type);
+		verify(invoiceFileConfigurationRepositoryMock).findByCreatorName("ExternalInvoiceCreator");
+	}
+
+	@Test
+	void getProcessablesWhenNoConfigFound() {
+		final var e1 = assertThrows(ThrowableProblem.class, () -> creator.getProcessableCategory());
+		final var e2 = assertThrows(ThrowableProblem.class, () -> creator.getProcessableType());
+
+		assertThat(List.of(e1, e2)).allSatisfy(e -> {
+			assertThat(e.getStatus()).isEqualTo(INTERNAL_SERVER_ERROR);
+			assertThat(e.getMessage()).isEqualTo("Internal Server Error: No configuration available for invoice creator with name ExternalInvoiceCreator");
+		});
+	}
+
+	@Test
+	void createFileHeader() throws Exception {
 		final var result = creator.createFileHeader();
-		final var expected = getResource("validation/expected_external_header_format.txt")
+		final var expected = getResource("validation/external_header_expected_format.txt")
 			.replace("yyMMdd", LocalDate.now().format(DateTimeFormatter.ofPattern("yyMMdd")));
 
 		assertThat(new String(result, StandardCharsets.UTF_8)).isEqualTo(expected);
@@ -121,7 +170,7 @@ class ExternalInvoiceCreatorTest {
 	@Test
 	void createInvoiceDataFromEntityWithLegalId() throws Exception {
 		final var result = creator.createInvoiceData(createbillingRecordEntity());
-		final var expected = getResource("validation/expected_external_invoicedata_format.txt");
+		final var expected = getResource("validation/external_invoicedata_expected_format.txt");
 
 		assertThat(new String(result, StandardCharsets.UTF_8)).isEqualTo(expected);
 		verify(legalIdProviderMock, never()).translateToLegalId(any());
@@ -135,14 +184,15 @@ class ExternalInvoiceCreatorTest {
 		when(legalIdProviderMock.translateToLegalId(PARTY_ID)).thenReturn(LEGAL_ID);
 
 		final var result = creator.createInvoiceData(input);
-		final var expected = getResource("validation/expected_external_invoicedata_format.txt");
+		final var expected = getResource("validation/external_invoicedata_expected_format.txt");
 
 		assertThat(new String(result, StandardCharsets.UTF_8)).isEqualTo(expected);
 		verify(legalIdProviderMock).translateToLegalId(PARTY_ID);
 	}
 
 	private String getResource(final String fileName) throws IOException, URISyntaxException {
-		return Files.readString(Paths.get(getClass().getClassLoader().getResource(fileName).toURI()), StandardCharsets.UTF_8);
+		return Files.readString(Paths.get(getClass().getClassLoader().getResource(fileName).toURI()), StandardCharsets.UTF_8)
+			.replaceAll(System.lineSeparator(), unescapeJava(properties.recordTerminator()));
 	}
 
 	private static BillingRecordEntity createbillingRecordEntity() {

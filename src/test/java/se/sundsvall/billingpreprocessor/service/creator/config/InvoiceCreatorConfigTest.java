@@ -2,6 +2,7 @@ package se.sundsvall.billingpreprocessor.service.creator.config;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.MOCK;
 
 import org.beanio.builder.StreamBuilder;
 import org.beanio.internal.config.StreamConfig;
@@ -10,8 +11,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest(classes = InvoiceCreatorConfig.class)
+import se.sundsvall.billingpreprocessor.Application;
+
+@SpringBootTest(classes = Application.class, webEnvironment = MOCK)
+@ActiveProfiles("junit")
 class InvoiceCreatorConfigTest {
 
 	@Autowired

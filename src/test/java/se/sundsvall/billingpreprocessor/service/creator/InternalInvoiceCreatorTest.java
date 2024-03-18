@@ -1,10 +1,13 @@
 package se.sundsvall.billingpreprocessor.service.creator;
 
+import static org.apache.commons.text.StringEscapeUtils.unescapeJava;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.STANDARD;
-import static se.sundsvall.billingpreprocessor.service.creator.config.InvoiceCreatorConfig.INTERNAL_INVOICE_BUILDER;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.INTERNAL;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -13,24 +16,25 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
-import org.beanio.StreamFactory;
-import org.beanio.builder.StreamBuilder;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.zalando.problem.ThrowableProblem;
 
+import se.sundsvall.billingpreprocessor.integration.db.InvoiceFileConfigurationRepository;
 import se.sundsvall.billingpreprocessor.integration.db.model.AccountInformationEmbeddable;
 import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.DescriptionEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceEntity;
+import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceFileConfigurationEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType;
+import se.sundsvall.billingpreprocessor.service.creator.config.InvoiceCreatorProperties;
 
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
 @ActiveProfiles("junit")
@@ -60,20 +64,57 @@ class InternalInvoiceCreatorTest {
 	private static final String PROJECT = "11041";
 	private static final String SUBACCOUNT = "936300";
 
+	@MockBean
+	private InvoiceFileConfigurationRepository invoiceFileConfigurationRepositoryMock;
+
 	@Autowired
 	private InternalInvoiceCreator creator;
 
-	private static final StreamFactory FACTORY = StreamFactory.newInstance();
+	@Autowired
+	private InvoiceCreatorProperties properties;
 
-	@BeforeAll
-	static void setUpFactory(@Qualifier(INTERNAL_INVOICE_BUILDER) StreamBuilder builder) {
-		FACTORY.define(builder);
+	@Test
+	void validateImplementation() {
+		assertThat(creator).isInstanceOf(InvoiceCreator.class);
 	}
 
 	@Test
-	void createInvoiceHeader() throws Exception {
+	void getProcessableCategory() {
+		final var category = "category";
+		final var config = InvoiceFileConfigurationEntity.create().withCategoryTag(category);
+
+		when(invoiceFileConfigurationRepositoryMock.findByCreatorName("InternalInvoiceCreator")).thenReturn(Optional.of(config));
+
+		assertThat(creator.getProcessableCategory()).isEqualTo(category);
+		verify(invoiceFileConfigurationRepositoryMock).findByCreatorName("InternalInvoiceCreator");
+	}
+
+	@Test
+	void getProcessableType() {
+		final var type = INTERNAL;
+		final var config = InvoiceFileConfigurationEntity.create().withType(type.toString());
+
+		when(invoiceFileConfigurationRepositoryMock.findByCreatorName("InternalInvoiceCreator")).thenReturn(Optional.of(config));
+
+		assertThat(creator.getProcessableType()).isEqualTo(type);
+		verify(invoiceFileConfigurationRepositoryMock).findByCreatorName("InternalInvoiceCreator");
+	}
+
+	@Test
+	void getProcessablesWhenNoConfigFound() {
+		final var e1 = assertThrows(ThrowableProblem.class, () -> creator.getProcessableCategory());
+		final var e2 = assertThrows(ThrowableProblem.class, () -> creator.getProcessableType());
+
+		assertThat(List.of(e1, e2)).allSatisfy(e -> {
+			assertThat(e.getStatus()).isEqualTo(INTERNAL_SERVER_ERROR);
+			assertThat(e.getMessage()).isEqualTo("Internal Server Error: No configuration available for invoice creator with name InternalInvoiceCreator");
+		});
+	}
+
+	@Test
+	void createFileHeader() throws Exception {
 		final var result = creator.createFileHeader();
-		final var expected = getResource("validation/expected_internal_header_format.txt");
+		final var expected = getResource("validation/internal_header_expected_format.txt");
 
 		assertThat(new String(result, StandardCharsets.UTF_8)).isEqualTo(expected);
 	}
@@ -95,13 +136,14 @@ class InternalInvoiceCreatorTest {
 	@Test
 	void createInvoiceDataFromEntity() throws Exception {
 		final var result = creator.createInvoiceData(createbillingRecordEntity());
-		final var expected = getResource("validation/expected_internal_invoicedata_format.txt");
+		final var expected = getResource("validation/internal_invoicedata_expected_format.txt");
 
 		assertThat(new String(result, StandardCharsets.UTF_8)).isEqualTo(expected);
 	}
 
 	private String getResource(final String fileName) throws IOException, URISyntaxException {
-		return Files.readString(Paths.get(getClass().getClassLoader().getResource(fileName).toURI()), StandardCharsets.UTF_8);
+		return Files.readString(Paths.get(getClass().getClassLoader().getResource(fileName).toURI()), StandardCharsets.UTF_8)
+			.replaceAll(System.lineSeparator(), unescapeJava(properties.recordTerminator()));
 	}
 
 	private static BillingRecordEntity createbillingRecordEntity() {

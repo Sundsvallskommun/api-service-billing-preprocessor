@@ -13,4 +13,6 @@ public interface InvoiceFileConfigurationRepository extends JpaRepository<Invoic
 	Optional<InvoiceFileConfigurationEntity> findByTypeAndCategoryTag(String type, String categoryTag);
 
 	boolean existsByTypeAndCategoryTag(String type, String categoryTag);
+
+	Optional<InvoiceFileConfigurationEntity> findByCreatorName(String creatorName);
 }

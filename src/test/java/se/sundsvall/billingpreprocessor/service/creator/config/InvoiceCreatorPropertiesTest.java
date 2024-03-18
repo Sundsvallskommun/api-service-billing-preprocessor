@@ -1,4 +1,4 @@
-package se.sundsvall.billingpreprocessor.integration.party.config;
+package se.sundsvall.billingpreprocessor.service.creator.config;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.MOCK;
@@ -12,14 +12,13 @@ import se.sundsvall.billingpreprocessor.Application;
 
 @SpringBootTest(classes = Application.class, webEnvironment = MOCK)
 @ActiveProfiles("junit")
-class PartyPropertiesTest {
+class InvoiceCreatorPropertiesTest {
 
-    @Autowired
-    private PartyProperties properties;
+	@Autowired
+	private InvoiceCreatorProperties properties;
 
-    @Test
-    void testProperties() {
-        assertThat(properties.connectTimeout()).isEqualTo(11);
-        assertThat(properties.readTimeout()).isEqualTo(22);
-    }
+	@Test
+	void externalStreamBuilder() {
+		assertThat(properties).isNotNull().extracting(InvoiceCreatorProperties::recordTerminator).isEqualTo("\\n");
+	}
 }
