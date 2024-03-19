@@ -6,7 +6,7 @@ import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity
 import se.sundsvall.billingpreprocessor.integration.db.model.enums.Type;
 
 public interface InvoiceCreator {
-	static final String CONFIGURATION_NOT_PRESENT = "No configuration available for invoice creator with name %s";
+	static final String CONFIGURATION_NOT_PRESENT = "No configuration present for invoice creator with name %s";
 
 	/**
 	 * Method returning the type that the creator can handle

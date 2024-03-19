@@ -31,17 +31,20 @@ public class InvoiceFileService {
 	private final InvoiceFileRepository invoiceFileRepository;
 	private final List<InvoiceCreator> invoiceCreators;
 	private final InvoiceFileConfigurationService invoiceFileConfigurationService;
+	private final MessagingService messagingService;
 
 	public InvoiceFileService(
 		BillingRecordRepository billingRecordRepository,
 		InvoiceFileRepository invoiceFileRepository,
 		List<InvoiceCreator> invoiceCreators,
-		InvoiceFileConfigurationService invoiceFileConfigurationService) {
+		InvoiceFileConfigurationService invoiceFileConfigurationService,
+		MessagingService messagingService) {
 
 		this.billingRecordRepository = billingRecordRepository;
 		this.invoiceFileRepository = invoiceFileRepository;
 		this.invoiceCreators = invoiceCreators;
 		this.invoiceFileConfigurationService = invoiceFileConfigurationService;
+		this.messagingService = messagingService;
 	}
 
 	@Transactional
@@ -59,32 +62,32 @@ public class InvoiceFileService {
 	}
 
 	private List<CreationError> processBillingRecords(List<BillingRecordEntity> billingRecords, InvoiceCreator invoiceCreator) {
-		final var type = invoiceCreator.getProcessableType();
-		final var category = invoiceCreator.getProcessableCategory();
 		final List<CreationError> billingRecordProcessErrors = new ArrayList<>();
 		final List<CreationError> commonErrors = new ArrayList<>();
 
-		final var billingRecordsToProcess = filterByTypeAndCategory(billingRecords, type, category);
-		if (!billingRecordsToProcess.isEmpty()) {
-			billingRecords.removeAll(billingRecordsToProcess); // Remove processed records from the original list and send mejl if unprocessed records exists at end of execution
+		try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+			final var type = invoiceCreator.getProcessableType();
+			final var category = invoiceCreator.getProcessableCategory();
 
-			try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+			final var billingRecordsToProcess = filterByTypeAndCategory(billingRecords, type, category);
+			if (!billingRecordsToProcess.isEmpty()) {
+				billingRecords.removeAll(billingRecordsToProcess); // Remove processed records from the original list and send mejl if unprocessed records exists at end of execution
+
 				final var filename = invoiceFileConfigurationService.getInvoiceFileNameBy(type.name(), category);
 
 				outputStream.write(invoiceCreator.createFileHeader());
 
-				billingRecordsToProcess.forEach(billingRecord ->
-				createBillingRecord(outputStream, billingRecord, invoiceCreator)
+				billingRecordsToProcess.forEach(billingRecord -> createBillingRecord(outputStream, billingRecord, invoiceCreator)
 					.ifPresent(billingRecordProcessErrors::add));
 
 				if (billingRecordsToProcess.size() > billingRecordProcessErrors.size()) { // At least one of the records should be successful for the file to be created
 					invoiceFileRepository.save(toInvoiceFileEntity(filename, type.name(), outputStream.toByteArray()));
 				}
-
-			} catch (Exception e) {
-				LOG.error("Exception occurred during creation of {} invoice billing file for category {}", type.name().toLowerCase(), category, e);
-				commonErrors.add(CreationError.create(e.getMessage()));
 			}
+
+		} catch (Exception e) {
+			LOG.error("Exception occurred during creation of invoice billing file", e);
+			commonErrors.add(CreationError.create(e.getMessage()));
 		}
 
 		return Stream.concat(commonErrors.stream(), billingRecordProcessErrors.stream()).toList();
@@ -110,11 +113,17 @@ public class InvoiceFileService {
 	}
 
 	private void sendErrorMail(List<CreationError> creationErrors, List<BillingRecordEntity> unprocessedRecords) {
-		// TODO: Integrate with messaging and send error email (task UF-7461)
-		creationErrors.forEach(error -> LOG.warn(error.isCommonError() ? error.getMessage() : "Record with id %s couldn't be processed. Message is '%s'.".formatted(error.getEntityId(), error.getMessage())));
-		unprocessedRecords.forEach(billingRecord -> LOG.warn("Record with id %s of type: '%s' and category: '%s' couldn't be processed as no corresponding invoice creator implementation exists.".formatted(
-			billingRecord.getId(),
-			billingRecord.getType(),
-			billingRecord.getCategory())));
+		final var allErrors = new ArrayList<CreationError>(creationErrors);
+		allErrors.addAll(unprocessedRecords.stream()
+			.map(billingRecord -> CreationError.create(
+				billingRecord.getId(),
+				"No corresponding invoice creator implementation could be found for type: '%s' and category: '%s'".formatted(
+					billingRecord.getType(),
+					billingRecord.getCategory())))
+			.toList());
+
+		allErrors.forEach(error -> LOG.warn(error.isCommonError() ? error.getMessage() : "Record with id {} couldn't be processed. Message is '{}'.", error.getEntityId(), error.getMessage()));
+
+		messagingService.sendErrorMail(allErrors);
 	}
 }

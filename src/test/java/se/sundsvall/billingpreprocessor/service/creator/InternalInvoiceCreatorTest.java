@@ -107,7 +107,7 @@ class InternalInvoiceCreatorTest {
 
 		assertThat(List.of(e1, e2)).allSatisfy(e -> {
 			assertThat(e.getStatus()).isEqualTo(INTERNAL_SERVER_ERROR);
-			assertThat(e.getMessage()).isEqualTo("Internal Server Error: No configuration available for invoice creator with name InternalInvoiceCreator");
+			assertThat(e.getMessage()).isEqualTo("Internal Server Error: No configuration present for invoice creator with name InternalInvoiceCreator");
 		});
 	}
 

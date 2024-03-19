@@ -6,6 +6,7 @@ import static se.sundsvall.billingpreprocessor.integration.messaging.config.Mess
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import generated.se.sundsvall.messaging.EmailRequest;
 import generated.se.sundsvall.messaging.MessageResult;
@@ -21,5 +22,5 @@ public interface MessagingClient {
 	 * @return response containing id for sent message
 	 */
 	@PostMapping(path = "/email", produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
-	MessageResult sendEmail(@RequestBody EmailRequest emailRequest);
+	MessageResult sendEmail(@RequestParam("async") boolean sendAsynchronously, @RequestBody EmailRequest emailRequest);
 }
