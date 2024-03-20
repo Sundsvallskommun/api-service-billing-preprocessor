@@ -7,6 +7,8 @@ import static se.sundsvall.billingpreprocessor.service.mapper.MessagingMapper.to
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,7 @@ import se.sundsvall.billingpreprocessor.service.creator.CreationError;
 @Service
 public class MessagingService {
 	private static final boolean ASYNCHRONOUSLY = true;
+	private static final Logger LOG = LoggerFactory.getLogger(InvoiceFileService.class);
 
 	private final String applicationName;
 	private final String environment;
@@ -24,8 +27,8 @@ public class MessagingService {
 	private final ErrorMessageProperties properties;
 
 	public MessagingService(MessagingClient client,
-		@Value("${spring.application.name:}") String applicationName,
-		@Value("${spring.profiles.active:default}") String environment,
+		@Value("${spring.application.name:default}") String applicationName,
+		@Value("${spring.profiles.active:}") String environment,
 		ErrorMessageProperties properties) {
 
 		this.client = client;
@@ -36,6 +39,7 @@ public class MessagingService {
 
 	public void sendErrorMail(List<CreationError> errors) {
 		if (isBlank(properties.sender()) || isEmpty(properties.recipients())) {
+			LOG.info("Error report will not be sent as sender or receiver has not been defined in properties.");
 			return;
 		}
 
