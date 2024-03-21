@@ -46,7 +46,6 @@ integration:
     connect-timeout: 11
     read-timeout: 22
   sftp:
-    host: 127.0.0.1
     user: user
     password: pass
     remoteDir: "/upload/"
