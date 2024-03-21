@@ -28,7 +28,7 @@ public class MessagingService {
 
 	public MessagingService(MessagingClient client,
 		@Value("${spring.application.name}") String applicationName,
-		@Value("${spring.profiles.active:default}") String environment,
+		@Value("${spring.profiles.active:}") String environment,
 		ErrorMessageProperties properties) {
 
 		this.client = client;

@@ -28,9 +28,9 @@ import se.sundsvall.dept44.test.AbstractAppTest;
 import se.sundsvall.dept44.test.annotation.wiremock.WireMockAppTestSuite;
 
 /**
- * Billing Record IT tests.
+ * Billing Records IT tests.
  */
-@WireMockAppTestSuite(files = "classpath:/BillingRecordIT/", classes = Application.class)
+@WireMockAppTestSuite(files = "classpath:/BillingRecordsIT/", classes = Application.class)
 @Sql({
 	"/db/scripts/truncate.sql",
 	"/db/scripts/testdata-it.sql"

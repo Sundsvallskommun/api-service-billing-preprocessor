@@ -9,6 +9,7 @@
 		"customerId": "15",
 		"description": "Passerkort med foto för Ivan Drago (IVA02DRA)",
 		"ourReference": "MAN22VEG",
+		"customerReference": "JAN00EDO",
 		"referenceId": "IN-1998-1884-42",
 		"totalAmount": 200.0,
 		"invoiceRows": [

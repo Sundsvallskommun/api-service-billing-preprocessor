@@ -11,6 +11,7 @@
 				"customerId": "15",
 				"description": "Passerkort med foto för Ivan Drago (IVA02DRA)",
 				"ourReference": "MAN22VEG",
+				"customerReference": "JAN00EDO",
 				"referenceId": "IN-1998-1884-42",
 				"totalAmount": 200.0,
 				"invoiceRows": [
@@ -38,44 +39,12 @@
 			"modified": "2022-06-30T08:52:25.112+02:00"
 		},
 		{
-			"id": "71258e7d-5285-46ce-b9b2-877f8cad8edd",
-			"category": "ISYCASE",
-			"type": "INTERNAL",
-			"status": "NEW",
-			"invoice": {
-				"customerId": "15",
-				"description": "Passerkort utan foto för Rocky Balboa (ROC01BAL)",
-				"ourReference": "MIC00GOL",
-				"referenceId": "IN-5538-4432-36",
-				"totalAmount": 150.0,
-				"invoiceRows": [
-					{
-						"descriptions": [
-							"Ordernummer: azi-330c-3fne-33",
-							"Beställare: MIC00GOL 22940338",
-							"Användare: Rocky Balboa ROC01BAL",
-							"Passerkort utan foto"
-						],
-						"totalAmount": 150.0,
-						"costPerUnit": 150.0,
-						"quantity": 1,
-						"accountInformation": {
-							"costCenter": "1620000",
-							"subaccount": "936100",
-							"department": "910300",
-							"activity": "5247000",
-							"counterpart": "MIC00GOL"
-						}
-					}
-				]
-			},
-			"created": "2022-06-20T11:17:36.795+02:00"
-		},
-		{
-			"id": "83e4d599-5b4d-431c-8ebc-81192e9401ee",
+			"id": "200ee4a6-f7bc-4d82-80cb-ecd2d610475c",
 			"category": "ISYCASE",
 			"type": "EXTERNAL",
-			"status": "NEW",
+			"status": "APPROVED",
+			"approvedBy": "JOE01DOE",
+			"approved": "2024-03-20T11:37:15.997+01:00",
 			"recipient": {
 				"partyId": "970cd619-51b0-40b9-9132-579e2f937c07",
 				"firstName": "Yuri",
@@ -88,46 +57,52 @@
 			},
 			"invoice": {
 				"customerId": "02",
-				"description": "Faktura för två Boxercise-pass",
+				"description": "Faktura för skadebehandling",
+				"ourReference": "MIC00GOL",
 				"customerReference": "YUI10KAR",
-				"date": "2022-01-01",
-				"dueDate": "2022-08-30",
-				"totalAmount": 30000.0,
+				"referenceId": "X17",
+				"date": "2024-03-18",
+				"dueDate": "2024-05-31",
+				"totalAmount": 200000.0,
 				"invoiceRows": [
 					{
-						"totalAmount": 30000.0,
+						"descriptions": [
+							"Styrka: 100mg"
+						],
+						"totalAmount": 200000.0,
 						"vatCode": "25",
-						"costPerUnit": 15000.0,
+						"costPerUnit": 100000.0,
 						"quantity": 2,
 						"accountInformation": {
 							"costCenter": "1455000",
 							"subaccount": "485223",
 							"department": "899700",
 							"activity": "3022910",
-							"article": "Friskvårdssatsning",
+							"article": "Smärtstillande medicin",
 							"counterpart": "YUI10KAR"
 						}
 					}
 				]
 			},
-			"created": "2022-06-25T16:43:12.553+02:00"
+			"created": "2024-03-20T11:37:15.997+01:00",
+			"modified": "2024-03-20T11:37:15.997+01:00"
 		}
 	],
 	"pageable": {
-		"sort": [],
-		"offset": 0,
 		"pageNumber": 0,
 		"pageSize": 20,
+		"sort": [],
+		"offset": 0,
 		"paged": true,
 		"unpaged": false
 	},
-	"totalElements": 3,
-	"totalPages": 1,
 	"last": true,
+	"totalElements": 2,
+	"totalPages": 1,
 	"size": 20,
 	"number": 0,
 	"sort": [],
-	"numberOfElements": 3,
 	"first": true,
+	"numberOfElements": 2,
 	"empty": false
 }

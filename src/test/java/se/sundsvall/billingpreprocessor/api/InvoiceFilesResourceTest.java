@@ -11,29 +11,32 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import se.sundsvall.billingpreprocessor.Application;
-import se.sundsvall.billingpreprocessor.service.InvoiceFileService;
+import se.sundsvall.billingpreprocessor.service.AsyncExecutorService;
 
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("junit")
-class InvoiceFileResourceTest {
+class InvoiceFilesResourceTest {
 	private static final String PATH = "/invoicefiles";
 
 	@Autowired
 	private WebTestClient webTestClient;
 
 	@MockBean
-	private InvoiceFileService serviceMock;
+	private AsyncExecutorService serviceMock;
 
 	@Test
 	void triggerInvoiceFileCreation() {
 
 		// Call
-		webTestClient.post().uri(PATH).contentType(APPLICATION_JSON)
+		final var requestId = webTestClient.post().uri(PATH).contentType(APPLICATION_JSON)
 			.exchange()
-			.expectStatus().isOk()
-			.expectBody().isEmpty();
+			.expectStatus().isNoContent()
+			.expectBody().isEmpty()
+			.getResponseHeaders()
+			.get("x-request-id")
+			.getFirst();
 
 		// Verification
-		verify(serviceMock).createFileEntities();
+		verify(serviceMock).createFileEntities(requestId);
 	}
 }
