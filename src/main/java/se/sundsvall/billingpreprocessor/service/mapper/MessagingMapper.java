@@ -5,11 +5,11 @@ import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 import static java.util.Collections.emptyList;
 import static java.util.Objects.isNull;
 import static java.util.Optional.ofNullable;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
-import java.util.Base64.Decoder;
 import java.util.Base64.Encoder;
 import java.util.Collection;
 import java.util.List;
@@ -19,13 +19,13 @@ import org.zalando.problem.Problem;
 
 import generated.se.sundsvall.messaging.EmailRequest;
 import generated.se.sundsvall.messaging.EmailSender;
-import io.netty.util.internal.StringUtil;
 import se.sundsvall.billingpreprocessor.integration.messaging.config.ErrorMessageProperties;
 import se.sundsvall.billingpreprocessor.service.creator.CreationError;
+import se.sundsvall.dept44.common.validators.annotation.impl.ValidBase64ConstraintValidator;
 import se.sundsvall.dept44.requestid.RequestId;
 
 public final class MessagingMapper {
-	private static final Decoder BASE64_DECODER = Base64.getDecoder();
+	private static final ValidBase64ConstraintValidator BASE64_VALIDATOR = new ValidBase64ConstraintValidator();
 	private static final Encoder BASE64_ENCODER = Base64.getEncoder();
 
 	private MessagingMapper() {}
@@ -84,15 +84,9 @@ public final class MessagingMapper {
 	}
 
 	private static String base64Encode(String message) {
-		if (StringUtil.isNullOrEmpty(message)) {
+		if (isEmpty(message) || BASE64_VALIDATOR.isValid(message)) {
 			return message;
 		}
-		try {
-			BASE64_DECODER.decode(message.getBytes(StandardCharsets.UTF_8));
-			return message; // If decoding passes, the message is already in base64 format
-		} catch (Exception e) {
-			return BASE64_ENCODER.encodeToString(message.getBytes(StandardCharsets.UTF_8));
-		}
+		return BASE64_ENCODER.encodeToString(message.getBytes(StandardCharsets.UTF_8));
 	}
-
 }

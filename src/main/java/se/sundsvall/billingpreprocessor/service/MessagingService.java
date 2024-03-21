@@ -19,7 +19,7 @@ import se.sundsvall.billingpreprocessor.service.creator.CreationError;
 @Service
 public class MessagingService {
 	private static final boolean ASYNCHRONOUSLY = true;
-	private static final Logger LOG = LoggerFactory.getLogger(InvoiceFileService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(MessagingService.class);
 
 	private final String applicationName;
 	private final String environment;
@@ -27,8 +27,8 @@ public class MessagingService {
 	private final ErrorMessageProperties properties;
 
 	public MessagingService(MessagingClient client,
-		@Value("${spring.application.name:default}") String applicationName,
-		@Value("${spring.profiles.active:}") String environment,
+		@Value("${spring.application.name}") String applicationName,
+		@Value("${spring.profiles.active:default}") String environment,
 		ErrorMessageProperties properties) {
 
 		this.client = client;
