@@ -1,0 +1,6 @@
+!BillingPreProcessor yyMMdd Extern debitering                                                                                                             
+S9901011234Yuri Karpov                                                           Beachland avenue 3308              KY 40211 Louiseville               YUI
+H9901011234240531YUI10KAR                      MIC00GOL                      
+R9901011234Styrka: 100mg                 200     10000000 20000000       25
+K1455000 4852238997003022     SmärtstYUI000020000000             
+T+00000020000000

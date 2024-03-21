@@ -34,7 +34,7 @@ invoicecreator:
   record-terminator: \n
 
 errorreport:
-  subject-template: Fel vid skapande av fakturafiler (%s, %s-environment)
+  subject-template: Fel vid skapande av fakturafiler - %s (%s)
   html-prefix-template: >
     <!DOCTYPE html>
     <html lang="en" xmlns="http://www.w3.org/1999/xhtml"><body>

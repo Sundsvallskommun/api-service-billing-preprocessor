@@ -24,12 +24,17 @@ spring:
             client-secret: someClientSecret
         provider:
           messaging:
-            token-uri: http://localhost:${wiremock.server.port}/token
+            token-uri: http://localhost:${wiremock.server.port}/api-token
           party:
-            token-uri: http://localhost:${wiremock.server.port}/token
+            token-uri: http://localhost:${wiremock.server.port}/api-token
 
 integration:
   messaging:
-    url: http://localhost:${wiremock.server.port}/messaging
+    url: http://localhost:${wiremock.server.port}/api-messaging
   party:
-    url: http://localhost:${wiremock.server.port}/party
+    url: http://localhost:${wiremock.server.port}/api-party
+
+errorreport:
+  recipients:
+    - receiver@noreply.com
+  sender: sender@noreply.com
