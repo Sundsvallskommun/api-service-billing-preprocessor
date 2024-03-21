@@ -1,5 +1,24 @@
 package se.sundsvall.billingpreprocessor.service;
 
+import static java.util.Collections.emptyList;
+import static java.util.UUID.randomUUID;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+import static org.springframework.data.domain.Sort.Direction.DESC;
+import static org.zalando.problem.Status.BAD_REQUEST;
+import static org.zalando.problem.Status.METHOD_NOT_ALLOWED;
+import static org.zalando.problem.Status.NOT_FOUND;
+import static se.sundsvall.billingpreprocessor.api.model.enums.Status.NEW;
+import static se.sundsvall.billingpreprocessor.api.model.enums.Type.INTERNAL;
+
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -13,38 +32,28 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.zalando.problem.ThrowableProblem;
+
 import se.sundsvall.billingpreprocessor.api.model.AccountInformation;
 import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
 import se.sundsvall.billingpreprocessor.api.model.Invoice;
 import se.sundsvall.billingpreprocessor.api.model.InvoiceRow;
-import se.sundsvall.billingpreprocessor.api.model.enums.Status;
 import se.sundsvall.billingpreprocessor.integration.db.BillingRecordRepository;
+import se.sundsvall.billingpreprocessor.integration.db.InvoiceFileConfigurationRepository;
 import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceEntity;
-
-import java.util.List;
-
-import static java.util.Collections.emptyList;
-import static java.util.UUID.randomUUID;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-import static org.springframework.data.domain.Sort.Direction.DESC;
-import static org.zalando.problem.Status.METHOD_NOT_ALLOWED;
-import static org.zalando.problem.Status.NOT_FOUND;
-import static se.sundsvall.billingpreprocessor.api.model.enums.Status.NEW;
-import static se.sundsvall.billingpreprocessor.api.model.enums.Type.INTERNAL;
+import se.sundsvall.billingpreprocessor.integration.db.model.enums.Status;
+import se.sundsvall.billingpreprocessor.integration.db.model.enums.Type;
 
 @ExtendWith(MockitoExtension.class)
 class BillingRecordServiceTest {
 	private final static String ID = randomUUID().toString();
+	private final static String CATEGORY = "ACCESS_CARD";
 
 	@Mock
-	private BillingRecordRepository repositoryMock;
+	private BillingRecordRepository billingRecordRepositoryMock;
+
+	@Mock
+	private InvoiceFileConfigurationRepository invoiceFileConfigurationRepositoryMock;
 
 	@Mock
 	private Specification<BillingRecordEntity> specificationMock;
@@ -52,31 +61,48 @@ class BillingRecordServiceTest {
 	@InjectMocks
 	private BillingRecordService service;
 
-
 	@Test
 	void createBillingRecord() {
 		// Setup
 		final var record = createBillingRecordInstance();
 
 		// Mock
-		when(repositoryMock.save(any(BillingRecordEntity.class))).thenReturn(BillingRecordEntity.create().withId(ID));
+		when(invoiceFileConfigurationRepositoryMock.existsByTypeAndCategoryTag(record.getType().name(), record.getCategory())).thenReturn(true);
+		when(billingRecordRepositoryMock.save(any(BillingRecordEntity.class))).thenReturn(BillingRecordEntity.create().withId(ID));
 
 		// Call
 		final var result = service.createBillingRecord(record);
 
 		// Assertions and verifications
 		assertThat(result).isEqualTo(ID);
-		verify(repositoryMock).save(any(BillingRecordEntity.class));
-		verifyNoMoreInteractions(repositoryMock);
+		verify(invoiceFileConfigurationRepositoryMock).existsByTypeAndCategoryTag(INTERNAL.name(), CATEGORY);
+		verify(billingRecordRepositoryMock).save(any(BillingRecordEntity.class));
+		verifyNoMoreInteractions(invoiceFileConfigurationRepositoryMock, billingRecordRepositoryMock);
 	}
 
 	@Test
-	void createBillingRecords(){
+	void createBillingRecordWithMissingConfiguration() {
+		// Setup
+		final var record = createBillingRecordInstance();
+
+		// Call
+		final var e = assertThrows(ThrowableProblem.class, () -> service.createBillingRecord(record));
+
+		// Assertions and verifications
+		assertThat(e.getStatus()).isEqualTo(BAD_REQUEST);
+		assertThat(e.getMessage()).isEqualTo("Bad Request: One or more billing records contain an unknown type or category!");
+		verify(invoiceFileConfigurationRepositoryMock).existsByTypeAndCategoryTag(INTERNAL.name(), CATEGORY);
+		verifyNoMoreInteractions(invoiceFileConfigurationRepositoryMock, billingRecordRepositoryMock);
+	}
+
+	@Test
+	void createBillingRecords() {
 		// Setup
 		final var record = createBillingRecordInstance();
 
 		// Mock
-		when(repositoryMock.saveAll(any())).thenReturn(List.of(BillingRecordEntity.create().withId(ID)));
+		when(invoiceFileConfigurationRepositoryMock.existsByTypeAndCategoryTag(record.getType().name(), record.getCategory())).thenReturn(true);
+		when(billingRecordRepositoryMock.saveAll(any())).thenReturn(List.of(BillingRecordEntity.create().withId(ID)));
 
 		// Call
 		final var result = service.createBillingRecords(List.of(record));
@@ -84,8 +110,32 @@ class BillingRecordServiceTest {
 		// Assertions and verifications
 		assertThat(result).isNotEmpty().hasSize(1);
 		assertThat(result.get(0)).isEqualTo(ID);
-		verify(repositoryMock).saveAll(any());
-		verifyNoMoreInteractions(repositoryMock);
+		verify(invoiceFileConfigurationRepositoryMock).existsByTypeAndCategoryTag(INTERNAL.name(), CATEGORY);
+		verify(billingRecordRepositoryMock).saveAll(anyList());
+		verifyNoMoreInteractions(invoiceFileConfigurationRepositoryMock, billingRecordRepositoryMock);
+	}
+
+	@Test
+	void createBillingRecordsWithEntryMissingConfiguration() {
+		// Setup
+		final var unknownCategory = "UNKNOWN_CATEGORY";
+
+		final var input = List.of(
+			createBillingRecordInstance(),
+			createBillingRecordInstance().withCategory(unknownCategory));
+
+		// Mock
+		when(invoiceFileConfigurationRepositoryMock.existsByTypeAndCategoryTag(INTERNAL.name(), CATEGORY)).thenReturn(true);
+
+		// Call
+		final var e = assertThrows(ThrowableProblem.class, () -> service.createBillingRecords(input));
+
+		// Assertions and verifications
+		assertThat(e.getStatus()).isEqualTo(BAD_REQUEST);
+		assertThat(e.getMessage()).isEqualTo("Bad Request: One or more billing records contain an unknown type or category!");
+		verify(invoiceFileConfigurationRepositoryMock).existsByTypeAndCategoryTag(INTERNAL.name(), CATEGORY);
+		verify(invoiceFileConfigurationRepositoryMock).existsByTypeAndCategoryTag(INTERNAL.name(), unknownCategory);
+		verifyNoMoreInteractions(invoiceFileConfigurationRepositoryMock, billingRecordRepositoryMock);
 	}
 
 	@Test
@@ -95,11 +145,11 @@ class BillingRecordServiceTest {
 		final Pageable pageable = PageRequest.of(1, 2, sort);
 
 		// Mock
-		when(repositoryMock.findAll(specificationMock, pageable)).thenReturn(new PageImpl<>(List.of(createBillingRecordEntityInstance(), createBillingRecordEntityInstance()), pageable, 2L));
-		when(repositoryMock.count(specificationMock)).thenReturn(10L);
+		when(billingRecordRepositoryMock.findAll(specificationMock, pageable)).thenReturn(new PageImpl<>(List.of(createBillingRecordEntityInstance(), createBillingRecordEntityInstance()), pageable, 2L));
+		when(billingRecordRepositoryMock.count(specificationMock)).thenReturn(10L);
 
 		// Call
-		final var matches = service.findBillingIRecords(specificationMock, pageable);
+		final var matches = service.findBillingRecords(specificationMock, pageable);
 
 		// Assertions and verifications
 		assertThat(matches.getContent()).isNotEmpty().hasSize(2);
@@ -109,9 +159,9 @@ class BillingRecordServiceTest {
 		assertThat(matches.getPageable()).usingRecursiveComparison().isEqualTo(pageable);
 		assertThat(matches.getSort()).usingRecursiveComparison().isEqualTo(sort);
 
-		verify(repositoryMock).findAll(specificationMock, pageable);
-		verify(repositoryMock).count(specificationMock);
-		verifyNoMoreInteractions(repositoryMock);
+		verify(billingRecordRepositoryMock).findAll(specificationMock, pageable);
+		verify(billingRecordRepositoryMock).count(specificationMock);
+		verifyNoMoreInteractions(billingRecordRepositoryMock);
 	}
 
 	@Test
@@ -121,10 +171,10 @@ class BillingRecordServiceTest {
 		final Pageable pageable = PageRequest.of(3, 7, sort);
 
 		// Mock
-		when(repositoryMock.findAll(specificationMock, pageable)).thenReturn(new PageImpl<>(emptyList()));
+		when(billingRecordRepositoryMock.findAll(specificationMock, pageable)).thenReturn(new PageImpl<>(emptyList()));
 
 		// Call
-		final var matches = service.findBillingIRecords(specificationMock, pageable);
+		final var matches = service.findBillingRecords(specificationMock, pageable);
 
 		// Assertions and verifications
 		assertThat(matches.getContent()).isEmpty();
@@ -134,25 +184,25 @@ class BillingRecordServiceTest {
 		assertThat(matches.getPageable()).usingRecursiveComparison().isEqualTo(pageable);
 		assertThat(matches.getSort()).usingRecursiveComparison().isEqualTo(sort);
 
-		verify(repositoryMock).findAll(specificationMock, pageable);
-		verify(repositoryMock).count(specificationMock);
-		verifyNoMoreInteractions(repositoryMock);
+		verify(billingRecordRepositoryMock).findAll(specificationMock, pageable);
+		verify(billingRecordRepositoryMock).count(specificationMock);
+		verifyNoMoreInteractions(billingRecordRepositoryMock);
 	}
 
 	@Test
 	void readExistingBillingRecord() {
 		// Mock
-		when(repositoryMock.existsById(ID)).thenReturn(true);
-		when(repositoryMock.getReferenceById(ID)).thenReturn(createBillingRecordEntityInstance());
+		when(billingRecordRepositoryMock.existsById(ID)).thenReturn(true);
+		when(billingRecordRepositoryMock.getReferenceById(ID)).thenReturn(createBillingRecordEntityInstance());
 
 		// Call
 		final var result = service.readBillingRecord(ID);
 
 		// Assertions and verifications
 		assertThat(result.getId()).isEqualTo(ID);
-		verify(repositoryMock).existsById(ID);
-		verify(repositoryMock).getReferenceById(ID);
-		verifyNoMoreInteractions(repositoryMock);
+		verify(billingRecordRepositoryMock).existsById(ID);
+		verify(billingRecordRepositoryMock).getReferenceById(ID);
+		verifyNoMoreInteractions(billingRecordRepositoryMock);
 	}
 
 	@Test
@@ -163,10 +213,10 @@ class BillingRecordServiceTest {
 		// Assertions and verifications
 		assertThat(exception.getStatus()).isEqualTo(NOT_FOUND);
 		assertThat(exception.getTitle()).isEqualTo(NOT_FOUND.getReasonPhrase());
-		assertThat(exception.getMessage()).isEqualTo("Not Found: A billing record with id " + ID + " could not be found");
+		assertThat(exception.getMessage()).isEqualTo("Not Found: A billing record with id '" + ID + "' could not be found!");
 
-		verify(repositoryMock).existsById(ID);
-		verifyNoMoreInteractions(repositoryMock);
+		verify(billingRecordRepositoryMock).existsById(ID);
+		verifyNoMoreInteractions(billingRecordRepositoryMock);
 	}
 
 	@Test
@@ -175,9 +225,9 @@ class BillingRecordServiceTest {
 		final var entity = createBillingRecordEntityInstance();
 
 		// Mock
-		when(repositoryMock.existsById(ID)).thenReturn(true);
-		when(repositoryMock.getReferenceById(ID)).thenReturn(entity);
-		when(repositoryMock.save(entity)).thenReturn(entity);
+		when(billingRecordRepositoryMock.existsById(ID)).thenReturn(true);
+		when(billingRecordRepositoryMock.getReferenceById(ID)).thenReturn(entity);
+		when(billingRecordRepositoryMock.save(entity)).thenReturn(entity);
 
 		// Call
 		final var response = service.updateBillingRecord(ID, createBillingRecordInstance());
@@ -185,10 +235,10 @@ class BillingRecordServiceTest {
 		// Assertions and verifications
 		assertThat(response.getId()).isEqualTo(ID);
 
-		verify(repositoryMock).existsById(ID);
-		verify(repositoryMock).getReferenceById(ID);
-		verify(repositoryMock).save(entity);
-		verifyNoMoreInteractions(repositoryMock);
+		verify(billingRecordRepositoryMock).existsById(ID);
+		verify(billingRecordRepositoryMock).getReferenceById(ID);
+		verify(billingRecordRepositoryMock).save(entity);
+		verifyNoMoreInteractions(billingRecordRepositoryMock);
 	}
 
 	@Test
@@ -202,34 +252,34 @@ class BillingRecordServiceTest {
 		// Assertions and verifications
 		assertThat(exception.getStatus()).isEqualTo(NOT_FOUND);
 		assertThat(exception.getTitle()).isEqualTo(NOT_FOUND.getReasonPhrase());
-		assertThat(exception.getMessage()).isEqualTo("Not Found: A billing record with id " + ID + " could not be found");
+		assertThat(exception.getMessage()).isEqualTo("Not Found: A billing record with id '" + ID + "' could not be found!");
 
-		verify(repositoryMock).existsById(ID);
-		verifyNoMoreInteractions(repositoryMock);
+		verify(billingRecordRepositoryMock).existsById(ID);
+		verifyNoMoreInteractions(billingRecordRepositoryMock);
 	}
 
 	@Test
 	void deleteBillingRecordWithDeletableStatus() {
 		// Mock
-		when(repositoryMock.existsById(ID)).thenReturn(true);
-		when(repositoryMock.getReferenceById(ID)).thenReturn(createBillingRecordEntityInstance().withStatus(NEW));
+		when(billingRecordRepositoryMock.existsById(ID)).thenReturn(true);
+		when(billingRecordRepositoryMock.getReferenceById(ID)).thenReturn(createBillingRecordEntityInstance().withStatus(Status.NEW));
 
 		// Call
 		service.deleteBillingRecord(ID);
 
 		// Assertions and verifications
-		verify(repositoryMock).existsById(ID);
-		verify(repositoryMock).getReferenceById(ID);
-		verify(repositoryMock).deleteById(ID);
-		verifyNoMoreInteractions(repositoryMock);
+		verify(billingRecordRepositoryMock).existsById(ID);
+		verify(billingRecordRepositoryMock).getReferenceById(ID);
+		verify(billingRecordRepositoryMock).deleteById(ID);
+		verifyNoMoreInteractions(billingRecordRepositoryMock);
 	}
 
 	@ParameterizedTest
 	@EnumSource(value = Status.class, names = "NEW", mode = EXCLUDE)
 	void deleteBillingRecordWithNonDeletableStatus(Status status) {
 		// Mock
-		when(repositoryMock.existsById(ID)).thenReturn(true);
-		when(repositoryMock.getReferenceById(ID)).thenReturn(createBillingRecordEntityInstance().withStatus(status));
+		when(billingRecordRepositoryMock.existsById(ID)).thenReturn(true);
+		when(billingRecordRepositoryMock.getReferenceById(ID)).thenReturn(createBillingRecordEntityInstance().withStatus(status));
 
 		// Call
 		final var exception = assertThrows(ThrowableProblem.class, () -> service.deleteBillingRecord(ID));
@@ -237,10 +287,10 @@ class BillingRecordServiceTest {
 		// Assertions and verifications
 		assertThat(exception.getStatus()).isEqualTo(METHOD_NOT_ALLOWED);
 		assertThat(exception.getTitle()).isEqualTo(METHOD_NOT_ALLOWED.getReasonPhrase());
-		assertThat(exception.getMessage()).isEqualTo("Method Not Allowed: The billing record does not have status NEW and is therefore not possible to delete");
+		assertThat(exception.getMessage()).isEqualTo("Method Not Allowed: The billing record does not have status NEW and is therefore not possible to delete!");
 
-		verify(repositoryMock).existsById(ID);
-		verifyNoMoreInteractions(repositoryMock);
+		verify(billingRecordRepositoryMock).existsById(ID);
+		verifyNoMoreInteractions(billingRecordRepositoryMock);
 	}
 
 	@Test
@@ -251,15 +301,15 @@ class BillingRecordServiceTest {
 		// Assertions and verifications
 		assertThat(exception.getStatus()).isEqualTo(NOT_FOUND);
 		assertThat(exception.getTitle()).isEqualTo(NOT_FOUND.getReasonPhrase());
-		assertThat(exception.getMessage()).isEqualTo("Not Found: A billing record with id " + ID + " could not be found");
+		assertThat(exception.getMessage()).isEqualTo("Not Found: A billing record with id '" + ID + "' could not be found!");
 
-		verify(repositoryMock).existsById(ID);
-		verifyNoMoreInteractions(repositoryMock);
+		verify(billingRecordRepositoryMock).existsById(ID);
+		verifyNoMoreInteractions(billingRecordRepositoryMock);
 	}
 
 	private static BillingRecord createBillingRecordInstance() {
 		return BillingRecord.create()
-			.withCategory("ACCESS_CARD")
+			.withCategory(CATEGORY)
 			.withInvoice(createInvoiceInstance())
 			.withStatus(NEW)
 			.withType(INTERNAL);
@@ -301,6 +351,10 @@ class BillingRecordServiceTest {
 	}
 
 	private static BillingRecordEntity createBillingRecordEntityInstance() {
-		return BillingRecordEntity.create().withId(ID).withInvoice(InvoiceEntity.create());
+		return BillingRecordEntity.create()
+			.withId(ID)
+			.withInvoice(InvoiceEntity.create())
+			.withStatus(Status.APPROVED)
+			.withType(Type.EXTERNAL);
 	}
 }

@@ -40,3 +40,24 @@ VALUES	('Ordernummer: azi-330c-3fne-33', 'STANDARD', 100),
 -------------------------------------
 INSERT INTO recipient (id, care_of, city, street, postal_code, first_name, last_name, organization_name, party_id, user_id)
 VALUES	('83e4d599-5b4d-431c-8ebc-81192e9401ee', NULL, 'Louiseville', 'Beachland avenue 3308', 'KY 40211', 'Yuri', 'Karpov', NULL, '970cd619-51b0-40b9-9132-579e2f937c07', 'YUI10KAR');
+
+-------------------------------------
+-- Invoice file
+-------------------------------------
+INSERT INTO invoice_file (created, content, sent, name, `type`, status) 
+VALUES 
+	('2024-02-26 10:15:00.000000', 'File content', NULL, 'INVOICE_FILE_1.txt', 'INTERNAL', 'GENERATED'),
+	('2024-02-25 09:30:00.000000', 'File content', '2024-02-25 09:35:00.000000', 'INVOICE_FILE_2.txt', 'INTERNAL', 'SEND_SUCCESSFUL'),
+	('2024-02-24 14:45:00.000000', 'File content', NULL, 'INVOICE_FILE_3.txt', 'INTERNAL', 'GENERATED'),
+	('2024-02-23 16:20:00.000000', 'File content', NULL, 'INVOICE_FILE_4.txt', 'INTERNAL', 'SEND_SUCCESSFUL'),
+	('2024-02-22 11:10:00.000000', 'File content', '2024-02-22 11:15:00.000000', 'INVOICE_FILE_5.txt', 'EXTERNAL', 'SEND_SUCCESSFUL');
+
+
+-------------------------------------
+-- Invoice file configuration
+-------------------------------------
+INSERT INTO file_configuration(type, category_tag, file_name_pattern)
+VALUES
+    ('type1', 'category_tag1', 'file_name_pattern1'),
+    ('type1', 'category_tag2', 'file_name_pattern2'),
+    ('type3', 'category_tag3', 'file_name_pattern3');

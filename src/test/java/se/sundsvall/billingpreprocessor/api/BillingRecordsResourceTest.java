@@ -1,6 +1,5 @@
 package se.sundsvall.billingpreprocessor.api;
 
-import static com.fasterxml.jackson.annotation.JsonCreator.Mode.PROPERTIES;
 import static java.util.Collections.emptyMap;
 import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,19 +24,13 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.JsonNode;
 
 import se.sundsvall.billingpreprocessor.Application;
 import se.sundsvall.billingpreprocessor.api.model.AccountInformation;
@@ -54,9 +47,6 @@ class BillingRecordsResourceTest {
 
 	@Autowired
 	private WebTestClient webTestClient;
-
-	@LocalServerPort
-	private int port;
 
 	@MockBean
 	private BillingRecordService serviceMock;
@@ -154,19 +144,19 @@ class BillingRecordsResourceTest {
 		final var matches = new PageImpl<>(List.of(BillingRecord.create()), pageable, 1);
 
 		// Mock
-		when(serviceMock.findBillingIRecords(Mockito.<Specification<BillingRecordEntity>>any(), eq(pageable))).thenReturn(matches);
+		when(serviceMock.findBillingRecords(Mockito.<Specification<BillingRecordEntity>>any(), eq(pageable))).thenReturn(matches);
 
 		// Call
 		final var response = webTestClient.get().uri(builder -> builder.path(PATH).build(emptyMap()))
 			.exchange()
 			.expectStatus().isOk()
 			.expectHeader().contentType(APPLICATION_JSON)
-			.returnResult(new ParameterizedTypeReference<RestResponsePage<BillingRecord>>() {})
-			.getResponseBody()
-			.blockFirst();
+			.expectBody(new ParameterizedTypeReference<Page<BillingRecord>>() {})
+			.returnResult()
+			.getResponseBody();
 
 		// Verification
-		verify(serviceMock).findBillingIRecords(Mockito.<Specification<BillingRecordEntity>>any(), eq(pageable));
+		verify(serviceMock).findBillingRecords(Mockito.<Specification<BillingRecordEntity>>any(), eq(pageable));
 		assertThat(response).isNotNull().isEqualTo(matches);
 		assertThat(response.getContent()).hasSize(1);
 	}
@@ -181,7 +171,7 @@ class BillingRecordsResourceTest {
 		final var filter = "category:'ACCESS_CARD' and status:'NEW'";
 
 		// Mock
-		when(serviceMock.findBillingIRecords(ArgumentMatchers.<Specification<BillingRecordEntity>>any(), eq(pageable))).thenReturn(matches);
+		when(serviceMock.findBillingRecords(ArgumentMatchers.<Specification<BillingRecordEntity>>any(), eq(pageable))).thenReturn(matches);
 
 		// Call
 		final var response = webTestClient.get().uri(builder -> builder.path(PATH)
@@ -191,12 +181,12 @@ class BillingRecordsResourceTest {
 			.exchange()
 			.expectStatus().isOk()
 			.expectHeader().contentType(APPLICATION_JSON)
-			.returnResult(new ParameterizedTypeReference<RestResponsePage<BillingRecord>>() {})
-			.getResponseBody()
-			.blockFirst();
+			.expectBody(new ParameterizedTypeReference<Page<BillingRecord>>() {})
+			.returnResult()
+			.getResponseBody();
 
 		// Verification
-		verify(serviceMock).findBillingIRecords(ArgumentMatchers.<Specification<BillingRecordEntity>>any(), eq(pageable));
+		verify(serviceMock).findBillingRecords(ArgumentMatchers.<Specification<BillingRecordEntity>>any(), eq(pageable));
 		assertThat(response).isNotNull().isEqualTo(matches);
 		assertThat(response.getContent()).hasSize(1);
 	}
@@ -282,31 +272,5 @@ class BillingRecordsResourceTest {
 			.withCostCenter("1620000")
 			.withSubaccount("936100")
 			.withCounterpart("counterPart");
-	}
-
-	// Helper implementation of Page
-	@JsonIgnoreProperties(ignoreUnknown = true)
-	private static class RestResponsePage<T> extends PageImpl<T> {
-		private static final long serialVersionUID = -7361702892303169935L;
-
-		@JsonCreator(mode = PROPERTIES)
-		public RestResponsePage(@JsonProperty("content") final List<T> content, @JsonProperty("number") final int number, @JsonProperty("size") final int size,
-			@JsonProperty("totalElements") final Long totalElements, @JsonProperty("pageable") final JsonNode pageable, @JsonProperty("last") final boolean last,
-			@JsonProperty("totalPages") final int totalPages, @JsonProperty("sort") final JsonNode sort, @JsonProperty("first") final boolean first,
-			@JsonProperty("numberOfElements") final int numberOfElements) {
-			super(content, PageRequest.of(number, size), totalElements);
-		}
-
-		public RestResponsePage(final List<T> content, final Pageable pageable, final long total) {
-			super(content, pageable, total);
-		}
-
-		public RestResponsePage(final List<T> content) {
-			super(content);
-		}
-
-		public RestResponsePage() {
-			super(new ArrayList<>());
-		}
 	}
 }

@@ -1,7 +1,6 @@
 package se.sundsvall.billingpreprocessor.integration.db.model;
 
 import static jakarta.persistence.CascadeType.ALL;
-import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.FetchType.LAZY;
 import static java.time.OffsetDateTime.now;
 import static java.time.temporal.ChronoUnit.MILLIS;
@@ -17,15 +16,14 @@ import org.hibernate.annotations.UuidGenerator;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
-import se.sundsvall.billingpreprocessor.api.model.enums.Status;
-import se.sundsvall.billingpreprocessor.api.model.enums.Type;
+import se.sundsvall.billingpreprocessor.integration.db.model.enums.Status;
+import se.sundsvall.billingpreprocessor.integration.db.model.enums.Type;
 
 @Entity
 @Table(name = "billing_record",
@@ -43,12 +41,10 @@ public class BillingRecordEntity implements Serializable {
 	@Column(name = "category", nullable = false)
 	private String category;
 
-	@Column(name = "type", nullable = false, columnDefinition = "varchar(255)")
-	@Enumerated(STRING)
+	@Column(name = "type", nullable = false)
 	private Type type;
 
-	@Column(name = "status", nullable = false, columnDefinition = "varchar(255)")
-	@Enumerated(STRING)
+	@Column(name = "status", nullable = false)
 	private Status status;
 
 	@Column(name = "approved_by")

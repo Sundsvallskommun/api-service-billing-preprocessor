@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
-    url: jdbc:tc:mariadb:10.6.4:///
+    url: jdbc:tc:mariadb:10.6.4:////ittest
   flyway:
     enabled: true
   jpa:
@@ -11,3 +11,30 @@ spring:
           schema-generation:
             database:
               action: validate
+
+  security:
+    oauth2:
+      client:
+        registration:
+          messaging:
+            client-id: someClientId
+            client-secret: someClientSecret
+          party:
+            client-id: someClientId
+            client-secret: someClientSecret
+        provider:
+          messaging:
+            token-uri: http://localhost:${wiremock.server.port}/api-token
+          party:
+            token-uri: http://localhost:${wiremock.server.port}/api-token
+
+integration:
+  messaging:
+    url: http://localhost:${wiremock.server.port}/api-messaging
+  party:
+    url: http://localhost:${wiremock.server.port}/api-party
+
+errorreport:
+  recipients:
+    - receiver@noreply.com
+  sender: sender@noreply.com

@@ -19,10 +19,49 @@ spring:
             scripts:
               action: create
               create-target: target/database/generated-schema.sql
+
+  security:
+    oauth2:
+      client:
+        registration:
+          messaging:
+            client-id: messagingClientId
+            client-secret: messagingClientSecret
+          party:
+            client-id: partyClientId
+            client-secret: partyClientSecret
+        provider:
+          messaging:
+            token-uri: http://token.url
+          party:
+            token-uri: http://token.url
+
 integration:
+  messaging:
+    url: http://messaging.url
+    connectTimeout: 12
+    readTimeout: 23
+  party:
+    url: http://party.url
+    connect-timeout: 11
+    read-timeout: 22
   sftp:
     host: 127.0.0.1
     user: user
     password: pass
     remoteDir: "/upload/"
     allowUnknownKeys: false
+
+errorreport:
+  subject-template: subjectTemplate
+  html-prefix-template: htmlPrefixTemplate
+  body-prefix-template: bodyPrefixTemplate
+  list-prefix-template: listPrefixTemplate
+  list-item-template: listItemTemplate
+  list-suffix-template: listSuffixTemplate
+  body-suffix-template: bodySuffixTemplate
+  html-suffix-template: htmlSuffixTemplate
+  recipients:
+    - recipient.1
+    - recipient.2
+  sender: sender

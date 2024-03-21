@@ -1,0 +1,6 @@
+S3456789123Testbolaget AB                     Jenny Långsam                      Testgatan 12                       85643 Sundsvall                    118
+H3456789123240330Snurre Sprätto                Johnny Bråttom                
+R3456789123En fakturarad                 100     139500   139500         25
+U3456789123En mer detaljerad fakturaradsbeskrivning           
+K15800100936300920360575611041Elcykel1180000001395005647         
+T+00000000139500

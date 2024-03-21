@@ -19,3 +19,39 @@ spring:
           schema-generation:
             database:
               action: none
+  security:
+    oauth2:
+      client:
+        registration:
+          messaging:
+            authorization-grant-type: client_credentials
+            provider: messaging
+          party:
+            authorization-grant-type: client_credentials
+            provider: party
+
+invoicecreator:
+  record-terminator: \n
+
+errorreport:
+  subject-template: Fel vid skapande av fakturafiler - %s (%s)
+  html-prefix-template: >
+    <!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml"><body>
+  body-prefix-template: > 
+      <b>Följande problem har inträffat vid generering av fakturafiler (%s)</b>
+      <p>
+  list-prefix-template: <i>%s fel:</i><ul>
+  list-item-template: <li>%s</li>
+  list-suffix-template: </ul>
+  body-suffix-template: >
+      Exekveringens request-id är %s
+      </p>
+      <p>
+        <b>Med vänlig hälsning <br/>
+        <a href="mailto:%s">%s</a></b>
+      </p>
+  html-suffix-template: </body></html>
+  
+  recipients:
+  sender: teamunmasked@sundsvall.se

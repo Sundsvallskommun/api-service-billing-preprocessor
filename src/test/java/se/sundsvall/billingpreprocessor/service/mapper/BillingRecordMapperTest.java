@@ -8,10 +8,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 import static org.assertj.core.groups.Tuple.tuple;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
-import static se.sundsvall.billingpreprocessor.api.model.enums.Status.APPROVED;
-import static se.sundsvall.billingpreprocessor.api.model.enums.Type.EXTERNAL;
-import static se.sundsvall.billingpreprocessor.integration.db.model.DescriptionType.DETAILED;
-import static se.sundsvall.billingpreprocessor.integration.db.model.DescriptionType.STANDARD;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.DETAILED;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.STANDARD;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
@@ -30,15 +28,14 @@ import se.sundsvall.billingpreprocessor.api.model.Invoice;
 import se.sundsvall.billingpreprocessor.api.model.InvoiceRow;
 import se.sundsvall.billingpreprocessor.api.model.Recipient;
 import se.sundsvall.billingpreprocessor.api.model.enums.Status;
-import se.sundsvall.billingpreprocessor.api.model.enums.Type;
 import se.sundsvall.billingpreprocessor.integration.db.model.AccountInformationEmbeddable;
 import se.sundsvall.billingpreprocessor.integration.db.model.AddressDetailsEmbeddable;
 import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.DescriptionEntity;
-import se.sundsvall.billingpreprocessor.integration.db.model.DescriptionType;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.RecipientEntity;
+import se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType;
 
 class BillingRecordMapperTest {
 
@@ -46,8 +43,8 @@ class BillingRecordMapperTest {
 	private static final String ID = randomUUID().toString();
 	private static final String CATEGORY = "category";
 	private static final String APPROVED_BY = "approvedBy";
-	private static final Status STATUS = APPROVED;
-	private static final Type TYPE = EXTERNAL;
+	private static final se.sundsvall.billingpreprocessor.integration.db.model.enums.Status STATUS = se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.APPROVED;
+	private static final se.sundsvall.billingpreprocessor.integration.db.model.enums.Type TYPE = se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.EXTERNAL;
 	private static final OffsetDateTime APPROVED_TIMESTAMP = now();
 	private static final OffsetDateTime CREATED_TIMESTAMP = now().minusDays(2);
 	private static final OffsetDateTime MODIFIED_TIMESTAMP = now().minusDays(1);
@@ -165,7 +162,7 @@ class BillingRecordMapperTest {
 				InvoiceEntity::getTotalAmount)
 			.containsExactly(
 				billingRecordEntity,
-				CUSTOMER_ID, 
+				CUSTOMER_ID,
 				CUSTOMER_REFERENCE,
 				DESCRIPTION,
 				DATE,
@@ -184,8 +181,8 @@ class BillingRecordMapperTest {
 				InvoiceRowEntity::getTotalAmount,
 				InvoiceRowEntity::getVatCode)
 			.containsExactly(
-				tuple(COST_PER_UNIT, 0l, QUANTITY, COST_PER_UNIT * QUANTITY, VAT_CODE),
-				tuple(COST_PER_UNIT, 0l, QUANTITY, COST_PER_UNIT * QUANTITY, VAT_CODE));
+				tuple(COST_PER_UNIT, 0L, QUANTITY, COST_PER_UNIT * QUANTITY, VAT_CODE),
+				tuple(COST_PER_UNIT, 0L, QUANTITY, COST_PER_UNIT * QUANTITY, VAT_CODE));
 
 		assertThat(billingRecordEntity.getInvoice().getInvoiceRows())
 			.extracting(InvoiceRowEntity::getInvoice).isNotNull().allMatch(invoice -> invoice == billingRecordEntity.getInvoice());
@@ -220,10 +217,10 @@ class BillingRecordMapperTest {
 					DescriptionEntity::getText,
 					DescriptionEntity::getType)
 				.containsExactly(
-					tuple(0l, invoiceRow, DESCRIPTION_1, STANDARD),
-					tuple(0l, invoiceRow, DESCRIPTION_2, STANDARD),
-					tuple(0l, invoiceRow, DETAILED_DESCRIPTION_1, DETAILED),
-					tuple(0l, invoiceRow, DETAILED_DESCRIPTION_2, DETAILED));
+					tuple(0L, invoiceRow, DESCRIPTION_1, STANDARD),
+					tuple(0L, invoiceRow, DESCRIPTION_2, STANDARD),
+					tuple(0L, invoiceRow, DETAILED_DESCRIPTION_1, DETAILED),
+					tuple(0L, invoiceRow, DETAILED_DESCRIPTION_2, DETAILED));
 		});
 	}
 
@@ -245,9 +242,8 @@ class BillingRecordMapperTest {
 		assertThat(billingRecordEntity.getApprovedBy()).isNull();
 	}
 
-
 	@Test
-	void toBillingRecordEntitiesForFullInstance(){
+	void toBillingRecordEntitiesForFullInstance() {
 		final var billingRecord = createbillingRecord();
 		final var billingRecordEntities = BillingRecordMapper.toBillingRecordEntities(List.of(billingRecord));
 
@@ -336,8 +332,8 @@ class BillingRecordMapperTest {
 				InvoiceRowEntity::getTotalAmount,
 				InvoiceRowEntity::getVatCode)
 			.containsExactly(
-				tuple(COST_PER_UNIT, 0l, QUANTITY, COST_PER_UNIT * QUANTITY, VAT_CODE),
-				tuple(COST_PER_UNIT, 0l, QUANTITY, COST_PER_UNIT * QUANTITY, VAT_CODE));
+				tuple(COST_PER_UNIT, 0L, QUANTITY, COST_PER_UNIT * QUANTITY, VAT_CODE),
+				tuple(COST_PER_UNIT, 0L, QUANTITY, COST_PER_UNIT * QUANTITY, VAT_CODE));
 
 		assertThat(billingRecordEntity.getInvoice().getInvoiceRows())
 			.extracting(InvoiceRowEntity::getInvoice).isNotNull().allMatch(invoice -> invoice == billingRecordEntity.getInvoice());
@@ -372,13 +368,12 @@ class BillingRecordMapperTest {
 					DescriptionEntity::getText,
 					DescriptionEntity::getType)
 				.containsExactly(
-					tuple(0l, invoiceRow, DESCRIPTION_1, STANDARD),
-					tuple(0l, invoiceRow, DESCRIPTION_2, STANDARD),
-					tuple(0l, invoiceRow, DETAILED_DESCRIPTION_1, DETAILED),
-					tuple(0l, invoiceRow, DETAILED_DESCRIPTION_2, DETAILED));
+					tuple(0L, invoiceRow, DESCRIPTION_1, STANDARD),
+					tuple(0L, invoiceRow, DESCRIPTION_2, STANDARD),
+					tuple(0L, invoiceRow, DETAILED_DESCRIPTION_1, DETAILED),
+					tuple(0L, invoiceRow, DETAILED_DESCRIPTION_2, DETAILED));
 		});
 	}
-
 
 	@Test
 	void tobillingRecordEntitiesWithNoRecipient() {
@@ -445,8 +440,8 @@ class BillingRecordMapperTest {
 		assertThat(billingRecord.getCreated()).isEqualTo(CREATED_TIMESTAMP);
 		assertThat(billingRecord.getId()).isEqualTo(ID);
 		assertThat(billingRecord.getModified()).isEqualTo(MODIFIED_TIMESTAMP);
-		assertThat(billingRecord.getStatus()).isEqualTo(STATUS);
-		assertThat(billingRecord.getType()).isEqualTo(TYPE);
+		assertThat(billingRecord.getStatus()).isEqualTo(se.sundsvall.billingpreprocessor.api.model.enums.Status.valueOf(STATUS.toString()));
+		assertThat(billingRecord.getType()).isEqualTo(se.sundsvall.billingpreprocessor.api.model.enums.Type.valueOf(TYPE.toString()));
 
 		// Assert Recipient values
 		assertThat(billingRecord.getRecipient()).isNotNull()
@@ -663,8 +658,8 @@ class BillingRecordMapperTest {
 			.withApprovedBy(APPROVED_BY)
 			.withInvoice(createInvoice())
 			.withRecipient(createRecipient())
-			.withStatus(STATUS)
-			.withType(TYPE);
+			.withStatus(se.sundsvall.billingpreprocessor.api.model.enums.Status.valueOf(STATUS.toString()))
+			.withType(se.sundsvall.billingpreprocessor.api.model.enums.Type.valueOf(TYPE.toString()));
 	}
 
 	private static Invoice createInvoice() {

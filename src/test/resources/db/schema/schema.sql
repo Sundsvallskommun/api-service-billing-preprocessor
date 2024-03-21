@@ -19,6 +19,15 @@
         primary key (id)
     ) engine=InnoDB;
 
+    create table file_configuration (
+            id bigint not null auto_increment,
+            category_tag varchar(255),
+            creator_name varchar(255),
+            file_name_pattern varchar(255),
+            type varchar(255),
+            primary key (id)
+    ) engine=InnoDB;
+
     create table invoice (
         `date` date,
         due_date date,
@@ -29,6 +38,17 @@
         id varchar(255) not null,
         our_reference varchar(255),
         reference_id varchar(255),
+        primary key (id)
+    ) engine=InnoDB;
+
+    create table invoice_file (
+        created datetime(6),
+        id bigint not null auto_increment,
+        sent datetime(6),
+        name varchar(255),
+        status varchar(255),
+        type varchar(255),
+        content longtext,
         primary key (id)
     ) engine=InnoDB;
 
@@ -67,6 +87,24 @@
 
     create index idx_billing_record_category_status 
        on billing_record (category, status);
+
+    create index idx_file_configuration_type_category_tag
+       on file_configuration (type, category_tag);
+
+    create index idx_file_configuration_creator_name
+       on file_configuration (creator_name);
+       
+    alter table if exists file_configuration
+       add constraint uq_type_category_tag unique (type, category_tag);
+
+    alter table if exists file_configuration
+       add constraint uq_creator_name unique (creator_name);
+       
+    create index idx_invoice_file_status 
+       on invoice_file (status);
+
+    alter table if exists invoice_file 
+       add constraint uq_file_name unique (name);
 
     alter table if exists description 
        add constraint fk_invoice_row_id_description 
