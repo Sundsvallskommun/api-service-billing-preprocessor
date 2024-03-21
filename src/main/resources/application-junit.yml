@@ -45,3 +45,17 @@ integration:
     url: http://party.url
     connect-timeout: 11
     read-timeout: 22
+
+errorreport:
+  subject-template: subjectTemplate
+  html-prefix-template: htmlPrefixTemplate
+  body-prefix-template: bodyPrefixTemplate
+  list-prefix-template: listPrefixTemplate
+  list-item-template: listItemTemplate
+  list-suffix-template: listSuffixTemplate
+  body-suffix-template: bodySuffixTemplate
+  html-suffix-template: htmlSuffixTemplate
+  recipients:
+    - recipient.1
+    - recipient.2
+  sender: sender
