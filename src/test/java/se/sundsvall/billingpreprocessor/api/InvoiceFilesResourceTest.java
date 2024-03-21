@@ -30,7 +30,7 @@ class InvoiceFilesResourceTest {
 		// Call
 		final var requestId = webTestClient.post().uri(PATH).contentType(APPLICATION_JSON)
 			.exchange()
-			.expectStatus().isNoContent()
+			.expectStatus().isAccepted()
 			.expectBody().isEmpty()
 			.getResponseHeaders()
 			.get("x-request-id")

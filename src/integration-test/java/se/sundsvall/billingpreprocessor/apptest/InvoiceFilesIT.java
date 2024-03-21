@@ -5,7 +5,7 @@ import static org.apache.commons.text.StringEscapeUtils.unescapeJava;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 import static org.springframework.http.HttpMethod.POST;
-import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.ACCEPTED;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileStatus.GENERATED;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.EXTERNAL;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.INTERNAL;
@@ -49,7 +49,7 @@ class InvoiceFilesIT extends AbstractAppTest {
 		setupCall()
 			.withServicePath("/invoicefiles")
 			.withHttpMethod(POST)
-			.withExpectedResponseStatus(NO_CONTENT)
+			.withExpectedResponseStatus(ACCEPTED)
 			.sendRequestAndVerifyResponse();
 
 		final var invoiceFiles = repository.findAll();
