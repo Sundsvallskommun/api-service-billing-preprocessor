@@ -20,6 +20,8 @@
 		<spring-filter.version>3.1.7</spring-filter.version>
 		<beanio.version>3.0.0</beanio.version>
 		<commons-text.version>1.11.0</commons-text.version>
+		<apache.sshd.version>2.12.1</apache.sshd.version>
+		<commons-codec.version>1.16.1</commons-codec.version>
 		<generated-sources-path>${project.build.directory}/generated-sources</generated-sources-path>
 		<failsafeArgLine>-Dfile.encoding=${project.build.sourceEncoding}</failsafeArgLine>
 	</properties>
@@ -41,6 +43,10 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.integration</groupId>
+			<artifactId>spring-integration-sftp</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.mariadb.jdbc</groupId>
@@ -65,6 +71,16 @@
 			<artifactId>commons-text</artifactId>
 			<version>${commons-text.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.sshd</groupId>
+			<artifactId>sshd-core</artifactId>
+			<version>${apache.sshd.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>${commons-codec.version}</version>
+		</dependency>
 
 		<!-- Test -->
 		<dependency>
@@ -77,6 +93,12 @@
 			<artifactId>mariadb</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<scope>test</scope>
+		</dependency>
+
 	</dependencies>
 	<build>
 		<plugins>

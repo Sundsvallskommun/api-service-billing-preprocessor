@@ -51,7 +51,7 @@ class BillingRecordsIT extends AbstractAppTest {
 			.withHttpMethod(POST)
 			.withRequest(REQUEST_FILE)
 			.withExpectedResponseStatus(CREATED)
-			.withExpectedResponseHeader(LOCATION, of("^http://(.*)/billingrecords/(.*)$"))
+			.withExpectedResponseHeader(LOCATION, of("^/billingrecords/(.*)$"))
 			.sendRequestAndVerifyResponse();
 	}
 
@@ -139,7 +139,7 @@ class BillingRecordsIT extends AbstractAppTest {
 			.withHttpMethod(POST)
 			.withRequest(REQUEST_FILE)
 			.withExpectedResponseStatus(CREATED)
-			.withExpectedResponseHeader(LOCATION, of("^http://(.*)/billingrecords/(.*)$"))
+			.withExpectedResponseHeader(LOCATION, of("^/billingrecords/$"))
 			.sendRequestAndVerifyResponse();
 	}
 }
