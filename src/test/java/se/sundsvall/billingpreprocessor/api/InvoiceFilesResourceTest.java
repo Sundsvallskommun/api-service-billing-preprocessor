@@ -46,7 +46,7 @@ class InvoiceFilesResourceTest {
 	void transferFiles() {
 
 		// Call
-		final var requestId = webTestClient.post().uri(BASE_PATH + "/send").contentType(APPLICATION_JSON)
+		final var requestId = webTestClient.post().uri(BASE_PATH + "/transfer").contentType(APPLICATION_JSON)
 			.exchange()
 			.expectStatus().isAccepted()
 			.expectBody().isEmpty()

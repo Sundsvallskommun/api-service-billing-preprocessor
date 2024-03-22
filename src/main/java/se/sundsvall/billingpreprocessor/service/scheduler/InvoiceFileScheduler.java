@@ -15,8 +15,8 @@ public class InvoiceFileScheduler {
 	private static final Logger LOGGER = LoggerFactory.getLogger(InvoiceFileScheduler.class);
 	private static final String LOG_CREATE_FILES_STARTED = "Beginning creation of invoice files";
 	private static final String LOG_CREATE_FILES_ENDED = "Ending creation of invoice files";
-	private static final String LOG_SEND_TO_FTP_STARTED = "Beginning sending invoice files to ftp";
-	private static final String LOG_SEND_TO_FTP_ENDED = "Ending sending invoice files to ftp";
+	private static final String LOG_TRANSFER_FILES_STARTED = "Beginning transfer of invoice files";
+	private static final String LOG_TRANSFER_FILES_ENDED = "Ending transfer of invoice files";
 
 	private final InvoiceFileService invoiceFileService;
 
@@ -38,11 +38,11 @@ public class InvoiceFileScheduler {
 	@Scheduled(cron = "${scheduler.transferfiles.cron}")
 	@SchedulerLock(name = "transferfiles", lockAtMostFor = "${scheduler.shedlock-lock-at-most-for}")
 	public void executeTransferFiles() {
-		LOGGER.info(LOG_SEND_TO_FTP_STARTED);
+		LOGGER.info(LOG_TRANSFER_FILES_STARTED);
 
 		RequestId.init();
 		invoiceFileService.transferFiles();
 
-		LOGGER.info(LOG_SEND_TO_FTP_ENDED);
+		LOGGER.info(LOG_TRANSFER_FILES_ENDED);
 	}
 }
