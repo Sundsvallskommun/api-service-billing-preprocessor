@@ -22,7 +22,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.zalando.problem.ThrowableProblem;
 
 import se.sundsvall.billingpreprocessor.integration.messaging.config.ErrorMessageProperties;
-import se.sundsvall.billingpreprocessor.service.creator.CreationError;
+import se.sundsvall.billingpreprocessor.integration.messaging.config.ErrorMessageProperties.ErrorMailTemplate;
+import se.sundsvall.billingpreprocessor.service.error.InvoiceFileError;
 import se.sundsvall.dept44.requestid.RequestId;
 
 @ExtendWith(MockitoExtension.class)
@@ -32,22 +33,26 @@ class MessagingMapperTest {
 	@Mock
 	private ErrorMessageProperties propertiesMock;
 
+	@Mock
+	private ErrorMailTemplate errorMailTemplateMock;
+
 	@Test
 	void composeWithNullProperties() {
-		final List<CreationError> errors = emptyList();
-		final var e = assertThrows(ThrowableProblem.class, () -> MessagingMapper.composeBody(errors, SENDER_NAME, null));
+		final List<InvoiceFileError> errors = emptyList();
+		final var e = assertThrows(ThrowableProblem.class, () -> MessagingMapper.composeCreationErrorMailBody(errors, SENDER_NAME, null));
 
 		assertThat(e.getStatus()).isEqualTo(INTERNAL_SERVER_ERROR);
 		assertThat(e.getMessage()).isEqualTo("Internal Server Error: ErrorMessageProperties bean is null");
 	}
 
 	@Test 
-	void composeWithSpecificError() {
-		final var error = CreationError.create(UUID.randomUUID().toString(), "Specific error");
+	void composeCreationErrorMailWithSpecificError() {
+		final var error = InvoiceFileError.create(UUID.randomUUID().toString(), "Specific error");
 	
 		initialize();
+		when(propertiesMock.creationErrorMailTemplate()).thenReturn(errorMailTemplateMock);
 
-		final var composedMessage = MessagingMapper.composeBody(List.of(error), SENDER_NAME, propertiesMock);
+		final var composedMessage = MessagingMapper.composeCreationErrorMailBody(List.of(error), SENDER_NAME, propertiesMock);
 
 		assertThat(composedMessage).isEqualTo("<html><body>Execution date %s<ul><li>Billingrecord med id %s gick inte att bearbeta. Felmeddelande är '%s'.</li></ul>RequestId: %s, mailTo: %s, Regards %s</body></html>"
 			.formatted(
@@ -60,12 +65,13 @@ class MessagingMapperTest {
 	}
 
 	@Test
-	void composeWithCommonError() {
-		final var error = CreationError.create("Common error");
+	void composeCreationErrorMailWithCommonError() {
+		final var error = InvoiceFileError.create("Common error");
 
 		initialize();
+		when(propertiesMock.creationErrorMailTemplate()).thenReturn(errorMailTemplateMock);
 
-		final var composedMessage = MessagingMapper.composeBody(List.of(error), SENDER_NAME, propertiesMock);
+		final var composedMessage = MessagingMapper.composeCreationErrorMailBody(List.of(error), SENDER_NAME, propertiesMock);
 		
 		assertThat(composedMessage).isEqualTo("<html><body>Execution date %s<ul><li>%s</li></ul>RequestId: %s, mailTo: %s, Regards %s</body></html>"
 			.formatted(
@@ -75,6 +81,25 @@ class MessagingMapperTest {
 				"senderEmail",
 				SENDER_NAME));
 		
+	}
+
+	@Test
+	void composeTransferErrorMail() {
+		final var error = InvoiceFileError.create("Error");
+
+		initialize();
+		when(propertiesMock.transferErrorMailTemplate()).thenReturn(errorMailTemplateMock);
+
+		final var composedMessage = MessagingMapper.composeTransferErrorMailBody(List.of(error), SENDER_NAME, propertiesMock);
+
+		assertThat(composedMessage).isEqualTo("<html><body>Execution date %s<ul><li>%s</li></ul>RequestId: %s, mailTo: %s, Regards %s</body></html>"
+			.formatted(
+				LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE),
+				error.getMessage(),
+				RequestId.get(),
+				"senderEmail",
+				SENDER_NAME));
+
 	}
 
 	@Test
@@ -126,13 +151,13 @@ class MessagingMapperTest {
 	private void initialize() {
 		RequestId.init();
 
-		when(propertiesMock.bodyPrefixTemplate()).thenReturn("<body>Execution date %s");
-		when(propertiesMock.bodySuffixTemplate()).thenReturn("RequestId: %s, mailTo: %s, Regards %s</body>");
-		when(propertiesMock.htmlPrefixTemplate()).thenReturn("<html>");
-		when(propertiesMock.htmlSuffixTemplate()).thenReturn("</html>");
-		when(propertiesMock.listItemTemplate()).thenReturn("<li>%s</li>");
-		when(propertiesMock.listPrefixTemplate()).thenReturn("<ul>");
-		when(propertiesMock.listSuffixTemplate()).thenReturn("</ul>");
+		when(errorMailTemplateMock.bodyPrefix()).thenReturn("<body>Execution date %s");
+		when(errorMailTemplateMock.bodySuffix()).thenReturn("RequestId: %s, mailTo: %s, Regards %s</body>");
+		when(errorMailTemplateMock.htmlPrefix()).thenReturn("<html>");
+		when(errorMailTemplateMock.htmlSuffix()).thenReturn("</html>");
+		when(errorMailTemplateMock.listItem()).thenReturn("<li>%s</li>");
+		when(errorMailTemplateMock.listPrefix()).thenReturn("<ul>");
+		when(errorMailTemplateMock.listSuffix()).thenReturn("</ul>");
 		when(propertiesMock.sender()).thenReturn("senderEmail");
 	}
 }

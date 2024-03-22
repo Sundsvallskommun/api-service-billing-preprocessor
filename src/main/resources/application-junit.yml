@@ -52,14 +52,24 @@ integration:
     allowUnknownKeys: false
 
 errorreport:
-  subject-template: subjectTemplate
-  html-prefix-template: htmlPrefixTemplate
-  body-prefix-template: bodyPrefixTemplate
-  list-prefix-template: listPrefixTemplate
-  list-item-template: listItemTemplate
-  list-suffix-template: listSuffixTemplate
-  body-suffix-template: bodySuffixTemplate
-  html-suffix-template: htmlSuffixTemplate
+  creation-error-mail-template:
+    subject: creationErrorSubject
+    html-prefix: creationErrorHtmlPrefix
+    body-prefix: creationErrorBodyPrefix
+    list-prefix: creationErrorListPrefix
+    list-item: creationErrorListItem
+    list-suffix: creationErrorListSuffix
+    body-suffix: creationErrorBodySuffix
+    html-suffix: creationErrorHtmlSuffix
+  transfer-error-mail-template:
+    subject: transferErrorSubject
+    html-prefix: transferErrorHtmlPrefix
+    body-prefix: transferErrorBodyPrefix
+    list-prefix: transferErrorListPrefix
+    list-item: transferErrorListItem
+    list-suffix: transferErrorListSuffix
+    body-suffix: transferErrorBodySuffix
+    html-suffix: transferErrorHtmlSuffix
   recipients:
     - recipient.1
     - recipient.2

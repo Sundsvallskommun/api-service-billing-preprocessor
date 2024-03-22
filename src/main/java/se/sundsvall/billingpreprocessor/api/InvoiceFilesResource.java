@@ -1,5 +1,7 @@
 package se.sundsvall.billingpreprocessor.api;
 
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
+import static org.springframework.http.MediaType.ALL_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
 import static org.springframework.http.ResponseEntity.accepted;
 
@@ -30,13 +32,23 @@ public class InvoiceFilesResource {
 		this.service = service;
 	}
 
-	@PostMapping(produces = APPLICATION_PROBLEM_JSON_VALUE)
-	@Operation(summary = "Triggers creation of file entities from billing records flagged as APPROVED")
+	@PostMapping(path = "/create", produces = APPLICATION_PROBLEM_JSON_VALUE)
+	@Operation(summary = "Triggers service to create files from billing records with status APPROVED")
 	@ApiResponse(responseCode = "202", description = "Successful Operation", useReturnTypeSchema = true)
 	@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	public ResponseEntity<Void> createFileEntities() {
-		service.createFileEntities(RequestId.get());
-		return accepted().build();
+		service.createFiles(RequestId.get());
+		return accepted().header(CONTENT_TYPE, ALL_VALUE).build();
+	}
+
+	@PostMapping(path = "/send", produces = APPLICATION_PROBLEM_JSON_VALUE)
+	@Operation(summary = "Triggers service to send files with status CREATED or SEND_FAILED")
+	@ApiResponse(responseCode = "202", description = "Successful Operation", useReturnTypeSchema = true)
+	@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
+	@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
+	public ResponseEntity<Void> transferFiles() {
+		service.transferFiles(RequestId.get());
+		return accepted().header(CONTENT_TYPE, ALL_VALUE).build();
 	}
 }

@@ -21,7 +21,7 @@
 		<beanio.version>3.0.0</beanio.version>
 		<commons-text.version>1.11.0</commons-text.version>
 		<apache.sshd.version>2.12.1</apache.sshd.version>
-		<commons-codec.version>1.16.1</commons-codec.version>
+        <shedlock.version>5.12.0</shedlock.version>
 		<generated-sources-path>${project.build.directory}/generated-sources</generated-sources-path>
 		<failsafeArgLine>-Dfile.encoding=${project.build.sourceEncoding}</failsafeArgLine>
 		<com.jcraft.version>0.1.55</com.jcraft.version>
@@ -80,8 +80,17 @@
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
-			<version>${commons-codec.version}</version>
 		</dependency>
+        <dependency>
+            <groupId>net.javacrumbs.shedlock</groupId>
+            <artifactId>shedlock-spring</artifactId>
+            <version>${shedlock.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.javacrumbs.shedlock</groupId>
+            <artifactId>shedlock-provider-jdbc-template</artifactId>
+            <version>${shedlock.version}</version>
+        </dependency>
 
 		<!-- Test -->
 		<dependency>

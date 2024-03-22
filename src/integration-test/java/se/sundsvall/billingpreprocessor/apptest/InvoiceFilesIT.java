@@ -47,7 +47,7 @@ class InvoiceFilesIT extends AbstractAppTest {
 	@Test
 	void test01_createInvoiceFiles() {
 		setupCall()
-			.withServicePath("/invoicefiles")
+			.withServicePath("/invoicefiles/create")
 			.withHttpMethod(POST)
 			.withExpectedResponseStatus(ACCEPTED)
 			.sendRequestAndVerifyResponse();

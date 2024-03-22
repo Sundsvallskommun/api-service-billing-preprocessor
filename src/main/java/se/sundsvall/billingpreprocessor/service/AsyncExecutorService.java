@@ -21,8 +21,14 @@ public class AsyncExecutorService {
 	}
 
 	@Async
-	public void createFileEntities(String uuid) {
+	public void createFiles(String uuid) {
 		RequestId.init(uuid);
-		invoiceFileService.createFileEntities();
+		invoiceFileService.createFiles();
+	}
+
+	@Async
+	public void transferFiles(String uuid) {
+		RequestId.init(uuid);
+		invoiceFileService.transferFiles();
 	}
 }

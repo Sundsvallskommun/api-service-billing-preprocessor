@@ -15,4 +15,6 @@ import se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileSt
 public interface InvoiceFileRepository extends JpaRepository<InvoiceFileEntity, Long>, JpaSpecificationExecutor<InvoiceFileEntity> {
 
 	List<InvoiceFileEntity> findByStatus(InvoiceFileStatus status);
+
+	List<InvoiceFileEntity> findByStatusIn(List<InvoiceFileStatus> statuses);
 }
