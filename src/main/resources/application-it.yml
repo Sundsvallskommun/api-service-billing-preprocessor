@@ -33,6 +33,11 @@ integration:
     url: http://localhost:${wiremock.server.port}/api-messaging
   party:
     url: http://localhost:${wiremock.server.port}/api-party
+  sftp:
+    user: user
+    password: pass
+    remoteDir: "/upload/"
+    allowUnknownKeys: false
 
 errorreport:
   recipients:
