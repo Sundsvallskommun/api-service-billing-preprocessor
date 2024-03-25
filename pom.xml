@@ -22,9 +22,8 @@
 		<commons-text.version>1.11.0</commons-text.version>
 		<apache.sshd.version>2.12.1</apache.sshd.version>
 		<shedlock.version>5.12.0</shedlock.version>
-		<generated-sources-path>${project.build.directory}/generated-sources</generated-sources-path>
-		<failsafeArgLine>-Dfile.encoding=${project.build.sourceEncoding}</failsafeArgLine>
 		<com.jcraft.version>0.1.55</com.jcraft.version>
+		<generated-sources-path>${project.build.directory}/generated-sources</generated-sources-path>
 	</properties>
 	<dependencies>
 		<dependency>
