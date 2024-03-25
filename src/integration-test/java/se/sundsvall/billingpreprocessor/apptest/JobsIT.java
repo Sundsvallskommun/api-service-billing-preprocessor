@@ -32,12 +32,12 @@ import se.sundsvall.dept44.test.annotation.wiremock.WireMockAppTestSuite;
 /**
  * Invoice files IT tests.
  */
-@WireMockAppTestSuite(files = "classpath:/InvoiceFilesIT/", classes = Application.class)
+@WireMockAppTestSuite(files = "classpath:/JobsIT/", classes = Application.class)
 @Sql({
 	"/db/scripts/truncate.sql",
 	"/db/scripts/testdata-it.sql"
 })
-class InvoiceFilesIT extends AbstractAppTest {
+class JobsIT extends AbstractAppTest {
 	@Autowired
 	private InvoiceFileRepository repository;
 
@@ -46,8 +46,10 @@ class InvoiceFilesIT extends AbstractAppTest {
 
 	@Test
 	void test01_createInvoiceFiles() {
+		assertThat(repository.findAll()).isEmpty();
+
 		setupCall()
-			.withServicePath("/invoicefiles/create")
+			.withServicePath("/jobs/filecreator")
 			.withHttpMethod(POST)
 			.withExpectedResponseStatus(ACCEPTED)
 			.sendRequestAndVerifyResponse();
