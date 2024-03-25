@@ -1,18 +1,21 @@
 package se.sundsvall.billingpreprocessor.integration.sftp;
 
+import static java.nio.file.Files.readString;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.util.ResourceUtils.getFile;
 
-import com.jcraft.jsch.ChannelSftp;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
-import com.jcraft.jsch.SftpException;
-import org.junit.jupiter.api.Test;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Vector;
+
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -21,24 +24,24 @@ import org.testcontainers.containers.output.Slf4jLogConsumer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.utility.MountableFile;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-
-import static java.nio.file.Files.readString;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.util.ResourceUtils.getFile;
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
+import com.jcraft.jsch.SftpException;
 
 @ActiveProfiles("junit")
 @SpringBootTest
 class SftpConfigurationTest {
+	private static final Logger LOGGER = LoggerFactory.getLogger(SftpConfigurationTest.class);
+	private static final Path TEST_FILE;
 
 	@Autowired
 	private SftpConfiguration.UploadGateway gateway;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(SftpConfigurationTest.class);
-	private static final Path TEST_FILE;
-
+	@Autowired
+	private SftpProperties properties;
+	
 	static {
 		try {
 			TEST_FILE = Files.createTempFile("TEST", ".txt");
@@ -63,7 +66,7 @@ class SftpConfigurationTest {
 
 		registry.add("integration.sftp.host", SFTP_SERVER::getHost);
 		registry.add("integration.sftp.port", () -> SFTP_SERVER.getMappedPort(22));
-		var key = readString(getFile("classpath:keys/ssh_host_rsa_key.pub").toPath());
+		final var key = readString(getFile("classpath:keys/ssh_host_rsa_key.pub").toPath());
 		registry.add("integration.sftp.knownHosts", () -> String.format("[%s]:%s %s", SFTP_SERVER.getHost(), SFTP_SERVER.getMappedPort(22), key));
 	}
 
@@ -76,28 +79,28 @@ class SftpConfigurationTest {
 
 	@Test
 	void testUpload() throws InterruptedException, IOException, JSchException, SftpException {
-
-		var resource = new FileSystemResource(TEST_FILE);
-		ChannelSftp channel = getSftpChannel();
+		final var resource = new ByteArrayResource(Files.readAllBytes(TEST_FILE));
+		final var channel = getSftpChannel();
 
 		try {
-			assertThat(channel.ls("/upload/")).noneMatch(item -> item.toString().contains(TEST_FILE.getFileName().toString()));
+			assertThat((Vector<?>) channel.ls(properties.remoteDir())).noneMatch(item -> item.toString().contains(TEST_FILE.getFileName().toString()));
 
-			gateway.sendToSftp(resource);
+			gateway.sendToSftp(resource, TEST_FILE.toFile().getName());
 
-			assertThat(channel.ls("/upload/")).anyMatch(item -> item.toString().contains(TEST_FILE.getFileName().toString()));
+			assertThat((Vector<?>) channel.ls(properties.remoteDir())).anyMatch(item -> item.toString().contains(TEST_FILE.getFileName().toString()));
 		} finally {
 			channel.disconnect();
 		}
 	}
 
 	private ChannelSftp getSftpChannel() throws JSchException {
-		JSch jsch = new JSch();
-		Session jschSession = jsch.getSession("user", SFTP_SERVER.getHost(), SFTP_SERVER.getMappedPort(22));
-		jschSession.setPassword("pass");
+		final var jsch = new JSch();
+		Session jschSession = jsch.getSession(properties.user(), properties.host(), properties.port());
+		jschSession.setPassword(properties.password());
 		jschSession.setConfig("StrictHostKeyChecking", "no");
 		jschSession.connect();
-		ChannelSftp channel = (ChannelSftp) jschSession.openChannel("sftp");
+
+		final var channel = (ChannelSftp) jschSession.openChannel("sftp");
 		channel.connect();
 		return channel;
 	}

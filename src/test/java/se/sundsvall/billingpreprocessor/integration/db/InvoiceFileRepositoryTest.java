@@ -7,6 +7,9 @@ import static org.assertj.core.api.Assertions.within;
 import static org.assertj.core.groups.Tuple.tuple;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileStatus.GENERATED;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileStatus.SEND_FAILED;
+
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,18 +82,34 @@ class InvoiceFileRepositoryTest {
 	@Test
 	void findByStatus() {
 
-		final var parameter = GENERATED;
-
 		// Act
-		final var result = repository.findByStatus(parameter);
+		final var result = repository.findByStatus(GENERATED);
 
 		// Assert
 		assertThat(result)
 			.isNotNull()
 			.hasSize(2)
 			.extracting(InvoiceFileEntity::getName, InvoiceFileEntity::getStatus)
-			.containsExactly(
+			.containsExactlyInAnyOrder(
 				tuple("INVOICE_FILE_1.txt", GENERATED),
 				tuple("INVOICE_FILE_3.txt", GENERATED));
 	}
+
+	@Test
+	void findByStatusIn() {
+
+		// Act
+		final var result = repository.findByStatusIn(List.of(GENERATED, SEND_FAILED));
+
+		// Assert
+		assertThat(result)
+			.isNotNull()
+			.hasSize(3)
+			.extracting(InvoiceFileEntity::getName, InvoiceFileEntity::getStatus)
+			.containsExactlyInAnyOrder(
+				tuple("INVOICE_FILE_1.txt", GENERATED),
+				tuple("INVOICE_FILE_3.txt", GENERATED),
+				tuple("INVOICE_FILE_4.txt", SEND_FAILED));
+	}
+
 }

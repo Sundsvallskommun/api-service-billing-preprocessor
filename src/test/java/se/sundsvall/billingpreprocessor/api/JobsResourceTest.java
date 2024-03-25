@@ -1,6 +1,7 @@
 package se.sundsvall.billingpreprocessor.api;
 
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 import org.junit.jupiter.api.Test;
@@ -15,8 +16,8 @@ import se.sundsvall.billingpreprocessor.service.AsyncExecutorService;
 
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("junit")
-class InvoiceFilesResourceTest {
-	private static final String PATH = "/invoicefiles";
+class JobsResourceTest {
+	private static final String BASE_PATH = "/jobs";
 
 	@Autowired
 	private WebTestClient webTestClient;
@@ -25,10 +26,10 @@ class InvoiceFilesResourceTest {
 	private AsyncExecutorService serviceMock;
 
 	@Test
-	void triggerInvoiceFileCreation() {
+	void createFiles() {
 
 		// Call
-		final var requestId = webTestClient.post().uri(PATH).contentType(APPLICATION_JSON)
+		final var requestId = webTestClient.post().uri(BASE_PATH + "/filecreator").contentType(APPLICATION_JSON)
 			.exchange()
 			.expectStatus().isAccepted()
 			.expectBody().isEmpty()
@@ -37,6 +38,24 @@ class InvoiceFilesResourceTest {
 			.getFirst();
 
 		// Verification
-		verify(serviceMock).createFileEntities(requestId);
+		verify(serviceMock).createFiles(requestId);
+		verifyNoMoreInteractions(serviceMock);
+	}
+
+	@Test
+	void transferFiles() {
+
+		// Call
+		final var requestId = webTestClient.post().uri(BASE_PATH + "/filetransferrer").contentType(APPLICATION_JSON)
+			.exchange()
+			.expectStatus().isAccepted()
+			.expectBody().isEmpty()
+			.getResponseHeaders()
+			.get("x-request-id")
+			.getFirst();
+
+		// Verification
+		verify(serviceMock).transferFiles(requestId);
+		verifyNoMoreInteractions(serviceMock);
 	}
 }

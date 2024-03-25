@@ -26,7 +26,8 @@ import generated.se.sundsvall.messaging.EmailRequest;
 import generated.se.sundsvall.messaging.EmailSender;
 import se.sundsvall.billingpreprocessor.integration.messaging.MessagingClient;
 import se.sundsvall.billingpreprocessor.integration.messaging.config.ErrorMessageProperties;
-import se.sundsvall.billingpreprocessor.service.creator.CreationError;
+import se.sundsvall.billingpreprocessor.integration.messaging.config.ErrorMessageProperties.ErrorMailTemplate;
+import se.sundsvall.billingpreprocessor.service.error.InvoiceFileError;
 import se.sundsvall.dept44.requestid.RequestId;
 
 @SpringBootTest(classes = { MessagingService.class, ErrorMessageProperties.class })
@@ -35,13 +36,16 @@ import se.sundsvall.dept44.requestid.RequestId;
 	"spring.profiles.active=junit" })
 class MessagingServiceTest {
 
-	private final List<CreationError> ERRORS = List.of(CreationError.create("error"));
+	private final List<InvoiceFileError> ERRORS = List.of(InvoiceFileError.create("error"));
 
 	@MockBean
 	private MessagingClient messagingClientMock;
 
 	@MockBean
 	private ErrorMessageProperties errorMessagePropertiesMock;
+
+	@MockBean
+	private ErrorMailTemplate errorMailTemplateMock;
 
 	@Captor
 	private ArgumentCaptor<EmailRequest> emailRequestCaptor;
@@ -50,20 +54,20 @@ class MessagingServiceTest {
 	private MessagingService service;
 
 	@Test
-	void sendErrorMailWhenNullSender() {
+	void sendCreationErrorMailWhenNullSender() {
 		when(errorMessagePropertiesMock.recipients()).thenReturn(List.of("receiver"));
 
-		service.sendErrorMail(ERRORS);
+		service.sendCreationErrorMail(ERRORS);
 
 		verify(errorMessagePropertiesMock).sender();
 		verifyNoMoreInteractions(errorMessagePropertiesMock, messagingClientMock);
 	}
 
 	@Test
-	void sendErrorMailWhenNullReceivers() {
+	void sendCreationErrorMailWhenNullReceivers() {
 		when(errorMessagePropertiesMock.sender()).thenReturn("sender");
 
-		service.sendErrorMail(ERRORS);
+		service.sendCreationErrorMail(ERRORS);
 
 		verify(errorMessagePropertiesMock).sender();
 		verify(errorMessagePropertiesMock).recipients();
@@ -71,11 +75,11 @@ class MessagingServiceTest {
 	}
 
 	@Test
-	void sendErrorMailWhenEmptyReceivers() {
+	void sendCreationErrorMailWhenEmptyReceivers() {
 		when(errorMessagePropertiesMock.sender()).thenReturn("sender");
 		when(errorMessagePropertiesMock.recipients()).thenReturn(emptyList());
 
-		service.sendErrorMail(ERRORS);
+		service.sendCreationErrorMail(ERRORS);
 
 		verify(errorMessagePropertiesMock).sender();
 		verify(errorMessagePropertiesMock).recipients();
@@ -83,25 +87,100 @@ class MessagingServiceTest {
 	}
 
 	@Test
-	void sendErrorMail() {
+	void sendCreationErrorMail() {
 		RequestId.init();
 
 		when(errorMessagePropertiesMock.sender()).thenReturn("sender");
 		when(errorMessagePropertiesMock.recipients()).thenReturn(List.of("recipient.1", "recipient.2"));
-		when(errorMessagePropertiesMock.subjectTemplate()).thenReturn("ApplicationName: %s Environment: %s");
-		when(errorMessagePropertiesMock.bodyPrefixTemplate()).thenReturn("ExecutionDate: %s ");
-		when(errorMessagePropertiesMock.bodySuffixTemplate()).thenReturn("RequestId: %s Sender: %s SenderName: %s");
-		when(errorMessagePropertiesMock.htmlPrefixTemplate()).thenReturn("");
-		when(errorMessagePropertiesMock.htmlSuffixTemplate()).thenReturn("");
-		when(errorMessagePropertiesMock.listItemTemplate()).thenReturn("ListItem: %s ");
-		when(errorMessagePropertiesMock.listPrefixTemplate()).thenReturn("");
-		when(errorMessagePropertiesMock.listSuffixTemplate()).thenReturn("");
+		when(errorMessagePropertiesMock.creationErrorMailTemplate()).thenReturn(errorMailTemplateMock);
+		when(errorMailTemplateMock.subject()).thenReturn("ApplicationName: %s Environment: %s");
+		when(errorMailTemplateMock.bodyPrefix()).thenReturn("ExecutionDate: %s ");
+		when(errorMailTemplateMock.bodySuffix()).thenReturn("RequestId: %s Sender: %s SenderName: %s");
+		when(errorMailTemplateMock.htmlPrefix()).thenReturn("");
+		when(errorMailTemplateMock.htmlSuffix()).thenReturn("");
+		when(errorMailTemplateMock.listItem()).thenReturn("ListItem: %s ");
+		when(errorMailTemplateMock.listPrefix()).thenReturn("");
+		when(errorMailTemplateMock.listSuffix()).thenReturn("");
 
-		service.sendErrorMail(ERRORS);
+		service.sendCreationErrorMail(ERRORS);
 
 		verify(errorMessagePropertiesMock, times(4)).sender();
 		verify(errorMessagePropertiesMock, times(2)).recipients();
+		verify(errorMessagePropertiesMock, times(8)).creationErrorMailTemplate();
 		verify(messagingClientMock, times(2)).sendEmail(eq(true), emailRequestCaptor.capture());
+		verifyNoMoreInteractions(errorMessagePropertiesMock, messagingClientMock);
+
+		assertThat(emailRequestCaptor.getAllValues()).hasSize(2)
+			.allSatisfy(request -> {
+				assertThat(request.getSender()).isNotNull().extracting(EmailSender::getName, EmailSender::getAddress).containsOnly("sender");
+				assertThat(request.getSubject()).isEqualTo("ApplicationName: applicationName Environment: junit");
+				assertThat(new String(Base64.getDecoder().decode(request.getHtmlMessage()), StandardCharsets.UTF_8))
+					.isEqualTo("ExecutionDate: %s ListItem: error RequestId: %s Sender: sender SenderName: applicationName"
+						.formatted(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE), RequestId.get()));
+			})
+			.satisfiesOnlyOnce(request -> {
+				assertThat(request.getEmailAddress()).isEqualTo("recipient.1");
+			}).satisfiesOnlyOnce(request -> {
+				assertThat(request.getEmailAddress()).isEqualTo("recipient.2");
+			});
+	}
+
+	@Test
+	void sendTransferErrorMailWhenNullSender() {
+		when(errorMessagePropertiesMock.recipients()).thenReturn(List.of("receiver"));
+
+		service.sendTransferErrorMail(ERRORS);
+
+		verify(errorMessagePropertiesMock).sender();
+		verifyNoMoreInteractions(errorMessagePropertiesMock, messagingClientMock);
+	}
+
+	@Test
+	void sendTransferErrorMailWhenNullReceivers() {
+		when(errorMessagePropertiesMock.sender()).thenReturn("sender");
+
+		service.sendTransferErrorMail(ERRORS);
+
+		verify(errorMessagePropertiesMock).sender();
+		verify(errorMessagePropertiesMock).recipients();
+		verifyNoMoreInteractions(errorMessagePropertiesMock, messagingClientMock);
+	}
+
+	@Test
+	void sendTransferErrorMailWhenEmptyReceivers() {
+		when(errorMessagePropertiesMock.sender()).thenReturn("sender");
+		when(errorMessagePropertiesMock.recipients()).thenReturn(emptyList());
+
+		service.sendTransferErrorMail(ERRORS);
+
+		verify(errorMessagePropertiesMock).sender();
+		verify(errorMessagePropertiesMock).recipients();
+		verifyNoMoreInteractions(errorMessagePropertiesMock, messagingClientMock);
+	}
+
+	@Test
+	void sendTransferErrorMail() {
+		RequestId.init();
+
+		when(errorMessagePropertiesMock.sender()).thenReturn("sender");
+		when(errorMessagePropertiesMock.recipients()).thenReturn(List.of("recipient.1", "recipient.2"));
+		when(errorMessagePropertiesMock.transferErrorMailTemplate()).thenReturn(errorMailTemplateMock);
+		when(errorMailTemplateMock.subject()).thenReturn("ApplicationName: %s Environment: %s");
+		when(errorMailTemplateMock.bodyPrefix()).thenReturn("ExecutionDate: %s ");
+		when(errorMailTemplateMock.bodySuffix()).thenReturn("RequestId: %s Sender: %s SenderName: %s");
+		when(errorMailTemplateMock.htmlPrefix()).thenReturn("");
+		when(errorMailTemplateMock.htmlSuffix()).thenReturn("");
+		when(errorMailTemplateMock.listItem()).thenReturn("ListItem: %s ");
+		when(errorMailTemplateMock.listPrefix()).thenReturn("");
+		when(errorMailTemplateMock.listSuffix()).thenReturn("");
+
+		service.sendTransferErrorMail(ERRORS);
+
+		verify(errorMessagePropertiesMock, times(4)).sender();
+		verify(errorMessagePropertiesMock, times(2)).recipients();
+		verify(errorMessagePropertiesMock, times(8)).transferErrorMailTemplate();
+		verify(messagingClientMock, times(2)).sendEmail(eq(true), emailRequestCaptor.capture());
+		verifyNoMoreInteractions(errorMessagePropertiesMock, messagingClientMock);
 
 		assertThat(emailRequestCaptor.getAllValues()).hasSize(2)
 			.allSatisfy(request -> {

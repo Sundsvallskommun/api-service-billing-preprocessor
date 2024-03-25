@@ -1,23 +1,23 @@
-package se.sundsvall.billingpreprocessor.service.creator;
+package se.sundsvall.billingpreprocessor.service.error;
 
 import java.util.Objects;
 
-public class CreationError {
+public class InvoiceFileError {
 	private String message;
 	private String entityId;
 
-	private CreationError() {}
+	private InvoiceFileError() {}
 
-	public static CreationError create() {
-		return new CreationError();
+	public static InvoiceFileError create() {
+		return new InvoiceFileError();
 	}
 
-	public static CreationError create(String message) {
+	public static InvoiceFileError create(String message) {
 		return create(null, message);
 	}
 
-	public static CreationError create(String entityId, String message) {
-		return CreationError.create()
+	public static InvoiceFileError create(String entityId, String message) {
+		return InvoiceFileError.create()
 			.withEntityId(entityId)
 			.withMessage(message);
 	}
@@ -30,7 +30,7 @@ public class CreationError {
 		this.entityId = entityId;
 	}
 
-	public CreationError withEntityId(String entityId) {
+	public InvoiceFileError withEntityId(String entityId) {
 		this.entityId = entityId;
 		return this;
 	}
@@ -43,7 +43,7 @@ public class CreationError {
 		this.message = message;
 	}
 
-	public CreationError withMessage(String messsage) {
+	public InvoiceFileError withMessage(String messsage) {
 		this.message = messsage;
 		return this;
 	}
@@ -62,17 +62,18 @@ public class CreationError {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof CreationError)) {
+		if (!(obj instanceof InvoiceFileError)) {
 			return false;
 		}
-		CreationError other = (CreationError) obj;
+		InvoiceFileError other = (InvoiceFileError) obj;
 		return Objects.equals(entityId, other.entityId) && Objects.equals(message, other.message);
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("CreationError [message=").append(message).append(", entityId=").append(entityId).append("]");
+		builder.append("InvoiceFileError [message=").append(message).append(", entityId=").append(entityId).append("]");
 		return builder.toString();
 	}
+
 }

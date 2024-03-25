@@ -33,25 +33,53 @@ spring:
 invoicecreator:
   record-terminator: \n
 
+scheduler:
+  createfiles:
+    # At 0000 every day
+    cron: 0 0 0 * * *
+  transferfiles:
+    # At 0700 every day
+    cron: 0 0 7 * * *
+  shedlock-lock-at-most-for: PT2M
+
 errorreport:
-  subject-template: Fel vid skapande av fakturafiler - %s (%s)
-  html-prefix-template: >
-    <!DOCTYPE html>
-    <html lang="en" xmlns="http://www.w3.org/1999/xhtml"><body>
-  body-prefix-template: > 
-      <b>Följande problem har inträffat vid generering av fakturafiler (%s)</b>
-      <p>
-  list-prefix-template: <i>%s fel:</i><ul>
-  list-item-template: <li>%s</li>
-  list-suffix-template: </ul>
-  body-suffix-template: >
-      Exekveringens request-id är %s
-      </p>
-      <p>
-        <b>Med vänlig hälsning <br/>
-        <a href="mailto:%s">%s</a></b>
-      </p>
-  html-suffix-template: </body></html>
-  
+  creation-error-mail-template:
+    subject: Fel vid skapande av fakturafiler - %s (%s)
+    html-prefix: >
+      <!DOCTYPE html>
+      <html lang="en" xmlns="http://www.w3.org/1999/xhtml"><body>
+    body-prefix: > 
+        <b>Följande problem har inträffat vid generering av fakturafiler (%s)</b>
+        <p>
+    list-prefix: <i>%s fel:</i><ul>
+    list-item: <li>%s</li>
+    list-suffix: </ul>
+    body-suffix: >
+        Exekveringens request-id är %s
+        </p>
+        <p>
+          <b>Med vänlig hälsning <br/>
+          <a href="mailto:%s">%s</a></b>
+        </p>
+    html-suffix: </body></html>
+  transfer-error-mail-template:
+    subject: Fel vid överföring av fakturafiler - %s (%s)
+    html-prefix: >
+      <!DOCTYPE html>
+      <html lang="en" xmlns="http://www.w3.org/1999/xhtml"><body>
+    body-prefix: > 
+        <b>Följande problem har inträffat vid överföring av fakturafiler (%s)</b>
+        <p>
+    list-prefix: <ul>
+    list-item: <li>%s</li>
+    list-suffix: </ul>
+    body-suffix: >
+        Exekveringens request-id är %s
+        </p>
+        <p>
+          <b>Med vänlig hälsning <br/>
+          <a href="mailto:%s">%s</a></b>
+        </p>
+    html-suffix: </body></html>
   recipients:
   sender: teamunmasked@sundsvall.se

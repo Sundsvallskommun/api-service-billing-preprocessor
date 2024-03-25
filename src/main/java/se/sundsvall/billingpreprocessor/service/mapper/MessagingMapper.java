@@ -20,7 +20,7 @@ import org.zalando.problem.Problem;
 import generated.se.sundsvall.messaging.EmailRequest;
 import generated.se.sundsvall.messaging.EmailSender;
 import se.sundsvall.billingpreprocessor.integration.messaging.config.ErrorMessageProperties;
-import se.sundsvall.billingpreprocessor.service.creator.CreationError;
+import se.sundsvall.billingpreprocessor.service.error.InvoiceFileError;
 import se.sundsvall.dept44.common.validators.annotation.impl.ValidBase64ConstraintValidator;
 import se.sundsvall.dept44.requestid.RequestId;
 
@@ -30,29 +30,48 @@ public final class MessagingMapper {
 
 	private MessagingMapper() {}
 
-	public static String composeBody(List<CreationError> errors, String senderName, ErrorMessageProperties properties) {
+	public static String composeCreationErrorMailBody(List<InvoiceFileError> errors, String senderName, ErrorMessageProperties properties) {
 		if (isNull(properties)) {
 			throw Problem.valueOf(INTERNAL_SERVER_ERROR, "ErrorMessageProperties bean is null");
 		}
 
-		final var bodyBuilder = new StringBuilder(properties.htmlPrefixTemplate())
-			.append(properties.bodyPrefixTemplate().formatted(now().format(ISO_LOCAL_DATE)));
+		final var bodyBuilder = new StringBuilder(properties.creationErrorMailTemplate().htmlPrefix())
+			.append(properties.creationErrorMailTemplate().bodyPrefix().formatted(now().format(ISO_LOCAL_DATE)));
 
 		final var commonErrors = ofNullable(errors).orElse(emptyList()).stream()
-			.filter(CreationError::isCommonError)
+			.filter(InvoiceFileError::isCommonError)
 			.toList();
 		final var recordSpecificErrors = CollectionUtils.subtract(ofNullable(errors).orElse(emptyList()), commonErrors);
 
 		if (!recordSpecificErrors.isEmpty()) {
-			addSpecificErrors(properties, bodyBuilder, recordSpecificErrors);
+			addSpecificCreationErrors(properties, bodyBuilder, recordSpecificErrors);
 		}
 		if (!commonErrors.isEmpty()) {
-			addCommonErrors(properties, bodyBuilder, commonErrors);
+			addCommonCreationErrors(properties, bodyBuilder, commonErrors);
 		}
 
 		return bodyBuilder
-			.append(properties.bodySuffixTemplate().formatted(RequestId.get(), properties.sender(), senderName))
-			.append(properties.htmlSuffixTemplate()).toString();
+			.append(properties.creationErrorMailTemplate().bodySuffix().formatted(RequestId.get(), properties.sender(), senderName))
+			.append(properties.creationErrorMailTemplate().htmlSuffix()).toString();
+	}
+
+	public static String composeTransferErrorMailBody(List<InvoiceFileError> errors, String senderName, ErrorMessageProperties properties) {
+		if (isNull(properties)) {
+			throw Problem.valueOf(INTERNAL_SERVER_ERROR, "ErrorMessageProperties bean is null");
+		}
+
+		final var bodyBuilder = new StringBuilder(properties.transferErrorMailTemplate().htmlPrefix())
+			.append(properties.transferErrorMailTemplate().bodyPrefix().formatted(now().format(ISO_LOCAL_DATE)));
+
+		if (!errors.isEmpty()) {
+			bodyBuilder.append(properties.transferErrorMailTemplate().listPrefix());
+			errors.forEach(error -> bodyBuilder.append(properties.transferErrorMailTemplate().listItem().formatted(error.getMessage())));
+			bodyBuilder.append(properties.transferErrorMailTemplate().listSuffix());
+		}
+
+		return bodyBuilder
+			.append(properties.transferErrorMailTemplate().bodySuffix().formatted(RequestId.get(), properties.sender(), senderName))
+			.append(properties.transferErrorMailTemplate().htmlSuffix()).toString();
 	}
 
 	public static EmailRequest toEmail(String subject, String htmlBody, String recipient, String sender) {
@@ -63,18 +82,18 @@ public final class MessagingMapper {
 			.subject(subject);
 	}
 
-	private static void addSpecificErrors(ErrorMessageProperties properties, final StringBuilder bodyBuilder, final Collection<CreationError> recordSpecificErrors) {
-		bodyBuilder.append(properties.listPrefixTemplate().formatted("Billingrecord-specifika"));
+	private static void addSpecificCreationErrors(ErrorMessageProperties properties, final StringBuilder bodyBuilder, final Collection<InvoiceFileError> recordSpecificErrors) {
+		bodyBuilder.append(properties.creationErrorMailTemplate().listPrefix().formatted("Billingrecord-specifika"));
 		recordSpecificErrors.stream()
 			.map(error -> "Billingrecord med id %s gick inte att bearbeta. Felmeddelande är '%s'.".formatted(error.getEntityId(), error.getMessage()))
-			.forEach(message -> bodyBuilder.append(properties.listItemTemplate().formatted(message)));
-		bodyBuilder.append(properties.listSuffixTemplate());
+			.forEach(message -> bodyBuilder.append(properties.creationErrorMailTemplate().listItem().formatted(message)));
+		bodyBuilder.append(properties.creationErrorMailTemplate().listSuffix());
 	}
 
-	private static void addCommonErrors(ErrorMessageProperties properties, final StringBuilder bodyBuilder, final List<CreationError> commonErrors) {
-		bodyBuilder.append(properties.listPrefixTemplate().formatted("Övriga"));
-		commonErrors.forEach(error -> bodyBuilder.append(properties.listItemTemplate().formatted(error.getMessage())));
-		bodyBuilder.append(properties.listSuffixTemplate());
+	private static void addCommonCreationErrors(ErrorMessageProperties properties, final StringBuilder bodyBuilder, final List<InvoiceFileError> commonErrors) {
+		bodyBuilder.append(properties.creationErrorMailTemplate().listPrefix().formatted("Övriga"));
+		commonErrors.forEach(error -> bodyBuilder.append(properties.creationErrorMailTemplate().listItem().formatted(error.getMessage())));
+		bodyBuilder.append(properties.creationErrorMailTemplate().listSuffix());
 	}
 
 	private static EmailSender toEmailSender(String sender) {

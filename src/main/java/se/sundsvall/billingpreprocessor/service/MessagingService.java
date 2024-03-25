@@ -2,7 +2,8 @@ package se.sundsvall.billingpreprocessor.service;
 
 import static org.apache.commons.collections4.CollectionUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static se.sundsvall.billingpreprocessor.service.mapper.MessagingMapper.composeBody;
+import static se.sundsvall.billingpreprocessor.service.mapper.MessagingMapper.composeCreationErrorMailBody;
+import static se.sundsvall.billingpreprocessor.service.mapper.MessagingMapper.composeTransferErrorMailBody;
 import static se.sundsvall.billingpreprocessor.service.mapper.MessagingMapper.toEmail;
 
 import java.util.List;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 import se.sundsvall.billingpreprocessor.integration.messaging.MessagingClient;
 import se.sundsvall.billingpreprocessor.integration.messaging.config.ErrorMessageProperties;
-import se.sundsvall.billingpreprocessor.service.creator.CreationError;
+import se.sundsvall.billingpreprocessor.service.error.InvoiceFileError;
 
 @Service
 public class MessagingService {
@@ -37,20 +38,36 @@ public class MessagingService {
 		this.properties = properties;
 	}
 
-	public void sendErrorMail(List<CreationError> errors) {
+	public void sendCreationErrorMail(List<InvoiceFileError> errors) {
 		if (isBlank(properties.sender()) || isEmpty(properties.recipients())) {
-			LOG.info("Error report will not be sent as sender or receiver has not been defined in properties.");
+			LOG.info("Report of creation errors will not be sent as sender or receiver has not been defined in properties.");
 			return;
 		}
 
-		final var subject = properties.subjectTemplate().formatted(applicationName, environment);
-		final var body = composeBody(errors, applicationName, properties);
+		final var subject = properties.creationErrorMailTemplate().subject().formatted(applicationName, environment);
+		final var body = composeCreationErrorMailBody(errors, applicationName, properties);
 		properties.recipients().forEach(recipient ->
 		client.sendEmail(ASYNCHRONOUSLY,
 			toEmail(
 				subject,
 				body,
 				recipient,
-			properties.sender())));
+				properties.sender())));
+	}
+
+	public void sendTransferErrorMail(List<InvoiceFileError> errors) {
+		if (isBlank(properties.sender()) || isEmpty(properties.recipients())) {
+			LOG.info("Report of transfer errors will not be sent as sender or receiver has not been defined in properties.");
+			return;
+		}
+
+		final var subject = properties.transferErrorMailTemplate().subject().formatted(applicationName, environment);
+		final var body = composeTransferErrorMailBody(errors, applicationName, properties);
+		properties.recipients().forEach(recipient -> client.sendEmail(ASYNCHRONOUSLY,
+			toEmail(
+				subject,
+				body,
+				recipient,
+				properties.sender())));
 	}
 }

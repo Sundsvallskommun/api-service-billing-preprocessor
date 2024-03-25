@@ -1,5 +1,8 @@
 package se.sundsvall.billingpreprocessor.service;
 
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileStatus.GENERATED;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileStatus.SEND_FAILED;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileStatus.SEND_SUCCESSFUL;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.APPROVED;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.INVOICED;
 import static se.sundsvall.billingpreprocessor.service.mapper.InvoiceFileMapper.toInvoiceFileEntity;
@@ -13,15 +16,18 @@ import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 import se.sundsvall.billingpreprocessor.integration.db.BillingRecordRepository;
 import se.sundsvall.billingpreprocessor.integration.db.InvoiceFileRepository;
 import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
+import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceFileEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.enums.Type;
-import se.sundsvall.billingpreprocessor.service.creator.CreationError;
+import se.sundsvall.billingpreprocessor.integration.sftp.SftpConfiguration.UploadGateway;
 import se.sundsvall.billingpreprocessor.service.creator.InvoiceCreator;
+import se.sundsvall.billingpreprocessor.service.error.InvoiceFileError;
 
 @Service
 public class InvoiceFileService {
@@ -32,23 +38,50 @@ public class InvoiceFileService {
 	private final List<InvoiceCreator> invoiceCreators;
 	private final InvoiceFileConfigurationService invoiceFileConfigurationService;
 	private final MessagingService messagingService;
+	private final UploadGateway uploadGateway;
 
 	public InvoiceFileService(
 		BillingRecordRepository billingRecordRepository,
 		InvoiceFileRepository invoiceFileRepository,
 		List<InvoiceCreator> invoiceCreators,
 		InvoiceFileConfigurationService invoiceFileConfigurationService,
-		MessagingService messagingService) {
+		MessagingService messagingService,
+		UploadGateway uploadGateway) {
 
 		this.billingRecordRepository = billingRecordRepository;
 		this.invoiceFileRepository = invoiceFileRepository;
 		this.invoiceCreators = invoiceCreators;
 		this.invoiceFileConfigurationService = invoiceFileConfigurationService;
 		this.messagingService = messagingService;
+		this.uploadGateway = uploadGateway;
+	}
+
+	public void transferFiles() {
+		final List<InvoiceFileError> errors = new ArrayList<>();
+
+		invoiceFileRepository.findByStatusIn(List.of(GENERATED, SEND_FAILED))
+			.forEach(fileEntity -> this.transferFile(fileEntity).ifPresent(errors::add));
+
+		if (!errors.isEmpty()) {
+			messagingService.sendTransferErrorMail(errors);
+		}
+	}
+
+	private Optional<InvoiceFileError> transferFile(InvoiceFileEntity fileEntity) {
+		try {
+			uploadGateway.sendToSftp(new ByteArrayResource(fileEntity.getContent().getBytes()), fileEntity.getName());
+			invoiceFileRepository.save(fileEntity.withStatus(SEND_SUCCESSFUL));
+			return Optional.empty();
+
+		} catch (Exception e) {
+			LOG.error("{} occurred while transferring file {} to ftp.", e.getClass().getSimpleName(), fileEntity.getName(), e);
+			invoiceFileRepository.save(fileEntity.withStatus(SEND_FAILED));
+			return Optional.of(InvoiceFileError.create(e.getMessage()));
+		}
 	}
 
 	@Transactional
-	public void createFileEntities() {
+	public void createFiles() {
 		final var billingRecords = new ArrayList<>(billingRecordRepository.findAllByStatus(APPROVED));
 
 		final var creationErrors = invoiceCreators.stream()
@@ -57,13 +90,13 @@ public class InvoiceFileService {
 			.toList();
 
 		if (!creationErrors.isEmpty() || !billingRecords.isEmpty()) {
-			sendErrorMail(creationErrors, billingRecords);
+			sendCreationErrorMail(creationErrors, billingRecords);
 		}
 	}
 
-	private List<CreationError> processBillingRecords(List<BillingRecordEntity> billingRecords, InvoiceCreator invoiceCreator) {
-		final List<CreationError> billingRecordProcessErrors = new ArrayList<>();
-		final List<CreationError> commonErrors = new ArrayList<>();
+	private List<InvoiceFileError> processBillingRecords(List<BillingRecordEntity> billingRecords, InvoiceCreator invoiceCreator) {
+		final List<InvoiceFileError> billingRecordProcessErrors = new ArrayList<>();
+		final List<InvoiceFileError> commonErrors = new ArrayList<>();
 
 		try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
 			final var type = invoiceCreator.getProcessableType();
@@ -87,20 +120,20 @@ public class InvoiceFileService {
 
 		} catch (Exception e) {
 			LOG.error("Exception occurred during creation of invoice billing file", e);
-			commonErrors.add(CreationError.create(e.getMessage()));
+			commonErrors.add(InvoiceFileError.create(e.getMessage()));
 		}
 
 		return Stream.concat(commonErrors.stream(), billingRecordProcessErrors.stream()).toList();
 	}
 
-	private Optional<CreationError> createBillingRecord(final ByteArrayOutputStream outputStream, BillingRecordEntity entity, InvoiceCreator invoiceCreator) {
+	private Optional<InvoiceFileError> createBillingRecord(final ByteArrayOutputStream outputStream, BillingRecordEntity entity, InvoiceCreator invoiceCreator) {
 		try {
 			outputStream.write(invoiceCreator.createInvoiceData(entity));
 			billingRecordRepository.save(entity.withStatus(INVOICED));
 			return Optional.empty();
 		} catch (Exception e) {
 			LOG.warn("{} occurred when persisting record with id {} to file'", e.getClass().getSimpleName(), entity.getId(), e);
-			return Optional.of(CreationError.create(entity.getId(), e.getMessage()));
+			return Optional.of(InvoiceFileError.create(entity.getId(), e.getMessage()));
 		}
 	}
 
@@ -112,10 +145,10 @@ public class InvoiceFileService {
 			.toList();
 	}
 
-	private void sendErrorMail(List<CreationError> creationErrors, List<BillingRecordEntity> unprocessedRecords) {
-		final var allErrors = new ArrayList<CreationError>(creationErrors);
+	private void sendCreationErrorMail(List<InvoiceFileError> creationErrors, List<BillingRecordEntity> unprocessedRecords) {
+		final var allErrors = new ArrayList<InvoiceFileError>(creationErrors);
 		allErrors.addAll(unprocessedRecords.stream()
-			.map(billingRecord -> CreationError.create(
+			.map(billingRecord -> InvoiceFileError.create(
 				billingRecord.getId(),
 				"No corresponding invoice creator implementation could be found for type: '%s' and category: '%s'".formatted(
 					billingRecord.getType(),
@@ -124,6 +157,6 @@ public class InvoiceFileService {
 
 		allErrors.forEach(error -> LOG.warn(error.isCommonError() ? error.getMessage() : "Record with id {} couldn't be processed. Message is '{}'.", error.getEntityId(), error.getMessage()));
 
-		messagingService.sendErrorMail(allErrors);
+		messagingService.sendCreationErrorMail(allErrors);
 	}
 }

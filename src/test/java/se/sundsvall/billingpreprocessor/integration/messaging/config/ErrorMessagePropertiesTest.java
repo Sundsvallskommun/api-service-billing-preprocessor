@@ -18,14 +18,24 @@ class ErrorMessagePropertiesTest {
 
 	@Test
 	void testProperties() {
-		assertThat(properties.bodyPrefixTemplate()).isEqualTo("bodyPrefixTemplate");
-		assertThat(properties.bodySuffixTemplate()).isEqualTo("bodySuffixTemplate");
-		assertThat(properties.htmlPrefixTemplate()).isEqualTo("htmlPrefixTemplate");
-		assertThat(properties.htmlSuffixTemplate()).isEqualTo("htmlSuffixTemplate");
-		assertThat(properties.listItemTemplate()).isEqualTo("listItemTemplate");
-		assertThat(properties.listPrefixTemplate()).isEqualTo("listPrefixTemplate");
-		assertThat(properties.listSuffixTemplate()).isEqualTo("listSuffixTemplate");
-		assertThat(properties.subjectTemplate()).isEqualTo("subjectTemplate");
+		assertThat(properties.creationErrorMailTemplate().bodyPrefix()).isEqualTo("creationErrorBodyPrefix");
+		assertThat(properties.creationErrorMailTemplate().bodySuffix()).isEqualTo("creationErrorBodySuffix");
+		assertThat(properties.creationErrorMailTemplate().htmlPrefix()).isEqualTo("creationErrorHtmlPrefix");
+		assertThat(properties.creationErrorMailTemplate().htmlSuffix()).isEqualTo("creationErrorHtmlSuffix");
+		assertThat(properties.creationErrorMailTemplate().listItem()).isEqualTo("creationErrorListItem");
+		assertThat(properties.creationErrorMailTemplate().listPrefix()).isEqualTo("creationErrorListPrefix");
+		assertThat(properties.creationErrorMailTemplate().listSuffix()).isEqualTo("creationErrorListSuffix");
+		assertThat(properties.creationErrorMailTemplate().subject()).isEqualTo("creationErrorSubject");
+
+		assertThat(properties.transferErrorMailTemplate().bodyPrefix()).isEqualTo("transferErrorBodyPrefix");
+		assertThat(properties.transferErrorMailTemplate().bodySuffix()).isEqualTo("transferErrorBodySuffix");
+		assertThat(properties.transferErrorMailTemplate().htmlPrefix()).isEqualTo("transferErrorHtmlPrefix");
+		assertThat(properties.transferErrorMailTemplate().htmlSuffix()).isEqualTo("transferErrorHtmlSuffix");
+		assertThat(properties.transferErrorMailTemplate().listItem()).isEqualTo("transferErrorListItem");
+		assertThat(properties.transferErrorMailTemplate().listPrefix()).isEqualTo("transferErrorListPrefix");
+		assertThat(properties.transferErrorMailTemplate().listSuffix()).isEqualTo("transferErrorListSuffix");
+		assertThat(properties.transferErrorMailTemplate().subject()).isEqualTo("transferErrorSubject");
+
 		assertThat(properties.sender()).isEqualTo("sender");
 		assertThat(properties.recipients()).asList().containsExactlyInAnyOrder("recipient.1", "recipient.2");
 	}

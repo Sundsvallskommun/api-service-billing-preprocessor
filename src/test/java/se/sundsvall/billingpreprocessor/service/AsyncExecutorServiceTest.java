@@ -2,6 +2,7 @@ package se.sundsvall.billingpreprocessor.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import java.util.UUID;
 import java.util.stream.Stream;
@@ -43,15 +44,30 @@ class AsyncExecutorServiceTest {
 	}
 
 	@Test
-	void createFileEntities() {
+	void createFiles() {
 		final var uuid = UUID.randomUUID().toString();
 
 		// Mock static RequestId to enable spy and to verify that static method is being called
 		try (MockedStatic<RequestId> requestIdMock = Mockito.mockStatic(RequestId.class)) {
-			service.createFileEntities(uuid);
+			service.createFiles(uuid);
 
 			requestIdMock.verify(() -> RequestId.init(uuid));
-			verify(invoiceFileServiceMock).createFileEntities();
+			verify(invoiceFileServiceMock).createFiles();
+			verifyNoMoreInteractions(invoiceFileServiceMock);
+		}
+	}
+
+	@Test
+	void sendFilesToFtp() {
+		final var uuid = UUID.randomUUID().toString();
+
+		// Mock static RequestId to enable spy and to verify that static method is being called
+		try (MockedStatic<RequestId> requestIdMock = Mockito.mockStatic(RequestId.class)) {
+			service.transferFiles(uuid);
+
+			requestIdMock.verify(() -> RequestId.init(uuid));
+			verify(invoiceFileServiceMock).transferFiles();
+			verifyNoMoreInteractions(invoiceFileServiceMock);
 		}
 	}
 }
