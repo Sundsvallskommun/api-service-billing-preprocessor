@@ -17,8 +17,6 @@ import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.I
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
@@ -101,11 +99,11 @@ class JobsIT extends AbstractAppTest {
 				assertThat(file.getStatus()).isEqualTo(GENERATED);
 			})
 			.satisfiesExactlyInAnyOrder(file -> {
-				assertThat(file.getContent()).isEqualTo(getResource("expected_internal_content.txt"));
+				assertThat(file.getContent()).isEqualTo(getResource("/filecontent/expected_internal_content.txt"));
 				assertThat(file.getName()).isEqualTo("IPKISYCASE_%s.txt".formatted(LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE)));
 				assertThat(file.getType()).isEqualTo(INTERNAL.name());
 			}, file -> {
-				assertThat(file.getContent()).isEqualTo(getResource("expected_external_content.txt").replace("yyMMdd", LocalDate.now().format(DateTimeFormatter.ofPattern("yyMMdd"))));
+				assertThat(file.getContent()).isEqualTo(getResource("/filecontent/expected_external_content.txt").replace("yyMMdd", LocalDate.now().format(DateTimeFormatter.ofPattern("yyMMdd"))));
 				assertThat(file.getName()).isEqualTo("KRISYCASE_%s.txt".formatted(LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE)));
 				assertThat(file.getType()).isEqualTo(EXTERNAL.name());
 			});
@@ -139,9 +137,9 @@ class JobsIT extends AbstractAppTest {
 		SFTP_SERVER.stop();
 	}
 
-	private String getResource(final String fileName) throws IOException, URISyntaxException {
-		var path = getTestDirectoryPath().replaceFirst("classpath:", "") + "/filecontent/";
-		return Files.readString(Paths.get(getClass().getClassLoader().getResource(path + fileName).toURI()), StandardCharsets.UTF_8)
+	private String getResource(final String filePath) throws IOException, URISyntaxException {
+		var path = getFile(getTestDirectoryPath() + filePath).toPath();
+		return readString(path, StandardCharsets.UTF_8)
 			.replaceAll(System.lineSeparator(), unescapeJava(properties.recordTerminator()));
 	}
 }
