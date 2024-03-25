@@ -16,8 +16,8 @@ import se.sundsvall.billingpreprocessor.service.AsyncExecutorService;
 
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("junit")
-class InvoiceFilesResourceTest {
-	private static final String BASE_PATH = "/invoicefiles";
+class JobsResourceTest {
+	private static final String BASE_PATH = "/jobs";
 
 	@Autowired
 	private WebTestClient webTestClient;
@@ -29,7 +29,7 @@ class InvoiceFilesResourceTest {
 	void createFiles() {
 
 		// Call
-		final var requestId = webTestClient.post().uri(BASE_PATH + "/create").contentType(APPLICATION_JSON)
+		final var requestId = webTestClient.post().uri(BASE_PATH + "/filecreator").contentType(APPLICATION_JSON)
 			.exchange()
 			.expectStatus().isAccepted()
 			.expectBody().isEmpty()
@@ -46,7 +46,7 @@ class InvoiceFilesResourceTest {
 	void transferFiles() {
 
 		// Call
-		final var requestId = webTestClient.post().uri(BASE_PATH + "/transfer").contentType(APPLICATION_JSON)
+		final var requestId = webTestClient.post().uri(BASE_PATH + "/filetransferrer").contentType(APPLICATION_JSON)
 			.exchange()
 			.expectStatus().isAccepted()
 			.expectBody().isEmpty()
