@@ -1,5 +1,7 @@
 package se.sundsvall.billingpreprocessor.service;
 
+import static se.sundsvall.billingpreprocessor.Constants.ERROR_INVOICE_FILE_GENERATION_FAILURE;
+import static se.sundsvall.billingpreprocessor.Constants.ERROR_INVOICE_FILE_TRANSFER_FAILURE;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileStatus.GENERATED;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileStatus.SEND_FAILED;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileStatus.SEND_SUCCESSFUL;
@@ -8,6 +10,8 @@ import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Status
 import static se.sundsvall.billingpreprocessor.service.mapper.InvoiceFileMapper.toInvoiceFileEntity;
 
 import java.io.ByteArrayOutputStream;
+import java.nio.charset.Charset;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -69,14 +73,18 @@ public class InvoiceFileService {
 
 	private Optional<InvoiceFileError> transferFile(InvoiceFileEntity fileEntity) {
 		try {
-			uploadGateway.sendToSftp(new ByteArrayResource(fileEntity.getContent().getBytes()), fileEntity.getName());
-			invoiceFileRepository.save(fileEntity.withStatus(SEND_SUCCESSFUL));
+			Charset encoding = Charset.forName(fileEntity.getEncoding());
+			uploadGateway.sendToSftp(new ByteArrayResource(fileEntity.getContent().getBytes(encoding)), fileEntity.getName());
+			invoiceFileRepository.save(fileEntity
+				.withSent(OffsetDateTime.now())
+				.withStatus(SEND_SUCCESSFUL));
+
 			return Optional.empty();
 
 		} catch (Exception e) {
 			LOG.error("{} occurred while transferring file {} to ftp.", e.getClass().getSimpleName(), fileEntity.getName(), e);
 			invoiceFileRepository.save(fileEntity.withStatus(SEND_FAILED));
-			return Optional.of(InvoiceFileError.create(e.getMessage()));
+			return Optional.of(InvoiceFileError.create(ERROR_INVOICE_FILE_TRANSFER_FAILURE.formatted(fileEntity.getName(), e.getClass().getSimpleName() + ": " + e.getMessage())));
 		}
 	}
 
@@ -107,6 +115,7 @@ public class InvoiceFileService {
 				billingRecords.removeAll(billingRecordsToProcess); // Remove processed records from the original list and send mejl if unprocessed records exists at end of execution
 
 				final var filename = invoiceFileConfigurationService.getInvoiceFileNameBy(type.name(), category);
+				final var encoding = invoiceFileConfigurationService.getEncoding(type.name(), category);
 
 				outputStream.write(invoiceCreator.createFileHeader());
 
@@ -114,13 +123,13 @@ public class InvoiceFileService {
 					.ifPresent(billingRecordProcessErrors::add));
 
 				if (billingRecordsToProcess.size() > billingRecordProcessErrors.size()) { // At least one of the records should be successful for the file to be created
-					invoiceFileRepository.save(toInvoiceFileEntity(filename, type.name(), outputStream.toByteArray()));
+					invoiceFileRepository.save(toInvoiceFileEntity(filename, type.name(), outputStream.toByteArray(), encoding));
 				}
 			}
 
 		} catch (Exception e) {
 			LOG.error("Exception occurred during creation of invoice billing file", e);
-			commonErrors.add(InvoiceFileError.create(e.getMessage()));
+			commonErrors.add(InvoiceFileError.create(ERROR_INVOICE_FILE_GENERATION_FAILURE.formatted(e.getClass().getSimpleName() + ": " + e.getMessage())));
 		}
 
 		return Stream.concat(commonErrors.stream(), billingRecordProcessErrors.stream()).toList();

@@ -8,6 +8,8 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 
+import java.nio.charset.Charset;
+import java.nio.charset.UnsupportedCharsetException;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -124,6 +126,75 @@ class InvoiceFileConfigurationServiceTest {
 		// Assert
 		assertThat(exception).isNotNull();
 		assertThat(exception.getMessage()).isEqualTo("Internal Server Error: Could not generate filename from template: 'null'");
+		verify(invoiceFileConfigurationRepositoryMock).findByTypeAndCategoryTag(type, categoryTag);
+		verifyNoMoreInteractions(invoiceFileConfigurationRepositoryMock);
+	}
+
+	@Test
+	void getEncoding() {
+
+		// Arrange
+		final var type = "SOME_TYPE";
+		final var categoryTag = "SOME_CATEGORY";
+		final var encodingName = "ISO-8859-1";
+		final var entity = InvoiceFileConfigurationEntity.create()
+			.withType(type)
+			.withCategoryTag(categoryTag)
+			.withEncoding(encodingName);
+
+		when(invoiceFileConfigurationRepositoryMock.findByTypeAndCategoryTag(type, categoryTag)).thenReturn(Optional.of(entity));
+
+		// Act
+		final var encoding = service.getEncoding(type, categoryTag);
+
+		// Assert
+		assertThat(encoding).isNotNull().extracting(Charset::name).isEqualTo(encodingName);
+		verify(invoiceFileConfigurationRepositoryMock).findByTypeAndCategoryTag(type, categoryTag);
+		verifyNoMoreInteractions(invoiceFileConfigurationRepositoryMock);
+	}
+
+	@Test
+	void getUnsupportedEncoding() {
+
+		// Arrange
+		final var type = "SOME_TYPE";
+		final var categoryTag = "SOME_CATEGORY";
+		final var encodingName = "UNSUPPORTED-ENCODING";
+		final var entity = InvoiceFileConfigurationEntity.create()
+			.withType(type)
+			.withCategoryTag(categoryTag)
+			.withEncoding(encodingName);
+
+		when(invoiceFileConfigurationRepositoryMock.findByTypeAndCategoryTag(type, categoryTag)).thenReturn(Optional.of(entity));
+
+		// Act
+		final var exception = assertThrows(UnsupportedCharsetException.class, () -> service.getEncoding(type, categoryTag));
+
+		// Assert
+		assertThat(exception).isNotNull();
+		assertThat(exception.getMessage()).isEqualTo(encodingName);
+		verify(invoiceFileConfigurationRepositoryMock).findByTypeAndCategoryTag(type, categoryTag);
+		verifyNoMoreInteractions(invoiceFileConfigurationRepositoryMock);
+	}
+
+	@Test
+	void getEncodingFromNull() {
+
+		// Arrange
+		final var type = "SOME_TYPE";
+		final var categoryTag = "SOME_CATEGORY";
+		final var entity = InvoiceFileConfigurationEntity.create()
+			.withType(type)
+			.withCategoryTag(categoryTag);
+
+		when(invoiceFileConfigurationRepositoryMock.findByTypeAndCategoryTag(type, categoryTag)).thenReturn(Optional.of(entity));
+
+		// Act
+		final var exception = assertThrows(IllegalArgumentException.class, () -> service.getEncoding(type, categoryTag));
+
+		// Assert
+		assertThat(exception).isNotNull();
+		assertThat(exception.getMessage()).isEqualTo("Null charset name");
 		verify(invoiceFileConfigurationRepositoryMock).findByTypeAndCategoryTag(type, categoryTag);
 		verifyNoMoreInteractions(invoiceFileConfigurationRepositoryMock);
 	}

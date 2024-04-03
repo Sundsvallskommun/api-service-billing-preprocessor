@@ -27,22 +27,20 @@ public class InvoiceFileScheduler {
 	@Scheduled(cron = "${scheduler.createfiles.cron}")
 	@SchedulerLock(name = "createfiles", lockAtMostFor = "${scheduler.shedlock-lock-at-most-for}")
 	public void executeCreateFiles() {
-		LOGGER.info(LOG_CREATE_FILES_STARTED);
-
 		RequestId.init();
-		invoiceFileService.createFiles();
 
+		LOGGER.info(LOG_CREATE_FILES_STARTED);
+		invoiceFileService.createFiles();
 		LOGGER.info(LOG_CREATE_FILES_ENDED);
 	}
 
 	@Scheduled(cron = "${scheduler.transferfiles.cron}")
 	@SchedulerLock(name = "transferfiles", lockAtMostFor = "${scheduler.shedlock-lock-at-most-for}")
 	public void executeTransferFiles() {
-		LOGGER.info(LOG_TRANSFER_FILES_STARTED);
-
 		RequestId.init();
-		invoiceFileService.transferFiles();
 
+		LOGGER.info(LOG_TRANSFER_FILES_STARTED);
+		invoiceFileService.transferFiles();
 		LOGGER.info(LOG_TRANSFER_FILES_ENDED);
 	}
 }
