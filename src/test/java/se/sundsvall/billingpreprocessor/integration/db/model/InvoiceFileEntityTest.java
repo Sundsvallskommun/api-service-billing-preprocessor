@@ -41,6 +41,7 @@ class InvoiceFileEntityTest {
 		BillingRecordEntity.create();
 		final var content = "content";
 		final var created = OffsetDateTime.now();
+		final var encoding = "encoding";
 		final var id = 1;
 		final var name = "name";
 		final var sent = OffsetDateTime.now();
@@ -50,6 +51,7 @@ class InvoiceFileEntityTest {
 		final var entity = InvoiceFileEntity.create()
 			.withContent(content)
 			.withCreated(created)
+			.withEncoding(encoding)
 			.withId(id)
 			.withName(name)
 			.withSent(sent)
@@ -59,6 +61,7 @@ class InvoiceFileEntityTest {
 		assertThat(entity).hasNoNullFieldsOrProperties();
 		assertThat(entity.getContent()).isEqualTo(content);
 		assertThat(entity.getCreated()).isEqualTo(created);
+		assertThat(entity.getEncoding()).isEqualTo(encoding);
 		assertThat(entity.getId()).isEqualTo(id);
 		assertThat(entity.getName()).isEqualTo(name);
 		assertThat(entity.getSent()).isEqualTo(sent);

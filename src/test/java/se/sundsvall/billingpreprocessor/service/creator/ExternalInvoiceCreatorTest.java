@@ -146,11 +146,14 @@ class ExternalInvoiceCreatorTest {
 
 	@Test
 	void createFileHeader() throws Exception {
+		final var config = InvoiceFileConfigurationEntity.create().withEncoding(StandardCharsets.ISO_8859_1.name());
+		when(invoiceFileConfigurationRepositoryMock.findByCreatorName("ExternalInvoiceCreator")).thenReturn(Optional.of(config));
+
 		final var result = creator.createFileHeader();
 		final var expected = getResource("validation/external_header_expected_format.txt")
 			.replace("yyMMdd", LocalDate.now().format(DateTimeFormatter.ofPattern("yyMMdd")));
 
-		assertThat(new String(result, StandardCharsets.UTF_8)).isEqualTo(expected);
+		assertThat(new String(result, StandardCharsets.ISO_8859_1)).isEqualTo(expected);
 	}
 
 	@Test
@@ -160,6 +163,9 @@ class ExternalInvoiceCreatorTest {
 
 	@Test
 	void createInvoiceDataWhenInvoiceMissing() throws Exception {
+		final var config = InvoiceFileConfigurationEntity.create().withEncoding(StandardCharsets.ISO_8859_1.name());
+		when(invoiceFileConfigurationRepositoryMock.findByCreatorName("ExternalInvoiceCreator")).thenReturn(Optional.of(config));
+
 		final var input = createbillingRecordEntity().withInvoice(null);
 		final var e = assertThrows(ThrowableProblem.class, () -> creator.createInvoiceData(input));
 
@@ -169,15 +175,21 @@ class ExternalInvoiceCreatorTest {
 
 	@Test
 	void createInvoiceDataFromEntityWithLegalId() throws Exception {
+		final var config = InvoiceFileConfigurationEntity.create().withEncoding(StandardCharsets.ISO_8859_1.name());
+		when(invoiceFileConfigurationRepositoryMock.findByCreatorName("ExternalInvoiceCreator")).thenReturn(Optional.of(config));
+
 		final var result = creator.createInvoiceData(createbillingRecordEntity());
 		final var expected = getResource("validation/external_invoicedata_expected_format.txt");
 
-		assertThat(new String(result, StandardCharsets.UTF_8)).isEqualTo(expected);
+		assertThat(new String(result, StandardCharsets.ISO_8859_1)).isEqualTo(expected);
 		verify(legalIdProviderMock, never()).translateToLegalId(any());
 	}
 
 	@Test
 	void createInvoiceDataFromEntityWithoutLegalId() throws Exception {
+		final var config = InvoiceFileConfigurationEntity.create().withEncoding(StandardCharsets.ISO_8859_1.name());
+		when(invoiceFileConfigurationRepositoryMock.findByCreatorName("ExternalInvoiceCreator")).thenReturn(Optional.of(config));
+
 		final var input = createbillingRecordEntity();
 		input.getRecipient().withLegalId(null).withPartyId(PARTY_ID);
 
@@ -186,7 +198,7 @@ class ExternalInvoiceCreatorTest {
 		final var result = creator.createInvoiceData(input);
 		final var expected = getResource("validation/external_invoicedata_expected_format.txt");
 
-		assertThat(new String(result, StandardCharsets.UTF_8)).isEqualTo(expected);
+		assertThat(new String(result, StandardCharsets.ISO_8859_1)).isEqualTo(expected);
 		verify(legalIdProviderMock).translateToLegalId(PARTY_ID);
 	}
 

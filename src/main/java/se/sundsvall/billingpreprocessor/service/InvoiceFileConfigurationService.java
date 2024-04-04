@@ -6,6 +6,7 @@ import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
 import static se.sundsvall.billingpreprocessor.Constants.ERROR_INVOICE_FILE_NAME_GENERATION_FAILURE;
 import static se.sundsvall.billingpreprocessor.Constants.ERROR_NO_INVOICE_FILE_CONFIGURATION_FOUND;
 
+import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.time.Clock;
 import java.util.Date;
@@ -31,6 +32,10 @@ public class InvoiceFileConfigurationService {
 	public String getInvoiceFileNameBy(String type, String categoryTag) {
 		final var fileNamePattern = getInvoiceFileConfigurationBy(type, categoryTag).getFileNamePattern();
 		return applyDatePattern(fileNamePattern);
+	}
+
+	public Charset getEncoding(String type, String categoryTag) {
+		return Charset.forName(getInvoiceFileConfigurationBy(type, categoryTag).getEncoding());
 	}
 
 	private InvoiceFileConfigurationEntity getInvoiceFileConfigurationBy(String type, String categoryTag) {

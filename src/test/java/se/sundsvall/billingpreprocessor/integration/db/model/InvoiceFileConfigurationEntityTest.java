@@ -1,15 +1,15 @@
 package se.sundsvall.billingpreprocessor.integration.db.model;
 
-import org.junit.jupiter.api.Test;
-
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanEquals;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanHashCode;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanToString;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidGettersAndSetters;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.jupiter.api.Test;
 
 class InvoiceFileConfigurationEntityTest {
 
@@ -25,17 +25,23 @@ class InvoiceFileConfigurationEntityTest {
 
 	@Test
 	void builderMethods() {
-		var type = "type";
-		var categoryTage = "categoryTag";
-		var fileNamePattern = "fileNamePattern";
+		final var categoryTage = "categoryTag";
+		final var creatorName = "creatorName";
+		final var encoding = "encoding";
+		final var fileNamePattern = "fileNamePattern";
+		final var type = "type";
 
-		var result = InvoiceFileConfigurationEntity.create()
-			.withType(type)
+		final var result = InvoiceFileConfigurationEntity.create()
 			.withCategoryTag(categoryTage)
-			.withFileNamePattern(fileNamePattern);
+			.withCreatorName(creatorName)
+			.withEncoding(encoding)
+			.withFileNamePattern(fileNamePattern)
+			.withType(type);
 
-		assertThat(result.getType()).isEqualTo(type);
 		assertThat(result.getCategoryTag()).isEqualTo(categoryTage);
+		assertThat(result.getCreatorName()).isEqualTo(creatorName);
+		assertThat(result.getEncoding()).isEqualTo(encoding);
 		assertThat(result.getFileNamePattern()).isEqualTo(fileNamePattern);
+		assertThat(result.getType()).isEqualTo(type);
 	}
 }

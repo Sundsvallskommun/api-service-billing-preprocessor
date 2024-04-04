@@ -20,6 +20,7 @@ import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.E
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.INTERNAL;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
@@ -51,6 +52,7 @@ class InvoiceFileServiceTest {
 	private final static String FILENAME = "fileName";
 	private final static byte[] FILE_HEADER = "file_header".getBytes();
 	private final static byte[] INVOICE_DATA = "invoice_data".getBytes();
+	private final static Charset ENCODING = StandardCharsets.ISO_8859_1;
 
 	@Mock
 	private BillingRecordRepository billingRecordRepositoryMock;
@@ -116,8 +118,9 @@ class InvoiceFileServiceTest {
 		when(invoiceFileRepositoryMock.findByStatusIn(List.of(GENERATED, SEND_FAILED))).thenReturn(List.of(invoiceFileEntityMock));
 		when(invoiceFileEntityMock.getContent()).thenReturn(content);
 		when(invoiceFileEntityMock.getName()).thenReturn(FILENAME);
+		when(invoiceFileEntityMock.getEncoding()).thenReturn(ENCODING.name());
 		when(invoiceFileEntityMock.withStatus(SEND_SUCCESSFUL)).thenReturn(invoiceFileEntityMock);
-
+		when(invoiceFileEntityMock.withSent(any())).thenReturn(invoiceFileEntityMock);
 		service.transferFiles();
 
 		verify(invoiceFileRepositoryMock).findByStatusIn(List.of(GENERATED, SEND_FAILED));
@@ -137,6 +140,7 @@ class InvoiceFileServiceTest {
 		when(invoiceFileRepositoryMock.findByStatusIn(List.of(GENERATED, SEND_FAILED))).thenReturn(List.of(invoiceFileEntityMock));
 		when(invoiceFileEntityMock.getContent()).thenReturn(content);
 		when(invoiceFileEntityMock.getName()).thenReturn(FILENAME);
+		when(invoiceFileEntityMock.getEncoding()).thenReturn(ENCODING.name());
 		when(invoiceFileEntityMock.withStatus(SEND_FAILED)).thenReturn(invoiceFileEntityMock);
 		doThrow(Problem.valueOf(INTERNAL_SERVER_ERROR)).when(uploadGatewayMock).sendToSftp(any(), any());
 
@@ -153,7 +157,7 @@ class InvoiceFileServiceTest {
 		assertThat(invoiceFileArgumentCaptor.getValue()).isSameAs(invoiceFileEntityMock);
 		assertThat(creationErrorArgumentCaptor.getValue()).hasSize(1)
 			.extracting(InvoiceFileError::getEntityId, InvoiceFileError::getMessage)
-			.containsExactly(tuple(null, "Internal Server Error"));
+			.containsExactly(tuple(null, "Could not transfer file with filename: 'fileName' due to DefaultProblem: Internal Server Error"));
 	}
 
 	@Test
@@ -177,6 +181,7 @@ class InvoiceFileServiceTest {
 
 		when(billingRecordRepositoryMock.findAllByStatus(APPROVED)).thenReturn(List.of(entity));
 		when(invoiceFileConfigurationServiceMock.getInvoiceFileNameBy(EXTERNAL.name(), CATEGORY)).thenReturn(FILENAME);
+		when(invoiceFileConfigurationServiceMock.getEncoding(EXTERNAL.name(), CATEGORY)).thenReturn(ENCODING);
 		when(externalInvoiceCreatorMock.createFileHeader()).thenReturn(FILE_HEADER);
 		when(externalInvoiceCreatorMock.createInvoiceData(any())).thenReturn(INVOICE_DATA);
 		when(externalInvoiceCreatorMock.getProcessableType()).thenReturn(EXTERNAL);
@@ -214,6 +219,7 @@ class InvoiceFileServiceTest {
 
 		when(billingRecordRepositoryMock.findAllByStatus(APPROVED)).thenReturn(List.of(entity));
 		when(invoiceFileConfigurationServiceMock.getInvoiceFileNameBy(INTERNAL.name(), CATEGORY)).thenReturn(FILENAME);
+		when(invoiceFileConfigurationServiceMock.getEncoding(INTERNAL.name(), CATEGORY)).thenReturn(ENCODING);
 		when(internalInvoiceCreatorMock.createFileHeader()).thenReturn(FILE_HEADER);
 		when(internalInvoiceCreatorMock.createInvoiceData(any())).thenReturn(INVOICE_DATA);
 		when(internalInvoiceCreatorMock.getProcessableType()).thenReturn(INTERNAL);
@@ -257,6 +263,7 @@ class InvoiceFileServiceTest {
 			invalidExternalEntity,
 			externalEntity));
 		when(invoiceFileConfigurationServiceMock.getInvoiceFileNameBy(EXTERNAL.name(), CATEGORY)).thenReturn(externalFileName);
+		when(invoiceFileConfigurationServiceMock.getEncoding(EXTERNAL.name(), CATEGORY)).thenReturn(ENCODING);
 		when(externalInvoiceCreatorMock.createFileHeader()).thenReturn(externalFileHeader);
 		when(externalInvoiceCreatorMock.createInvoiceData(externalEntity)).thenReturn(externalInvoiceData);
 		when(externalInvoiceCreatorMock.createInvoiceData(invalidExternalEntity)).thenThrow(Problem.valueOf(INTERNAL_SERVER_ERROR));
@@ -307,6 +314,7 @@ class InvoiceFileServiceTest {
 			invalidInternalEntity,
 			internalEntity));
 		when(invoiceFileConfigurationServiceMock.getInvoiceFileNameBy(INTERNAL.name(), CATEGORY)).thenReturn(internalFileName);
+		when(invoiceFileConfigurationServiceMock.getEncoding(INTERNAL.name(), CATEGORY)).thenReturn(ENCODING);
 		when(internalInvoiceCreatorMock.createFileHeader()).thenReturn(internalFileHeader);
 		when(internalInvoiceCreatorMock.createInvoiceData(internalEntity)).thenReturn(internalInvoiceData);
 		when(internalInvoiceCreatorMock.createInvoiceData(invalidInternalEntity)).thenThrow(Problem.valueOf(INTERNAL_SERVER_ERROR));
@@ -359,6 +367,7 @@ class InvoiceFileServiceTest {
 		when(internalInvoiceCreatorMock.getProcessableCategory()).thenReturn(CATEGORY);
 		when(internalInvoiceCreatorMock.createFileHeader()).thenReturn(internalFileHeader);
 		when(internalInvoiceCreatorMock.createInvoiceData(invalidInternalEntity)).thenThrow(Problem.valueOf(INTERNAL_SERVER_ERROR));
+		when(invoiceFileConfigurationServiceMock.getEncoding(INTERNAL.name(), CATEGORY)).thenReturn(ENCODING);
 
 		// Act
 		service.createFiles();
@@ -402,12 +411,13 @@ class InvoiceFileServiceTest {
 		verify(internalInvoiceCreatorMock).getProcessableCategory();
 		verify(internalInvoiceCreatorMock).createFileHeader();
 		verify(invoiceFileConfigurationServiceMock).getInvoiceFileNameBy(INTERNAL.name(), CATEGORY);
+		verify(invoiceFileConfigurationServiceMock).getEncoding(INTERNAL.name(), CATEGORY);
 		verify(messagingServiceMock).sendCreationErrorMail(creationErrorArgumentCaptor.capture());
 		verifyNoMoreInterationsOnMocks();
 
 		assertThat(creationErrorArgumentCaptor.getValue()).hasSize(1)
 			.extracting(InvoiceFileError::getEntityId, InvoiceFileError::getMessage)
-			.containsExactly(tuple(null, "Cannot read the array length because \"b\" is null"));
+			.containsExactly(tuple(null, "NullPointerException: Cannot read the array length because \"b\" is null occurred when generating file content"));
 	}
 
 	@Test

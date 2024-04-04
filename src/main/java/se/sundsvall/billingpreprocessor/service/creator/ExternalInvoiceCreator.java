@@ -19,6 +19,7 @@ import static se.sundsvall.billingpreprocessor.service.util.StringUtil.formatLeg
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
 
 import org.beanio.BeanWriter;
 import org.beanio.StreamFactory;
@@ -45,16 +46,18 @@ public class ExternalInvoiceCreator implements InvoiceCreator {
 		this.configurationRepository = configurationRepository;
 	}
 
+	private InvoiceFileConfigurationEntity getConfiguration() {
+		return configurationRepository.findByCreatorName(this.getClass().getSimpleName())
+			.orElseThrow(createInternalServerErrorProblem(CONFIGURATION_NOT_PRESENT.formatted(this.getClass().getSimpleName())));
+	}
+
 	/**
 	 * Method returning the type that the creator can handle
 	 * 
 	 * @return the type that the creator can handle
 	 */
 	public Type getProcessableType() {
-		return configurationRepository.findByCreatorName(this.getClass().getSimpleName())
-			.map(InvoiceFileConfigurationEntity::getType)
-			.map(Type::valueOf)
-			.orElseThrow(createInternalServerErrorProblem(CONFIGURATION_NOT_PRESENT.formatted(this.getClass().getSimpleName())));
+		return Type.valueOf(getConfiguration().getType());
 	}
 
 	/**
@@ -63,9 +66,7 @@ public class ExternalInvoiceCreator implements InvoiceCreator {
 	 * @return the category that the creator can handle
 	 */
 	public String getProcessableCategory() {
-		return configurationRepository.findByCreatorName(this.getClass().getSimpleName())
-			.map(InvoiceFileConfigurationEntity::getCategoryTag)
-			.orElseThrow(createInternalServerErrorProblem(CONFIGURATION_NOT_PRESENT.formatted(this.getClass().getSimpleName())));
+		return getConfiguration().getCategoryTag();
 	}
 
 	/**
@@ -76,8 +77,9 @@ public class ExternalInvoiceCreator implements InvoiceCreator {
 	 */
 	@Override
 	public byte[] createFileHeader() throws IOException {
+		final var encoding = Charset.forName(getConfiguration().getEncoding());
 		try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-			BeanWriter invoiceWriter = factory.createWriter(EXTERNAL_INVOICE_BUILDER, new OutputStreamWriter(byteArrayOutputStream))) {
+			BeanWriter invoiceWriter = factory.createWriter(EXTERNAL_INVOICE_BUILDER, new OutputStreamWriter(byteArrayOutputStream, encoding))) {
 			invoiceWriter.write(toFileHeader(GENERATING_SYSTEM, EXTERNAL_INVOICE_TYPE));
 			invoiceWriter.flush();
 			return byteArrayOutputStream.toByteArray();
@@ -97,8 +99,9 @@ public class ExternalInvoiceCreator implements InvoiceCreator {
 			return EMPTY_ARRAY;
 		}
 
+		final var encoding = Charset.forName(getConfiguration().getEncoding());
 		try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-			BeanWriter invoiceWriter = factory.createWriter(EXTERNAL_INVOICE_BUILDER, new OutputStreamWriter(byteArrayOutputStream))) {
+			BeanWriter invoiceWriter = factory.createWriter(EXTERNAL_INVOICE_BUILDER, new OutputStreamWriter(byteArrayOutputStream, encoding))) {
 			processInvoice(invoiceWriter, billingRecord);
 			invoiceWriter.flush();
 			return byteArrayOutputStream.toByteArray();

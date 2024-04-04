@@ -28,17 +28,20 @@ public class InvoiceFileConfigurationEntity {
 	@Column(name = "id")
 	private long id;
 
-	@Column(name = "type")
+	@Column(name = "type", nullable = false)
 	private String type;
 
-	@Column(name = "category_tag")
+	@Column(name = "category_tag", nullable = false)
 	private String categoryTag;
 
-	@Column(name = "creator_name")
+	@Column(name = "creator_name", nullable = false)
 	private String creatorName;
 
-	@Column(name = "file_name_pattern")
+	@Column(name = "file_name_pattern", nullable = false)
 	private String fileNamePattern;
+
+	@Column(name = "encoding", nullable = false)
+	private String encoding;
 
 	public static InvoiceFileConfigurationEntity create() {
 		return new InvoiceFileConfigurationEntity();
@@ -104,9 +107,22 @@ public class InvoiceFileConfigurationEntity {
 		return this;
 	}
 
+	public String getEncoding() {
+		return encoding;
+	}
+
+	public void setEncoding(String encoding) {
+		this.encoding = encoding;
+	}
+
+	public InvoiceFileConfigurationEntity withEncoding(String encoding) {
+		this.encoding = encoding;
+		return this;
+	}
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(categoryTag, creatorName, fileNamePattern, id, type);
+		return Objects.hash(categoryTag, creatorName, encoding, fileNamePattern, id, type);
 	}
 
 	@Override
@@ -118,14 +134,15 @@ public class InvoiceFileConfigurationEntity {
 			return false;
 		}
 		InvoiceFileConfigurationEntity other = (InvoiceFileConfigurationEntity) obj;
-		return Objects.equals(categoryTag, other.categoryTag) && Objects.equals(creatorName, other.creatorName) && Objects.equals(fileNamePattern, other.fileNamePattern) && id == other.id && Objects.equals(type, other.type);
+		return Objects.equals(categoryTag, other.categoryTag) && Objects.equals(creatorName, other.creatorName) && Objects.equals(encoding, other.encoding) && Objects.equals(fileNamePattern, other.fileNamePattern) && id == other.id && Objects.equals(
+			type, other.type);
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("InvoiceFileConfigurationEntity [id=").append(id).append(", type=").append(type).append(", categoryTag=").append(categoryTag).append(", creatorName=").append(creatorName).append(", fileNamePattern=").append(fileNamePattern)
-			.append("]");
+			.append(", encoding=").append(encoding).append("]");
 		return builder.toString();
 	}
 }

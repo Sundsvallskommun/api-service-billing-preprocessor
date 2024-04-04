@@ -43,6 +43,9 @@ public class InvoiceFileEntity implements Serializable {
 	@Column(name = "content", length = Length.LONG32)
 	private String content;
 
+	@Column(name = "encoding")
+	private String encoding;
+
 	@Column(name = "status")
 	private InvoiceFileStatus status;
 
@@ -97,6 +100,19 @@ public class InvoiceFileEntity implements Serializable {
 
 	public InvoiceFileEntity withContent(String content) {
 		this.content = content;
+		return this;
+	}
+
+	public String getEncoding() {
+		return encoding;
+	}
+
+	public void setEncoding(String encoding) {
+		this.encoding = encoding;
+	}
+
+	public InvoiceFileEntity withEncoding(String encoding) {
+		this.encoding = encoding;
 		return this;
 	}
 
@@ -160,22 +176,27 @@ public class InvoiceFileEntity implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(content, created, id, name, sent, status, type);
+		return Objects.hash(content, created, encoding, id, name, sent, status, type);
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) { return true; }
-		if (!(obj instanceof final InvoiceFileEntity other)) { return false; }
-		return Objects.equals(content, other.content) && Objects.equals(created, other.created) && (id == other.id) && Objects.equals(name, other.name) && Objects.equals(sent, other.sent) && (status == other.status) && Objects.equals(type, other.type);
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof InvoiceFileEntity)) {
+			return false;
+		}
+		InvoiceFileEntity other = (InvoiceFileEntity) obj;
+		return Objects.equals(content, other.content) && Objects.equals(created, other.created) && Objects.equals(encoding, other.encoding) && id == other.id && Objects.equals(name, other.name) && Objects.equals(sent, other.sent)
+			&& status == other.status && Objects.equals(type, other.type);
 	}
 
 	@Override
 	public String toString() {
-		final StringBuilder builder = new StringBuilder();
-		builder.append("InvoiceFileEntity [id=").append(id).append(", name=").append(name).append(", content=").append(content).append(", status=").append(status).append(", type=").append(type).append(", created=").append(created).append(", sent=").append(
-			sent).append("]");
+		StringBuilder builder = new StringBuilder();
+		builder.append("InvoiceFileEntity [id=").append(id).append(", name=").append(name).append(", content=").append(content).append(", encoding=").append(encoding).append(", status=").append(status).append(", type=").append(type).append(
+			", created=").append(created).append(", sent=").append(sent).append("]");
 		return builder.toString();
 	}
-
 }

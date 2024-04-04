@@ -113,10 +113,13 @@ class InternalInvoiceCreatorTest {
 
 	@Test
 	void createFileHeader() throws Exception {
+		final var config = InvoiceFileConfigurationEntity.create().withEncoding(StandardCharsets.ISO_8859_1.name());
+		when(invoiceFileConfigurationRepositoryMock.findByCreatorName("InternalInvoiceCreator")).thenReturn(Optional.of(config));
+
 		final var result = creator.createFileHeader();
 		final var expected = getResource("validation/internal_header_expected_format.txt");
 
-		assertThat(new String(result, StandardCharsets.UTF_8)).isEqualTo(expected);
+		assertThat(new String(result, StandardCharsets.ISO_8859_1)).isEqualTo(expected);
 	}
 
 	@Test
@@ -126,6 +129,9 @@ class InternalInvoiceCreatorTest {
 
 	@Test
 	void createInvoiceDataWhenInvoiceMissing() throws Exception {
+		final var config = InvoiceFileConfigurationEntity.create().withEncoding(StandardCharsets.ISO_8859_1.name());
+		when(invoiceFileConfigurationRepositoryMock.findByCreatorName("InternalInvoiceCreator")).thenReturn(Optional.of(config));
+
 		final var input = createbillingRecordEntity().withInvoice(null);
 		final var e = assertThrows(ThrowableProblem.class, () -> creator.createInvoiceData(input));
 
@@ -135,10 +141,13 @@ class InternalInvoiceCreatorTest {
 
 	@Test
 	void createInvoiceDataFromEntity() throws Exception {
+		final var config = InvoiceFileConfigurationEntity.create().withEncoding(StandardCharsets.ISO_8859_1.name());
+		when(invoiceFileConfigurationRepositoryMock.findByCreatorName("InternalInvoiceCreator")).thenReturn(Optional.of(config));
+
 		final var result = creator.createInvoiceData(createbillingRecordEntity());
 		final var expected = getResource("validation/internal_invoicedata_expected_format.txt");
 
-		assertThat(new String(result, StandardCharsets.UTF_8)).isEqualTo(expected);
+		assertThat(new String(result, StandardCharsets.ISO_8859_1)).isEqualTo(expected);
 	}
 
 	private String getResource(final String fileName) throws IOException, URISyntaxException {
