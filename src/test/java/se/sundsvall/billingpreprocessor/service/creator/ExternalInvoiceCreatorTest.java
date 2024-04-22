@@ -151,7 +151,7 @@ class ExternalInvoiceCreatorTest {
 
 		final var result = creator.createFileHeader();
 		final var expected = getResource("validation/external_header_expected_format.txt")
-			.replace("  yyMMdd", LocalDate.now().format(DateTimeFormatter.ofPattern("yyMMdd")));
+			.replace("yyMMdd", LocalDate.now().format(DateTimeFormatter.ofPattern("yyMMdd")));
 
 		assertThat(new String(result, StandardCharsets.ISO_8859_1)).isEqualTo(expected);
 	}
