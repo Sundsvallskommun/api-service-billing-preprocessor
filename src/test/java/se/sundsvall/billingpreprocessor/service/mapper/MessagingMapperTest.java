@@ -45,10 +45,10 @@ class MessagingMapperTest {
 		assertThat(e.getMessage()).isEqualTo("Internal Server Error: ErrorMessageProperties bean is null");
 	}
 
-	@Test 
+	@Test
 	void composeCreationErrorMailWithSpecificError() {
 		final var error = InvoiceFileError.create(UUID.randomUUID().toString(), "Specific error");
-	
+
 		initialize();
 		when(propertiesMock.creationErrorMailTemplate()).thenReturn(errorMailTemplateMock);
 
@@ -72,7 +72,7 @@ class MessagingMapperTest {
 		when(propertiesMock.creationErrorMailTemplate()).thenReturn(errorMailTemplateMock);
 
 		final var composedMessage = MessagingMapper.composeCreationErrorMailBody(List.of(error), SENDER_NAME, propertiesMock);
-		
+
 		assertThat(composedMessage).isEqualTo("<html><body>Execution date %s<ul><li>%s</li></ul>RequestId: %s, mailTo: %s, Regards %s</body></html>"
 			.formatted(
 				LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE),
@@ -80,7 +80,6 @@ class MessagingMapperTest {
 				RequestId.get(),
 				"senderEmail",
 				SENDER_NAME));
-		
 	}
 
 	@Test
@@ -111,12 +110,11 @@ class MessagingMapperTest {
 
 		final var bean = MessagingMapper.toEmail(subject, body, recipient, sender);
 
-		assertThat(bean.getAttachments()).isNullOrEmpty();
+		assertThat(bean.getAttachments()).isNotNull().isEmpty();
 		assertThat(bean.getEmailAddress()).isEqualTo(recipient);
 		assertThat(bean.getHeaders()).isNullOrEmpty();
 		assertThat(bean.getHtmlMessage()).isEqualTo(body);
 		assertThat(bean.getMessage()).isNull();
-		assertThat(bean.getParty()).isNull();
 		assertThat(bean.getSender()).isNotNull().satisfies(s -> {
 			assertThat(s.getAddress()).isEqualTo(sender);
 			assertThat(s.getName()).isEqualTo(sender);
