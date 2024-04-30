@@ -79,6 +79,7 @@ public final class MessagingMapper {
 			.emailAddress(recipient)
 			.htmlMessage(base64Encode(htmlBody))
 			.sender(toEmailSender(sender))
+			.attachments(emptyList())
 			.subject(subject);
 	}
 

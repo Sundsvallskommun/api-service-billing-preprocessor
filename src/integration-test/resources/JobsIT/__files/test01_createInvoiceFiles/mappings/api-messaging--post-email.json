@@ -14,17 +14,18 @@
 		"bodyPatterns": [
 			{
 				"equalToJson": {
-					"emailAddress" : "receiver@noreply.com",
-					"subject" : "Fel vid skapande av fakturafiler - api-billing-preprocessor ()",
-					"htmlMessage" : "${json-unit.ignore}",
-					"sender" : {
-						"name" : "sender@noreply.com",
-						"address" : "sender@noreply.com"
+					"emailAddress": "receiver@noreply.com",
+					"subject": "Fel vid skapande av fakturafiler - api-billing-preprocessor ()",
+					"htmlMessage": "${json-unit.ignore}",
+					"sender": {
+						"name": "sender@noreply.com",
+						"address": "sender@noreply.com"
 					},
-					"headers" : { }
+					"attachments": [],
+					"headers": {}
 				}
 			}
-		]		
+		]
 	},
 	"response": {
 		"headers": {
