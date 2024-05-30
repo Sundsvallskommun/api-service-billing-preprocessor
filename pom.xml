@@ -12,10 +12,6 @@
 	<version>1.4</version>
 	<name>api-service-billing-preprocessor</name>
 	<properties>
-		<!-- Pipeline properties -->
-		<docker.image.name>ms-billing-preprocessor</docker.image.name>
-		<published.container.port.test>9104</published.container.port.test>
-		<published.container.port.production>9104</published.container.port.production>
   		<!-- Service properties -->
 		<spring-filter.version>3.1.7</spring-filter.version>
 		<beanio.version>3.0.0</beanio.version>
