@@ -128,7 +128,7 @@ class InternalInvoiceCreatorTest {
 	}
 
 	@Test
-	void createInvoiceDataWhenInvoiceMissing() throws Exception {
+	void createInvoiceDataWhenInvoiceMissing() {
 		final var config = InvoiceFileConfigurationEntity.create().withEncoding(StandardCharsets.ISO_8859_1.name());
 		when(invoiceFileConfigurationRepositoryMock.findByCreatorName("InternalInvoiceCreator")).thenReturn(Optional.of(config));
 

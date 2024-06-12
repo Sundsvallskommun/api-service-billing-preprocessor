@@ -37,6 +37,8 @@ class ErrorMessagePropertiesTest {
 		assertThat(properties.transferErrorMailTemplate().subject()).isEqualTo("transferErrorSubject");
 
 		assertThat(properties.sender()).isEqualTo("sender");
-		assertThat(properties.recipients()).asList().containsExactlyInAnyOrder("recipient.1", "recipient.2");
+		assertThat(properties.recipients().getFirst()).isEqualTo("recipient.1");
+		assertThat(properties.recipients().getLast()).isEqualTo("recipient.2");
+
 	}
 }

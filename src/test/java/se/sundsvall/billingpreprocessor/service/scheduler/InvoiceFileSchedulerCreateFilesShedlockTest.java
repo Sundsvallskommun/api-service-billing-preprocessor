@@ -68,7 +68,7 @@ class InvoiceFileSchedulerCreateFilesShedlockTest {
 	private static LocalDateTime mockCalledTime;
 
 	@Test
-	void verifyShedLockForCreateFiles() throws InterruptedException {
+	void verifyShedLockForCreateFiles() {
 		// Make sure scheduling occurs multiple times
 		await().until(() -> mockCalledTime != null && LocalDateTime.now().isAfter(mockCalledTime.plusSeconds(2)));
 

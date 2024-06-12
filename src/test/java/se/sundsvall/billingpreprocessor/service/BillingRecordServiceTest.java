@@ -64,14 +64,14 @@ class BillingRecordServiceTest {
 	@Test
 	void createBillingRecord() {
 		// Setup
-		final var record = createBillingRecordInstance();
+		final var billingRecord = createBillingRecordInstance();
 
 		// Mock
-		when(invoiceFileConfigurationRepositoryMock.existsByTypeAndCategoryTag(record.getType().name(), record.getCategory())).thenReturn(true);
+		when(invoiceFileConfigurationRepositoryMock.existsByTypeAndCategoryTag(billingRecord.getType().name(), billingRecord.getCategory())).thenReturn(true);
 		when(billingRecordRepositoryMock.save(any(BillingRecordEntity.class))).thenReturn(BillingRecordEntity.create().withId(ID));
 
 		// Call
-		final var result = service.createBillingRecord(record);
+		final var result = service.createBillingRecord(billingRecord);
 
 		// Assertions and verifications
 		assertThat(result).isEqualTo(ID);
@@ -83,10 +83,10 @@ class BillingRecordServiceTest {
 	@Test
 	void createBillingRecordWithMissingConfiguration() {
 		// Setup
-		final var record = createBillingRecordInstance();
+		final var billingRecord = createBillingRecordInstance();
 
 		// Call
-		final var e = assertThrows(ThrowableProblem.class, () -> service.createBillingRecord(record));
+		final var e = assertThrows(ThrowableProblem.class, () -> service.createBillingRecord(billingRecord));
 
 		// Assertions and verifications
 		assertThat(e.getStatus()).isEqualTo(BAD_REQUEST);
@@ -98,18 +98,18 @@ class BillingRecordServiceTest {
 	@Test
 	void createBillingRecords() {
 		// Setup
-		final var record = createBillingRecordInstance();
+		final var billingRecord = createBillingRecordInstance();
 
 		// Mock
-		when(invoiceFileConfigurationRepositoryMock.existsByTypeAndCategoryTag(record.getType().name(), record.getCategory())).thenReturn(true);
+		when(invoiceFileConfigurationRepositoryMock.existsByTypeAndCategoryTag(billingRecord.getType().name(), billingRecord.getCategory())).thenReturn(true);
 		when(billingRecordRepositoryMock.saveAll(any())).thenReturn(List.of(BillingRecordEntity.create().withId(ID)));
 
 		// Call
-		final var result = service.createBillingRecords(List.of(record));
+		final var result = service.createBillingRecords(List.of(billingRecord));
 
 		// Assertions and verifications
 		assertThat(result).isNotEmpty().hasSize(1);
-		assertThat(result.get(0)).isEqualTo(ID);
+		assertThat(result.getFirst()).isEqualTo(ID);
 		verify(invoiceFileConfigurationRepositoryMock).existsByTypeAndCategoryTag(INTERNAL.name(), CATEGORY);
 		verify(billingRecordRepositoryMock).saveAll(anyList());
 		verifyNoMoreInteractions(invoiceFileConfigurationRepositoryMock, billingRecordRepositoryMock);
@@ -244,10 +244,10 @@ class BillingRecordServiceTest {
 	@Test
 	void updateNonExistingBillingRecord() {
 		// Setup
-		final var record = BillingRecord.create();
+		final var billingRecord = BillingRecord.create();
 
 		// Call
-		final var exception = assertThrows(ThrowableProblem.class, () -> service.updateBillingRecord(ID, record));
+		final var exception = assertThrows(ThrowableProblem.class, () -> service.updateBillingRecord(ID, billingRecord));
 
 		// Assertions and verifications
 		assertThat(exception.getStatus()).isEqualTo(NOT_FOUND);

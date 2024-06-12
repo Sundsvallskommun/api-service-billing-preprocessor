@@ -101,7 +101,7 @@ class ExternalInvoiceMapperTest {
 
 	@ParameterizedTest
 	@MethodSource("toFileHeaderWhenMissingVitalDataArgumentProvider")
-	void toFileHeaderWhenMissingVitalData(String generatingSystem, String invoiceType, String expectedMessage) {
+	void toFileHeaderWhenMissingVitalData(final String generatingSystem, final String invoiceType, final String expectedMessage) {
 		final var e = assertThrows(ThrowableProblem.class, () -> ExternalInvoiceMapper.toFileHeader(generatingSystem, invoiceType));
 
 		assertThat(e.getStatus()).isEqualTo(INTERNAL_SERVER_ERROR);
@@ -116,7 +116,7 @@ class ExternalInvoiceMapperTest {
 
 	@Test
 	void toCustomerForPrivateCustomer() {
-		final var billingRecordEntity = createbillingRecordEntity(); // BillingRecordMapper.toBillingRecordEntity(createbillingRecord());
+		final var billingRecordEntity = createbillingRecordEntity();
 		billingRecordEntity.getRecipient().setOrganizationName(null);
 
 		final var bean = ExternalInvoiceMapper.toCustomer(LEGAL_ID, billingRecordEntity);
@@ -131,7 +131,7 @@ class ExternalInvoiceMapperTest {
 
 	@Test
 	void toCustomerForOrganization() {
-		final var billingRecordEntity = createbillingRecordEntity(); // BillingRecordMapper.toBillingRecordEntity(createbillingRecord());
+		final var billingRecordEntity = createbillingRecordEntity();
 
 		final var bean = ExternalInvoiceMapper.toCustomer(LEGAL_ID, billingRecordEntity);
 
@@ -145,7 +145,7 @@ class ExternalInvoiceMapperTest {
 
 	@Test
 	void toCustomerWhenMissingCounterpartData() {
-		final var billingRecordEntity = createbillingRecordEntity(); // BillingRecordMapper.toBillingRecordEntity(createbillingRecord());
+		final var billingRecordEntity = createbillingRecordEntity();
 		billingRecordEntity.getInvoice().getInvoiceRows().stream()
 			.map(InvoiceRowEntity::getAccountInformation)
 			.forEach(ac -> ac.setCounterpart(" "));
@@ -158,7 +158,7 @@ class ExternalInvoiceMapperTest {
 
 	@ParameterizedTest
 	@MethodSource("toCustomerWhenMissingVitalDataArgumentProvider")
-	void toCustomerWhenMissingVitalData(String legalId, RecipientEntity recipientEntity, String expectedMessage) {
+	void toCustomerWhenMissingVitalData(final String legalId, final RecipientEntity recipientEntity, final String expectedMessage) {
 
 		final var billingRecordEntity = BillingRecordEntity.create().withRecipient(recipientEntity);
 		final var e = assertThrows(ThrowableProblem.class, () -> ExternalInvoiceMapper.toCustomer(legalId, billingRecordEntity));
@@ -189,7 +189,7 @@ class ExternalInvoiceMapperTest {
 
 	@ParameterizedTest
 	@MethodSource("toInvoiceHeaderWhenMissingVitalDataArgumentProvider")
-	void toInvoiceHeaderWhenMissingVitalData(String legalId, InvoiceEntity invoiceEntity, String expectedMessage) {
+	void toInvoiceHeaderWhenMissingVitalData(final String legalId, final InvoiceEntity invoiceEntity, final String expectedMessage) {
 
 		final var billingRecordEntity = BillingRecordEntity.create().withInvoice(invoiceEntity);
 		final var e = assertThrows(ThrowableProblem.class, () -> ExternalInvoiceMapper.toInvoiceHeader(legalId, billingRecordEntity));
@@ -220,7 +220,7 @@ class ExternalInvoiceMapperTest {
 
 	@ParameterizedTest
 	@MethodSource("toInvoiceRowWhenMissingVitalDataArgumentProvider")
-	void toInvoiceRowWhenMissingVitalData(String legalId, InvoiceRowEntity invoiceRowEntity, String expectedMessage) {
+	void toInvoiceRowWhenMissingVitalData(final String legalId, final InvoiceRowEntity invoiceRowEntity, final String expectedMessage) {
 
 		final var e = assertThrows(ThrowableProblem.class, () -> ExternalInvoiceMapper.toInvoiceRow(legalId, invoiceRowEntity));
 
@@ -270,7 +270,7 @@ class ExternalInvoiceMapperTest {
 
 	@ParameterizedTest
 	@MethodSource("toInvoiceAccountingRowWhenMissingVitalDataArgumentProvider")
-	void toInvoiceAccountingRowWhenMissingVitalData(InvoiceRowEntity invoiceRowEntity, String expectedMessage) {
+	void toInvoiceAccountingRowWhenMissingVitalData(final InvoiceRowEntity invoiceRowEntity, final String expectedMessage) {
 
 		final var e = assertThrows(ThrowableProblem.class, () -> ExternalInvoiceMapper.toInvoiceAccountingRow(invoiceRowEntity));
 
@@ -327,7 +327,7 @@ class ExternalInvoiceMapperTest {
 		return billingRecordEntity;
 	}
 
-	private static InvoiceEntity createInvoiceEntity(BillingRecordEntity billingRecordEntity) {
+	private static InvoiceEntity createInvoiceEntity(final BillingRecordEntity billingRecordEntity) {
 		final var invoiceEntity = InvoiceEntity.create()
 			.withBillingRecord(billingRecordEntity)
 			.withCustomerId(CUSTOMER_ID)
@@ -343,7 +343,7 @@ class ExternalInvoiceMapperTest {
 		return invoiceEntity.withInvoiceRows(List.of(createInvoiceRowEntity(1, invoiceEntity), createInvoiceRowEntity(2, invoiceEntity)));
 	}
 
-	private static InvoiceRowEntity createInvoiceRowEntity(int id, InvoiceEntity invoiceEntity) {
+	private static InvoiceRowEntity createInvoiceRowEntity(final int id, final InvoiceEntity invoiceEntity) {
 		final var invoiceRowEntity = InvoiceRowEntity.create()
 			.withAccountInformation(createAccountInformationEmbeddable())
 			.withCostPerUnit(COST_PER_UNIT)
@@ -359,7 +359,7 @@ class ExternalInvoiceMapperTest {
 			createDescriptionEntity(3, invoiceRowEntity, DETAILED, DETAILED_DESCRIPTION_2)));
 	}
 
-	private static DescriptionEntity createDescriptionEntity(int id, InvoiceRowEntity invoiceRowEntity, DescriptionType type, String text) {
+	private static DescriptionEntity createDescriptionEntity(final int id, final InvoiceRowEntity invoiceRowEntity, final DescriptionType type, final String text) {
 		return DescriptionEntity.create()
 			.withId(id)
 			.withInvoiceRow(invoiceRowEntity)
@@ -379,7 +379,7 @@ class ExternalInvoiceMapperTest {
 			.withSubaccount(SUBACCOUNT);
 	}
 
-	private static RecipientEntity createRecipientEntity(BillingRecordEntity billingRecordEntity) {
+	private static RecipientEntity createRecipientEntity(final BillingRecordEntity billingRecordEntity) {
 		return RecipientEntity.create()
 			.withAddressDetails(createAddressDetailsEmbeddable())
 			.withBillingRecord(billingRecordEntity)
