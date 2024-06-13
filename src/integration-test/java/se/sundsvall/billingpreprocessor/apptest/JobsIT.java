@@ -15,7 +15,6 @@ import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.E
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.INTERNAL;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
@@ -63,7 +62,7 @@ class JobsIT extends AbstractAppTest {
 		.withCommand("user:pass:1001::upload");
 
 	@DynamicPropertySource
-	static void registerProperties(DynamicPropertyRegistry registry) throws IOException {
+	static void registerProperties(final DynamicPropertyRegistry registry) throws IOException {
 		SFTP_SERVER.start();
 		SFTP_SERVER.followOutput(new Slf4jLogConsumer(LOGGER));
 
@@ -133,12 +132,12 @@ class JobsIT extends AbstractAppTest {
 	}
 
 	@AfterAll
-	static void tearDown() throws IOException {
+	static void tearDown() {
 		SFTP_SERVER.stop();
 	}
 
-	private String getResource(final String filePath) throws IOException, URISyntaxException {
-		var path = getFile(getTestDirectoryPath() + filePath).toPath();
+	private String getResource(final String filePath) throws IOException {
+		final var path = getFile(getTestDirectoryPath() + filePath).toPath();
 		return readString(path, StandardCharsets.UTF_8)
 			.replaceAll(System.lineSeparator(), unescapeJava(properties.recordTerminator()));
 	}

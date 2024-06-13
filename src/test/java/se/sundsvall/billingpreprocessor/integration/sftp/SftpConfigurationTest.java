@@ -9,6 +9,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Vector;
 
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
+import com.jcraft.jsch.SftpException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -23,12 +28,6 @@ import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.output.Slf4jLogConsumer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.utility.MountableFile;
-
-import com.jcraft.jsch.ChannelSftp;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
-import com.jcraft.jsch.SftpException;
 
 @ActiveProfiles("junit")
 @SpringBootTest
@@ -45,7 +44,7 @@ class SftpConfigurationTest {
 	static {
 		try {
 			TEST_FILE = Files.createTempFile("TEST", ".txt");
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
@@ -58,7 +57,7 @@ class SftpConfigurationTest {
 		.withCommand("user:pass:1001::upload");
 
 	@DynamicPropertySource
-	static void registerProperties(DynamicPropertyRegistry registry) throws IOException {
+	static void registerProperties(final DynamicPropertyRegistry registry) throws IOException {
 		SFTP_SERVER.start();
 		SFTP_SERVER.followOutput(new Slf4jLogConsumer(LOGGER));
 
@@ -75,7 +74,7 @@ class SftpConfigurationTest {
 	}
 
 	@Test
-	void testUpload() throws InterruptedException, IOException, JSchException, SftpException {
+	void testUpload() throws IOException, JSchException, SftpException {
 		final var resource = new ByteArrayResource(Files.readAllBytes(TEST_FILE));
 		final var channel = getSftpChannel();
 
@@ -92,7 +91,7 @@ class SftpConfigurationTest {
 
 	private ChannelSftp getSftpChannel() throws JSchException {
 		final var jsch = new JSch();
-		Session jschSession = jsch.getSession(properties.user(), properties.host(), properties.port());
+		final Session jschSession = jsch.getSession(properties.user(), properties.host(), properties.port());
 		jschSession.setPassword(properties.password());
 		jschSession.setConfig("StrictHostKeyChecking", "no");
 		jschSession.connect();

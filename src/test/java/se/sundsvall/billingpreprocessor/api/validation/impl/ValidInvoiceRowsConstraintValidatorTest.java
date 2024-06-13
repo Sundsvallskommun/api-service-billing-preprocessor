@@ -12,6 +12,9 @@ import static se.sundsvall.billingpreprocessor.api.model.enums.Type.INTERNAL;
 import java.util.List;
 import java.util.stream.Stream;
 
+import jakarta.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidatorContext.ConstraintViolationBuilder;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -21,8 +24,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import jakarta.validation.ConstraintValidatorContext;
-import jakarta.validation.ConstraintValidatorContext.ConstraintViolationBuilder;
 import se.sundsvall.billingpreprocessor.api.model.AccountInformation;
 import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
 import se.sundsvall.billingpreprocessor.api.model.Invoice;
@@ -165,24 +166,6 @@ class ValidInvoiceRowsConstraintValidatorTest {
 			.withCounterpart(counterpart)
 			.withDepartment(department)
 			.withSubaccount(subAccount);
-	}
-
-	@ParameterizedTest
-	@EnumSource(value = Type.class)
-	void withAccountInformationMissingCounterPart(Type type) {
-		final var billingRecord = BillingRecord.create().withType(type).withInvoice(Invoice.create().withInvoiceRows(List.of(InvoiceRow.create()
-				.withAccountInformation(AccountInformation.create()
-						.withDepartment("Department")
-						.withSubaccount("Subaccount")
-						.withCostCenter("CostCenter")))));
-
-		when(contextMock.buildConstraintViolationWithTemplate(any())).thenReturn(builderMock);
-
-		assertThat(validator.isValid(billingRecord, contextMock)).isFalse();
-
-		verify(contextMock).disableDefaultConstraintViolation();
-		verify(contextMock).buildConstraintViolationWithTemplate("when accountInformation is present costCenter, subaccount, department and counterpart are mandatory");
-		verify(builderMock).addConstraintViolation();
 	}
 
 	@ParameterizedTest

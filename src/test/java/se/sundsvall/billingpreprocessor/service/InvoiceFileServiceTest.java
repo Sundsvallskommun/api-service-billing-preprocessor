@@ -421,7 +421,7 @@ class InvoiceFileServiceTest {
 	}
 
 	@Test
-	void createBillingFilesWhenNoCorrespondingCreatorForTypeExists() throws Exception {
+	void createBillingFilesWhenNoCorrespondingCreatorForTypeExists() {
 		// Arrange
 		final var entity = createBillingRecordEntity(randomUUID().toString(), EXTERNAL);
 
@@ -445,7 +445,7 @@ class InvoiceFileServiceTest {
 	}
 
 	@Test
-	void createBillingFilesWhenNoCorrespondingCreatorForCategoryExists() throws Exception {
+	void createBillingFilesWhenNoCorrespondingCreatorForCategoryExists() {
 		// Arrange
 		final var entity = createBillingRecordEntity(randomUUID().toString(), EXTERNAL);
 
