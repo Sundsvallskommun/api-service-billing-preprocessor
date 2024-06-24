@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>se.sundsvall.dept44</groupId>
 		<artifactId>dept44-service-parent</artifactId>
-		<version>5.0.1</version>
+		<version>5.0.2</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>se.sundsvall</groupId>
@@ -86,7 +86,6 @@
 			<artifactId>shedlock-provider-jdbc-template</artifactId>
 			<version>${shedlock.version}</version>
 		</dependency>
-
 		<!-- Test -->
 		<dependency>
 			<groupId>se.sundsvall.dept44</groupId>
@@ -109,7 +108,6 @@
 			<version>${com.jcraft.version}</version>
 			<scope>test</scope>
 		</dependency>
-
 	</dependencies>
 	<build>
 		<plugins>
