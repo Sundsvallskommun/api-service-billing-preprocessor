@@ -46,8 +46,8 @@ import se.sundsvall.billingpreprocessor.integration.db.model.enums.Type;
 
 @ExtendWith(MockitoExtension.class)
 class BillingRecordServiceTest {
-	private final static String ID = randomUUID().toString();
-	private final static String CATEGORY = "ACCESS_CARD";
+	private static final String ID = randomUUID().toString();
+	private static final String CATEGORY = "ACCESS_CARD";
 
 	@Mock
 	private BillingRecordRepository billingRecordRepositoryMock;
