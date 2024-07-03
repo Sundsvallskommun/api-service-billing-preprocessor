@@ -66,7 +66,7 @@ class BillingRecordRepositoryTest {
 	private static final String STANDARD_TEXT = "standardText";
 	private static final String DETAILED_TEXT = "detailedText";
 	private static final Float COST_PER_UNIT = 13.37f;
-	private static final Integer QUANTITY = 10;
+	private static final Float QUANTITY = 10.0f;
 	private static final Float TOTAL_ROW_AMOUNT = COST_PER_UNIT * QUANTITY;
 	private static final String VAT_CODE = "06";
 	private static final String CUSTOMER_ID = "customerId";

@@ -32,7 +32,7 @@ class InvoiceRowTest {
 		final var costPerUnit = new Random().nextFloat();
 		final var descriptions = List.of("description");
 		final var detailedDescriptions = List.of("detailedDescription");
-		final var quantity = 2;
+		final var quantity = 2f;
 		final var totalAmount = costPerUnit * quantity;
 		final var vatCode = "vatCode";
 

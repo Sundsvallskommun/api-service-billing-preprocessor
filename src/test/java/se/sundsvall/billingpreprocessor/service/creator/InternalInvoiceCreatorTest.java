@@ -52,7 +52,7 @@ class InternalInvoiceCreatorTest {
 	// Invoice row constants
 	private static final float COST_PER_UNIT = 1500f;
 	private static final String DESCRIPTION = "Uppdrag: ABC-123";
-	private static final int QUANTITY = 1;
+	private static final float QUANTITY = 1f;
 
 	// Account information constants
 	private static final String ACCURAL_KEY = "117";

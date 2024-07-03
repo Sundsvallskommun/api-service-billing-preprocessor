@@ -84,7 +84,7 @@ public class InternalInvoiceMapper {
 		return InvoiceRow.create()
 			.withDescription(ofNullable(extractDescription(invoiceRowEntity)).orElseThrow(createInternalServerErrorProblem(ERROR_DESCRIPTION_NOT_PRESENT)))
 			.withCostPerUnit(invoiceRowEntity.getCostPerUnit())
-			.withQuantity(ofNullable(invoiceRowEntity.getQuantity()).map(Integer::floatValue).orElse(null))
+			.withQuantity(invoiceRowEntity.getQuantity())
 			.withTotalAmount(ofNullable(invoiceRowEntity.getTotalAmount()).orElseThrow(createInternalServerErrorProblem(ERROR_TOTAL_AMOUNT_NOT_PRESENT)));
 	}
 

@@ -48,7 +48,7 @@ public class InvoiceRowEntity implements Serializable {
 	private Float costPerUnit;
 
 	@Column(name = "quantity")
-	private Integer quantity;
+	private Float quantity;
 
 	@Embedded
 	private AccountInformationEmbeddable accountInformation;
@@ -137,15 +137,15 @@ public class InvoiceRowEntity implements Serializable {
 		return this;
 	}
 
-	public Integer getQuantity() {
+	public Float getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(Integer quantity) {
+	public void setQuantity(Float quantity) {
 		this.quantity = quantity;
 	}
 
-	public InvoiceRowEntity withQuantity(Integer quantity) {
+	public InvoiceRowEntity withQuantity(Float quantity) {
 		this.quantity = quantity;
 		return this;
 	}

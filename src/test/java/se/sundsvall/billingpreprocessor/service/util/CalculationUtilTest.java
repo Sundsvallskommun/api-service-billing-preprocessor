@@ -15,8 +15,8 @@ import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;
 
 class CalculationUtilTest {
-	private static final float COST_PER_UNIT = 123;
-	private static final int QUANTITY = 45;
+	private static final float COST_PER_UNIT = 123f;
+	private static final float QUANTITY = 45f;
 	private static final int ROW_AMOUNT = 10;
 
 	@Test

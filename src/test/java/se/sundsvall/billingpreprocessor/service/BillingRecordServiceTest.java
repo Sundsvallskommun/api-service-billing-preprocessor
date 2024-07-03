@@ -328,18 +328,18 @@ class BillingRecordServiceTest {
 		return List.of(
 			InvoiceRow.create()
 				.withDescriptions(List.of("Ordernummer: azi-330c-3fne-33"))
-				.withQuantity(0),
+				.withQuantity(0f),
 			InvoiceRow.create()
 				.withDescriptions(List.of("Beställare: joh01doe 22940338"))
-				.withQuantity(0),
+				.withQuantity(0f),
 			InvoiceRow.create()
 				.withDescriptions(List.of("Användare: Johan Doe joh01doe"))
-				.withQuantity(0),
+				.withQuantity(0f),
 			InvoiceRow.create()
 				.withDescriptions(List.of("Passerkort utan foto"))
 				.withAccountInformation(createAccountInformationInstance())
 				.withCostPerUnit(150f)
-				.withQuantity(1));
+				.withQuantity(1f));
 	}
 
 	private static AccountInformation createAccountInformationInstance() {

@@ -9,8 +9,9 @@
 	</parent>
 	<groupId>se.sundsvall</groupId>
 	<artifactId>api-service-billing-preprocessor</artifactId>
-	<version>1.4</version>
+	<version>1.5</version>
 	<name>api-service-billing-preprocessor</name>
+
 	<properties>
   		<!-- Service properties -->
 		<spring-filter.version>3.1.7</spring-filter.version>

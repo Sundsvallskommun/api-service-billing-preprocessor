@@ -56,7 +56,7 @@
 
     create table invoice_row (
         cost_per_unit float(23),
-        quantity integer,
+        quantity float(23),
         total_amount float(23),
         id bigint not null auto_increment,
         accural_key varchar(255),

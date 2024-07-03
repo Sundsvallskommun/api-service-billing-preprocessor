@@ -67,7 +67,7 @@ class BillingRecordMapperTest {
 	private static final String DETAILED_DESCRIPTION_1 = "detailed_description_1";
 	private static final String DETAILED_DESCRIPTION_2 = "detailed_description_2";
 	private static final List<String> DETAILED_DESCRIPTIONS = List.of(DETAILED_DESCRIPTION_1, DETAILED_DESCRIPTION_2);
-	private static final int QUANTITY = 10;
+	private static final float QUANTITY = 10f;
 	private static final String VAT_CODE = "vatCode";
 
 	// Account information constants

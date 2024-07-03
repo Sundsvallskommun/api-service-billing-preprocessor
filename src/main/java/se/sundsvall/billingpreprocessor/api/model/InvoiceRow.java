@@ -33,8 +33,8 @@ public class InvoiceRow {
 	@Schema(description = "Cost per unit", example = "155.55")
 	private Float costPerUnit;
 
-	@Schema(description = "Total amount of units", example = "9")
-	private Integer quantity;
+	@Schema(description = "Total amount of units", example = "9.0")
+	private Float quantity;
 
 	@Schema(implementation = AccountInformation.class)
 	@Valid
@@ -109,15 +109,15 @@ public class InvoiceRow {
 		return this;
 	}
 
-	public Integer getQuantity() {
+	public Float getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(Integer quantity) {
+	public void setQuantity(Float quantity) {
 		this.quantity = quantity;
 	}
 
-	public InvoiceRow withQuantity(Integer quantity) {
+	public InvoiceRow withQuantity(Float quantity) {
 		this.quantity = quantity;
 		return this;
 	}

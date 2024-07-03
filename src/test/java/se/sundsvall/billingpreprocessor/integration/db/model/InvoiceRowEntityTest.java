@@ -33,7 +33,7 @@ class InvoiceRowEntityTest {
 		final var description = DescriptionEntity.create();
 		final var id = 1234L;
 		final var invoice = InvoiceEntity.create();
-		final var quantity = 13;
+		final var quantity = 13.0f;
 		final var totalAmount = costPerUnit * quantity;
 		final var vatCode = "vatCode";
 
