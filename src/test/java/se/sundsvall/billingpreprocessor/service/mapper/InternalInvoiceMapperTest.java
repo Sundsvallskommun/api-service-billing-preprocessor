@@ -59,7 +59,7 @@ class InternalInvoiceMapperTest {
 	private static final float COST_PER_UNIT = 123.45f;
 	private static final String DETAILED_DESCRIPTION_1 = "detailed_description_1";
 	private static final String DETAILED_DESCRIPTION_2 = "detailed_description_2";
-	private static final int QUANTITY = 10;
+	private static final float QUANTITY = 10f;
 	private static final String VAT_CODE = "vatCode";
 
 	// Account information constants

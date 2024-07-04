@@ -86,7 +86,7 @@ public class ExternalInvoiceMapper {
 	}
 
 	/**
-	 * Method for mapping invoice data to a invoice header row for an external invoice file
+	 * Method for mapping invoice data to an invoice header row for an external invoice file
 	 * 
 	 * @param legalId             legal id of invoice recipient
 	 * @param billingRecordEntity entity representing the billingRecordEntity
@@ -104,7 +104,7 @@ public class ExternalInvoiceMapper {
 	}
 
 	/**
-	 * Method for mapping invoice row data to a invoice row for an external invoice file
+	 * Method for mapping invoice row data to an invoice row for an external invoice file
 	 * 
 	 * @param legalId          legal id of invoice recipient
 	 * @param invoiceRowEntity entity representing the invoiceRowEntity
@@ -116,13 +116,13 @@ public class ExternalInvoiceMapper {
 			.withLegalId(ofNullable(legalId).orElseThrow(createInternalServerErrorProblem(ERROR_LEGALID_NOT_PRESENT)))
 			.withCostPerUnit(invoiceRowEntity.getCostPerUnit())
 			.withText(ofNullable(extractDescription(invoiceRowEntity)).orElseThrow(createInternalServerErrorProblem(ERROR_DESCRIPTION_NOT_PRESENT)))
-			.withQuantity(ofNullable(invoiceRowEntity.getQuantity()).map(Integer::floatValue).orElse(null))
+			.withQuantity(invoiceRowEntity.getQuantity())
 			.withTotalAmount(invoiceRowEntity.getTotalAmount())
 			.withVatCode(ofNullable(invoiceRowEntity.getVatCode()).orElseThrow(createInternalServerErrorProblem(ERROR_VAT_CODE_NOT_PRESENT)));
 	}
 
 	/**
-	 * Method for mapping invoice row data to a invoice description row for an external invoice file
+	 * Method for mapping invoice row data to an invoice description row for an external invoice file
 	 * 
 	 * @param legalId          legal id of invoice recipient
 	 * @param invoiceRowEntity entity representing the invoiceRowEntity
@@ -138,7 +138,7 @@ public class ExternalInvoiceMapper {
 	}
 
 	/**
-	 * Method for mapping invoice row data to a invoice accounting row for an external invoice file
+	 * Method for mapping invoice row data to an invoice accounting row for an external invoice file
 	 * 
 	 * @param invoiceRowEntity entity representing the invoiceRowEntity
 	 * @return InvoiceAccountingRow for external invoice files representing provided data
@@ -159,7 +159,7 @@ public class ExternalInvoiceMapper {
 	}
 
 	/**
-	 * Method for mapping invoice data to a invoice footer row for an external invoice file
+	 * Method for mapping invoice data to an invoice footer row for an external invoice file
 	 * 
 	 * @param billingRecordEntity entity representing the billingRecordEntity
 	 * @return InvoiceFooterRow for external invoice files representing provided data

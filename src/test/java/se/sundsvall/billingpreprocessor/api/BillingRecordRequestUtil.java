@@ -65,7 +65,7 @@ public class BillingRecordRequestUtil {
 			.withCostPerUnit(123f)
 			.withDescriptions(List.of(validInvoiceRows ? "description" : "a longer description than thirty characters"))
 			.withDetailedDescriptions(validInvoiceRows && INTERNAL == type ? null : List.of("detailedDescription"))
-			.withQuantity(1)
+			.withQuantity(1f)
 			.withTotalAmount(validInvoiceRows ? null : 123f)
 			.withVatCode(validInvoiceRows ? INTERNAL == type ? null : "00" : INTERNAL == type ? "00" : null);
 	}

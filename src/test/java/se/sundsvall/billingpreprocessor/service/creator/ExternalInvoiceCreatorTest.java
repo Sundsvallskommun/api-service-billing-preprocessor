@@ -70,7 +70,7 @@ class ExternalInvoiceCreatorTest {
 	// Invoice row constants
 	private static final float COST_PER_UNIT = 1395f;
 	private static final String DETAILED_DESCRIPTION = "En mer detaljerad fakturaradsbeskrivning";
-	private static final int QUANTITY = 1;
+	private static final float QUANTITY = 1f;
 	private static final String VAT_CODE = "25";
 
 	// Account information constants

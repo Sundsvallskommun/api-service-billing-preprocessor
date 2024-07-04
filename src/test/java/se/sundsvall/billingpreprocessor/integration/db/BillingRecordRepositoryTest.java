@@ -66,7 +66,7 @@ class BillingRecordRepositoryTest {
 	private static final String STANDARD_TEXT = "standardText";
 	private static final String DETAILED_TEXT = "detailedText";
 	private static final Float COST_PER_UNIT = 13.37f;
-	private static final Integer QUANTITY = 10;
+	private static final Float QUANTITY = 10.0f;
 	private static final Float TOTAL_ROW_AMOUNT = COST_PER_UNIT * QUANTITY;
 	private static final String VAT_CODE = "06";
 	private static final String CUSTOMER_ID = "customerId";
@@ -178,20 +178,20 @@ class BillingRecordRepositoryTest {
 	}
 
 	private static void verifyRecipient(final BillingRecordEntity billingRecord) {
-		final var Recipient = billingRecord.getRecipient();
-		assertThat(Recipient.getAddressDetails()).isNotNull();
-		assertThat(Recipient.getAddressDetails().getCareOf()).isEqualTo(CARE_OF);
-		assertThat(Recipient.getAddressDetails().getCity()).isEqualTo(CITY);
-		assertThat(Recipient.getAddressDetails().getStreet()).isEqualTo(STREET);
-		assertThat(Recipient.getAddressDetails().getPostalCode()).isEqualTo(POSTAL_CODE);
-		assertThat(Recipient.getBillingRecord()).isEqualTo(billingRecord);
-		assertThat(Recipient.getFirstName()).isEqualTo(FIRST_NAME);
-		assertThat(Recipient.getId()).isEqualTo(billingRecord.getId());
-		assertThat(Recipient.getLastName()).isEqualTo(LAST_NAME);
-		assertThat(Recipient.getOrganizationName()).isEqualTo(ORGANIZATION_NAME);
-		assertThat(Recipient.getPartyId()).isEqualTo(PARTY_ID);
-		assertThat(Recipient.getLegalId()).isEqualTo(LEGAL_ID);
-		assertThat(Recipient.getUserId()).isEqualTo(USER_ID);
+		final var recipient = billingRecord.getRecipient();
+		assertThat(recipient.getAddressDetails()).isNotNull();
+		assertThat(recipient.getAddressDetails().getCareOf()).isEqualTo(CARE_OF);
+		assertThat(recipient.getAddressDetails().getCity()).isEqualTo(CITY);
+		assertThat(recipient.getAddressDetails().getStreet()).isEqualTo(STREET);
+		assertThat(recipient.getAddressDetails().getPostalCode()).isEqualTo(POSTAL_CODE);
+		assertThat(recipient.getBillingRecord()).isEqualTo(billingRecord);
+		assertThat(recipient.getFirstName()).isEqualTo(FIRST_NAME);
+		assertThat(recipient.getId()).isEqualTo(billingRecord.getId());
+		assertThat(recipient.getLastName()).isEqualTo(LAST_NAME);
+		assertThat(recipient.getOrganizationName()).isEqualTo(ORGANIZATION_NAME);
+		assertThat(recipient.getPartyId()).isEqualTo(PARTY_ID);
+		assertThat(recipient.getLegalId()).isEqualTo(LEGAL_ID);
+		assertThat(recipient.getUserId()).isEqualTo(USER_ID);
 	}
 
 	@Test

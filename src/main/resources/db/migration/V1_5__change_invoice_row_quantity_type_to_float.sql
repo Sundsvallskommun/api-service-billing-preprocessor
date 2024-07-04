@@ -1,0 +1,1 @@
+alter table invoice_row modify quantity float(23);
