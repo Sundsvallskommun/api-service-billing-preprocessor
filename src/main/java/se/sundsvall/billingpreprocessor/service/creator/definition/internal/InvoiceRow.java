@@ -6,6 +6,7 @@ import org.beanio.annotation.Field;
 import org.beanio.annotation.Fields;
 import org.beanio.annotation.Record;
 
+import org.beanio.builder.Align;
 import se.sundsvall.billingpreprocessor.service.creator.config.InternalInvoiceFloatTypeHandler;
 
 @Record
@@ -17,13 +18,13 @@ public class InvoiceRow {
 	@Field(at = 2, length = 30)
 	private String description;
 
-	@Field(at = 54, length = 7, handlerName = InternalInvoiceFloatTypeHandler.NAME)
+	@Field(at = 54, length = 7, handlerName = InternalInvoiceFloatTypeHandler.NAME, align = Align.RIGHT)
 	private Float quantity;
 
-	@Field(at = 61, length = 13, handlerName = InternalInvoiceFloatTypeHandler.NAME)
+	@Field(at = 61, length = 13, handlerName = InternalInvoiceFloatTypeHandler.NAME, align = Align.RIGHT)
 	private Float costPerUnit;
 
-	@Field(at = 89, length = 15, handlerName = InternalInvoiceFloatTypeHandler.NAME)
+	@Field(at = 89, length = 15, handlerName = InternalInvoiceFloatTypeHandler.NAME, align = Align.RIGHT)
 	private Float totalAmount;
 
 	public static InvoiceRow create() {
