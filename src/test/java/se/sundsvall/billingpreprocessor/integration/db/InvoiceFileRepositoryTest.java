@@ -35,6 +35,8 @@ import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceFileEntity;
 })
 class InvoiceFileRepositoryTest {
 
+	private static final String MUNICIPALITY_ID = "2281";
+
 	@Autowired
 	private InvoiceFileRepository repository;
 
@@ -45,6 +47,7 @@ class InvoiceFileRepositoryTest {
 		final var content = "content";
 		final var invoiceFileEntity = InvoiceFileEntity.create()
 			.withContent(content)
+			.withMunicipalityId(MUNICIPALITY_ID)
 			.withName("file.txt");
 
 		// Act
@@ -65,10 +68,12 @@ class InvoiceFileRepositoryTest {
 		// Arrange
 		final var invoiceFileEntity1 = InvoiceFileEntity.create()
 			.withName("file.txt")
+			.withMunicipalityId(MUNICIPALITY_ID)
 			.withStatus(GENERATED);
 
 		final var invoiceFileEntity2 = InvoiceFileEntity.create()
 			.withName("file.txt")
+			.withMunicipalityId(MUNICIPALITY_ID)
 			.withStatus(GENERATED);
 
 		// Save first entity.
@@ -80,10 +85,10 @@ class InvoiceFileRepositoryTest {
 	}
 
 	@Test
-	void findByStatus() {
+	void findByStatusAndMunicipalityId() {
 
 		// Act
-		final var result = repository.findByStatus(GENERATED);
+		final var result = repository.findByStatusAndMunicipalityId(GENERATED, MUNICIPALITY_ID);
 
 		// Assert
 		assertThat(result)
@@ -96,10 +101,10 @@ class InvoiceFileRepositoryTest {
 	}
 
 	@Test
-	void findByStatusIn() {
+	void findByStatusAndMunicipalityIdIn() {
 
 		// Act
-		final var result = repository.findByStatusIn(List.of(GENERATED, SEND_FAILED));
+		final var result = repository.findByStatusInAndMunicipalityId(List.of(GENERATED, SEND_FAILED), MUNICIPALITY_ID);
 
 		// Assert
 		assertThat(result)

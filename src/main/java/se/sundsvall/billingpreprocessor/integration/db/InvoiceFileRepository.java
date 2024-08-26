@@ -14,7 +14,7 @@ import se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileSt
 @CircuitBreaker(name = "InvoiceFileRepository")
 public interface InvoiceFileRepository extends JpaRepository<InvoiceFileEntity, Long>, JpaSpecificationExecutor<InvoiceFileEntity> {
 
-	List<InvoiceFileEntity> findByStatus(InvoiceFileStatus status);
+	List<InvoiceFileEntity> findByStatusAndMunicipalityId(InvoiceFileStatus status, String municipalityId);
 
-	List<InvoiceFileEntity> findByStatusIn(List<InvoiceFileStatus> statuses);
+	List<InvoiceFileEntity> findByStatusInAndMunicipalityId(List<InvoiceFileStatus> statuses, String municipalityId);
 }

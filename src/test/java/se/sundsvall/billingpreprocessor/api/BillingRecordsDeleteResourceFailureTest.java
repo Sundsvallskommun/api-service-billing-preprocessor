@@ -22,7 +22,7 @@ import se.sundsvall.billingpreprocessor.service.BillingRecordService;
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("junit")
 class BillingRecordsDeleteResourceFailureTest {
-	private static final String PATH = "/billingrecords/{id}";
+	private static final String PATH = "/{municipalityId}/billingrecords/{id}";
 	
 	@Autowired
 	private WebTestClient webTestClient;
@@ -33,7 +33,7 @@ class BillingRecordsDeleteResourceFailureTest {
 	@Test
 	void updateBillingRecordWithInvalidUuid() {
 		// Call
-		final var response = webTestClient.delete().uri(builder -> builder.path(PATH).build(Map.of("id", "invalid-uuid")))
+		final var response = webTestClient.delete().uri(builder -> builder.path(PATH).build(Map.of("id", "invalid-uuid", "municipalityId", "2281")))
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectBody(ConstraintViolationProblem.class)
@@ -45,6 +45,26 @@ class BillingRecordsDeleteResourceFailureTest {
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations()).extracting(Violation::getField, Violation::getMessage).containsExactlyInAnyOrder(
 			tuple("deleteBillingRecord.id", "not a valid UUID"));
+
+		// Verification
+		verifyNoInteractions(serviceMock);
+	}
+
+	@Test
+	void updateBillingRecordWithInvalidMunicipalityId() {
+		// Call
+		final var response = webTestClient.delete().uri(builder -> builder.path(PATH).build(Map.of("id", "c9242a01-e7bd-4f59-b4cd-66210c427904", "municipalityId", "666")))
+			.exchange()
+			.expectStatus().isBadRequest()
+			.expectBody(ConstraintViolationProblem.class)
+			.returnResult()
+			.getResponseBody();
+
+		assertThat(response).isNotNull();
+		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
+		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
+		assertThat(response.getViolations()).extracting(Violation::getField, Violation::getMessage).containsExactlyInAnyOrder(
+			tuple("deleteBillingRecord.municipalityId", "not a valid municipality ID"));
 
 		// Verification
 		verifyNoInteractions(serviceMock);

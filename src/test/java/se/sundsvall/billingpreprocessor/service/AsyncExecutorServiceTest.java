@@ -23,6 +23,8 @@ import se.sundsvall.dept44.requestid.RequestId;
 @ExtendWith(MockitoExtension.class)
 class AsyncExecutorServiceTest {
 
+	private static final String MUNICIPALITY_ID = "municipalityId";
+
 	@Mock
 	private InvoiceFileService invoiceFileServiceMock;
 
@@ -49,10 +51,10 @@ class AsyncExecutorServiceTest {
 
 		// Mock static RequestId to enable spy and to verify that static method is being called
 		try (MockedStatic<RequestId> requestIdMock = Mockito.mockStatic(RequestId.class)) {
-			service.createFiles(uuid);
+			service.createFiles(uuid, MUNICIPALITY_ID);
 
 			requestIdMock.verify(() -> RequestId.init(uuid));
-			verify(invoiceFileServiceMock).createFiles();
+			verify(invoiceFileServiceMock).createFiles(MUNICIPALITY_ID);
 			verifyNoMoreInteractions(invoiceFileServiceMock);
 		}
 	}
@@ -63,10 +65,10 @@ class AsyncExecutorServiceTest {
 
 		// Mock static RequestId to enable spy and to verify that static method is being called
 		try (MockedStatic<RequestId> requestIdMock = Mockito.mockStatic(RequestId.class)) {
-			service.transferFiles(uuid);
+			service.transferFiles(uuid, MUNICIPALITY_ID);
 
 			requestIdMock.verify(() -> RequestId.init(uuid));
-			verify(invoiceFileServiceMock).transferFiles();
+			verify(invoiceFileServiceMock).transferFiles(MUNICIPALITY_ID);
 			verifyNoMoreInteractions(invoiceFileServiceMock);
 		}
 	}

@@ -36,7 +36,7 @@ import se.sundsvall.billingpreprocessor.service.BillingRecordService;
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("junit")
 class BillingRecordsCreateResourceFailureTest {
-	private static final String PATH = "/billingrecords";
+	private static final String PATH = "/2281/billingrecords";
 
 	@Autowired
 	private WebTestClient webTestClient;
@@ -59,7 +59,7 @@ class BillingRecordsCreateResourceFailureTest {
 		assertThat(response.getTitle()).isEqualTo("Bad Request");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getDetail()).isEqualTo("Required request body is missing: public org.springframework.http.ResponseEntity<java.lang.Void> "
-			+ "se.sundsvall.billingpreprocessor.api.BillingRecordsResource.createBillingRecord(se.sundsvall.billingpreprocessor.api.model.BillingRecord)");
+			+ "se.sundsvall.billingpreprocessor.api.BillingRecordsResource.createBillingRecord(java.lang.String,se.sundsvall.billingpreprocessor.api.model.BillingRecord)");
 
 		// Verification
 		verifyNoInteractions(serviceMock);
@@ -275,6 +275,33 @@ class BillingRecordsCreateResourceFailureTest {
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations()).extracting(Violation::getField, Violation::getMessage).containsExactlyInAnyOrder(
 			tuple("billingRecord", "Street, postal code and city must all be present in recipient.addressDetails for EXTERNAL billing record"));
+
+		// Verification
+		verifyNoInteractions(serviceMock);
+	}
+
+	@Test
+	void createBillingRecordWithInvalidMunicipalityId() {
+		// Parameter values
+		final var request = createBillingRecordInstance(EXTERNAL, true)
+			.withInvoice(createInvoiceInstance(true, EXTERNAL).withInvoiceRows(List.of(createInvoiceRowInstance(true, EXTERNAL))))
+			.withRecipient(createRecipientInstance(true).withAddressDetails(createAddressDetailsInstance(true)));;
+
+		// Call
+		final var response = webTestClient.post().uri("/666/billingrecords")
+			.contentType(APPLICATION_JSON)
+			.bodyValue(request)
+			.exchange()
+			.expectStatus().isBadRequest()
+			.expectBody(ConstraintViolationProblem.class)
+			.returnResult()
+			.getResponseBody();
+
+		assertThat(response).isNotNull();
+		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
+		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
+		assertThat(response.getViolations()).extracting(Violation::getField, Violation::getMessage).containsExactlyInAnyOrder(
+			tuple("createBillingRecord.municipalityId", "not a valid municipality ID"));
 
 		// Verification
 		verifyNoInteractions(serviceMock);

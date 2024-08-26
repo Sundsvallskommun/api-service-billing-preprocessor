@@ -1,5 +1,6 @@
 package se.sundsvall.billingpreprocessor.service;
 
+import static org.zalando.problem.Status.BAD_REQUEST;
 import static se.sundsvall.billingpreprocessor.Constants.ERROR_INVOICE_FILE_GENERATION_FAILURE;
 import static se.sundsvall.billingpreprocessor.Constants.ERROR_INVOICE_FILE_TRANSFER_FAILURE;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileStatus.GENERATED;
@@ -21,15 +22,18 @@ import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.integration.file.remote.session.DelegatingSessionFactory;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
+import org.zalando.problem.Problem;
 import se.sundsvall.billingpreprocessor.integration.db.BillingRecordRepository;
 import se.sundsvall.billingpreprocessor.integration.db.InvoiceFileRepository;
 import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceFileEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.enums.Type;
 import se.sundsvall.billingpreprocessor.integration.sftp.SftpConfiguration.UploadGateway;
+import se.sundsvall.billingpreprocessor.integration.sftp.SftpPropertiesConfig;
 import se.sundsvall.billingpreprocessor.service.creator.InvoiceCreator;
 import se.sundsvall.billingpreprocessor.service.error.InvoiceFileError;
 
@@ -43,6 +47,8 @@ public class InvoiceFileService {
 	private final InvoiceFileConfigurationService invoiceFileConfigurationService;
 	private final MessagingService messagingService;
 	private final UploadGateway uploadGateway;
+	private final DelegatingSessionFactory<?> sessionFactory;
+	private final SftpPropertiesConfig sftpPropertiesConfig;
 
 	public InvoiceFileService(
 		BillingRecordRepository billingRecordRepository,
@@ -50,7 +56,9 @@ public class InvoiceFileService {
 		List<InvoiceCreator> invoiceCreators,
 		InvoiceFileConfigurationService invoiceFileConfigurationService,
 		MessagingService messagingService,
-		UploadGateway uploadGateway) {
+		UploadGateway uploadGateway,
+		DelegatingSessionFactory<?> sessionFactory,
+		SftpPropertiesConfig sftpPropertiesConfig) {
 
 		this.billingRecordRepository = billingRecordRepository;
 		this.invoiceFileRepository = invoiceFileRepository;
@@ -58,23 +66,32 @@ public class InvoiceFileService {
 		this.invoiceFileConfigurationService = invoiceFileConfigurationService;
 		this.messagingService = messagingService;
 		this.uploadGateway = uploadGateway;
+		this.sessionFactory = sessionFactory;
+		this.sftpPropertiesConfig = sftpPropertiesConfig;
 	}
 
-	public void transferFiles() {
-		final List<InvoiceFileError> errors = new ArrayList<>();
+	public void transferFiles(String municipalityId) {
+		if(!sftpPropertiesConfig.getMap().containsKey(municipalityId)) {
+			throw Problem.valueOf(BAD_REQUEST, String.format("File transfer for municipality id '%s' is not configured!", municipalityId));
+		}
+		try {
+			final List<InvoiceFileError> errors = new ArrayList<>();
+			sessionFactory.setThreadKey(municipalityId);
+			invoiceFileRepository.findByStatusInAndMunicipalityId(List.of(GENERATED, SEND_FAILED), municipalityId)
+				.forEach(fileEntity -> this.transferFile(fileEntity, sftpPropertiesConfig.getMap().get(municipalityId).getRemoteDir()).ifPresent(errors::add));
 
-		invoiceFileRepository.findByStatusIn(List.of(GENERATED, SEND_FAILED))
-			.forEach(fileEntity -> this.transferFile(fileEntity).ifPresent(errors::add));
-
-		if (!errors.isEmpty()) {
-			messagingService.sendTransferErrorMail(errors);
+			if (!errors.isEmpty()) {
+				messagingService.sendTransferErrorMail(errors);
+			}
+		} finally {
+			sessionFactory.clearThreadKey();
 		}
 	}
 
-	private Optional<InvoiceFileError> transferFile(InvoiceFileEntity fileEntity) {
+	private Optional<InvoiceFileError> transferFile(InvoiceFileEntity fileEntity, String remoteDir) {
 		try {
 			Charset encoding = Charset.forName(fileEntity.getEncoding());
-			uploadGateway.sendToSftp(new ByteArrayResource(fileEntity.getContent().getBytes(encoding)), fileEntity.getName());
+			uploadGateway.sendToSftp(new ByteArrayResource(fileEntity.getContent().getBytes(encoding)), fileEntity.getName(), remoteDir);
 			invoiceFileRepository.save(fileEntity
 				.withSent(OffsetDateTime.now())
 				.withStatus(SEND_SUCCESSFUL));
@@ -89,11 +106,11 @@ public class InvoiceFileService {
 	}
 
 	@Transactional
-	public void createFiles() {
-		final var billingRecords = new ArrayList<>(billingRecordRepository.findAllByStatus(APPROVED));
+	public void createFiles(String municipalityId) {
+		final var billingRecords = new ArrayList<>(billingRecordRepository.findAllByStatusAndMunicipalityId(APPROVED, municipalityId));
 
 		final var creationErrors = invoiceCreators.stream()
-			.map(creator -> processBillingRecords(billingRecords, creator))
+			.map(creator -> processBillingRecords(billingRecords, creator, municipalityId))
 			.flatMap(List::stream)
 			.toList();
 
@@ -102,7 +119,7 @@ public class InvoiceFileService {
 		}
 	}
 
-	private List<InvoiceFileError> processBillingRecords(List<BillingRecordEntity> billingRecords, InvoiceCreator invoiceCreator) {
+	private List<InvoiceFileError> processBillingRecords(List<BillingRecordEntity> billingRecords, InvoiceCreator invoiceCreator, String municipalityId) {
 		final List<InvoiceFileError> billingRecordProcessErrors = new ArrayList<>();
 		final List<InvoiceFileError> commonErrors = new ArrayList<>();
 
@@ -112,7 +129,7 @@ public class InvoiceFileService {
 
 			final var billingRecordsToProcess = filterByTypeAndCategory(billingRecords, type, category);
 			if (!billingRecordsToProcess.isEmpty()) {
-				billingRecords.removeAll(billingRecordsToProcess); // Remove processed records from the original list and send mejl if unprocessed records exists at end of execution
+				billingRecords.removeAll(billingRecordsToProcess); // Remove processed records from the original list and send mail if unprocessed records exists at end of execution
 
 				final var filename = invoiceFileConfigurationService.getInvoiceFileNameBy(type.name(), category);
 				final var encoding = invoiceFileConfigurationService.getEncoding(type.name(), category);
@@ -122,8 +139,9 @@ public class InvoiceFileService {
 				billingRecordsToProcess.forEach(billingRecord -> createBillingRecord(outputStream, billingRecord, invoiceCreator)
 					.ifPresent(billingRecordProcessErrors::add));
 
+
 				if (billingRecordsToProcess.size() > billingRecordProcessErrors.size()) { // At least one of the records should be successful for the file to be created
-					invoiceFileRepository.save(toInvoiceFileEntity(filename, type.name(), outputStream.toByteArray(), encoding));
+					invoiceFileRepository.save(toInvoiceFileEntity(filename, type.name(), outputStream.toByteArray(), encoding, municipalityId));
 				}
 			}
 

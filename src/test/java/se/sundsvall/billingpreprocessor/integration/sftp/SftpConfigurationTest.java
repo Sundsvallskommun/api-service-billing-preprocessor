@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.integration.file.remote.session.DelegatingSessionFactory;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -39,7 +40,10 @@ class SftpConfigurationTest {
 	private SftpConfiguration.UploadGateway gateway;
 
 	@Autowired
-	private SftpProperties properties;
+	private SftpPropertiesConfig properties;
+
+	@Autowired
+	private DelegatingSessionFactory<?> sessionFactory;
 	
 	static {
 		try {
@@ -62,9 +66,9 @@ class SftpConfigurationTest {
 		SFTP_SERVER.followOutput(new Slf4jLogConsumer(LOGGER));
 
 		final var key = readString(getFile("classpath:keys/ssh_host_rsa_key.pub").toPath());
-		registry.add("integration.sftp.host", SFTP_SERVER::getHost);
-		registry.add("integration.sftp.port", () -> SFTP_SERVER.getMappedPort(22));
-		registry.add("integration.sftp.knownHosts", () -> String.format("[%s]:%s %s", SFTP_SERVER.getHost(), SFTP_SERVER.getMappedPort(22), key));
+		registry.add("integration.sftp.municipalityIds.2281.host", SFTP_SERVER::getHost);
+		registry.add("integration.sftp.municipalityIds.2281.port", () -> SFTP_SERVER.getMappedPort(22));
+		registry.add("integration.sftp.municipalityIds.2281.knownHosts", () -> String.format("[%s]:%s %s", SFTP_SERVER.getHost(), SFTP_SERVER.getMappedPort(22), key));
 	}
 
 	@AfterAll
@@ -79,11 +83,13 @@ class SftpConfigurationTest {
 		final var channel = getSftpChannel();
 
 		try {
-			assertThat((Vector<?>) channel.ls(properties.remoteDir())).noneMatch(item -> item.toString().contains(TEST_FILE.getFileName().toString()));
+			assertThat((Vector<?>) channel.ls(properties.getMap().get("2281").getRemoteDir())).noneMatch(item -> item.toString().contains(TEST_FILE.getFileName().toString()));
 
-			gateway.sendToSftp(resource, TEST_FILE.toFile().getName());
+			sessionFactory.setThreadKey("2281");
+			gateway.sendToSftp(resource, TEST_FILE.toFile().getName(), properties.getMap().get("2281").getRemoteDir());
+			sessionFactory.clearThreadKey();
 
-			assertThat((Vector<?>) channel.ls(properties.remoteDir())).anyMatch(item -> item.toString().contains(TEST_FILE.getFileName().toString()));
+			assertThat((Vector<?>) channel.ls(properties.getMap().get("2281").getRemoteDir())).anyMatch(item -> item.toString().contains(TEST_FILE.getFileName().toString()));
 		} finally {
 			channel.disconnect();
 		}
@@ -91,8 +97,8 @@ class SftpConfigurationTest {
 
 	private ChannelSftp getSftpChannel() throws JSchException {
 		final var jsch = new JSch();
-		final Session jschSession = jsch.getSession(properties.user(), properties.host(), properties.port());
-		jschSession.setPassword(properties.password());
+		final Session jschSession = jsch.getSession(properties.getMap().get("2281").getUser(), properties.getMap().get("2281").getHost(), properties.getMap().get("2281").getPort());
+		jschSession.setPassword(properties.getMap().get("2281").getPassword());
 		jschSession.setConfig("StrictHostKeyChecking", "no");
 		jschSession.connect();
 

@@ -11,9 +11,10 @@ public final class InvoiceFileMapper {
 
 	private InvoiceFileMapper() {}
 
-	public static InvoiceFileEntity toInvoiceFileEntity(String name, String type, byte[] content, Charset fileEncoding) {
+	public static InvoiceFileEntity toInvoiceFileEntity(String name, String type, byte[] content, Charset fileEncoding, String municipalityId) {
 		final var entity = InvoiceFileEntity.create()
-			.withStatus(GENERATED);
+			.withStatus(GENERATED)
+			.withMunicipalityId(municipalityId);
 
 		ofNullable(name).ifPresent(entity::setName);
 		ofNullable(type).ifPresent(entity::setType);

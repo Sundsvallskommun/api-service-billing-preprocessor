@@ -6,6 +6,7 @@
         approved_by varchar(255),
         category varchar(255) not null,
         id varchar(255) not null,
+        municipality_id varchar(255) not null,
         status varchar(255) not null,
         type varchar(255) not null,
         primary key (id)
@@ -47,6 +48,7 @@
         id bigint not null auto_increment,
         sent datetime(6),
         encoding varchar(255),
+        municipality_id varchar(255) not null,
         name varchar(255),
         status varchar(255),
         type varchar(255),

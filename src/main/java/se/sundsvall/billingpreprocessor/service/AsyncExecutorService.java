@@ -21,14 +21,14 @@ public class AsyncExecutorService {
 	}
 
 	@Async
-	public void createFiles(String uuid) {
+	public void createFiles(String uuid, String municipalityId) {
 		RequestId.init(uuid);
-		invoiceFileService.createFiles();
+		invoiceFileService.createFiles(municipalityId);
 	}
 
 	@Async
-	public void transferFiles(String uuid) {
+	public void transferFiles(String uuid, String municipalityId) {
 		RequestId.init(uuid);
-		invoiceFileService.transferFiles();
+		invoiceFileService.transferFiles(municipalityId);
 	}
 }

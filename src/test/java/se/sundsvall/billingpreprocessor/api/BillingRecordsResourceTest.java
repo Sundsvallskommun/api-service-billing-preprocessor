@@ -43,7 +43,8 @@ import se.sundsvall.billingpreprocessor.service.BillingRecordService;
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("junit")
 class BillingRecordsResourceTest {
-	private static final String PATH = "/billingrecords";
+	private static final String MUNICIPALITY_ID = "2281";
+	private static final String PATH = String.format("/%s/billingrecords", MUNICIPALITY_ID);
 
 	@Autowired
 	private WebTestClient webTestClient;
@@ -64,7 +65,7 @@ class BillingRecordsResourceTest {
 		final var instance = createBillingRecordInstance();
 
 		// Mock
-		when(serviceMock.createBillingRecord(any())).thenReturn(uuid);
+		when(serviceMock.createBillingRecord(any(), any())).thenReturn(uuid);
 
 		// Call
 		webTestClient.post().uri(PATH).contentType(APPLICATION_JSON)
@@ -72,11 +73,11 @@ class BillingRecordsResourceTest {
 			.exchange()
 			.expectStatus().isCreated()
 			.expectHeader().contentType(ALL)
-			.expectHeader().location("/billingrecords/" + uuid)
+			.expectHeader().location(PATH + "/" + uuid)
 			.expectBody().isEmpty();
 
 		// Verification
-		verify(serviceMock).createBillingRecord(billingRecordCaptor.capture());
+		verify(serviceMock).createBillingRecord(billingRecordCaptor.capture(), eq(MUNICIPALITY_ID));
 		assertThat(billingRecordCaptor.getValue()).usingRecursiveComparison().isEqualTo(instance);
 	}
 
@@ -96,7 +97,7 @@ class BillingRecordsResourceTest {
 		billingRecords.add(instance4);
 
 		// Mock
-		when(serviceMock.createBillingRecords(any())).thenReturn(List.of(uuid, uuid, uuid, uuid));
+		when(serviceMock.createBillingRecords(any(), any())).thenReturn(List.of(uuid, uuid, uuid, uuid));
 
 		// Call
 		final var result = webTestClient.post().uri(PATH.concat("/batch")).contentType(APPLICATION_JSON)
@@ -104,12 +105,12 @@ class BillingRecordsResourceTest {
 			.exchange()
 			.expectStatus().isCreated()
 			.expectHeader().contentType(APPLICATION_JSON)
-			.expectHeader().location("/billingrecords/")
+			.expectHeader().location(PATH + "/")
 			.expectBody(String[].class)
 			.returnResult().getResponseBody();
 
 		// Verification
-		verify(serviceMock).createBillingRecords(billingRecordsCaptor.capture());
+		verify(serviceMock).createBillingRecords(billingRecordsCaptor.capture(), eq(MUNICIPALITY_ID));
 		assertThat(billingRecordsCaptor.getValue()).usingRecursiveComparison().isEqualTo(billingRecords);
 		assertThat(result).isNotNull().hasSize(4).contains(uuid, uuid, uuid, uuid);
 	}
@@ -121,7 +122,7 @@ class BillingRecordsResourceTest {
 		final var billingRecord = BillingRecord.create().withId(uuid);
 
 		// Mock
-		when(serviceMock.readBillingRecord(uuid)).thenReturn(billingRecord);
+		when(serviceMock.readBillingRecord(any(), any())).thenReturn(billingRecord);
 
 		// Call
 		final var response = webTestClient.get().uri(builder -> builder.path(PATH + "/{id}").build(Map.of("id", uuid)))
@@ -133,7 +134,7 @@ class BillingRecordsResourceTest {
 			.getResponseBody();
 
 		// Verification
-		verify(serviceMock).readBillingRecord(uuid);
+		verify(serviceMock).readBillingRecord(uuid, MUNICIPALITY_ID);
 		assertThat(response).isNotNull().isEqualTo(billingRecord);
 	}
 
@@ -144,7 +145,7 @@ class BillingRecordsResourceTest {
 		final var matches = new PageImpl<>(List.of(BillingRecord.create()), pageable, 1);
 
 		// Mock
-		when(serviceMock.findBillingRecords(Mockito.<Specification<BillingRecordEntity>>any(), eq(pageable))).thenReturn(matches);
+		when(serviceMock.findBillingRecords(Mockito.<Specification<BillingRecordEntity>>any(), eq(pageable), any())).thenReturn(matches);
 
 		// Call
 		final var response = webTestClient.get().uri(builder -> builder.path(PATH).build(emptyMap()))
@@ -156,7 +157,7 @@ class BillingRecordsResourceTest {
 			.getResponseBody();
 
 		// Verification
-		verify(serviceMock).findBillingRecords(Mockito.<Specification<BillingRecordEntity>>any(), eq(pageable));
+		verify(serviceMock).findBillingRecords(Mockito.<Specification<BillingRecordEntity>>any(), eq(pageable), eq(MUNICIPALITY_ID));
 		assertThat(response).isNotNull().isEqualTo(matches);
 		assertThat(response.getContent()).hasSize(1);
 	}
@@ -171,7 +172,7 @@ class BillingRecordsResourceTest {
 		final var filter = "category:'ACCESS_CARD' and status:'NEW'";
 
 		// Mock
-		when(serviceMock.findBillingRecords(ArgumentMatchers.<Specification<BillingRecordEntity>>any(), eq(pageable))).thenReturn(matches);
+		when(serviceMock.findBillingRecords(ArgumentMatchers.<Specification<BillingRecordEntity>>any(), eq(pageable), any())).thenReturn(matches);
 
 		// Call
 		final var response = webTestClient.get().uri(builder -> builder.path(PATH)
@@ -186,7 +187,7 @@ class BillingRecordsResourceTest {
 			.getResponseBody();
 
 		// Verification
-		verify(serviceMock).findBillingRecords(ArgumentMatchers.<Specification<BillingRecordEntity>>any(), eq(pageable));
+		verify(serviceMock).findBillingRecords(ArgumentMatchers.<Specification<BillingRecordEntity>>any(), eq(pageable), eq(MUNICIPALITY_ID));
 		assertThat(response).isNotNull().isEqualTo(matches);
 		assertThat(response.getContent()).hasSize(1);
 	}
@@ -199,7 +200,7 @@ class BillingRecordsResourceTest {
 		final var updatedInstance = BillingRecord.create().withId(uuid);
 
 		// Mock
-		when(serviceMock.updateBillingRecord(eq(uuid), any())).thenReturn(updatedInstance);
+		when(serviceMock.updateBillingRecord(eq(uuid), any(), any())).thenReturn(updatedInstance);
 
 		// Call
 		final var response = webTestClient.put().uri(builder -> builder.path(PATH + "/{id}").build(Map.of("id", uuid)))
@@ -213,7 +214,7 @@ class BillingRecordsResourceTest {
 			.getResponseBody();
 
 		// Verification
-		verify(serviceMock).updateBillingRecord(eq(uuid), billingRecordCaptor.capture());
+		verify(serviceMock).updateBillingRecord(eq(uuid), billingRecordCaptor.capture(), eq(MUNICIPALITY_ID));
 		assertThat(billingRecordCaptor.getValue()).usingRecursiveComparison().isEqualTo(instance);
 		assertThat(response).isEqualTo(updatedInstance);
 	}
@@ -227,7 +228,7 @@ class BillingRecordsResourceTest {
 			.expectBody().isEmpty();
 
 		// Verification
-		verify(serviceMock).deleteBillingRecord(uuid);
+		verify(serviceMock).deleteBillingRecord(uuid, MUNICIPALITY_ID);
 	}
 
 	private static BillingRecord createBillingRecordInstance() {

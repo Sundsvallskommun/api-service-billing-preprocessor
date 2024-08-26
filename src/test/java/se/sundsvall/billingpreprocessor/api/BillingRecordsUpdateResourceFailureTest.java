@@ -38,7 +38,7 @@ import se.sundsvall.billingpreprocessor.service.BillingRecordService;
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("junit")
 class BillingRecordsUpdateResourceFailureTest {
-	private static final String PATH = "/billingrecords/{id}";
+	private static final String PATH = "/{municipalityId}/billingrecords/{id}";
 
 	@Autowired
 	private WebTestClient webTestClient;
@@ -54,7 +54,7 @@ class BillingRecordsUpdateResourceFailureTest {
 			.withRecipient(createRecipientInstance(true).withAddressDetails(createAddressDetailsInstance(true)));
 
 		// Call
-		final var response = webTestClient.put().uri(builder -> builder.path(PATH).build(Map.of("id", "invalid-uuid")))
+		final var response = webTestClient.put().uri(builder -> builder.path(PATH).build(Map.of("id", "invalid-uuid", "municipalityId", "2281")))
 			.contentType(APPLICATION_JSON)
 			.bodyValue(request)
 			.exchange()
@@ -79,7 +79,7 @@ class BillingRecordsUpdateResourceFailureTest {
 		final var uuid = randomUUID().toString();
 
 		// Call
-		final var response = webTestClient.put().uri(builder -> builder.path(PATH).build(Map.of("id", uuid)))
+		final var response = webTestClient.put().uri(builder -> builder.path(PATH).build(Map.of("id", uuid, "municipalityId", "2281")))
 			.contentType(APPLICATION_JSON)
 			.exchange()
 			.expectStatus().isBadRequest()
@@ -91,7 +91,7 @@ class BillingRecordsUpdateResourceFailureTest {
 		assertThat(response.getTitle()).isEqualTo("Bad Request");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getDetail()).isEqualTo("Required request body is missing: public org.springframework.http.ResponseEntity<se.sundsvall.billingpreprocessor.api.model.BillingRecord> "
-			+ "se.sundsvall.billingpreprocessor.api.BillingRecordsResource.updateBillingRecord(java.lang.String,se.sundsvall.billingpreprocessor.api.model.BillingRecord)");
+			+ "se.sundsvall.billingpreprocessor.api.BillingRecordsResource.updateBillingRecord(java.lang.String,java.lang.String,se.sundsvall.billingpreprocessor.api.model.BillingRecord)");
 
 		// Verification
 		verifyNoInteractions(serviceMock);
@@ -103,7 +103,7 @@ class BillingRecordsUpdateResourceFailureTest {
 		final var uuid = randomUUID().toString();
 
 		// Call
-		final var response = webTestClient.put().uri(builder -> builder.path(PATH).build(Map.of("id", uuid)))
+		final var response = webTestClient.put().uri(builder -> builder.path(PATH).build(Map.of("id", uuid, "municipalityId", "2281")))
 			.contentType(APPLICATION_JSON)
 			.bodyValue(BillingRecord.create())
 			.exchange()
@@ -134,7 +134,7 @@ class BillingRecordsUpdateResourceFailureTest {
 			.withRecipient(Recipient.create().withPartyId("invalid").withLegalId("invalid").withAddressDetails(createAddressDetailsInstance(false)));
 
 		// Call
-		final var response = webTestClient.put().uri(builder -> builder.path(PATH).build(Map.of("id", uuid)))
+		final var response = webTestClient.put().uri(builder -> builder.path(PATH).build(Map.of("id", uuid, "municipalityId", "666")))
 			.contentType(APPLICATION_JSON)
 			.bodyValue(request)
 			.exchange()
@@ -175,7 +175,7 @@ class BillingRecordsUpdateResourceFailureTest {
 			.withRecipient(Recipient.create().withAddressDetails(createAddressDetailsInstance(false)));
 
 		// Call
-		final var response = webTestClient.put().uri(builder -> builder.path(PATH).build(Map.of("id", uuid)))
+		final var response = webTestClient.put().uri(builder -> builder.path(PATH).build(Map.of("id", uuid, "municipalityId", "666")))
 			.contentType(APPLICATION_JSON)
 			.bodyValue(request)
 			.exchange()
@@ -218,7 +218,7 @@ class BillingRecordsUpdateResourceFailureTest {
 			.withRecipient(createRecipientInstance(true).withAddressDetails(createAddressDetailsInstance(true)));
 
 		// Call
-		final var response = webTestClient.put().uri(builder -> builder.path(PATH).build(Map.of("id", uuid)))
+		final var response = webTestClient.put().uri(builder -> builder.path(PATH).build(Map.of("id", uuid, "municipalityId", "2281")))
 			.contentType(APPLICATION_JSON)
 			.bodyValue(request)
 			.exchange()
@@ -245,7 +245,7 @@ class BillingRecordsUpdateResourceFailureTest {
 			.withInvoice(createInvoiceInstance(true, EXTERNAL).withInvoiceRows(List.of(createInvoiceRowInstance(true, EXTERNAL))));
 
 		// Call
-		final var response = webTestClient.put().uri(builder -> builder.path(PATH).build(Map.of("id", uuid)))
+		final var response = webTestClient.put().uri(builder -> builder.path(PATH).build(Map.of("id", uuid, "municipalityId", "2281")))
 			.contentType(APPLICATION_JSON)
 			.bodyValue(request)
 			.exchange()
@@ -274,7 +274,7 @@ class BillingRecordsUpdateResourceFailureTest {
 			.withRecipient(createRecipientInstance(true).withAddressDetails(createAddressDetailsInstance(true)));
 
 		// Call
-		final var response = webTestClient.put().uri(builder -> builder.path(PATH).build(Map.of("id", uuid)))
+		final var response = webTestClient.put().uri(builder -> builder.path(PATH).build(Map.of("id", uuid, "municipalityId", "2281")))
 			.contentType(APPLICATION_JSON)
 			.bodyValue(request)
 			.exchange()
@@ -302,7 +302,7 @@ class BillingRecordsUpdateResourceFailureTest {
 			.withRecipient(createRecipientInstance(true));
 
 		// Call
-		final var response = webTestClient.put().uri(builder -> builder.path(PATH).build(Map.of("id", uuid)))
+		final var response = webTestClient.put().uri(builder -> builder.path(PATH).build(Map.of("id", uuid, "municipalityId", "2281")))
 			.contentType(APPLICATION_JSON)
 			.bodyValue(request)
 			.exchange()

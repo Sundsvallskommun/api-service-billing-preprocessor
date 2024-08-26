@@ -24,7 +24,7 @@ import se.sundsvall.billingpreprocessor.service.BillingRecordService;
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("junit")
 class BillingRecordsReadResourceFailureTest {
-	private static final String PATH = "/billingrecords";
+	private static final String PATH = "/{municipalityId}/billingrecords";
 	
 	@Autowired
 	private WebTestClient webTestClient;
@@ -35,7 +35,7 @@ class BillingRecordsReadResourceFailureTest {
 	@Test
 	void readBillingRecordWithInvalidUuid() {
 		// Call
-		final var response = webTestClient.get().uri(builder -> builder.path(PATH + "/{id}").build(Map.of("id", "invalid-uuid")))
+		final var response = webTestClient.get().uri(builder -> builder.path(PATH + "/{id}").build(Map.of("id", "invalid-uuid", "municipalityId", "2281")))
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectBody(ConstraintViolationProblem.class)
@@ -55,7 +55,7 @@ class BillingRecordsReadResourceFailureTest {
 	@Test
 	void findBillingRecordWithInvalidFilterString() {
 		// Call
-		final var response = webTestClient.get().uri(builder -> builder.path(PATH).queryParam("filter", "category:'ACCESS_CARD' and").build(emptyMap()))
+		final var response = webTestClient.get().uri(builder -> builder.path(PATH).queryParam("filter", "category:'ACCESS_CARD' and").build(Map.of("municipalityId", "2281")))
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectBody(Problem.class)
@@ -66,6 +66,26 @@ class BillingRecordsReadResourceFailureTest {
 		assertThat(response.getTitle()).isEqualTo("Invalid Filter Content");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getDetail()).isEqualTo("mismatched input '<EOF>' expecting {PREFIX_OPERATOR, TRUE, FALSE, '(', '[', '`', ID, NUMBER, STRING}");
+
+		// Verification
+		verifyNoInteractions(serviceMock);
+	}
+
+	@Test
+	void findBillingRecordWithInvalidMunicipalityId() {
+		// Call
+		final var response = webTestClient.get().uri(builder -> builder.path(PATH + "/{id}").build(Map.of("id", "c9242a01-e7bd-4f59-b4cd-66210c427904", "municipalityId", "666")))
+			.exchange()
+			.expectStatus().isBadRequest()
+			.expectBody(ConstraintViolationProblem.class)
+			.returnResult()
+			.getResponseBody();
+
+		assertThat(response).isNotNull();
+		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
+		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
+		assertThat(response.getViolations()).extracting(Violation::getField, Violation::getMessage).containsExactlyInAnyOrder(
+			tuple("readBillingRecord.municipalityId", "not a valid municipality ID"));
 
 		// Verification
 		verifyNoInteractions(serviceMock);

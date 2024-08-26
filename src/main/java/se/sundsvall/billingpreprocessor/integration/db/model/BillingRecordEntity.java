@@ -41,6 +41,9 @@ public class BillingRecordEntity implements Serializable {
 	@Column(name = "category", nullable = false)
 	private String category;
 
+	@Column(name = "municipality_id", nullable = false)
+	private String municipalityId;
+
 	@Column(name = "type", nullable = false)
 	private Type type;
 
@@ -92,6 +95,19 @@ public class BillingRecordEntity implements Serializable {
 
 	public BillingRecordEntity withId(String id) {
 		this.id = id;
+		return this;
+	}
+
+	public String getMunicipalityId() {
+		return municipalityId;
+	}
+
+	public void setMunicipalityId(String municipalityId) {
+		this.municipalityId = municipalityId;
+	}
+
+	public BillingRecordEntity withMunicipalityId(String municipalityId) {
+		this.municipalityId = municipalityId;
 		return this;
 	}
 
@@ -214,7 +230,7 @@ public class BillingRecordEntity implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(category, approved, approvedBy, created, id, invoice, recipient, modified, status, type);
+		return Objects.hash(municipalityId, category, approved, approvedBy, created, id, invoice, recipient, modified, status, type);
 	}
 
 	@Override
@@ -229,7 +245,7 @@ public class BillingRecordEntity implements Serializable {
 			return false;
 		}
 		final BillingRecordEntity other = (BillingRecordEntity) obj;
-		return Objects.equals(category, other.category) && Objects.equals(approved, other.approved) && Objects.equals(approvedBy, other.approvedBy) && Objects.equals(created, other.created) && Objects.equals(id, other.id) && Objects.equals(
+		return Objects.equals(municipalityId, other.municipalityId) && Objects.equals(category, other.category) && Objects.equals(approved, other.approved) && Objects.equals(approvedBy, other.approvedBy) && Objects.equals(created, other.created) && Objects.equals(id, other.id) && Objects.equals(
 			invoice, other.invoice) && Objects.equals(recipient, other.recipient) && Objects.equals(modified, other.modified) && Objects.equals(status, other.status) && Objects.equals(type, other.type);
 	}
 
@@ -237,6 +253,7 @@ public class BillingRecordEntity implements Serializable {
 	public String toString() {
 		final StringBuilder builder = new StringBuilder();
 		builder.append("BillingRecordEntity [id=").append(id)
+			.append(", municipalityId=").append(municipalityId)
 			.append(", category=").append(category)
 			.append(", type=").append(type)
 			.append(", status=").append(status)

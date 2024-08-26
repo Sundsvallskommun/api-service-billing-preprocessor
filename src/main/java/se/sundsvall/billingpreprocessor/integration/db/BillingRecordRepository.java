@@ -13,5 +13,8 @@ import se.sundsvall.billingpreprocessor.integration.db.model.enums.Status;
 @Transactional
 @CircuitBreaker(name = "BillingRecordRepository")
 public interface BillingRecordRepository extends JpaRepository<BillingRecordEntity, String>, JpaSpecificationExecutor<BillingRecordEntity> {
-	List<BillingRecordEntity> findAllByStatus(Status status);
+	List<BillingRecordEntity> findAllByStatusAndMunicipalityId(Status status, String municipalityId);
+	boolean existsByIdAndMunicipalityId(String id, String municipalityId);
+	BillingRecordEntity getReferenceByIdAndMunicipalityId(String id, String municipalityId);
+	void deleteByIdAndMunicipalityId(String id, String municipalityId);
 }

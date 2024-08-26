@@ -47,11 +47,11 @@ class BillingRecordsIT extends AbstractAppTest {
 	@Test
 	void test01_createBillingRecord() {
 		setupCall()
-			.withServicePath("/billingrecords")
+			.withServicePath("/2281/billingrecords")
 			.withHttpMethod(POST)
 			.withRequest(REQUEST_FILE)
 			.withExpectedResponseStatus(CREATED)
-			.withExpectedResponseHeader(LOCATION, of("^/billingrecords/(.*)$"))
+			.withExpectedResponseHeader(LOCATION, of("^/2281/billingrecords/(.*)$"))
 			.sendRequestAndVerifyResponse();
 	}
 
@@ -59,7 +59,7 @@ class BillingRecordsIT extends AbstractAppTest {
 	void test02_readBillingRecordById() {
 		System.out.println(Charset.defaultCharset());
 		setupCall()
-			.withServicePath("/billingrecords/1310ee8b-ecf9-4fe1-ab9d-f19153b19d06")
+			.withServicePath("/2281/billingrecords/1310ee8b-ecf9-4fe1-ab9d-f19153b19d06")
 			.withHttpMethod(GET)
 			.withExpectedResponseStatus(OK)
 			.withExpectedResponseHeader(CONTENT_TYPE, CONTENT_TYPE_JSON)
@@ -70,7 +70,7 @@ class BillingRecordsIT extends AbstractAppTest {
 	@Test
 	void test03_readAllBillingRecords() {
 		setupCall()
-			.withServicePath("/billingrecords")
+			.withServicePath("/2281/billingrecords")
 			.withHttpMethod(GET)
 			.withExpectedResponseStatus(OK)
 			.withExpectedResponseHeader(CONTENT_TYPE, CONTENT_TYPE_JSON)
@@ -81,7 +81,7 @@ class BillingRecordsIT extends AbstractAppTest {
 	@Test
 	void test04_readBillingRecordsByFilter() {
 		setupCall()
-			.withServicePath("/billingrecords?filter=category : 'ISYCASE' and status : 'APPROVED'")
+			.withServicePath("/2281/billingrecords?filter=category : 'ISYCASE' and status : 'APPROVED'")
 			.withHttpMethod(GET)
 			.withExpectedResponseStatus(OK)
 			.withExpectedResponseHeader(CONTENT_TYPE, CONTENT_TYPE_JSON)
@@ -92,7 +92,7 @@ class BillingRecordsIT extends AbstractAppTest {
 	@Test
 	void test05_updateBillingRecord() {
 		setupCall()
-			.withServicePath("/billingrecords/83e4d599-5b4d-431c-8ebc-81192e9401ee")
+			.withServicePath("/2281/billingrecords/83e4d599-5b4d-431c-8ebc-81192e9401ee")
 			.withHttpMethod(PUT)
 			.withRequest(REQUEST_FILE)
 			.withExpectedResponseStatus(OK)
@@ -107,7 +107,7 @@ class BillingRecordsIT extends AbstractAppTest {
 		assertThat(repository.existsById(id)).isTrue();
 
 		setupCall()
-			.withServicePath("/billingrecords/" + id)
+			.withServicePath("/2281/billingrecords/" + id)
 			.withHttpMethod(DELETE)
 			.withExpectedResponseStatus(METHOD_NOT_ALLOWED)
 			.withExpectedResponseHeader(CONTENT_TYPE, of(APPLICATION_PROBLEM_JSON_VALUE))
@@ -123,7 +123,7 @@ class BillingRecordsIT extends AbstractAppTest {
 		assertThat(repository.existsById(id)).isTrue();
 
 		setupCall()
-			.withServicePath("/billingrecords/" + id)
+			.withServicePath("/2281/billingrecords/" + id)
 			.withHttpMethod(DELETE)
 			.withExpectedResponseStatus(NO_CONTENT)
 			.withExpectedResponseBodyIsNull()
@@ -135,11 +135,11 @@ class BillingRecordsIT extends AbstractAppTest {
 	@Test
 	void test08_createBillingRecords() {
 		setupCall()
-			.withServicePath("/billingrecords/batch")
+			.withServicePath("/2281/billingrecords/batch")
 			.withHttpMethod(POST)
 			.withRequest(REQUEST_FILE)
 			.withExpectedResponseStatus(CREATED)
-			.withExpectedResponseHeader(LOCATION, of("^/billingrecords/$"))
+			.withExpectedResponseHeader(LOCATION, of("^/2281/billingrecords/$"))
 			.sendRequestAndVerifyResponse();
 	}
 }
