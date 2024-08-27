@@ -92,6 +92,9 @@
     create index idx_billing_record_category_status 
        on billing_record (category, status);
 
+    create index idx_billing_record_municipality_id
+           on billing_record (municipality_id);
+
     create index idx_file_configuration_type_category_tag 
        on file_configuration (type, category_tag);
 
@@ -106,6 +109,9 @@
 
     create index idx_invoice_file_status 
        on invoice_file (status);
+
+    create index idx_invoice_file_municipality_id
+       on invoice_file (municipality_id);
 
     alter table if exists invoice_file 
        add constraint uq_file_name unique (name);

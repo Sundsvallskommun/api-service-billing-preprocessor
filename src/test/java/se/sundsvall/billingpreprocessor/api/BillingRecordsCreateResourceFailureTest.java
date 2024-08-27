@@ -285,7 +285,7 @@ class BillingRecordsCreateResourceFailureTest {
 		// Parameter values
 		final var request = createBillingRecordInstance(EXTERNAL, true)
 			.withInvoice(createInvoiceInstance(true, EXTERNAL).withInvoiceRows(List.of(createInvoiceRowInstance(true, EXTERNAL))))
-			.withRecipient(createRecipientInstance(true).withAddressDetails(createAddressDetailsInstance(true)));;
+			.withRecipient(createRecipientInstance(true).withAddressDetails(createAddressDetailsInstance(true)));
 
 		// Call
 		final var response = webTestClient.post().uri("/666/billingrecords")

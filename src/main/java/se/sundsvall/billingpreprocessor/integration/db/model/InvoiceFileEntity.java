@@ -26,7 +26,10 @@ import se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileSt
 
 @Entity
 @Table(name = "invoice_file",
-	indexes = @Index(name = "idx_invoice_file_status", columnList = "status"),
+	indexes = {
+		@Index(name = "idx_invoice_file_status", columnList = "status"),
+		@Index(name = "idx_invoice_file_municipality_id", columnList = "municipalityId")
+	},
 	uniqueConstraints = @UniqueConstraint(name = "uq_file_name", columnNames = { "name" }))
 public class InvoiceFileEntity implements Serializable {
 

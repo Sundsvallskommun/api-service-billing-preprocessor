@@ -81,7 +81,8 @@ public class BillingRecordsResource {
 		@Valid @NotNull @RequestBody final List<BillingRecord> billingRecords) {
 		final var uuidList = service.createBillingRecords(billingRecords, municipalityId);
 
-		return created(fromPath("/{municipalityId}/billingrecords/").buildAndExpand(municipalityId).toUri()).body(uuidList);
+		return created(fromPath("/{municipalityId}/billingrecords/").buildAndExpand(municipalityId).toUri()).header(CONTENT_TYPE, ALL_VALUE)
+			.body(uuidList);
 	}
 
 	@GetMapping(path = "/{id}", produces = { APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE })
@@ -134,6 +135,6 @@ public class BillingRecordsResource {
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @PathVariable("municipalityId") @ValidMunicipalityId String municipalityId,
 		@Parameter(name = "id", description = "BillingRecord id", example = "b82bd8ac-1507-4d9a-958d-369261eecc15") @ValidUuid @PathVariable final String id) {
 		service.deleteBillingRecord(id, municipalityId);
-		return noContent().build();
+		return noContent().header(CONTENT_TYPE, ALL_VALUE).build();
 	}
 }

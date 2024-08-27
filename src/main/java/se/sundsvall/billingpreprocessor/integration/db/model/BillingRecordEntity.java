@@ -28,7 +28,8 @@ import se.sundsvall.billingpreprocessor.integration.db.model.enums.Type;
 @Entity
 @Table(name = "billing_record",
 	indexes = {
-		@Index(name = "idx_billing_record_category_status", columnList = "category, status")
+		@Index(name = "idx_billing_record_category_status", columnList = "category, status"),
+		@Index(name = "idx_billing_record_municipality_id", columnList = "municipalityId")
 	})
 public class BillingRecordEntity implements Serializable {
 	private static final long serialVersionUID = -1199591346011106014L;

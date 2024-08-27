@@ -104,7 +104,7 @@ class BillingRecordsResourceTest {
 			.bodyValue(billingRecords)
 			.exchange()
 			.expectStatus().isCreated()
-			.expectHeader().contentType(APPLICATION_JSON)
+			.expectHeader().contentType(ALL)
 			.expectHeader().location(PATH + "/")
 			.expectBody(String[].class)
 			.returnResult().getResponseBody();
