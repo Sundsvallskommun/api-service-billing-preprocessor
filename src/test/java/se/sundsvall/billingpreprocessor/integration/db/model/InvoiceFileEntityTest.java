@@ -38,7 +38,6 @@ class InvoiceFileEntityTest {
 	@Test
 	void hasValidBuilderMethods() {
 
-		BillingRecordEntity.create();
 		final var content = "content";
 		final var created = OffsetDateTime.now();
 		final var encoding = "encoding";
@@ -47,6 +46,7 @@ class InvoiceFileEntityTest {
 		final var sent = OffsetDateTime.now();
 		final var status = SEND_SUCCESSFUL;
 		final var type = "type";
+		final var municipalityId = "municipalityId";
 
 		final var entity = InvoiceFileEntity.create()
 			.withContent(content)
@@ -56,7 +56,8 @@ class InvoiceFileEntityTest {
 			.withName(name)
 			.withSent(sent)
 			.withStatus(status)
-			.withType(type);
+			.withType(type)
+			.withMunicipalityId(municipalityId);
 
 		assertThat(entity).hasNoNullFieldsOrProperties();
 		assertThat(entity.getContent()).isEqualTo(content);
@@ -67,6 +68,7 @@ class InvoiceFileEntityTest {
 		assertThat(entity.getSent()).isEqualTo(sent);
 		assertThat(entity.getStatus()).isEqualTo(status);
 		assertThat(entity.getType()).isEqualTo(type);
+		assertThat(entity.getMunicipalityId()).isEqualTo(municipalityId);
 	}
 
 	@Test

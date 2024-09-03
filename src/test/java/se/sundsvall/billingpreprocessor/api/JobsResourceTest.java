@@ -17,7 +17,8 @@ import se.sundsvall.billingpreprocessor.service.AsyncExecutorService;
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("junit")
 class JobsResourceTest {
-	private static final String BASE_PATH = "/jobs";
+	private static final String MUNICIPALITY_ID = "2281";
+	private static final String BASE_PATH = String.format("/%s/jobs", MUNICIPALITY_ID);
 
 	@Autowired
 	private WebTestClient webTestClient;
@@ -38,7 +39,7 @@ class JobsResourceTest {
 			.getFirst();
 
 		// Verification
-		verify(serviceMock).createFiles(requestId);
+		verify(serviceMock).createFiles(requestId, MUNICIPALITY_ID);
 		verifyNoMoreInteractions(serviceMock);
 	}
 
@@ -55,7 +56,7 @@ class JobsResourceTest {
 			.getFirst();
 
 		// Verification
-		verify(serviceMock).transferFiles(requestId);
+		verify(serviceMock).transferFiles(requestId, MUNICIPALITY_ID);
 		verifyNoMoreInteractions(serviceMock);
 	}
 }

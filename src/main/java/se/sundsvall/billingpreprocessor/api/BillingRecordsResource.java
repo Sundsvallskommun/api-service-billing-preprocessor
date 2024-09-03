@@ -43,11 +43,12 @@ import jakarta.validation.constraints.NotNull;
 import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
 import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
 import se.sundsvall.billingpreprocessor.service.BillingRecordService;
+import se.sundsvall.dept44.common.validators.annotation.ValidMunicipalityId;
 import se.sundsvall.dept44.common.validators.annotation.ValidUuid;
 
 @RestController
 @Validated
-@RequestMapping("/billingrecords")
+@RequestMapping("/{municipalityId}/billingrecords")
 @Tag(name = "BillingRecord", description = "Billing record operations")
 public class BillingRecordsResource {
 
@@ -62,10 +63,12 @@ public class BillingRecordsResource {
 	@ApiResponse(responseCode = "201", headers = @Header(name = LOCATION, schema = @Schema(type = "string")), description = "Successful operation", useReturnTypeSchema = true)
 	@ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(oneOf = { Problem.class, ConstraintViolationProblem.class })))
 	@ApiResponse(responseCode = "500", description = "Internal Server error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
-	public ResponseEntity<Void> createBillingRecord(@Valid @NotNull @RequestBody final BillingRecord billingRecord) {
-		final var uuid = service.createBillingRecord(billingRecord);
+	public ResponseEntity<Void> createBillingRecord(
+		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @PathVariable("municipalityId") @ValidMunicipalityId String municipalityId,
+		@Valid @NotNull @RequestBody final BillingRecord billingRecord) {
+		final var uuid = service.createBillingRecord(billingRecord, municipalityId);
     
-		return created(fromPath("/billingrecords/{id}").buildAndExpand(uuid).toUri()).header(CONTENT_TYPE, ALL_VALUE).build();
+		return created(fromPath("/{municipalityId}/billingrecords/{id}").buildAndExpand(municipalityId, uuid).toUri()).header(CONTENT_TYPE, ALL_VALUE).build();
 	}
 
 	@PostMapping(path = "/batch", consumes = APPLICATION_JSON_VALUE, produces = { APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE })
@@ -73,10 +76,13 @@ public class BillingRecordsResource {
 	@ApiResponse(responseCode = "201", headers = @Header(name = LOCATION, schema = @Schema(type = "string")), description = "Successful operation", useReturnTypeSchema = true)
 	@ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(oneOf = { Problem.class, ConstraintViolationProblem.class })))
 	@ApiResponse(responseCode = "500", description = "Internal Server error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
-	public ResponseEntity<List<String>> createBillingRecords(@Valid @NotNull @RequestBody final List<BillingRecord> billingRecords) {
-		final var uuidList = service.createBillingRecords(billingRecords);
+	public ResponseEntity<List<String>> createBillingRecords(
+		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @PathVariable("municipalityId") @ValidMunicipalityId String municipalityId,
+		@Valid @NotNull @RequestBody final List<BillingRecord> billingRecords) {
+		final var uuidList = service.createBillingRecords(billingRecords, municipalityId);
 
-		return created(fromPath("/billingrecords/").buildAndExpand().toUri()).body(uuidList);
+		return created(fromPath("/{municipalityId}/billingrecords/").buildAndExpand(municipalityId).toUri()).header(CONTENT_TYPE, ALL_VALUE)
+			.body(uuidList);
 	}
 
 	@GetMapping(path = "/{id}", produces = { APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE })
@@ -85,8 +91,10 @@ public class BillingRecordsResource {
 	@ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(oneOf = { Problem.class, ConstraintViolationProblem.class })))
 	@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
-	public ResponseEntity<BillingRecord> readBillingRecord(@Parameter(name = "id", description = "BillingRecord id", example = "b82bd8ac-1507-4d9a-958d-369261eecc15") @ValidUuid @PathVariable final String id) {
-		return ok(service.readBillingRecord(id));
+	public ResponseEntity<BillingRecord> readBillingRecord(
+		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @PathVariable("municipalityId") @ValidMunicipalityId String municipalityId,
+		@Parameter(name = "id", description = "BillingRecord id", example = "b82bd8ac-1507-4d9a-958d-369261eecc15") @ValidUuid @PathVariable final String id) {
+		return ok(service.readBillingRecord(id, municipalityId));
 	}
 
 	@GetMapping(produces = { APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE })
@@ -95,11 +103,12 @@ public class BillingRecordsResource {
 	@ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(oneOf = { Problem.class, ConstraintViolationProblem.class })))
 	@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	public ResponseEntity<Page<BillingRecord>> findBillingRecords(
+		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @PathVariable("municipalityId") @ValidMunicipalityId String municipalityId,
 		@Parameter(description = "Syntax description: [spring-filter](https://github.com/turkraft/spring-filter/blob/85730f950a5f8623159cc0eb4d737555f9382bb7/README.md#syntax)",
 			example = "category : 'ACCESS_CARD' and status : 'NEW'",
 			schema = @Schema(implementation = String.class)) @Filter final Specification<BillingRecordEntity> filter,
 		@ParameterObject final Pageable pageable) {
-		return ok(service.findBillingRecords(filter, pageable));
+		return ok(service.findBillingRecords(filter, pageable, municipalityId));
 	}
 
 	@PutMapping(path = "/{id}", consumes = APPLICATION_JSON_VALUE, produces = { APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE })
@@ -109,9 +118,10 @@ public class BillingRecordsResource {
 	@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	@ApiResponse(responseCode = "500", description = "Internal Server error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	public ResponseEntity<BillingRecord> updateBillingRecord(
+		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @PathVariable("municipalityId") @ValidMunicipalityId String municipalityId,
 		@Parameter(name = "id", description = "BillingRecord id", example = "b82bd8ac-1507-4d9a-958d-369261eecc15") @ValidUuid @PathVariable final String id,
 		@Valid @NotNull @RequestBody final BillingRecord billingRecord) {
-		return ok(service.updateBillingRecord(id, billingRecord));
+		return ok(service.updateBillingRecord(id, billingRecord, municipalityId));
 	}
 
 	@DeleteMapping(path = "/{id}")
@@ -121,8 +131,10 @@ public class BillingRecordsResource {
 	@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	@ApiResponse(responseCode = "405", description = "Method not allowed", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	@ApiResponse(responseCode = "500", description = "Internal Server error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
-	public ResponseEntity<Void> deleteBillingRecord(@Parameter(name = "id", description = "BillingRecord id", example = "b82bd8ac-1507-4d9a-958d-369261eecc15") @ValidUuid @PathVariable final String id) {
-		service.deleteBillingRecord(id);
-		return noContent().build();
+	public ResponseEntity<Void> deleteBillingRecord(
+		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @PathVariable("municipalityId") @ValidMunicipalityId String municipalityId,
+		@Parameter(name = "id", description = "BillingRecord id", example = "b82bd8ac-1507-4d9a-958d-369261eecc15") @ValidUuid @PathVariable final String id) {
+		service.deleteBillingRecord(id, municipalityId);
+		return noContent().header(CONTENT_TYPE, ALL_VALUE).build();
 	}
 }

@@ -41,13 +41,15 @@ public final class BillingRecordMapper {
 	 * Method for mapping a BillingRecord object to a BillingRecordEntity object
 	 *
 	 * @param  billingRecord a billing record represented by the BillingRecord class
+	 * @param  municipalityId municipality ID
 	 * @return               a object of class BillingRecordEntity representing the incoming BillingRecord object
 	 */
-	public static BillingRecordEntity toBillingRecordEntity(final BillingRecord billingRecord) {
+	public static BillingRecordEntity toBillingRecordEntity(final BillingRecord billingRecord, String municipalityId) {
 		final var billingRecordEntity = BillingRecordEntity.create() // Create billing record entity
 			.withCategory(billingRecord.getCategory())
 			.withStatus(se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.valueOf(billingRecord.getStatus().toString()))
-			.withType(se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.valueOf(billingRecord.getType().toString()));
+			.withType(se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.valueOf(billingRecord.getType().toString()))
+			.withMunicipalityId(municipalityId);
 
 		billingRecordEntity.setRecipient(toRecipientEntity(billingRecordEntity, billingRecord.getRecipient())); // Add recipient entity to billing record entity
 		billingRecordEntity.setInvoice(toInvoiceEntity(billingRecordEntity, billingRecord.getInvoice())); // Add invoice entity to billing record entity
@@ -63,12 +65,13 @@ public final class BillingRecordMapper {
 	 * Method for mapping a list of BillingRecordEntity objects to a BillingRecord objects
 	 *
 	 * @param  billingRecords a list of billing records represented by the BillingRecordEntity class
+	 * @param  municipalityId municipality ID
 	 * @return                a list of objects of class BillingRecord representing the incoming BillingRecordEntity objects
 	 */
-	public static List<BillingRecordEntity> toBillingRecordEntities(final List<BillingRecord> billingRecords) {
+	public static List<BillingRecordEntity> toBillingRecordEntities(final List<BillingRecord> billingRecords, String municipalityId) {
 		return ofNullable(billingRecords)
 			.map(records -> records.stream()
-				.map(BillingRecordMapper::toBillingRecordEntity)
+				.map(r -> toBillingRecordEntity(r, municipalityId))
 				.toList())
 			.orElse(emptyList());
 	}

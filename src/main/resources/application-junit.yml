@@ -46,10 +46,17 @@ integration:
     connect-timeout: 11
     read-timeout: 22
   sftp:
-    user: user
-    password: pass
-    remoteDir: "/upload/"
-    allowUnknownKeys: false
+    municipalityIds:
+      2281:
+        user: user
+        password: pass
+        remoteDir: "/upload/"
+        allowUnknownKeys: false
+      2282:
+        user: user2
+        password: pass2
+        remoteDir: "/upload2/"
+        allowUnknownKeys: false
 
 errorreport:
   creation-error-mail-template:

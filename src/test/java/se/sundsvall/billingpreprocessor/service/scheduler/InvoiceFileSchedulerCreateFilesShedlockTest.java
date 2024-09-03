@@ -23,6 +23,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 import static org.awaitility.Awaitility.await;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -53,7 +54,7 @@ class InvoiceFileSchedulerCreateFilesShedlockTest {
 				await().forever()
 					.until(() -> false);
 				return null;
-			}).when(mockBean).createFiles();
+			}).when(mockBean).createFiles(any());
 
 			return mockBean;
 		}
@@ -78,7 +79,7 @@ class InvoiceFileSchedulerCreateFilesShedlockTest {
 				.isCloseTo(LocalDateTime.now(systemUTC()), within(10, ChronoUnit.SECONDS)));
 
 		// Only one call should be made as long as createFiles() is locked and mock is waiting for first call to finish
-		verify(invoiceFileServiceMock).createFiles();
+		verify(invoiceFileServiceMock).createFiles("2281");
 		verifyNoMoreInteractions(invoiceFileServiceMock);
 	}
 

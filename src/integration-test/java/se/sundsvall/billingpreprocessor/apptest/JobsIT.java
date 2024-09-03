@@ -67,9 +67,9 @@ class JobsIT extends AbstractAppTest {
 		SFTP_SERVER.followOutput(new Slf4jLogConsumer(LOGGER));
 
 		final var key = readString(getFile("classpath:keys/ssh_host_rsa_key.pub").toPath());
-		registry.add("integration.sftp.host", SFTP_SERVER::getHost);
-		registry.add("integration.sftp.port", () -> SFTP_SERVER.getMappedPort(22));
-		registry.add("integration.sftp.knownHosts", () -> String.format("[%s]:%s %s", SFTP_SERVER.getHost(), SFTP_SERVER.getMappedPort(22), key));
+		registry.add("integration.sftp.municipalityIds.2281.host", SFTP_SERVER::getHost);
+		registry.add("integration.sftp.municipalityIds.2281.port", () -> SFTP_SERVER.getMappedPort(22));
+		registry.add("integration.sftp.municipalityIds.2281.knownHosts", () -> String.format("[%s]:%s %s", SFTP_SERVER.getHost(), SFTP_SERVER.getMappedPort(22), key));
 	}
 
 	@Autowired
@@ -83,7 +83,7 @@ class JobsIT extends AbstractAppTest {
 		assertThat(repository.findAll()).isEmpty();
 
 		setupCall()
-			.withServicePath("/jobs/filecreator")
+			.withServicePath("/2281/jobs/filecreator")
 			.withHttpMethod(POST)
 			.withExpectedResponseStatus(ACCEPTED)
 			.withExpectedResponseBodyIsNull()
@@ -116,7 +116,7 @@ class JobsIT extends AbstractAppTest {
 			.allMatch(status -> Objects.equals(status, GENERATED));
 
 		setupCall()
-			.withServicePath("/jobs/filetransferrer")
+			.withServicePath("/2281/jobs/filetransferrer")
 			.withHttpMethod(POST)
 			.withExpectedResponseStatus(ACCEPTED)
 			.withExpectedResponseBodyIsNull()

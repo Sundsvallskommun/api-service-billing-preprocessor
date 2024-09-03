@@ -1,10 +1,10 @@
 -------------------------------------
 -- Billling records
 -------------------------------------
-INSERT INTO billing_record (id, category, approved, approved_by, created, modified, status, `type`)
-VALUES	('71258e7d-5285-46ce-b9b2-877f8cad8edd', 'ACCESS_CARD', NULL, NULL, '2022-06-20 11:17:36.795', NULL, 'NEW', 'INTERNAL'),
-		('1310ee8b-ecf9-4fe1-ab9d-f19153b19d06', 'ACCESS_CARD', '2022-06-30 08:52:25.112', 'JOE01DOE', '2022-06-25 16:43:12.553', '2022-06-30 08:52:25.112', 'APPROVED', 'INTERNAL'),
-		('83e4d599-5b4d-431c-8ebc-81192e9401ee', 'SALARY_AND_PENSION', NULL, NULL, '2022-06-25 16:43:12.553', NULL, 'NEW', 'EXTERNAL');
+INSERT INTO billing_record (id, category, approved, approved_by, created, modified, status, `type`, municipality_id)
+VALUES	('71258e7d-5285-46ce-b9b2-877f8cad8edd', 'ACCESS_CARD', NULL, NULL, '2022-06-20 11:17:36.795', NULL, 'NEW', 'INTERNAL', '2281'),
+		('1310ee8b-ecf9-4fe1-ab9d-f19153b19d06', 'ACCESS_CARD', '2022-06-30 08:52:25.112', 'JOE01DOE', '2022-06-25 16:43:12.553', '2022-06-30 08:52:25.112', 'APPROVED', 'INTERNAL', '2281'),
+		('83e4d599-5b4d-431c-8ebc-81192e9401ee', 'SALARY_AND_PENSION', NULL, NULL, '2022-06-25 16:43:12.553', NULL, 'NEW', 'EXTERNAL', '2281');
 
 -------------------------------------
 -- Invoices
@@ -44,13 +44,13 @@ VALUES	('83e4d599-5b4d-431c-8ebc-81192e9401ee', NULL, 'Louiseville', 'Beachland 
 -------------------------------------
 -- Invoice file
 -------------------------------------
-INSERT INTO invoice_file (created, content, encoding, sent, name, `type`, status) 
+INSERT INTO invoice_file (created, content, encoding, sent, name, `type`, status, municipality_id)
 VALUES 
-	('2024-02-26 10:15:00.000000', 'File content', 'ISO-8859-1', NULL, 'INVOICE_FILE_1.txt', 'INTERNAL', 'GENERATED'),
-	('2024-02-25 09:30:00.000000', 'File content', 'ISO-8859-1', '2024-02-25 09:35:00.000000', 'INVOICE_FILE_2.txt', 'INTERNAL', 'SEND_SUCCESSFUL'),
-	('2024-02-24 14:45:00.000000', 'File content', 'ISO-8859-1', NULL, 'INVOICE_FILE_3.txt', 'INTERNAL', 'GENERATED'),
-	('2024-02-23 16:20:00.000000', 'File content', 'ISO-8859-1', NULL, 'INVOICE_FILE_4.txt', 'INTERNAL', 'SEND_FAILED'),
-	('2024-02-22 11:10:00.000000', 'File content', 'ISO-8859-1', '2024-02-22 11:15:00.000000', 'INVOICE_FILE_5.txt', 'EXTERNAL', 'SEND_SUCCESSFUL');
+	('2024-02-26 10:15:00.000000', 'File content', 'ISO-8859-1', NULL, 'INVOICE_FILE_1.txt', 'INTERNAL', 'GENERATED', '2281'),
+	('2024-02-25 09:30:00.000000', 'File content', 'ISO-8859-1', '2024-02-25 09:35:00.000000', 'INVOICE_FILE_2.txt', 'INTERNAL', 'SEND_SUCCESSFUL', '2281'),
+	('2024-02-24 14:45:00.000000', 'File content', 'ISO-8859-1', NULL, 'INVOICE_FILE_3.txt', 'INTERNAL', 'GENERATED', '2281'),
+	('2024-02-23 16:20:00.000000', 'File content', 'ISO-8859-1', NULL, 'INVOICE_FILE_4.txt', 'INTERNAL', 'SEND_FAILED', '2281'),
+	('2024-02-22 11:10:00.000000', 'File content', 'ISO-8859-1', '2024-02-22 11:15:00.000000', 'INVOICE_FILE_5.txt', 'EXTERNAL', 'SEND_SUCCESSFUL', '2281');
 
 
 -------------------------------------

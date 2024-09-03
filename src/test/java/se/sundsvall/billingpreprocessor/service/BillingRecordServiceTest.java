@@ -48,6 +48,7 @@ import se.sundsvall.billingpreprocessor.integration.db.model.enums.Type;
 class BillingRecordServiceTest {
 	private static final String ID = randomUUID().toString();
 	private static final String CATEGORY = "ACCESS_CARD";
+	private static final String MUNICIPALITY_ID = "MUNICIPALITY_ID";
 
 	@Mock
 	private BillingRecordRepository billingRecordRepositoryMock;
@@ -71,7 +72,7 @@ class BillingRecordServiceTest {
 		when(billingRecordRepositoryMock.save(any(BillingRecordEntity.class))).thenReturn(BillingRecordEntity.create().withId(ID));
 
 		// Call
-		final var result = service.createBillingRecord(billingRecord);
+		final var result = service.createBillingRecord(billingRecord, MUNICIPALITY_ID);
 
 		// Assertions and verifications
 		assertThat(result).isEqualTo(ID);
@@ -86,7 +87,7 @@ class BillingRecordServiceTest {
 		final var billingRecord = createBillingRecordInstance();
 
 		// Call
-		final var e = assertThrows(ThrowableProblem.class, () -> service.createBillingRecord(billingRecord));
+		final var e = assertThrows(ThrowableProblem.class, () -> service.createBillingRecord(billingRecord, MUNICIPALITY_ID));
 
 		// Assertions and verifications
 		assertThat(e.getStatus()).isEqualTo(BAD_REQUEST);
@@ -105,7 +106,7 @@ class BillingRecordServiceTest {
 		when(billingRecordRepositoryMock.saveAll(any())).thenReturn(List.of(BillingRecordEntity.create().withId(ID)));
 
 		// Call
-		final var result = service.createBillingRecords(List.of(billingRecord));
+		final var result = service.createBillingRecords(List.of(billingRecord), MUNICIPALITY_ID);
 
 		// Assertions and verifications
 		assertThat(result).isNotEmpty().hasSize(1);
@@ -128,7 +129,7 @@ class BillingRecordServiceTest {
 		when(invoiceFileConfigurationRepositoryMock.existsByTypeAndCategoryTag(INTERNAL.name(), CATEGORY)).thenReturn(true);
 
 		// Call
-		final var e = assertThrows(ThrowableProblem.class, () -> service.createBillingRecords(input));
+		final var e = assertThrows(ThrowableProblem.class, () -> service.createBillingRecords(input, MUNICIPALITY_ID));
 
 		// Assertions and verifications
 		assertThat(e.getStatus()).isEqualTo(BAD_REQUEST);
@@ -145,11 +146,11 @@ class BillingRecordServiceTest {
 		final Pageable pageable = PageRequest.of(1, 2, sort);
 
 		// Mock
-		when(billingRecordRepositoryMock.findAll(specificationMock, pageable)).thenReturn(new PageImpl<>(List.of(createBillingRecordEntityInstance(), createBillingRecordEntityInstance()), pageable, 2L));
-		when(billingRecordRepositoryMock.count(specificationMock)).thenReturn(10L);
+		when(billingRecordRepositoryMock.findAll(specificationMock, pageable)).thenReturn(new PageImpl<>(List.of(createBillingRecordEntityInstance(), createBillingRecordEntityInstance()), pageable, 10L));
+		when(specificationMock.and(any())).thenReturn(specificationMock);
 
 		// Call
-		final var matches = service.findBillingRecords(specificationMock, pageable);
+		final var matches = service.findBillingRecords(specificationMock, pageable, MUNICIPALITY_ID);
 
 		// Assertions and verifications
 		assertThat(matches.getContent()).isNotEmpty().hasSize(2);
@@ -160,8 +161,8 @@ class BillingRecordServiceTest {
 		assertThat(matches.getSort()).usingRecursiveComparison().isEqualTo(sort);
 
 		verify(billingRecordRepositoryMock).findAll(specificationMock, pageable);
-		verify(billingRecordRepositoryMock).count(specificationMock);
-		verifyNoMoreInteractions(billingRecordRepositoryMock);
+		verify(specificationMock).and(any());
+		verifyNoMoreInteractions(billingRecordRepositoryMock, specificationMock);
 	}
 
 	@Test
@@ -172,9 +173,10 @@ class BillingRecordServiceTest {
 
 		// Mock
 		when(billingRecordRepositoryMock.findAll(specificationMock, pageable)).thenReturn(new PageImpl<>(emptyList()));
+		when(specificationMock.and(any())).thenReturn(specificationMock);
 
 		// Call
-		final var matches = service.findBillingRecords(specificationMock, pageable);
+		final var matches = service.findBillingRecords(specificationMock, pageable, MUNICIPALITY_ID);
 
 		// Assertions and verifications
 		assertThat(matches.getContent()).isEmpty();
@@ -185,37 +187,37 @@ class BillingRecordServiceTest {
 		assertThat(matches.getSort()).usingRecursiveComparison().isEqualTo(sort);
 
 		verify(billingRecordRepositoryMock).findAll(specificationMock, pageable);
-		verify(billingRecordRepositoryMock).count(specificationMock);
-		verifyNoMoreInteractions(billingRecordRepositoryMock);
+		verify(specificationMock).and(any());
+		verifyNoMoreInteractions(billingRecordRepositoryMock, specificationMock);
 	}
 
 	@Test
 	void readExistingBillingRecord() {
 		// Mock
-		when(billingRecordRepositoryMock.existsById(ID)).thenReturn(true);
-		when(billingRecordRepositoryMock.getReferenceById(ID)).thenReturn(createBillingRecordEntityInstance());
+		when(billingRecordRepositoryMock.existsByIdAndMunicipalityId(ID, MUNICIPALITY_ID)).thenReturn(true);
+		when(billingRecordRepositoryMock.getReferenceByIdAndMunicipalityId(ID, MUNICIPALITY_ID)).thenReturn(createBillingRecordEntityInstance());
 
 		// Call
-		final var result = service.readBillingRecord(ID);
+		final var result = service.readBillingRecord(ID, MUNICIPALITY_ID);
 
 		// Assertions and verifications
 		assertThat(result.getId()).isEqualTo(ID);
-		verify(billingRecordRepositoryMock).existsById(ID);
-		verify(billingRecordRepositoryMock).getReferenceById(ID);
+		verify(billingRecordRepositoryMock).existsByIdAndMunicipalityId(ID, MUNICIPALITY_ID);
+		verify(billingRecordRepositoryMock).getReferenceByIdAndMunicipalityId(ID, MUNICIPALITY_ID);
 		verifyNoMoreInteractions(billingRecordRepositoryMock);
 	}
 
 	@Test
 	void readNonExistingBillingRecord() {
 		// Call
-		final var exception = assertThrows(ThrowableProblem.class, () -> service.readBillingRecord(ID));
+		final var exception = assertThrows(ThrowableProblem.class, () -> service.readBillingRecord(ID, MUNICIPALITY_ID));
 
 		// Assertions and verifications
 		assertThat(exception.getStatus()).isEqualTo(NOT_FOUND);
 		assertThat(exception.getTitle()).isEqualTo(NOT_FOUND.getReasonPhrase());
-		assertThat(exception.getMessage()).isEqualTo("Not Found: A billing record with id '" + ID + "' could not be found!");
+		assertThat(exception.getMessage()).isEqualTo((String.format("Not Found: A billing record with id '%s' and municipality ID '%s' could not be found!", ID, MUNICIPALITY_ID)));
 
-		verify(billingRecordRepositoryMock).existsById(ID);
+		verify(billingRecordRepositoryMock).existsByIdAndMunicipalityId(ID, MUNICIPALITY_ID);
 		verifyNoMoreInteractions(billingRecordRepositoryMock);
 	}
 
@@ -225,18 +227,18 @@ class BillingRecordServiceTest {
 		final var entity = createBillingRecordEntityInstance();
 
 		// Mock
-		when(billingRecordRepositoryMock.existsById(ID)).thenReturn(true);
-		when(billingRecordRepositoryMock.getReferenceById(ID)).thenReturn(entity);
+		when(billingRecordRepositoryMock.existsByIdAndMunicipalityId(ID, MUNICIPALITY_ID)).thenReturn(true);
+		when(billingRecordRepositoryMock.getReferenceByIdAndMunicipalityId(ID, MUNICIPALITY_ID)).thenReturn(entity);
 		when(billingRecordRepositoryMock.save(entity)).thenReturn(entity);
 
 		// Call
-		final var response = service.updateBillingRecord(ID, createBillingRecordInstance());
+		final var response = service.updateBillingRecord(ID, createBillingRecordInstance(), MUNICIPALITY_ID);
 
 		// Assertions and verifications
 		assertThat(response.getId()).isEqualTo(ID);
 
-		verify(billingRecordRepositoryMock).existsById(ID);
-		verify(billingRecordRepositoryMock).getReferenceById(ID);
+		verify(billingRecordRepositoryMock).existsByIdAndMunicipalityId(ID, MUNICIPALITY_ID);
+		verify(billingRecordRepositoryMock).getReferenceByIdAndMunicipalityId(ID, MUNICIPALITY_ID);
 		verify(billingRecordRepositoryMock).save(entity);
 		verifyNoMoreInteractions(billingRecordRepositoryMock);
 	}
@@ -247,30 +249,30 @@ class BillingRecordServiceTest {
 		final var billingRecord = BillingRecord.create();
 
 		// Call
-		final var exception = assertThrows(ThrowableProblem.class, () -> service.updateBillingRecord(ID, billingRecord));
+		final var exception = assertThrows(ThrowableProblem.class, () -> service.updateBillingRecord(ID, billingRecord, MUNICIPALITY_ID));
 
 		// Assertions and verifications
 		assertThat(exception.getStatus()).isEqualTo(NOT_FOUND);
 		assertThat(exception.getTitle()).isEqualTo(NOT_FOUND.getReasonPhrase());
-		assertThat(exception.getMessage()).isEqualTo("Not Found: A billing record with id '" + ID + "' could not be found!");
+		assertThat(exception.getMessage()).isEqualTo((String.format("Not Found: A billing record with id '%s' and municipality ID '%s' could not be found!", ID, MUNICIPALITY_ID)));
 
-		verify(billingRecordRepositoryMock).existsById(ID);
+		verify(billingRecordRepositoryMock).existsByIdAndMunicipalityId(ID, MUNICIPALITY_ID);
 		verifyNoMoreInteractions(billingRecordRepositoryMock);
 	}
 
 	@Test
 	void deleteBillingRecordWithDeletableStatus() {
 		// Mock
-		when(billingRecordRepositoryMock.existsById(ID)).thenReturn(true);
-		when(billingRecordRepositoryMock.getReferenceById(ID)).thenReturn(createBillingRecordEntityInstance().withStatus(Status.NEW));
+		when(billingRecordRepositoryMock.existsByIdAndMunicipalityId(ID, MUNICIPALITY_ID)).thenReturn(true);
+		when(billingRecordRepositoryMock.getReferenceByIdAndMunicipalityId(ID, MUNICIPALITY_ID)).thenReturn(createBillingRecordEntityInstance().withStatus(Status.NEW));
 
 		// Call
-		service.deleteBillingRecord(ID);
+		service.deleteBillingRecord(ID, MUNICIPALITY_ID);
 
 		// Assertions and verifications
-		verify(billingRecordRepositoryMock).existsById(ID);
-		verify(billingRecordRepositoryMock).getReferenceById(ID);
-		verify(billingRecordRepositoryMock).deleteById(ID);
+		verify(billingRecordRepositoryMock).existsByIdAndMunicipalityId(ID, MUNICIPALITY_ID);
+		verify(billingRecordRepositoryMock).getReferenceByIdAndMunicipalityId(ID, MUNICIPALITY_ID);
+		verify(billingRecordRepositoryMock).deleteByIdAndMunicipalityId(ID, MUNICIPALITY_ID);
 		verifyNoMoreInteractions(billingRecordRepositoryMock);
 	}
 
@@ -278,32 +280,32 @@ class BillingRecordServiceTest {
 	@EnumSource(value = Status.class, names = "NEW", mode = EXCLUDE)
 	void deleteBillingRecordWithNonDeletableStatus(Status status) {
 		// Mock
-		when(billingRecordRepositoryMock.existsById(ID)).thenReturn(true);
-		when(billingRecordRepositoryMock.getReferenceById(ID)).thenReturn(createBillingRecordEntityInstance().withStatus(status));
+		when(billingRecordRepositoryMock.existsByIdAndMunicipalityId(ID, MUNICIPALITY_ID)).thenReturn(true);
+		when(billingRecordRepositoryMock.getReferenceByIdAndMunicipalityId(ID, MUNICIPALITY_ID)).thenReturn(createBillingRecordEntityInstance().withStatus(status));
 
 		// Call
-		final var exception = assertThrows(ThrowableProblem.class, () -> service.deleteBillingRecord(ID));
+		final var exception = assertThrows(ThrowableProblem.class, () -> service.deleteBillingRecord(ID, MUNICIPALITY_ID));
 
 		// Assertions and verifications
 		assertThat(exception.getStatus()).isEqualTo(METHOD_NOT_ALLOWED);
 		assertThat(exception.getTitle()).isEqualTo(METHOD_NOT_ALLOWED.getReasonPhrase());
 		assertThat(exception.getMessage()).isEqualTo("Method Not Allowed: The billing record does not have status NEW and is therefore not possible to delete!");
 
-		verify(billingRecordRepositoryMock).existsById(ID);
+		verify(billingRecordRepositoryMock).existsByIdAndMunicipalityId(ID, MUNICIPALITY_ID);
 		verifyNoMoreInteractions(billingRecordRepositoryMock);
 	}
 
 	@Test
 	void deleteNonExistingBillingRecord() {
 		// Call
-		final var exception = assertThrows(ThrowableProblem.class, () -> service.deleteBillingRecord(ID));
+		final var exception = assertThrows(ThrowableProblem.class, () -> service.deleteBillingRecord(ID, MUNICIPALITY_ID));
 
 		// Assertions and verifications
 		assertThat(exception.getStatus()).isEqualTo(NOT_FOUND);
 		assertThat(exception.getTitle()).isEqualTo(NOT_FOUND.getReasonPhrase());
-		assertThat(exception.getMessage()).isEqualTo("Not Found: A billing record with id '" + ID + "' could not be found!");
+		assertThat(exception.getMessage()).isEqualTo(String.format("Not Found: A billing record with id '%s' and municipality ID '%s' could not be found!", ID, MUNICIPALITY_ID));
 
-		verify(billingRecordRepositoryMock).existsById(ID);
+		verify(billingRecordRepositoryMock).existsByIdAndMunicipalityId(ID, MUNICIPALITY_ID);
 		verifyNoMoreInteractions(billingRecordRepositoryMock);
 	}
 

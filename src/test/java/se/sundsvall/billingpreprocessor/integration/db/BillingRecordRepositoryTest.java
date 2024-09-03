@@ -92,6 +92,7 @@ class BillingRecordRepositoryTest {
 	private static final String APPROVED_BY = "approvedBy";
 	private static final Status STATUS = APPROVED;
 	private static final Type TYPE = EXTERNAL;
+	private static final String MUNICIPALITY_ID = "2281";
 
 	@Autowired
 	private BillingRecordRepository repository;
@@ -132,6 +133,7 @@ class BillingRecordRepositoryTest {
 		assertThat(billingRecord.getModified()).isNull();
 		assertThat(billingRecord.getStatus()).isEqualTo(STATUS);
 		assertThat(billingRecord.getType()).isEqualTo(TYPE);
+		assertThat(billingRecord.getMunicipalityId()).isEqualTo(MUNICIPALITY_ID);
 	}
 
 	private static void verifyInvoice(final BillingRecordEntity billingRecord) {
@@ -197,7 +199,7 @@ class BillingRecordRepositoryTest {
 	@Test
 	void read() {
 		final var id = "83e4d599-5b4d-431c-8ebc-81192e9401ee";
-		final var entity = repository.getReferenceById(id);
+		final var entity = repository.getReferenceByIdAndMunicipalityId(id, MUNICIPALITY_ID);
 
 		assertThat(entity).isNotNull().extracting(BillingRecordEntity::getId).isEqualTo(id);
 		assertThat(entity).extracting(BillingRecordEntity::getStatus).isEqualTo(NEW);
@@ -257,7 +259,7 @@ class BillingRecordRepositoryTest {
 
 	@Test
 	void update() {
-		final var entity = repository.getReferenceById("83e4d599-5b4d-431c-8ebc-81192e9401ee");
+		final var entity = repository.getReferenceByIdAndMunicipalityId("83e4d599-5b4d-431c-8ebc-81192e9401ee", MUNICIPALITY_ID);
 		final var status = REJECTED;
 
 		assertThat(entity.getStatus()).isEqualTo(NEW);
@@ -270,9 +272,9 @@ class BillingRecordRepositoryTest {
 	void delete() {
 		final var id = "1310ee8b-ecf9-4fe1-ab9d-f19153b19d06";
 
-		assertThat(repository.existsById(id)).isTrue();
-		repository.deleteById(id);
-		assertThat(repository.existsById(id)).isFalse();
+		assertThat(repository.existsByIdAndMunicipalityId(id, MUNICIPALITY_ID)).isTrue();
+		repository.deleteByIdAndMunicipalityId(id, MUNICIPALITY_ID);
+		assertThat(repository.existsByIdAndMunicipalityId(id, MUNICIPALITY_ID)).isFalse();
 	}
 
 	private static AccountInformationEmbeddable createAccountInformation() {
@@ -350,6 +352,7 @@ class BillingRecordRepositoryTest {
 			.withApproved(APPROVED_TIMESTAMP)
 			.withApprovedBy(APPROVED_BY)
 			.withStatus(STATUS)
-			.withType(TYPE);
+			.withType(TYPE)
+			.withMunicipalityId(MUNICIPALITY_ID);
 	}
 }

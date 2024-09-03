@@ -39,6 +39,8 @@ import se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionTy
 
 class BillingRecordMapperTest {
 
+	private static final String MUNICIPALITY_ID = "municipalityId";
+
 	// billingRecord constants
 	private static final String ID = randomUUID().toString();
 	private static final String CATEGORY = "category";
@@ -97,7 +99,7 @@ class BillingRecordMapperTest {
 	@Test
 	void tobillingRecordEntityForFullInstance() {
 		final var billingRecord = createbillingRecord();
-		final var billingRecordEntity = BillingRecordMapper.toBillingRecordEntity(billingRecord);
+		final var billingRecordEntity = BillingRecordMapper.toBillingRecordEntity(billingRecord, MUNICIPALITY_ID);
 
 		// Assert billing record entity values
 		assertThat(billingRecordEntity.getCategory()).isEqualTo(CATEGORY);
@@ -105,6 +107,7 @@ class BillingRecordMapperTest {
 		assertThat(billingRecordEntity.getApprovedBy()).isEqualTo(APPROVED_BY);
 		assertThat(billingRecordEntity.getStatus()).isEqualTo(STATUS);
 		assertThat(billingRecordEntity.getType()).isEqualTo(TYPE);
+		assertThat(billingRecordEntity.getMunicipalityId()).isEqualTo(MUNICIPALITY_ID);
 
 		assertThat(billingRecordEntity)
 			.extracting(
@@ -227,7 +230,7 @@ class BillingRecordMapperTest {
 	@Test
 	void tobillingRecordEntityWithNoRecipient() {
 		final var billingRecord = createbillingRecord().withRecipient(null);
-		final var billingRecordEntity = BillingRecordMapper.toBillingRecordEntity(billingRecord);
+		final var billingRecordEntity = BillingRecordMapper.toBillingRecordEntity(billingRecord, MUNICIPALITY_ID);
 
 		assertThat(billingRecordEntity.getRecipient()).isNull();
 	}
@@ -236,7 +239,7 @@ class BillingRecordMapperTest {
 	@EnumSource(value = Status.class, names = "APPROVED", mode = EXCLUDE)
 	void verifyNoApprovedDateOrApprovedBy(Status status) {
 		final var billingRecord = createbillingRecord().withStatus(status);
-		final var billingRecordEntity = BillingRecordMapper.toBillingRecordEntity(billingRecord);
+		final var billingRecordEntity = BillingRecordMapper.toBillingRecordEntity(billingRecord, MUNICIPALITY_ID);
 
 		assertThat(billingRecordEntity.getApproved()).isNull();
 		assertThat(billingRecordEntity.getApprovedBy()).isNull();
@@ -245,7 +248,7 @@ class BillingRecordMapperTest {
 	@Test
 	void toBillingRecordEntitiesForFullInstance() {
 		final var billingRecord = createbillingRecord();
-		final var billingRecordEntities = BillingRecordMapper.toBillingRecordEntities(List.of(billingRecord));
+		final var billingRecordEntities = BillingRecordMapper.toBillingRecordEntities(List.of(billingRecord), MUNICIPALITY_ID);
 
 		assertThat(billingRecordEntities).isNotNull().hasSize(1);
 		final var billingRecordEntity = billingRecordEntities.get(0);
@@ -256,6 +259,7 @@ class BillingRecordMapperTest {
 		assertThat(billingRecordEntity.getApprovedBy()).isEqualTo(APPROVED_BY);
 		assertThat(billingRecordEntity.getStatus()).isEqualTo(STATUS);
 		assertThat(billingRecordEntity.getType()).isEqualTo(TYPE);
+		assertThat(billingRecordEntity.getMunicipalityId()).isEqualTo(MUNICIPALITY_ID);
 
 		assertThat(billingRecordEntity)
 			.extracting(
@@ -378,7 +382,7 @@ class BillingRecordMapperTest {
 	@Test
 	void tobillingRecordEntitiesWithNoRecipient() {
 		final var billingRecord = createbillingRecord().withRecipient(null);
-		final var billingRecordEntity = BillingRecordMapper.toBillingRecordEntities(List.of(billingRecord));
+		final var billingRecordEntity = BillingRecordMapper.toBillingRecordEntities(List.of(billingRecord), MUNICIPALITY_ID);
 
 		assertThat(billingRecordEntity.get(0).getRecipient()).isNull();
 	}
@@ -386,7 +390,7 @@ class BillingRecordMapperTest {
 	@ParameterizedTest
 	@EnumSource(value = Status.class, names = "APPROVED", mode = EXCLUDE)
 	void updatebillingRecordEntityFromOtherStatusToApprovedStatus(Status status) {
-		final var billingEntity = BillingRecordMapper.toBillingRecordEntity(createbillingRecord().withStatus(status).withApprovedBy(null));
+		final var billingEntity = BillingRecordMapper.toBillingRecordEntity(createbillingRecord().withStatus(status).withApprovedBy(null), MUNICIPALITY_ID);
 		final var billingRecord = createbillingRecord();
 		final var updatedEntity = BillingRecordMapper.updateEntity(billingEntity, billingRecord);
 
@@ -399,7 +403,7 @@ class BillingRecordMapperTest {
 	@ValueSource(strings = "RANDOM_APPROVED_BY")
 	@NullSource
 	void updatebillingRecordEntityWhenStatusApproved(String approvedBy) {
-		final var billingEntity = BillingRecordMapper.toBillingRecordEntity(createbillingRecord());
+		final var billingEntity = BillingRecordMapper.toBillingRecordEntity(createbillingRecord(), MUNICIPALITY_ID);
 		final var approvedTimestamp = billingEntity.getApproved();
 		final var updatedEntity = BillingRecordMapper.updateEntity(billingEntity, createbillingRecord().withApprovedBy(approvedBy));
 
@@ -411,7 +415,7 @@ class BillingRecordMapperTest {
 	@ParameterizedTest
 	@EnumSource(value = Status.class, names = "APPROVED", mode = EXCLUDE)
 	void updatebillingRecordEntityFromStatusApprovedToOtherStatus(Status status) {
-		final var billingEntity = BillingRecordMapper.toBillingRecordEntity(createbillingRecord());
+		final var billingEntity = BillingRecordMapper.toBillingRecordEntity(createbillingRecord(), MUNICIPALITY_ID);
 		final var approvedTimestamp = billingEntity.getApproved();
 		final var updatedEntity = BillingRecordMapper.updateEntity(billingEntity, createbillingRecord());
 
@@ -423,7 +427,7 @@ class BillingRecordMapperTest {
 	void tobillingRecordEntityWithNoAccountInformation() {
 		final var billingRecord = createbillingRecord();
 		billingRecord.getInvoice().getInvoiceRows().forEach(row -> row.setAccountInformation(null));
-		final var billingRecordEntity = BillingRecordMapper.toBillingRecordEntity(billingRecord);
+		final var billingRecordEntity = BillingRecordMapper.toBillingRecordEntity(billingRecord, MUNICIPALITY_ID);
 
 		billingRecordEntity.getInvoice().getInvoiceRows().forEach(row -> assertThat(row.getAccountInformation()).isNotNull().hasAllNullFieldsOrProperties());
 	}

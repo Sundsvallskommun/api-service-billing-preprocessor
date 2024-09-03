@@ -6,6 +6,7 @@
         approved_by varchar(255),
         category varchar(255) not null,
         id varchar(255) not null,
+        municipality_id varchar(255) not null,
         status varchar(255) not null,
         type varchar(255) not null,
         primary key (id)
@@ -47,6 +48,7 @@
         id bigint not null auto_increment,
         sent datetime(6),
         encoding varchar(255),
+        municipality_id varchar(255) not null,
         name varchar(255),
         status varchar(255),
         type varchar(255),
@@ -90,6 +92,9 @@
     create index idx_billing_record_category_status 
        on billing_record (category, status);
 
+    create index idx_billing_record_municipality_id
+           on billing_record (municipality_id);
+
     create index idx_file_configuration_type_category_tag 
        on file_configuration (type, category_tag);
 
@@ -104,6 +109,9 @@
 
     create index idx_invoice_file_status 
        on invoice_file (status);
+
+    create index idx_invoice_file_municipality_id
+       on invoice_file (municipality_id);
 
     alter table if exists invoice_file 
        add constraint uq_file_name unique (name);

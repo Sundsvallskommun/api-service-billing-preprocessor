@@ -38,6 +38,7 @@ class BillingRecordEntityTest {
 
 	@Test
 	void hasValidBuilderMethods() {
+		final var municipalityId = "municipalityId";
 		final var category = "category";
 		final var approved = now().minusWeeks(2);
 		final var approvedBy = "approvedBy";
@@ -50,6 +51,7 @@ class BillingRecordEntityTest {
 		final var type = INTERNAL;
 
 		final var entity = BillingRecordEntity.create()
+			.withMunicipalityId(municipalityId)
 			.withCategory(category)
 			.withApproved(approved)
 			.withApprovedBy(approvedBy)
@@ -62,6 +64,7 @@ class BillingRecordEntityTest {
 			.withType(type);
 
 		assertThat(entity).hasNoNullFieldsOrProperties();
+		assertThat(entity.getMunicipalityId()).isEqualTo(municipalityId);
 		assertThat(entity.getCategory()).isEqualTo(category);
 		assertThat(entity.getApproved()).isEqualTo(approved);
 		assertThat(entity.getApprovedBy()).isEqualTo(approvedBy);
