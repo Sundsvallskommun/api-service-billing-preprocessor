@@ -81,7 +81,7 @@ public class InvoiceFileService {
 				.forEach(fileEntity -> this.transferFile(fileEntity, sftpPropertiesConfig.getMap().get(municipalityId).getRemoteDir()).ifPresent(errors::add));
 
 			if (!errors.isEmpty()) {
-				messagingService.sendTransferErrorMail(errors);
+				messagingService.sendTransferErrorMail(municipalityId, errors);
 			}
 		} finally {
 			sessionFactory.clearThreadKey();
@@ -115,7 +115,7 @@ public class InvoiceFileService {
 			.toList();
 
 		if (!creationErrors.isEmpty() || !billingRecords.isEmpty()) {
-			sendCreationErrorMail(creationErrors, billingRecords);
+			sendCreationErrorMail(creationErrors, billingRecords, municipalityId);
 		}
 	}
 
@@ -172,7 +172,7 @@ public class InvoiceFileService {
 			.toList();
 	}
 
-	private void sendCreationErrorMail(List<InvoiceFileError> creationErrors, List<BillingRecordEntity> unprocessedRecords) {
+	private void sendCreationErrorMail(List<InvoiceFileError> creationErrors, List<BillingRecordEntity> unprocessedRecords, String municipalityId) {
 		final var allErrors = new ArrayList<InvoiceFileError>(creationErrors);
 		allErrors.addAll(unprocessedRecords.stream()
 			.map(billingRecord -> InvoiceFileError.create(
@@ -184,6 +184,6 @@ public class InvoiceFileService {
 
 		allErrors.forEach(error -> LOG.warn(error.isCommonError() ? error.getMessage() : "Record with id {} couldn't be processed. Message is '{}'.", error.getEntityId(), error.getMessage()));
 
-		messagingService.sendCreationErrorMail(allErrors);
+		messagingService.sendCreationErrorMail(municipalityId, allErrors);
 	}
 }

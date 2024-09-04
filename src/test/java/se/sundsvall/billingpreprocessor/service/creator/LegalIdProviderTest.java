@@ -31,6 +31,8 @@ import se.sundsvall.billingpreprocessor.integration.party.PartyClient;
 @ExtendWith(MockitoExtension.class)
 class LegalIdProviderTest {
 
+	private static final String MUNICIPALITY_ID = "municipalityId";
+
 	@Mock
 	private PartyClient partyClientMock;
 
@@ -44,7 +46,7 @@ class LegalIdProviderTest {
 	@NullAndEmptySource
 	@ValueSource(strings = " ")
 	void translateToLegalIdWithEmptyValue(String value) {
-		final var e = assertThrows(ThrowableProblem.class, () -> legalIdProvider.translateToLegalId(value));
+		final var e = assertThrows(ThrowableProblem.class, () -> legalIdProvider.translateToLegalId(MUNICIPALITY_ID, value));
 
 		assertThat(e.getStatus()).isEqualTo(INTERNAL_SERVER_ERROR);
 		assertThat(e.getMessage()).isEqualTo("Internal Server Error: Party id is not present");
@@ -55,11 +57,11 @@ class LegalIdProviderTest {
 	void translatePrivatePartyIdToLegalId() {
 		final var partyId = UUID.randomUUID().toString();
 		final var legalId = "123456789012";
-		when(partyClientMock.getLegalId(PartyType.PRIVATE, partyId)).thenReturn(Optional.of(legalId));
+		when(partyClientMock.getLegalId(MUNICIPALITY_ID, PartyType.PRIVATE, partyId)).thenReturn(Optional.of(legalId));
 
-		final var result = legalIdProvider.translateToLegalId(partyId);
+		final var result = legalIdProvider.translateToLegalId(MUNICIPALITY_ID, partyId);
 
-		verify(partyClientMock).getLegalId(PartyType.PRIVATE, partyId);
+		verify(partyClientMock).getLegalId(MUNICIPALITY_ID, PartyType.PRIVATE, partyId);
 		verifyNoMoreInteractions(partyClientMock);
 		assertThat(result).isEqualTo(legalId);
 	}
@@ -68,12 +70,12 @@ class LegalIdProviderTest {
 	void translateEnterprisePartyIdToLegalId() {
 		final var partyId = UUID.randomUUID().toString();
 		final var legalId = "123456789012";
-		when(partyClientMock.getLegalId(PartyType.PRIVATE, partyId)).thenReturn(Optional.empty());
-		when(partyClientMock.getLegalId(PartyType.ENTERPRISE, partyId)).thenReturn(Optional.of(legalId));
+		when(partyClientMock.getLegalId(MUNICIPALITY_ID, PartyType.PRIVATE, partyId)).thenReturn(Optional.empty());
+		when(partyClientMock.getLegalId(MUNICIPALITY_ID, PartyType.ENTERPRISE, partyId)).thenReturn(Optional.of(legalId));
 
-		final var result = legalIdProvider.translateToLegalId(partyId);
+		final var result = legalIdProvider.translateToLegalId(MUNICIPALITY_ID, partyId);
 
-		verify(partyClientMock, times(2)).getLegalId(partyTypeCaptor.capture(), eq(partyId));
+		verify(partyClientMock, times(2)).getLegalId(eq(MUNICIPALITY_ID), partyTypeCaptor.capture(), eq(partyId));
 		verifyNoMoreInteractions(partyClientMock);
 		assertThat(result).isEqualTo(legalId);
 		assertThat(partyTypeCaptor.getAllValues()).hasSize(2).containsExactlyInAnyOrder(PartyType.ENTERPRISE, PartyType.PRIVATE);

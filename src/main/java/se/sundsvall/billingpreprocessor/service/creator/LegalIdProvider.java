@@ -21,13 +21,13 @@ public class LegalIdProvider {
 		this.partyClient = partyClient;
 	}
 
-	public String translateToLegalId(String partyId) {
+	public String translateToLegalId(String municipalityId, String partyId) {
 		if (isBlank(partyId)) {
 			throw Problem.valueOf(INTERNAL_SERVER_ERROR, "Party id is not present");
 		}
 
-		return partyClient.getLegalId(PRIVATE, partyId)
-			.or(() -> partyClient.getLegalId(ENTERPRISE, partyId))
+		return partyClient.getLegalId(municipalityId, PRIVATE, partyId)
+			.or(() -> partyClient.getLegalId(municipalityId, ENTERPRISE, partyId))
 			.orElseThrow(createProblem(NOT_FOUND, format("PartyId '%s' could not be found as a private customer or an enterprise customer", partyId)));
 	}
 }

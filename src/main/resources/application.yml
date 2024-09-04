@@ -32,7 +32,9 @@ spring:
 
 invoicecreator:
   record-terminator: \n
-
+mdc:
+  municipalityId:
+    enabled: true
 scheduler:
   createfiles:
     # At 0000 every day

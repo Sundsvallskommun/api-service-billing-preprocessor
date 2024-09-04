@@ -38,7 +38,7 @@ public class MessagingService {
 		this.properties = properties;
 	}
 
-	public void sendCreationErrorMail(List<InvoiceFileError> errors) {
+	public void sendCreationErrorMail(String municipalityId, List<InvoiceFileError> errors) {
 		if (isBlank(properties.sender()) || isEmpty(properties.recipients())) {
 			LOG.info("Report of creation errors will not be sent as sender or receiver has not been defined in properties.");
 			return;
@@ -47,7 +47,7 @@ public class MessagingService {
 		final var subject = properties.creationErrorMailTemplate().subject().formatted(applicationName, environment);
 		final var body = composeCreationErrorMailBody(errors, applicationName, properties);
 		properties.recipients().forEach(recipient ->
-		client.sendEmail(ASYNCHRONOUSLY,
+		client.sendEmail(municipalityId, ASYNCHRONOUSLY,
 			toEmail(
 				subject,
 				body,
@@ -55,7 +55,7 @@ public class MessagingService {
 				properties.sender())));
 	}
 
-	public void sendTransferErrorMail(List<InvoiceFileError> errors) {
+	public void sendTransferErrorMail(String municipalityId, List<InvoiceFileError> errors) {
 		if (isBlank(properties.sender()) || isEmpty(properties.recipients())) {
 			LOG.info("Report of transfer errors will not be sent as sender or receiver has not been defined in properties.");
 			return;
@@ -63,7 +63,7 @@ public class MessagingService {
 
 		final var subject = properties.transferErrorMailTemplate().subject().formatted(applicationName, environment);
 		final var body = composeTransferErrorMailBody(errors, applicationName, properties);
-		properties.recipients().forEach(recipient -> client.sendEmail(ASYNCHRONOUSLY,
+		properties.recipients().forEach(recipient -> client.sendEmail(municipalityId, ASYNCHRONOUSLY,
 			toEmail(
 				subject,
 				body,

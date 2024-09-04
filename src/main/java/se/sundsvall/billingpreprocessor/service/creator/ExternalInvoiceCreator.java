@@ -130,7 +130,7 @@ public class ExternalInvoiceCreator implements InvoiceCreator {
 
 	private String extractLegalId(BillingRecordEntity billingRecord) {
 		final var legalId = ofNullable(billingRecord.getRecipient().getLegalId())
-			.orElseGet(() -> legalIdProvider.translateToLegalId(billingRecord.getRecipient().getPartyId()));
+			.orElseGet(() -> legalIdProvider.translateToLegalId(billingRecord.getMunicipalityId(), billingRecord.getRecipient().getPartyId()));
 
 		return formatLegalId(legalId);
 	}

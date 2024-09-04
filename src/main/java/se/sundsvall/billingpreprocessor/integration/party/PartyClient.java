@@ -24,12 +24,13 @@ public interface PartyClient {
     /**
      * Get legal id by party type and party id.
      *
+     * @param municipalityId municipality ID
      * @param partyType the party type.
      * @param partyId the party id, i.e. person id or organization id.
      * @return an optional string containing the legal id that corresponds to the provided party
      * type and party id.
      * @throws org.zalando.problem.ThrowableProblem on errors
      */
-    @GetMapping(path = "/{type}/{partyId}/legalId", produces = { TEXT_PLAIN_VALUE, APPLICATION_PROBLEM_JSON_VALUE })
-    Optional<String> getLegalId(@PathVariable("type") PartyType partyType, @PathVariable("partyId") String partyId);
+    @GetMapping(path = "/{municipalityId}/{type}/{partyId}/legalId", produces = { TEXT_PLAIN_VALUE, APPLICATION_PROBLEM_JSON_VALUE })
+    Optional<String> getLegalId(@PathVariable("municipalityId") String municipalityId, @PathVariable("type") PartyType partyType, @PathVariable("partyId") String partyId);
 }

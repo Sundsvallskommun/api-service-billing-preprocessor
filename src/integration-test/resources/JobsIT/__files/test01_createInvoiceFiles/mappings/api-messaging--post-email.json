@@ -1,7 +1,7 @@
 {
 	"name": "api-messaging--post-email",
 	"request": {
-		"url": "/api-messaging/email?async=true",
+		"url": "/api-messaging/2281/email?async=true",
 		"method": "POST",
 		"headers": {
 			"Authorization": {
