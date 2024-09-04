@@ -53,6 +53,7 @@ import se.sundsvall.billingpreprocessor.service.creator.config.InvoiceCreatorPro
 class ExternalInvoiceCreatorTest {
 	// billingRecord constants
 	private static final String ID = randomUUID().toString();
+	private static final String MUNICIPALITY_ID = "municipalityId";
 	private static final Status STATUS = APPROVED;
 	private static final Type TYPE = EXTERNAL;
 	private static final OffsetDateTime APPROVED_TIMESTAMP = now();
@@ -182,7 +183,7 @@ class ExternalInvoiceCreatorTest {
 		final var expected = getResource("validation/external_invoicedata_expected_format.txt");
 
 		assertThat(new String(result, StandardCharsets.ISO_8859_1)).isEqualTo(expected);
-		verify(legalIdProviderMock, never()).translateToLegalId(any());
+		verify(legalIdProviderMock, never()).translateToLegalId(any(), any());
 	}
 
 	@Test
@@ -193,13 +194,13 @@ class ExternalInvoiceCreatorTest {
 		final var input = createbillingRecordEntity();
 		input.getRecipient().withLegalId(null).withPartyId(PARTY_ID);
 
-		when(legalIdProviderMock.translateToLegalId(PARTY_ID)).thenReturn(LEGAL_ID);
+		when(legalIdProviderMock.translateToLegalId(MUNICIPALITY_ID, PARTY_ID)).thenReturn(LEGAL_ID);
 
 		final var result = creator.createInvoiceData(input);
 		final var expected = getResource("validation/external_invoicedata_expected_format.txt");
 
 		assertThat(new String(result, StandardCharsets.ISO_8859_1)).isEqualTo(expected);
-		verify(legalIdProviderMock).translateToLegalId(PARTY_ID);
+		verify(legalIdProviderMock).translateToLegalId(MUNICIPALITY_ID, PARTY_ID);
 	}
 
 	private String getResource(final String fileName) throws IOException, URISyntaxException {
@@ -209,6 +210,7 @@ class ExternalInvoiceCreatorTest {
 
 	private static BillingRecordEntity createbillingRecordEntity() {
 		final var billingRecordEntity = BillingRecordEntity.create()
+			.withMunicipalityId(MUNICIPALITY_ID)
 			.withApproved(APPROVED_TIMESTAMP)
 			.withCreated(CREATED_TIMESTAMP)
 			.withId(ID)

@@ -182,7 +182,7 @@ class InvoiceFileServiceTest {
 		verify(uploadGatewayMock).sendToSftp(byteArrayResourceArgumentCaptor.capture(), eq(FILENAME), eq("remoteDir"));
 		verify(invoiceFileRepositoryMock).save(invoiceFileArgumentCaptor.capture());
 		verify(invoiceFileEntityMock).withStatus(SEND_FAILED);
-		verify(messagingServiceMock).sendTransferErrorMail(creationErrorArgumentCaptor.capture());
+		verify(messagingServiceMock).sendTransferErrorMail(eq(MUNICIPALITY_ID), creationErrorArgumentCaptor.capture());
 		verify(sessionFactoryMock).clearThreadKey();
 		verifyNoMoreInterationsOnMocks();
 
@@ -314,7 +314,7 @@ class InvoiceFileServiceTest {
 		verifyInvoiceCreatorMock(externalInvoiceCreatorMock, invalidExternalEntity, externalEntity);
 		verify(billingRecordRepositoryMock).save(billingRecordArgumentCaptor.capture());
 		verify(invoiceFileRepositoryMock).save(invoiceFileArgumentCaptor.capture());
-		verify(messagingServiceMock).sendCreationErrorMail(creationErrorArgumentCaptor.capture());
+		verify(messagingServiceMock).sendCreationErrorMail(eq(MUNICIPALITY_ID), creationErrorArgumentCaptor.capture());
 		verifyNoMoreInterationsOnMocks();
 
 		assertThat(billingRecordArgumentCaptor.getAllValues()).satisfiesOnlyOnce(billingEntity -> {
@@ -367,7 +367,7 @@ class InvoiceFileServiceTest {
 		verifyInvoiceCreatorMock(internalInvoiceCreatorMock, invalidInternalEntity, internalEntity);
 		verify(billingRecordRepositoryMock).save(billingRecordArgumentCaptor.capture());
 		verify(invoiceFileRepositoryMock).save(invoiceFileArgumentCaptor.capture());
-		verify(messagingServiceMock).sendCreationErrorMail(creationErrorArgumentCaptor.capture());
+		verify(messagingServiceMock).sendCreationErrorMail(eq(MUNICIPALITY_ID), creationErrorArgumentCaptor.capture());
 		verifyNoMoreInterationsOnMocks();
 
 		assertThat(billingRecordArgumentCaptor.getAllValues()).satisfiesOnlyOnce(billingEntity -> {
@@ -414,7 +414,7 @@ class InvoiceFileServiceTest {
 		verify(internalInvoiceCreatorMock).getProcessableType();
 		verify(internalInvoiceCreatorMock).createInvoiceData(invalidInternalEntity);
 		verify(invoiceFileConfigurationServiceMock).getInvoiceFileNameBy(INTERNAL.name(), CATEGORY);
-		verify(messagingServiceMock).sendCreationErrorMail(creationErrorArgumentCaptor.capture());
+		verify(messagingServiceMock).sendCreationErrorMail(eq(MUNICIPALITY_ID), creationErrorArgumentCaptor.capture());
 		verifyNoMoreInterationsOnMocks();
 
 		assertThat(creationErrorArgumentCaptor.getValue()).hasSize(1)
@@ -445,7 +445,7 @@ class InvoiceFileServiceTest {
 		verify(internalInvoiceCreatorMock).createFileHeader();
 		verify(invoiceFileConfigurationServiceMock).getInvoiceFileNameBy(INTERNAL.name(), CATEGORY);
 		verify(invoiceFileConfigurationServiceMock).getEncoding(INTERNAL.name(), CATEGORY);
-		verify(messagingServiceMock).sendCreationErrorMail(creationErrorArgumentCaptor.capture());
+		verify(messagingServiceMock).sendCreationErrorMail(eq(MUNICIPALITY_ID), creationErrorArgumentCaptor.capture());
 		verifyNoMoreInterationsOnMocks();
 
 		assertThat(creationErrorArgumentCaptor.getValue()).hasSize(1)
@@ -469,7 +469,7 @@ class InvoiceFileServiceTest {
 		verify(externalInvoiceCreatorMock).getProcessableCategory();
 		verify(internalInvoiceCreatorMock).getProcessableType();
 		verify(internalInvoiceCreatorMock).getProcessableCategory();
-		verify(messagingServiceMock).sendCreationErrorMail(creationErrorArgumentCaptor.capture());
+		verify(messagingServiceMock).sendCreationErrorMail(eq(MUNICIPALITY_ID), creationErrorArgumentCaptor.capture());
 		verifyNoMoreInterationsOnMocks();
 
 		assertThat(creationErrorArgumentCaptor.getValue()).hasSize(1)
@@ -494,7 +494,7 @@ class InvoiceFileServiceTest {
 		verify(externalInvoiceCreatorMock).getProcessableCategory();
 		verify(internalInvoiceCreatorMock).getProcessableType();
 		verify(internalInvoiceCreatorMock).getProcessableCategory();
-		verify(messagingServiceMock).sendCreationErrorMail(creationErrorArgumentCaptor.capture());
+		verify(messagingServiceMock).sendCreationErrorMail(eq(MUNICIPALITY_ID), creationErrorArgumentCaptor.capture());
 		verifyNoMoreInterationsOnMocks();
 
 		assertThat(creationErrorArgumentCaptor.getValue()).hasSize(1)

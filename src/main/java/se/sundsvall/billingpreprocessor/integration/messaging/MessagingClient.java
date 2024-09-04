@@ -4,6 +4,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static se.sundsvall.billingpreprocessor.integration.messaging.config.MessagingConfiguration.CLIENT_ID;
 
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,9 +19,11 @@ public interface MessagingClient {
 	/**
 	 * Send a single e-mail
 	 *
+	 * @param municipalityId municipality ID
+	 * @param sendAsynchronously none blocking call if true
 	 * @param emailRequest containing email information
 	 * @return response containing id for sent message
 	 */
-	@PostMapping(path = "/email", produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
-	MessageResult sendEmail(@RequestParam("async") boolean sendAsynchronously, @RequestBody EmailRequest emailRequest);
+	@PostMapping(path = "{municipalityId}/email", produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
+	MessageResult sendEmail(@PathVariable("municipalityId") String municipalityId, @RequestParam("async") boolean sendAsynchronously, @RequestBody EmailRequest emailRequest);
 }

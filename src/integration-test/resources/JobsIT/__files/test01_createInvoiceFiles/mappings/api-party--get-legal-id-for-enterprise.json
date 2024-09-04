@@ -10,7 +10,7 @@
 			}
 		},
 		"method": "GET",
-		"urlPath": "/api-party/ENTERPRISE/970cd619-51b0-40b9-9132-579e2f937c07/legalId"
+		"urlPath": "/api-party/2281/ENTERPRISE/970cd619-51b0-40b9-9132-579e2f937c07/legalId"
 	},
 	"response": {
 		"status": 200,

@@ -37,6 +37,7 @@ import se.sundsvall.dept44.requestid.RequestId;
 class MessagingServiceTest {
 
 	private final List<InvoiceFileError> ERRORS = List.of(InvoiceFileError.create("error"));
+	private static final String MUNICIPALITY_ID = "municipalityId";
 
 	@MockBean
 	private MessagingClient messagingClientMock;
@@ -57,7 +58,7 @@ class MessagingServiceTest {
 	void sendCreationErrorMailWhenNullSender() {
 		when(errorMessagePropertiesMock.recipients()).thenReturn(List.of("receiver"));
 
-		service.sendCreationErrorMail(ERRORS);
+		service.sendCreationErrorMail(MUNICIPALITY_ID, ERRORS);
 
 		verify(errorMessagePropertiesMock).sender();
 		verifyNoMoreInteractions(errorMessagePropertiesMock, messagingClientMock);
@@ -67,7 +68,7 @@ class MessagingServiceTest {
 	void sendCreationErrorMailWhenNullReceivers() {
 		when(errorMessagePropertiesMock.sender()).thenReturn("sender");
 
-		service.sendCreationErrorMail(ERRORS);
+		service.sendCreationErrorMail(MUNICIPALITY_ID, ERRORS);
 
 		verify(errorMessagePropertiesMock).sender();
 		verify(errorMessagePropertiesMock).recipients();
@@ -79,7 +80,7 @@ class MessagingServiceTest {
 		when(errorMessagePropertiesMock.sender()).thenReturn("sender");
 		when(errorMessagePropertiesMock.recipients()).thenReturn(emptyList());
 
-		service.sendCreationErrorMail(ERRORS);
+		service.sendCreationErrorMail(MUNICIPALITY_ID, ERRORS);
 
 		verify(errorMessagePropertiesMock).sender();
 		verify(errorMessagePropertiesMock).recipients();
@@ -102,12 +103,12 @@ class MessagingServiceTest {
 		when(errorMailTemplateMock.listPrefix()).thenReturn("");
 		when(errorMailTemplateMock.listSuffix()).thenReturn("");
 
-		service.sendCreationErrorMail(ERRORS);
+		service.sendCreationErrorMail(MUNICIPALITY_ID, ERRORS);
 
 		verify(errorMessagePropertiesMock, times(4)).sender();
 		verify(errorMessagePropertiesMock, times(2)).recipients();
 		verify(errorMessagePropertiesMock, times(8)).creationErrorMailTemplate();
-		verify(messagingClientMock, times(2)).sendEmail(eq(true), emailRequestCaptor.capture());
+		verify(messagingClientMock, times(2)).sendEmail(eq(MUNICIPALITY_ID), eq(true), emailRequestCaptor.capture());
 		verifyNoMoreInteractions(errorMessagePropertiesMock, messagingClientMock);
 
 		assertThat(emailRequestCaptor.getAllValues()).hasSize(2)
@@ -129,7 +130,7 @@ class MessagingServiceTest {
 	void sendTransferErrorMailWhenNullSender() {
 		when(errorMessagePropertiesMock.recipients()).thenReturn(List.of("receiver"));
 
-		service.sendTransferErrorMail(ERRORS);
+		service.sendTransferErrorMail(MUNICIPALITY_ID, ERRORS);
 
 		verify(errorMessagePropertiesMock).sender();
 		verifyNoMoreInteractions(errorMessagePropertiesMock, messagingClientMock);
@@ -139,7 +140,7 @@ class MessagingServiceTest {
 	void sendTransferErrorMailWhenNullReceivers() {
 		when(errorMessagePropertiesMock.sender()).thenReturn("sender");
 
-		service.sendTransferErrorMail(ERRORS);
+		service.sendTransferErrorMail(MUNICIPALITY_ID, ERRORS);
 
 		verify(errorMessagePropertiesMock).sender();
 		verify(errorMessagePropertiesMock).recipients();
@@ -151,7 +152,7 @@ class MessagingServiceTest {
 		when(errorMessagePropertiesMock.sender()).thenReturn("sender");
 		when(errorMessagePropertiesMock.recipients()).thenReturn(emptyList());
 
-		service.sendTransferErrorMail(ERRORS);
+		service.sendTransferErrorMail(MUNICIPALITY_ID, ERRORS);
 
 		verify(errorMessagePropertiesMock).sender();
 		verify(errorMessagePropertiesMock).recipients();
@@ -174,12 +175,12 @@ class MessagingServiceTest {
 		when(errorMailTemplateMock.listPrefix()).thenReturn("");
 		when(errorMailTemplateMock.listSuffix()).thenReturn("");
 
-		service.sendTransferErrorMail(ERRORS);
+		service.sendTransferErrorMail(MUNICIPALITY_ID, ERRORS);
 
 		verify(errorMessagePropertiesMock, times(4)).sender();
 		verify(errorMessagePropertiesMock, times(2)).recipients();
 		verify(errorMessagePropertiesMock, times(8)).transferErrorMailTemplate();
-		verify(messagingClientMock, times(2)).sendEmail(eq(true), emailRequestCaptor.capture());
+		verify(messagingClientMock, times(2)).sendEmail(eq(MUNICIPALITY_ID), eq(true), emailRequestCaptor.capture());
 		verifyNoMoreInteractions(errorMessagePropertiesMock, messagingClientMock);
 
 		assertThat(emailRequestCaptor.getAllValues()).hasSize(2)
