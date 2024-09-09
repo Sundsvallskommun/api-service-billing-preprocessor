@@ -18,7 +18,7 @@
 		<beanio.version>3.1.0</beanio.version>
 		<commons-text.version>1.12.0</commons-text.version>
 		<apache.sshd.version>2.13.2</apache.sshd.version>
-		<shedlock.version>5.15.1</shedlock.version>
+		<shedlock.version>5.16.0</shedlock.version>
 		<com.jcraft.version>0.1.55</com.jcraft.version>
 		<generated-sources-path>${project.build.directory}/generated-sources</generated-sources-path>
 	</properties>
