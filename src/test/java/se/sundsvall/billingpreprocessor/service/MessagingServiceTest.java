@@ -36,7 +36,7 @@ import se.sundsvall.dept44.requestid.RequestId;
 	"spring.profiles.active=junit" })
 class MessagingServiceTest {
 
-	private final List<InvoiceFileError> ERRORS = List.of(InvoiceFileError.create("error"));
+	private static final List<InvoiceFileError> ERRORS = List.of(InvoiceFileError.create("error"));
 	private static final String MUNICIPALITY_ID = "municipalityId";
 
 	@MockBean

@@ -53,12 +53,18 @@ import se.sundsvall.billingpreprocessor.service.error.InvoiceFileError;
 
 @ExtendWith(MockitoExtension.class)
 class InvoiceFileServiceTest {
-	private final static String CATEGORY = "category";
-	private final static String FILENAME = "fileName";
-	private final static byte[] FILE_HEADER = "file_header".getBytes();
-	private final static byte[] INVOICE_DATA = "invoice_data".getBytes();
-	private final static Charset ENCODING = StandardCharsets.ISO_8859_1;
-	private final static String MUNICIPALITY_ID = "municipality_id";
+
+	private static final String CATEGORY = "category";
+
+	private static final String FILENAME = "fileName";
+
+	private static final byte[] FILE_HEADER = "file_header".getBytes();
+
+	private static final byte[] INVOICE_DATA = "invoice_data".getBytes();
+
+	private static final Charset ENCODING = StandardCharsets.ISO_8859_1;
+
+	private static final String MUNICIPALITY_ID = "municipality_id";
 
 	@Mock
 	private BillingRecordRepository billingRecordRepositoryMock;

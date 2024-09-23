@@ -124,11 +124,9 @@ class JobsIT extends AbstractAppTest {
 
 		await()
 			.atMost(10, TimeUnit.SECONDS)
-			.until(() -> {
-				return repository.findAll().stream()
-					.map(InvoiceFileEntity::getStatus)
-					.allMatch(s -> Objects.equals(s, SEND_SUCCESSFUL));
-		});
+			.until(() -> repository.findAll().stream()
+				.map(InvoiceFileEntity::getStatus)
+				.allMatch(s -> Objects.equals(s, SEND_SUCCESSFUL)));
 	}
 
 	@AfterAll
