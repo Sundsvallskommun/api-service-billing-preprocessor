@@ -45,7 +45,7 @@ class BillingRecordEntityTest {
 		final var created = now().minusWeeks(3);
 		final var id = "id";
 		final var invoice = InvoiceEntity.create();
-		final var Recipient = RecipientEntity.create();
+		final var recipient = RecipientEntity.create();
 		final var modified = now().minusWeeks(1);
 		final var status = REJECTED;
 		final var type = INTERNAL;
@@ -58,7 +58,7 @@ class BillingRecordEntityTest {
 			.withCreated(created)
 			.withId(id)
 			.withInvoice(invoice)
-			.withRecipient(Recipient)
+			.withRecipient(recipient)
 			.withModified(modified)
 			.withStatus(status)
 			.withType(type);
@@ -71,7 +71,7 @@ class BillingRecordEntityTest {
 		assertThat(entity.getCreated()).isEqualTo(created);
 		assertThat(entity.getId()).isEqualTo(id);
 		assertThat(entity.getInvoice()).isEqualTo(invoice);
-		assertThat(entity.getRecipient()).isEqualTo(Recipient);
+		assertThat(entity.getRecipient()).isEqualTo(recipient);
 		assertThat(entity.getModified()).isEqualTo(modified);
 		assertThat(entity.getStatus()).isEqualTo(status);
 		assertThat(entity.getType()).isEqualTo(type);

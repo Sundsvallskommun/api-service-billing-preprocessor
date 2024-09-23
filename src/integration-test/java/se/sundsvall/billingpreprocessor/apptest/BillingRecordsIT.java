@@ -57,7 +57,6 @@ class BillingRecordsIT extends AbstractAppTest {
 
 	@Test
 	void test02_readBillingRecordById() {
-		System.out.println(Charset.defaultCharset());
 		setupCall()
 			.withServicePath("/2281/billingrecords/1310ee8b-ecf9-4fe1-ab9d-f19153b19d06")
 			.withHttpMethod(GET)
