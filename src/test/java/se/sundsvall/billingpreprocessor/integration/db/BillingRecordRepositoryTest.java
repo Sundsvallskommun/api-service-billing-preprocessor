@@ -18,6 +18,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.turkraft.springfilter.converter.FilterSpecificationConverter;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,8 +30,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.turkraft.springfilter.converter.FilterSpecificationConverter;
 
 import se.sundsvall.billingpreprocessor.integration.db.model.AccountInformationEmbeddable;
 import se.sundsvall.billingpreprocessor.integration.db.model.AddressDetailsEmbeddable;
@@ -208,7 +207,7 @@ class BillingRecordRepositoryTest {
 
 	@Test
 	void findWithSpecification() {
-		final Specification<BillingRecordEntity> specification = filterSpecificationConverter.convert("(category : 'ACCESS_CARD' and status : 'APPROVED')");
+		final Specification<BillingRecordEntity> specification = filterSpecificationConverter.convert("(category : 'BILLING_RECORD' and status : 'APPROVED')");
 		final Pageable pageable = PageRequest.of(0, 20);
 
 		final var matches = repository.findAll(specification, pageable);
@@ -219,7 +218,7 @@ class BillingRecordRepositoryTest {
 		assertThat(matches.getTotalPages()).isEqualTo(1);
 		assertThat(matches)
 			.extracting(BillingRecordEntity::getId, BillingRecordEntity::getCategory, BillingRecordEntity::getStatus).containsExactly(
-				tuple("1310ee8b-ecf9-4fe1-ab9d-f19153b19d06", "ACCESS_CARD", APPROVED));
+				tuple("1310ee8b-ecf9-4fe1-ab9d-f19153b19d06", "BILLING_RECORD", APPROVED));
 	}
 
 	@Test
@@ -235,8 +234,8 @@ class BillingRecordRepositoryTest {
 		assertThat(matches.getTotalPages()).isEqualTo(1);
 		assertThat(matches)
 			.extracting(BillingRecordEntity::getId, BillingRecordEntity::getCategory, BillingRecordEntity::getStatus).containsExactlyInAnyOrder(
-				tuple("71258e7d-5285-46ce-b9b2-877f8cad8edd", "ACCESS_CARD", NEW),
-				tuple("1310ee8b-ecf9-4fe1-ab9d-f19153b19d06", "ACCESS_CARD", APPROVED),
+				tuple("71258e7d-5285-46ce-b9b2-877f8cad8edd", "BILLING_RECORD", NEW),
+				tuple("1310ee8b-ecf9-4fe1-ab9d-f19153b19d06", "BILLING_RECORD", APPROVED),
 				tuple("83e4d599-5b4d-431c-8ebc-81192e9401ee", "SALARY_AND_PENSION", NEW));
 	}
 
@@ -254,7 +253,7 @@ class BillingRecordRepositoryTest {
 		assertThat(matches.getTotalPages()).isEqualTo(3);
 		assertThat(matches)
 			.extracting(BillingRecordEntity::getId, BillingRecordEntity::getCategory, BillingRecordEntity::getStatus).containsExactly(
-				tuple("71258e7d-5285-46ce-b9b2-877f8cad8edd", "ACCESS_CARD", NEW));
+				tuple("71258e7d-5285-46ce-b9b2-877f8cad8edd", "BILLING_RECORD", NEW));
 	}
 
 	@Test

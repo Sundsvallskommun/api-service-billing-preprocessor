@@ -24,9 +24,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.integration.file.remote.session.DelegatingSessionFactory;
 import org.springframework.stereotype.Service;
-
-import jakarta.transaction.Transactional;
 import org.zalando.problem.Problem;
+
 import se.sundsvall.billingpreprocessor.integration.db.BillingRecordRepository;
 import se.sundsvall.billingpreprocessor.integration.db.InvoiceFileRepository;
 import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
@@ -36,6 +35,8 @@ import se.sundsvall.billingpreprocessor.integration.sftp.SftpConfiguration.Uploa
 import se.sundsvall.billingpreprocessor.integration.sftp.SftpPropertiesConfig;
 import se.sundsvall.billingpreprocessor.service.creator.InvoiceCreator;
 import se.sundsvall.billingpreprocessor.service.error.InvoiceFileError;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class InvoiceFileService {
@@ -172,7 +173,7 @@ public class InvoiceFileService {
 	}
 
 	private void sendCreationErrorMail(List<InvoiceFileError> creationErrors, List<BillingRecordEntity> unprocessedRecords, String municipalityId) {
-		final var allErrors = new ArrayList<InvoiceFileError>(creationErrors);
+		final var allErrors = new ArrayList<>(creationErrors);
 		allErrors.addAll(unprocessedRecords.stream()
 			.map(billingRecord -> InvoiceFileError.create(
 				billingRecord.getId(),
