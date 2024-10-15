@@ -23,12 +23,20 @@ public class AsyncExecutorService {
 	@Async
 	public void createFiles(String uuid, String municipalityId) {
 		RequestId.init(uuid);
-		invoiceFileService.createFiles(municipalityId);
+		try {
+			invoiceFileService.createFiles(municipalityId);
+		} finally {
+			RequestId.reset();
+		}
 	}
 
 	@Async
 	public void transferFiles(String uuid, String municipalityId) {
 		RequestId.init(uuid);
-		invoiceFileService.transferFiles(municipalityId);
+		try {
+			invoiceFileService.transferFiles(municipalityId);
+		} finally {
+			RequestId.reset();
+		}
 	}
 }

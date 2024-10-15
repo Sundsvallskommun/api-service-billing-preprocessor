@@ -39,12 +39,12 @@ import se.sundsvall.billingpreprocessor.service.creator.config.InvoiceCreatorPro
 
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
 @ActiveProfiles("junit")
-class InternalInvoiceCreatorTest {
+class InternalCustomerInvoiceCreatorTest {
 	// Invoice constants
 	private static final String CUSTOMER_ID = "16";
 	private static final String CUSTOMER_REFERENCE = "5ABC30DEF";
 	private static final String INVOICE_DESCRIPTION = "Extra utbetalning - Direktinsättning";
-	private static final LocalDate DATE = LocalDate.of(2024, 3, 06);
+	private static final LocalDate DATE = LocalDate.of(2024, 3, 6);
 	private static final LocalDate DUE_DATE = LocalDate.of(2024, 3, 30);
 	private static final String OUR_REFERENCE = "Johnny Bråttom";
 	private static final String REFERENCE_ID = "referenceId";
@@ -69,8 +69,7 @@ class InternalInvoiceCreatorTest {
 	private InvoiceFileConfigurationRepository invoiceFileConfigurationRepositoryMock;
 
 	@Autowired
-	@Qualifier(value = "internalInvoiceCreator")
-	private InternalInvoiceCreator creator;
+	private InternalCustomerInvoiceCreator creator;
 
 	@Autowired
 	private InvoiceCreatorProperties properties;
@@ -85,10 +84,10 @@ class InternalInvoiceCreatorTest {
 		final var category = "category";
 		final var config = InvoiceFileConfigurationEntity.create().withCategoryTag(category);
 
-		when(invoiceFileConfigurationRepositoryMock.findByCreatorName("InternalInvoiceCreator")).thenReturn(Optional.of(config));
+		when(invoiceFileConfigurationRepositoryMock.findByCreatorName("InternalCustomerInvoiceCreator")).thenReturn(Optional.of(config));
 
 		assertThat(creator.getProcessableCategory()).isEqualTo(category);
-		verify(invoiceFileConfigurationRepositoryMock).findByCreatorName("InternalInvoiceCreator");
+		verify(invoiceFileConfigurationRepositoryMock).findByCreatorName("InternalCustomerInvoiceCreator");
 	}
 
 	@Test
@@ -96,10 +95,10 @@ class InternalInvoiceCreatorTest {
 		final var type = INTERNAL;
 		final var config = InvoiceFileConfigurationEntity.create().withType(type.toString());
 
-		when(invoiceFileConfigurationRepositoryMock.findByCreatorName("InternalInvoiceCreator")).thenReturn(Optional.of(config));
+		when(invoiceFileConfigurationRepositoryMock.findByCreatorName("InternalCustomerInvoiceCreator")).thenReturn(Optional.of(config));
 
 		assertThat(creator.getProcessableType()).isEqualTo(type);
-		verify(invoiceFileConfigurationRepositoryMock).findByCreatorName("InternalInvoiceCreator");
+		verify(invoiceFileConfigurationRepositoryMock).findByCreatorName("InternalCustomerInvoiceCreator");
 	}
 
 	@Test
@@ -109,14 +108,14 @@ class InternalInvoiceCreatorTest {
 
 		assertThat(List.of(e1, e2)).allSatisfy(e -> {
 			assertThat(e.getStatus()).isEqualTo(INTERNAL_SERVER_ERROR);
-			assertThat(e.getMessage()).isEqualTo("Internal Server Error: No configuration present for invoice creator with name InternalInvoiceCreator");
+			assertThat(e.getMessage()).isEqualTo("Internal Server Error: No configuration present for invoice creator with name InternalCustomerInvoiceCreator");
 		});
 	}
 
 	@Test
 	void createFileHeader() throws Exception {
 		final var config = InvoiceFileConfigurationEntity.create().withEncoding(StandardCharsets.ISO_8859_1.name());
-		when(invoiceFileConfigurationRepositoryMock.findByCreatorName("InternalInvoiceCreator")).thenReturn(Optional.of(config));
+		when(invoiceFileConfigurationRepositoryMock.findByCreatorName("InternalCustomerInvoiceCreator")).thenReturn(Optional.of(config));
 
 		final var result = creator.createFileHeader();
 		final var expected = getResource("validation/internal_header_expected_format.txt");
@@ -132,7 +131,7 @@ class InternalInvoiceCreatorTest {
 	@Test
 	void createInvoiceDataWhenInvoiceMissing() {
 		final var config = InvoiceFileConfigurationEntity.create().withEncoding(StandardCharsets.ISO_8859_1.name());
-		when(invoiceFileConfigurationRepositoryMock.findByCreatorName("InternalInvoiceCreator")).thenReturn(Optional.of(config));
+		when(invoiceFileConfigurationRepositoryMock.findByCreatorName("InternalCustomerInvoiceCreator")).thenReturn(Optional.of(config));
 
 		final var input = createbillingRecordEntity().withInvoice(null);
 		final var e = assertThrows(ThrowableProblem.class, () -> creator.createInvoiceData(input));
@@ -144,7 +143,7 @@ class InternalInvoiceCreatorTest {
 	@Test
 	void createInvoiceDataFromEntity() throws Exception {
 		final var config = InvoiceFileConfigurationEntity.create().withEncoding(StandardCharsets.ISO_8859_1.name());
-		when(invoiceFileConfigurationRepositoryMock.findByCreatorName("InternalInvoiceCreator")).thenReturn(Optional.of(config));
+		when(invoiceFileConfigurationRepositoryMock.findByCreatorName("InternalCustomerInvoiceCreator")).thenReturn(Optional.of(config));
 
 		final var result = creator.createInvoiceData(createbillingRecordEntity());
 		final var expected = getResource("validation/internal_invoicedata_expected_format.txt");

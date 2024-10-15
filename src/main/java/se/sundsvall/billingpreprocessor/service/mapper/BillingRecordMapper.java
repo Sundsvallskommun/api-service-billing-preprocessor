@@ -17,6 +17,7 @@ import static se.sundsvall.billingpreprocessor.service.util.CalculationUtil.calc
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import se.sundsvall.billingpreprocessor.api.model.AccountInformation;
 import se.sundsvall.billingpreprocessor.api.model.AddressDetails;
@@ -181,11 +182,12 @@ public final class BillingRecordMapper {
 	}
 
 	private static AddressDetailsEmbeddable toAddressDetailsEmbeddable(final AddressDetails addressDetails) {
-		return AddressDetailsEmbeddable.create()
-			.withCareOf(addressDetails.getCareOf())
-			.withCity(addressDetails.getCity())
-			.withPostalCode(addressDetails.getPostalCode())
-			.withStreet(addressDetails.getStreet());
+		return Optional.ofNullable(addressDetails).map(details -> AddressDetailsEmbeddable.create()
+			.withCareOf(details.getCareOf())
+			.withCity(details.getCity())
+			.withPostalCode(details.getPostalCode())
+			.withStreet(details.getStreet()))
+			.orElse(null);
 	}
 
 	/**
