@@ -30,7 +30,9 @@ class InvoiceFileStatusConverterTest {
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = { "GENERATED", "SEND_SUCCESSFUL", "SEND_FAILED" })
+	@ValueSource(strings = {
+		"GENERATED", "SEND_SUCCESSFUL", "SEND_FAILED"
+	})
 	void testConvertToEntityAttribute(String string) {
 		final var value = converter.convertToEntityAttribute(string);
 		assertThat(value)

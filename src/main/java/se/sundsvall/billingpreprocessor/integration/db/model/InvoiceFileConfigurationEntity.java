@@ -18,8 +18,12 @@ import jakarta.persistence.UniqueConstraint;
 		@Index(name = "idx_file_configuration_creator_name", columnList = "creator_name")
 	},
 	uniqueConstraints = {
-		@UniqueConstraint(name = "uq_type_category_tag", columnNames = { "type", "category_tag" }),
-		@UniqueConstraint(name = "uq_creator_name", columnNames = { "creator_name" })
+		@UniqueConstraint(name = "uq_type_category_tag", columnNames = {
+			"type", "category_tag"
+		}),
+		@UniqueConstraint(name = "uq_creator_name", columnNames = {
+			"creator_name"
+		})
 	})
 public class InvoiceFileConfigurationEntity {
 

@@ -31,9 +31,9 @@ class ValidRecipientConstraintValidatorTest {
 	@Test
 	void withExternalTypeAndValidRecipient() {
 		assertThat(validator.isValid(BillingRecord.create().withType(EXTERNAL).withRecipient(Recipient.create().withPartyId("partyId").withLegalId("legalId")
-				.withOrganizationName("organizationName")), contextMock)).isTrue();
+			.withOrganizationName("organizationName")), contextMock)).isTrue();
 		assertThat(validator.isValid(BillingRecord.create().withType(EXTERNAL).withRecipient(Recipient.create().withPartyId("partyId").withLegalId("legalId")
-				.withFirstName("firstName").withLastName("lastName")), contextMock)).isTrue();
+			.withFirstName("firstName").withLastName("lastName")), contextMock)).isTrue();
 
 		verifyNoInteractions(contextMock, builderMock);
 	}
@@ -105,7 +105,7 @@ class ValidRecipientConstraintValidatorTest {
 	@Test
 	void withExternalTypeAndRecipientWithNoPartyIdButWithLegalId() {
 		assertThat(validator.isValid(BillingRecord.create().withType(EXTERNAL).withRecipient(Recipient.create()
-				.withOrganizationName("organizationName").withLegalId("legalId")), contextMock)).isTrue();
+			.withOrganizationName("organizationName").withLegalId("legalId")), contextMock)).isTrue();
 
 		verifyNoInteractions(contextMock, builderMock);
 	}

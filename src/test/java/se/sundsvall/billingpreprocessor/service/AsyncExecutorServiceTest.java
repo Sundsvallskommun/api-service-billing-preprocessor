@@ -41,8 +41,8 @@ class AsyncExecutorServiceTest {
 		assertThat(Stream.of(AsyncExecutorService.class.getDeclaredMethods())
 			.filter(m -> !m.isSynthetic()) // Need to filter out method added by jacoco (see https://www.jacoco.org/jacoco/trunk/doc/faq.html)
 			.allMatch(m -> m.isAnnotationPresent(Async.class)))
-				.withFailMessage("One or more methods in AsyncExecutorService is not annotated with @Async")
-				.isTrue();
+			.withFailMessage("One or more methods in AsyncExecutorService is not annotated with @Async")
+			.isTrue();
 	}
 
 	@Test

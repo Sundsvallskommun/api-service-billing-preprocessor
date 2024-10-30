@@ -72,7 +72,7 @@ public class ExternalInvoiceCreator implements InvoiceCreator {
 	/**
 	 * Method creates a file header according to the specification for external invoices
 	 * 
-	 * @return bytearray representing the file header
+	 * @return             bytearray representing the file header
 	 * @throws IOException if byte array output stream can not be closed
 	 */
 	@Override
@@ -89,9 +89,9 @@ public class ExternalInvoiceCreator implements InvoiceCreator {
 	/**
 	 * Method creates a invoice data section according to the specification for external invoices
 	 * 
-	 * @param billingRecord containing the billing record to produce a invoice data section for
-	 * @return bytearray representing the invoice data section
-	 * @throws IOException if byte array output stream can not be closed
+	 * @param  billingRecord containing the billing record to produce a invoice data section for
+	 * @return               bytearray representing the invoice data section
+	 * @throws IOException   if byte array output stream can not be closed
 	 */
 	@Override
 	public byte[] createInvoiceData(BillingRecordEntity billingRecord) throws IOException {

@@ -23,7 +23,7 @@ import se.sundsvall.billingpreprocessor.service.BillingRecordService;
 @ActiveProfiles("junit")
 class BillingRecordsDeleteResourceFailureTest {
 	private static final String PATH = "/{municipalityId}/billingrecords/{id}";
-	
+
 	@Autowired
 	private WebTestClient webTestClient;
 

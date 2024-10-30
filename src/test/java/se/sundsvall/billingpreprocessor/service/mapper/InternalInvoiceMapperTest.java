@@ -118,8 +118,7 @@ class InternalInvoiceMapperTest {
 			Arguments.of(null, "Invoice is not present"),
 			Arguments.of(createInvoiceEntity(null).withCustomerId(null), "Customer id is not present"),
 			Arguments.of(createInvoiceEntity(null).withCustomerReference(null), "Customer reference is not present"),
-			Arguments.of(createInvoiceEntity(null).withOurReference(null), "Our reference is not present")
-		);
+			Arguments.of(createInvoiceEntity(null).withOurReference(null), "Our reference is not present"));
 	}
 
 	@Test

@@ -202,8 +202,7 @@ class ExternalInvoiceMapperTest {
 		return Stream.of(
 			Arguments.of("value", null, "Invoice is not present"),
 			Arguments.of(null, createInvoiceEntity(null), "LegalId is not present"),
-			Arguments.of("value", createInvoiceEntity(null).withCustomerReference(null), "Customer reference is not present")
-		);
+			Arguments.of("value", createInvoiceEntity(null).withCustomerReference(null), "Customer reference is not present"));
 	}
 
 	@Test

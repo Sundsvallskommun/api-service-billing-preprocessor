@@ -102,5 +102,4 @@ public final class SftpProperties {
 			"knownHosts=" + knownHosts + ']';
 	}
 
-
 }

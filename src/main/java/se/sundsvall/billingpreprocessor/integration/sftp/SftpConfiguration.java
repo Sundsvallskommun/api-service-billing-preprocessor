@@ -28,7 +28,7 @@ public class SftpConfiguration {
 	@Bean
 	public DelegatingSessionFactory<SftpClient.DirEntry> sftpSessionFactory(SftpPropertiesConfig config) {
 		Map<Object, SessionFactory<SftpClient.DirEntry>> factories = new LinkedHashMap<>();
-		for(Map.Entry<String, SftpProperties> properties : config.getMap().entrySet()) {
+		for (Map.Entry<String, SftpProperties> properties : config.getMap().entrySet()) {
 			DefaultSftpSessionFactory factory = getSftpSessionFactory(properties);
 			factories.put(properties.getKey(), new CachingSessionFactory<>(factory));
 		}
@@ -43,7 +43,7 @@ public class SftpConfiguration {
 		factory.setUser(properties.getValue().getUser());
 		factory.setPassword(properties.getValue().getPassword());
 
-		if(properties.getValue().getKnownHosts() != null) {
+		if (properties.getValue().getKnownHosts() != null) {
 			factory.setKnownHostsResource(new InputStreamResource(new ByteArrayInputStream(properties.getValue().getKnownHosts().getBytes())));
 		}
 		factory.setAllowUnknownKeys(properties.getValue().isAllowUnknownKeys());

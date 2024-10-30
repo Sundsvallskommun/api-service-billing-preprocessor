@@ -44,7 +44,7 @@ class SftpConfigurationTest {
 
 	@Autowired
 	private DelegatingSessionFactory<?> sessionFactory;
-	
+
 	static {
 		try {
 			TEST_FILE = Files.createTempFile("TEST", ".txt");

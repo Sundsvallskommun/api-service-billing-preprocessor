@@ -90,8 +90,7 @@ class InvoiceFileConfigurationRepositoryTest {
 				.withCategoryTag("categoryTag")
 				.withFileNamePattern("fileNamePattern")
 				.withCreatorName("creatorName"),
-				"Column 'encoding' cannot be null")
-		);
+				"Column 'encoding' cannot be null"));
 	}
 
 	@Test

@@ -27,9 +27,9 @@ public final class CalculationUtil {
 		}
 
 		return ((Double) ofNullable(entity.getInvoiceRows()).orElse(emptyList()).stream()
-				.filter(row -> nonNull(row.getTotalAmount()))
-				.mapToDouble(InvoiceRowEntity::getTotalAmount)
-				.sum())
+			.filter(row -> nonNull(row.getTotalAmount()))
+			.mapToDouble(InvoiceRowEntity::getTotalAmount)
+			.sum())
 			.floatValue();
 	}
 }

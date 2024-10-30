@@ -123,7 +123,9 @@ class MessagingMapperTest {
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = { "<body>", "åäö", " ", "" })
+	@ValueSource(strings = {
+		"<body>", "åäö", " ", ""
+	})
 	void verifyBase64Body(String body) {
 		final var bean = MessagingMapper.toEmail(null, body, null, null);
 

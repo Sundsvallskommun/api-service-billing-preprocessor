@@ -28,7 +28,7 @@ public class InvoiceEntity implements Serializable {
 	@Id
 	@Column(name = "id")
 	private String id;
-    
+
 	@OneToOne(fetch = LAZY)
 	@MapsId
 	@JoinColumn(name = "id", foreignKey = @ForeignKey(name = "fk_billing_record_id_invoice"))

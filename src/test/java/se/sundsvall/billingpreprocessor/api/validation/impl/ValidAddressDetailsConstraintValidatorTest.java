@@ -22,41 +22,41 @@ class ValidAddressDetailsConstraintValidatorTest {
 	@Test
 	void withExternalTypeAndValidAddressDetails() {
 		assertThat(validator.isValid(BillingRecord.create()
-					.withType(EXTERNAL)
-					.withRecipient(Recipient.create().withAddressDetails(AddressDetails.create()
-							.withCity("City")
-							.withStreet("Street")
-							.withtPostalCode("Postal code"))), null))
-					.isTrue();
+			.withType(EXTERNAL)
+			.withRecipient(Recipient.create().withAddressDetails(AddressDetails.create()
+				.withCity("City")
+				.withStreet("Street")
+				.withtPostalCode("Postal code"))), null))
+			.isTrue();
 	}
 
 	@Test
 	void withExternalTypeAndMissingCity() {
 		assertThat(validator.isValid(BillingRecord.create()
-				.withType(EXTERNAL)
-				.withRecipient(Recipient.create().withAddressDetails(AddressDetails.create()
-						.withStreet("Street")
-						.withtPostalCode("Postal code"))), null))
-				.isFalse();
+			.withType(EXTERNAL)
+			.withRecipient(Recipient.create().withAddressDetails(AddressDetails.create()
+				.withStreet("Street")
+				.withtPostalCode("Postal code"))), null))
+			.isFalse();
 	}
 
 	@Test
 	void withExternalTypeAndMissingStreet() {
 		assertThat(validator.isValid(BillingRecord.create()
-				.withType(EXTERNAL)
-				.withRecipient(Recipient.create().withAddressDetails(AddressDetails.create()
-						.withCity("City")
-						.withtPostalCode("Postal code"))), null))
-				.isFalse();
+			.withType(EXTERNAL)
+			.withRecipient(Recipient.create().withAddressDetails(AddressDetails.create()
+				.withCity("City")
+				.withtPostalCode("Postal code"))), null))
+			.isFalse();
 	}
 
 	@Test
 	void withExternalTypeAndMissingPostalCode() {
 		assertThat(validator.isValid(BillingRecord.create()
-				.withType(EXTERNAL)
-				.withRecipient(Recipient.create().withAddressDetails(AddressDetails.create()
-						.withCity("City")
-						.withStreet("Street"))), null))
-				.isFalse();
+			.withType(EXTERNAL)
+			.withRecipient(Recipient.create().withAddressDetails(AddressDetails.create()
+				.withCity("City")
+				.withStreet("Street"))), null))
+			.isFalse();
 	}
 }
