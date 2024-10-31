@@ -40,9 +40,9 @@ public final class BillingRecordMapper {
 	/**
 	 * Method for mapping a BillingRecord object to a BillingRecordEntity object
 	 *
-	 * @param  billingRecord a billing record represented by the BillingRecord class
+	 * @param  billingRecord  a billing record represented by the BillingRecord class
 	 * @param  municipalityId municipality ID
-	 * @return               a object of class BillingRecordEntity representing the incoming BillingRecord object
+	 * @return                a object of class BillingRecordEntity representing the incoming BillingRecord object
 	 */
 	public static BillingRecordEntity toBillingRecordEntity(final BillingRecord billingRecord, String municipalityId) {
 		final var billingRecordEntity = BillingRecordEntity.create() // Create billing record entity

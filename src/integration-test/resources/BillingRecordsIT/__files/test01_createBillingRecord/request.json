@@ -1,47 +1,41 @@
 {
-	"category": "ISYCASE",
-	"type": "EXTERNAL",
-	"status": "NEW",
 	"recipient": {
-		"partyId": "f0882f1d-06bc-47fd-b017-1d8307f5ce95",
 		"firstName": "Alice",
 		"lastName": "Snuffleupagus",
-		"userId": "ALI23SNU",
 		"addressDetails": {
+			"city": "Grouchytown",
 			"street": "Sesame Street 7",
-			"postalCode": "12345",
-			"city": "Grouchytown"
-		}
+			"postalCode": "12345"
+		},
+		"partyId": "f0882f1d-06bc-47fd-b017-1d8307f5ce95",
+		"userId": "ALI23SNU"
 	},
 	"invoice": {
-		"customerId": "16",
-		"description": "Errand number: 2113-01784",
 		"ourReference": "Harvey Kneeslapper",
 		"customerReference": "Alice Snuffleupagus",
-		"referenceId": "19-ALI22SNU",
 		"dueDate": "2023-12-24",
-		"invoiceRows": [
-			{
-				"descriptions": [
-					"Köp av elektrisk tjänstecykel"
-				],
-				"detailedDescriptions": [
-					"Detta ska faktureras Sundsvall Elnät AB"
-				],
-				"vatCode": "25",
-				"costPerUnit": 7995.0,
-				"quantity": 1,
-				"accountInformation": {
-					"costCenter": "15800100",
-					"subaccount": "936300",
-					"department": "920360",
-					"accuralKey": "5647",
-					"activity": "5756",
-					"article": "Elektrisk cykel",
-					"project": "11041",
-					"counterpart": "11830000"
-				}
-			}
-		]
-	}
+		"customerId": "16",
+		"description": "Errand number: 2113-01784",
+		"invoiceRows": [{
+			"quantity": 1,
+			"accountInformation": {
+				"activity": "5756",
+				"costCenter": "15800100",
+				"subaccount": "936300",
+				"counterpart": "11830000",
+				"project": "11041",
+				"department": "920360",
+				"article": "Elektrisk cykel",
+				"accuralKey": "5647"
+			},
+			"detailedDescriptions": ["Detta ska faktureras Sundsvall Elnät AB"],
+			"descriptions": ["Köp av elektrisk tjänstecykel"],
+			"vatCode": "25",
+			"costPerUnit": 7995
+		}],
+		"referenceId": "19-ALI22SNU"
+	},
+	"category": "ISYCASE",
+	"type": "EXTERNAL",
+	"status": "NEW"
 }

@@ -39,17 +39,16 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 @ActiveProfiles("junit")
 class InvoiceFileSchedulerCreateFilesShedlockTest {
 
-
 	@TestConfiguration
 	public static class ShedlockTestConfiguration {
 		@Bean
 		@Primary
 		public InvoiceFileService createMock() {
 
-			final var mockBean =  Mockito.mock(InvoiceFileService.class);
+			final var mockBean = Mockito.mock(InvoiceFileService.class);
 
 			// Let mock hang
-			doAnswer( invocation -> {
+			doAnswer(invocation -> {
 				mockCalledTime = LocalDateTime.now();
 				await().forever()
 					.until(() -> false);

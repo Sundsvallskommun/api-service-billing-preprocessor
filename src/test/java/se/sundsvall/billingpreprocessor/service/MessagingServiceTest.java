@@ -30,10 +30,13 @@ import se.sundsvall.billingpreprocessor.integration.messaging.config.ErrorMessag
 import se.sundsvall.billingpreprocessor.service.error.InvoiceFileError;
 import se.sundsvall.dept44.requestid.RequestId;
 
-@SpringBootTest(classes = { MessagingService.class, ErrorMessageProperties.class })
+@SpringBootTest(classes = {
+	MessagingService.class, ErrorMessageProperties.class
+})
 @TestPropertySource(properties = {
 	"spring.application.name=applicationName",
-	"spring.profiles.active=junit" })
+	"spring.profiles.active=junit"
+})
 class MessagingServiceTest {
 
 	private static final List<InvoiceFileError> ERRORS = List.of(InvoiceFileError.create("error"));

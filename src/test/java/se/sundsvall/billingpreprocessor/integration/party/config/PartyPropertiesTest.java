@@ -14,12 +14,12 @@ import se.sundsvall.billingpreprocessor.Application;
 @ActiveProfiles("junit")
 class PartyPropertiesTest {
 
-    @Autowired
-    private PartyProperties properties;
+	@Autowired
+	private PartyProperties properties;
 
-    @Test
-    void testProperties() {
-        assertThat(properties.connectTimeout()).isEqualTo(11);
-        assertThat(properties.readTimeout()).isEqualTo(22);
-    }
+	@Test
+	void testProperties() {
+		assertThat(properties.connectTimeout()).isEqualTo(11);
+		assertThat(properties.readTimeout()).isEqualTo(22);
+	}
 }

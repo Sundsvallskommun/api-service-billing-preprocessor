@@ -58,7 +58,7 @@ class ValidInvoiceRowsConstraintValidatorTest {
 	@Test
 	void withInvoiceRowsContainingNoPricePerUnit() {
 		final var billingRecord = BillingRecord.create().withInvoice(Invoice.create().withInvoiceRows(List.of(InvoiceRow.create()
-				.withAccountInformation(createAccountInformationInstance(true)))));
+			.withAccountInformation(createAccountInformationInstance(true)))));
 
 		assertThat(validator.isValid(billingRecord, contextMock)).isTrue();
 
@@ -68,10 +68,10 @@ class ValidInvoiceRowsConstraintValidatorTest {
 	@Test
 	void withInternalTypeAndVatPresent() {
 		final var billingRecord = BillingRecord.create().withType(INTERNAL).withInvoice(Invoice.create()
-				.withInvoiceRows(List.of(InvoiceRow.create()
-						.withAccountInformation(createAccountInformationInstance(true))
-						.withCostPerUnit(10f)
-						.withVatCode("25"))));
+			.withInvoiceRows(List.of(InvoiceRow.create()
+				.withAccountInformation(createAccountInformationInstance(true))
+				.withCostPerUnit(10f)
+				.withVatCode("25"))));
 
 		when(contextMock.buildConstraintViolationWithTemplate(any())).thenReturn(builderMock);
 
@@ -85,8 +85,8 @@ class ValidInvoiceRowsConstraintValidatorTest {
 	@Test
 	void withExternalTypeAndVatNotPresent() {
 		final var billingRecord = BillingRecord.create().withType(EXTERNAL).withInvoice(Invoice.create().withInvoiceRows(List.of(InvoiceRow.create()
-				.withAccountInformation(createAccountInformationInstance(true))
-				.withCostPerUnit(10f))));
+			.withAccountInformation(createAccountInformationInstance(true))
+			.withCostPerUnit(10f))));
 
 		when(contextMock.buildConstraintViolationWithTemplate(any())).thenReturn(builderMock);
 
@@ -172,9 +172,9 @@ class ValidInvoiceRowsConstraintValidatorTest {
 	@EnumSource(value = Type.class)
 	void withAccountInformationInCompleteOnOneRow(Type type) {
 		final var billingRecord = BillingRecord.create().withType(type).withInvoice(Invoice.create()
-				.withInvoiceRows(List.of(
-						InvoiceRow.create().withAccountInformation(createAccountInformationInstance(true)),
-						InvoiceRow.create().withAccountInformation(createAccountInformationInstance(true).withCounterpart(null)))));
+			.withInvoiceRows(List.of(
+				InvoiceRow.create().withAccountInformation(createAccountInformationInstance(true)),
+				InvoiceRow.create().withAccountInformation(createAccountInformationInstance(true).withCounterpart(null)))));
 
 		when(contextMock.buildConstraintViolationWithTemplate(any())).thenReturn(builderMock);
 

@@ -526,6 +526,7 @@ class InvoiceFileServiceTest {
 			messagingServiceMock,
 			uploadGatewayMock);
 	}
+
 	private static BillingRecordEntity createBillingRecordEntity(String id, Type type, String municipalityId) {
 		return BillingRecordEntity.create()
 			.withId(id)

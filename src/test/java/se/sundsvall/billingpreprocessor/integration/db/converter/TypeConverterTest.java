@@ -30,7 +30,9 @@ class TypeConverterTest {
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = { "EXTERNAL", "INTERNAL" })
+	@ValueSource(strings = {
+		"EXTERNAL", "INTERNAL"
+	})
 	void testConvertToEntityAttribute(String string) {
 		final var value = converter.convertToEntityAttribute(string);
 		assertThat(value)

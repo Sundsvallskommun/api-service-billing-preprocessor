@@ -11,7 +11,9 @@ import jakarta.validation.Payload;
 import se.sundsvall.billingpreprocessor.api.validation.impl.ValidRecipientConstraintValidator;
 
 @Documented
-@Target({ ElementType.FIELD, ElementType.CONSTRUCTOR, ElementType.PARAMETER, ElementType.TYPE_USE })
+@Target({
+	ElementType.FIELD, ElementType.CONSTRUCTOR, ElementType.PARAMETER, ElementType.TYPE_USE
+})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = ValidRecipientConstraintValidator.class)
 public @interface ValidRecipient {

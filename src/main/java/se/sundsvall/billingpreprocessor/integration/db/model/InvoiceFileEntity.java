@@ -30,7 +30,9 @@ import se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileSt
 		@Index(name = "idx_invoice_file_status", columnList = "status"),
 		@Index(name = "idx_invoice_file_municipality_id", columnList = "municipalityId")
 	},
-	uniqueConstraints = @UniqueConstraint(name = "uq_file_name", columnNames = { "name" }))
+	uniqueConstraints = @UniqueConstraint(name = "uq_file_name", columnNames = {
+		"name"
+	}))
 public class InvoiceFileEntity implements Serializable {
 
 	private static final long serialVersionUID = 912687910950201275L;
@@ -207,15 +209,17 @@ public class InvoiceFileEntity implements Serializable {
 			return false;
 		}
 		InvoiceFileEntity other = (InvoiceFileEntity) obj;
-		return Objects.equals(municipalityId, other.municipalityId) && Objects.equals(content, other.content) && Objects.equals(created, other.created) && Objects.equals(encoding, other.encoding) && id == other.id && Objects.equals(name, other.name) && Objects.equals(sent, other.sent)
+		return Objects.equals(municipalityId, other.municipalityId) && Objects.equals(content, other.content) && Objects.equals(created, other.created) && Objects.equals(encoding, other.encoding) && id == other.id && Objects.equals(name, other.name)
+			&& Objects.equals(sent, other.sent)
 			&& status == other.status && Objects.equals(type, other.type);
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("InvoiceFileEntity [id=").append(id).append(", municipalityId=").append(municipalityId).append(", name=").append(name).append(", content=").append(content).append(", encoding=").append(encoding).append(", status=").append(status).append(", type=").append(type).append(
-			", created=").append(created).append(", sent=").append(sent).append("]");
+		builder.append("InvoiceFileEntity [id=").append(id).append(", municipalityId=").append(municipalityId).append(", name=").append(name).append(", content=").append(content).append(", encoding=").append(encoding).append(", status=").append(status)
+			.append(", type=").append(type).append(
+				", created=").append(created).append(", sent=").append(sent).append("]");
 		return builder.toString();
 	}
 }

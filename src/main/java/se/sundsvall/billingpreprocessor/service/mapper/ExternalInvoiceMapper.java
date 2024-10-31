@@ -53,9 +53,9 @@ public class ExternalInvoiceMapper {
 	/**
 	 * method for creating file header row for external invoice files
 	 * 
-	 * @param generatingSystem the generating system for the file
-	 * @param invoiceType      type of invoice
-	 * @return FileHeaderRow for external invoice files
+	 * @param  generatingSystem the generating system for the file
+	 * @param  invoiceType      type of invoice
+	 * @return                  FileHeaderRow for external invoice files
 	 * @throws ThrowableProblem if any mandatory data is missing
 	 */
 	public static FileHeaderRow toFileHeader(String generatingSystem, String invoiceType) {
@@ -68,10 +68,10 @@ public class ExternalInvoiceMapper {
 	/**
 	 * Method for mapping recipient data to a customer row for an external invoice file
 	 * 
-	 * @param legalId             legal id of invoice recipient
-	 * @param billingRecordEntity entity representing the billingRecordEntity
-	 * @return CustomerRow for external invoice files representing provided data
-	 * @throws ThrowableProblem if any mandatory data is missing
+	 * @param  legalId             legal id of invoice recipient
+	 * @param  billingRecordEntity entity representing the billingRecordEntity
+	 * @return                     CustomerRow for external invoice files representing provided data
+	 * @throws ThrowableProblem    if any mandatory data is missing
 	 */
 	public static CustomerRow toCustomer(String legalId, BillingRecordEntity billingRecordEntity) {
 		final var recipientEntity = ofNullable(billingRecordEntity.getRecipient()).orElseThrow(createInternalServerErrorProblem(ERROR_RECIPIENT_NOT_PRESENT));
@@ -88,10 +88,10 @@ public class ExternalInvoiceMapper {
 	/**
 	 * Method for mapping invoice data to an invoice header row for an external invoice file
 	 * 
-	 * @param legalId             legal id of invoice recipient
-	 * @param billingRecordEntity entity representing the billingRecordEntity
-	 * @return InvoiceHeaderRow for external invoice files representing provided data
-	 * @throws ThrowableProblem if any mandatory data is missing
+	 * @param  legalId             legal id of invoice recipient
+	 * @param  billingRecordEntity entity representing the billingRecordEntity
+	 * @return                     InvoiceHeaderRow for external invoice files representing provided data
+	 * @throws ThrowableProblem    if any mandatory data is missing
 	 */
 	public static InvoiceHeaderRow toInvoiceHeader(String legalId, BillingRecordEntity billingRecordEntity) {
 		final var invoiceEntity = ofNullable(billingRecordEntity.getInvoice()).orElseThrow(createInternalServerErrorProblem(ERROR_INVOICE_NOT_PRESENT));
@@ -106,9 +106,9 @@ public class ExternalInvoiceMapper {
 	/**
 	 * Method for mapping invoice row data to an invoice row for an external invoice file
 	 * 
-	 * @param legalId          legal id of invoice recipient
-	 * @param invoiceRowEntity entity representing the invoiceRowEntity
-	 * @return InvoiceRow for external invoice files representing provided data
+	 * @param  legalId          legal id of invoice recipient
+	 * @param  invoiceRowEntity entity representing the invoiceRowEntity
+	 * @return                  InvoiceRow for external invoice files representing provided data
 	 * @throws ThrowableProblem if any mandatory data is missing
 	 */
 	public static InvoiceRow toInvoiceRow(String legalId, InvoiceRowEntity invoiceRowEntity) {
@@ -124,9 +124,9 @@ public class ExternalInvoiceMapper {
 	/**
 	 * Method for mapping invoice row data to an invoice description row for an external invoice file
 	 * 
-	 * @param legalId          legal id of invoice recipient
-	 * @param invoiceRowEntity entity representing the invoiceRowEntity
-	 * @return A list of InvoiceDescriptionRows representing provided data
+	 * @param  legalId          legal id of invoice recipient
+	 * @param  invoiceRowEntity entity representing the invoiceRowEntity
+	 * @return                  A list of InvoiceDescriptionRows representing provided data
 	 */
 	public static List<InvoiceDescriptionRow> toInvoiceDescriptionRows(String legalId, InvoiceRowEntity invoiceRowEntity) {
 		return ofNullable(invoiceRowEntity.getDescriptions()).orElse(emptyList()).stream()
@@ -140,8 +140,8 @@ public class ExternalInvoiceMapper {
 	/**
 	 * Method for mapping invoice row data to an invoice accounting row for an external invoice file
 	 * 
-	 * @param invoiceRowEntity entity representing the invoiceRowEntity
-	 * @return InvoiceAccountingRow for external invoice files representing provided data
+	 * @param  invoiceRowEntity entity representing the invoiceRowEntity
+	 * @return                  InvoiceAccountingRow for external invoice files representing provided data
 	 * @throws ThrowableProblem if any mandatory data is missing
 	 */
 	public static InvoiceAccountingRow toInvoiceAccountingRow(InvoiceRowEntity invoiceRowEntity) {
@@ -161,9 +161,9 @@ public class ExternalInvoiceMapper {
 	/**
 	 * Method for mapping invoice data to an invoice footer row for an external invoice file
 	 * 
-	 * @param billingRecordEntity entity representing the billingRecordEntity
-	 * @return InvoiceFooterRow for external invoice files representing provided data
-	 * @throws ThrowableProblem if any mandatory data is missing
+	 * @param  billingRecordEntity entity representing the billingRecordEntity
+	 * @return                     InvoiceFooterRow for external invoice files representing provided data
+	 * @throws ThrowableProblem    if any mandatory data is missing
 	 */
 	public static InvoiceFooterRow toInvoiceFooter(BillingRecordEntity billingRecordEntity) {
 		final var invoiceEntity = ofNullable(billingRecordEntity.getInvoice()).orElseThrow(createInternalServerErrorProblem(ERROR_INVOICE_NOT_PRESENT));

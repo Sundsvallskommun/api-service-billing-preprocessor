@@ -46,8 +46,7 @@ public class MessagingService {
 
 		final var subject = properties.creationErrorMailTemplate().subject().formatted(applicationName, environment);
 		final var body = composeCreationErrorMailBody(errors, applicationName, properties);
-		properties.recipients().forEach(recipient ->
-		client.sendEmail(municipalityId, ASYNCHRONOUSLY,
+		properties.recipients().forEach(recipient -> client.sendEmail(municipalityId, ASYNCHRONOUSLY,
 			toEmail(
 				subject,
 				body,

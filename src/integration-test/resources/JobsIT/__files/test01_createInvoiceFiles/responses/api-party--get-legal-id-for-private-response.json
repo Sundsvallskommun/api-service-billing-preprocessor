@@ -1,5 +1,5 @@
 {
-  "title": "Not Found",
-  "status": 404,
-  "detail": "legalentity error: {detail=A LegalEntity with id 970cd619-51b0-40b9-9132-579e2f937c07 was not found, status=404 Not Found, title=The LegalEntity was not found.}"
+	"detail": "legalentity error: {detail=A LegalEntity with id 970cd619-51b0-40b9-9132-579e2f937c07 was not found, status=404 Not Found, title=The LegalEntity was not found.}",
+	"title": "Not Found",
+	"status": 404
 }

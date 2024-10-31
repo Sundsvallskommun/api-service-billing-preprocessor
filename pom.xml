@@ -1,11 +1,12 @@
-<?xml version="1.0"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>se.sundsvall.dept44</groupId>
 		<artifactId>dept44-service-parent</artifactId>
-		<version>6.0.2</version>
-		<relativePath /> <!-- lookup parent from repository -->
+		<version>6.0.3</version>
+		<relativePath />
+		<!-- lookup parent from repository -->
 	</parent>
 	<groupId>se.sundsvall</groupId>
 	<artifactId>api-service-billing-preprocessor</artifactId>
@@ -13,7 +14,7 @@
 	<name>api-service-billing-preprocessor</name>
 
 	<properties>
-  		<!-- Service properties -->
+		<!-- Service properties -->
 		<spring-filter.version>3.1.7</spring-filter.version>
 		<beanio.version>3.1.0</beanio.version>
 		<commons-text.version>1.12.0</commons-text.version>
@@ -124,7 +125,8 @@
 					<excludes>
 						<exclude>**/se/sundsvall/billingpreprocessor/Application*</exclude>
 						<exclude>**/generated/se/sundsvall/**/*</exclude>
-						<exclude>**/db/model/*_*</exclude> <!-- JPAModelGen classes -->
+						<exclude>**/db/model/*_*</exclude>
+						<!-- JPAModelGen classes -->
 					</excludes>
 				</configuration>
 			</plugin>
@@ -189,14 +191,16 @@
 				<executions>
 					<execution>
 						<id>add-generated-source</id>
-						<phase>generate-sources</phase>
 						<goals>
 							<goal>add-source</goal>
 						</goals>
+						<phase>generate-sources</phase>
 						<configuration>
 							<sources>
-								<source>${generated-sources-path}/models</source> <!-- API-model classes -->
-								<source>${generated-sources-path}/annotations</source> <!-- JPAModelGen classes -->
+								<source>${generated-sources-path}/models</source>
+								<!-- API-model classes -->
+								<source>${generated-sources-path}/annotations</source>
+								<!-- JPAModelGen classes -->
 							</sources>
 						</configuration>
 					</execution>

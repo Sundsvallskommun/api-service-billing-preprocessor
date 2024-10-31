@@ -30,7 +30,9 @@ class StatusConverterTest {
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = { "NEW", "APPROVED", "INVOICED", "REJECTED" })
+	@ValueSource(strings = {
+		"NEW", "APPROVED", "INVOICED", "REJECTED"
+	})
 	void testConvertToEntityAttribute(String string) {
 		final var value = converter.convertToEntityAttribute(string);
 		assertThat(value)

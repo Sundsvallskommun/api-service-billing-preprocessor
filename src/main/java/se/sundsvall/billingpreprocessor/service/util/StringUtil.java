@@ -3,6 +3,7 @@ package se.sundsvall.billingpreprocessor.service.util;
 import static java.util.Optional.ofNullable;
 
 import org.apache.commons.lang3.StringUtils;
+
 public class StringUtil {
 	private StringUtil() {}
 

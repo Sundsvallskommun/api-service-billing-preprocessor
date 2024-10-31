@@ -246,8 +246,9 @@ public class BillingRecordEntity implements Serializable {
 			return false;
 		}
 		final BillingRecordEntity other = (BillingRecordEntity) obj;
-		return Objects.equals(municipalityId, other.municipalityId) && Objects.equals(category, other.category) && Objects.equals(approved, other.approved) && Objects.equals(approvedBy, other.approvedBy) && Objects.equals(created, other.created) && Objects.equals(id, other.id) && Objects.equals(
-			invoice, other.invoice) && Objects.equals(recipient, other.recipient) && Objects.equals(modified, other.modified) && Objects.equals(status, other.status) && Objects.equals(type, other.type);
+		return Objects.equals(municipalityId, other.municipalityId) && Objects.equals(category, other.category) && Objects.equals(approved, other.approved) && Objects.equals(approvedBy, other.approvedBy) && Objects.equals(created, other.created) && Objects
+			.equals(id, other.id) && Objects.equals(
+				invoice, other.invoice) && Objects.equals(recipient, other.recipient) && Objects.equals(modified, other.modified) && Objects.equals(status, other.status) && Objects.equals(type, other.type);
 	}
 
 	@Override

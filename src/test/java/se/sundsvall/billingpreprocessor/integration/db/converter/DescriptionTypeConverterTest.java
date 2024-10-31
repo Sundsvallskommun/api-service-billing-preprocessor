@@ -30,7 +30,9 @@ class DescriptionTypeConverterTest {
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = { "DETAILED", "STANDARD" })
+	@ValueSource(strings = {
+		"DETAILED", "STANDARD"
+	})
 	void testConvertToEntityAttribute(String string) {
 		final var value = converter.convertToEntityAttribute(string);
 		assertThat(value)

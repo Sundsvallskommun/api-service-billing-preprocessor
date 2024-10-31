@@ -25,7 +25,7 @@ public interface InvoiceCreator {
 	/**
 	 * Method for creating a file header
 	 * 
-	 * @return bytearray representing the file header
+	 * @return             bytearray representing the file header
 	 * @throws IOException if byte array output stream can not be closed
 	 */
 	byte[] createFileHeader() throws IOException;
@@ -33,9 +33,9 @@ public interface InvoiceCreator {
 	/**
 	 * Method for creating an invoice data section
 	 * 
-	 * @param billingRecord containing the billing record to produce a invoice data section for
-	 * @return bytearray representing the invoice data section
-	 * @throws IOException if byte array output stream can not be closed
+	 * @param  billingRecord containing the billing record to produce a invoice data section for
+	 * @return               bytearray representing the invoice data section
+	 * @throws IOException   if byte array output stream can not be closed
 	 */
 	byte[] createInvoiceData(BillingRecordEntity billingRecord) throws IOException;
 }

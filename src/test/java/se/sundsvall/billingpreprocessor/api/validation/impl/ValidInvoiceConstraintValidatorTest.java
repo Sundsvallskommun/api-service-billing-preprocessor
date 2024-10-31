@@ -82,7 +82,8 @@ class ValidInvoiceConstraintValidatorTest {
 
 	@Test
 	void withInternalTypeAndDetailDescriptionsPresent() {
-		final var billingRecord = BillingRecord.create().withType(INTERNAL).withInvoice(Invoice.create().withReferenceId("refId").withOurReference("ourRef").withInvoiceRows(List.of(InvoiceRow.create().withDetailedDescriptions(List.of("detailedDescription")))));
+		final var billingRecord = BillingRecord.create().withType(INTERNAL).withInvoice(Invoice.create().withReferenceId("refId").withOurReference("ourRef").withInvoiceRows(List.of(InvoiceRow.create().withDetailedDescriptions(List.of(
+			"detailedDescription")))));
 
 		when(contextMock.buildConstraintViolationWithTemplate(any())).thenReturn(builderMock);
 

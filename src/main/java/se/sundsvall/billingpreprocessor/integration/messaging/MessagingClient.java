@@ -19,10 +19,10 @@ public interface MessagingClient {
 	/**
 	 * Send a single e-mail
 	 *
-	 * @param municipalityId municipality ID
-	 * @param sendAsynchronously none blocking call if true
-	 * @param emailRequest containing email information
-	 * @return response containing id for sent message
+	 * @param  municipalityId     municipality ID
+	 * @param  sendAsynchronously none blocking call if true
+	 * @param  emailRequest       containing email information
+	 * @return                    response containing id for sent message
 	 */
 	@PostMapping(path = "{municipalityId}/email", produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
 	MessageResult sendEmail(@PathVariable("municipalityId") String municipalityId, @RequestParam("async") boolean sendAsynchronously, @RequestBody EmailRequest emailRequest);

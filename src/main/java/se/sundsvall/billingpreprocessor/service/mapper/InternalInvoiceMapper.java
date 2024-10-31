@@ -44,9 +44,9 @@ public class InternalInvoiceMapper {
 	/**
 	 * Method for mapping invoice data to a invoice header row for an internal invoice file
 	 * 
-	 * @param billingRecordEntity entity representing the billingRecordEntity
-	 * @return InvoiceHeaderRow for internal invoice files representing provided data
-	 * @throws ThrowableProblem if any mandatory data is missing
+	 * @param  billingRecordEntity entity representing the billingRecordEntity
+	 * @return                     InvoiceHeaderRow for internal invoice files representing provided data
+	 * @throws ThrowableProblem    if any mandatory data is missing
 	 */
 	public static InvoiceHeaderRow toInvoiceHeader(BillingRecordEntity billingRecordEntity) {
 		final var invoiceEntity = ofNullable(billingRecordEntity.getInvoice()).orElseThrow(createInternalServerErrorProblem(ERROR_INVOICE_NOT_PRESENT));
@@ -62,9 +62,9 @@ public class InternalInvoiceMapper {
 	/**
 	 * Method for mapping invoice data to a invoice description row for an internal invoice file
 	 * 
-	 * @param billingRecordEntity entity representing the billingRecordEntity
-	 * @return InvoiceDescriptionRow for internal invoice files representing provided data
-	 * @throws ThrowableProblem if any mandatory data is missing
+	 * @param  billingRecordEntity entity representing the billingRecordEntity
+	 * @return                     InvoiceDescriptionRow for internal invoice files representing provided data
+	 * @throws ThrowableProblem    if any mandatory data is missing
 	 */
 	public static InvoiceDescriptionRow toInvoiceDescriptionRow(BillingRecordEntity billingRecordEntity) {
 		final var invoiceEntity = ofNullable(billingRecordEntity.getInvoice()).orElseThrow(createInternalServerErrorProblem(ERROR_INVOICE_NOT_PRESENT));
@@ -76,8 +76,8 @@ public class InternalInvoiceMapper {
 	/**
 	 * Method for mapping invoice row data to a invoice row for an internal invoice file
 	 * 
-	 * @param invoiceRowEntity entity representing the invoiceRowEntity
-	 * @return InvoiceRow for internal invoice files representing provided data
+	 * @param  invoiceRowEntity entity representing the invoiceRowEntity
+	 * @return                  InvoiceRow for internal invoice files representing provided data
 	 * @throws ThrowableProblem if any mandatory data is missing
 	 */
 	public static InvoiceRow toInvoiceRow(InvoiceRowEntity invoiceRowEntity) {
@@ -91,8 +91,8 @@ public class InternalInvoiceMapper {
 	/**
 	 * Method for mapping invoice accounting row data to a invoice row for an internal invoice file
 	 * 
-	 * @param invoiceRowEntity entity representing the invoiceRowEntity
-	 * @return InvoiceAccountingRow for internal invoice files representing provided data
+	 * @param  invoiceRowEntity entity representing the invoiceRowEntity
+	 * @return                  InvoiceAccountingRow for internal invoice files representing provided data
 	 * @throws ThrowableProblem if any mandatory data is missing
 	 */
 	public static InvoiceAccountingRow toInvoiceAccountingRow(InvoiceRowEntity invoiceRowEntity) {
@@ -112,7 +112,7 @@ public class InternalInvoiceMapper {
 
 	/**
 	 * 
-	 * @param invoiceEntity
+	 * @param  invoiceEntity
 	 * @return
 	 */
 	public static InvoiceFooterRow toInvoiceFooter(BillingRecordEntity billingRecordEntity) {

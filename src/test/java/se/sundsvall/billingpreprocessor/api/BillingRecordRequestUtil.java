@@ -18,8 +18,7 @@ import se.sundsvall.billingpreprocessor.api.model.enums.Type;
 
 public class BillingRecordRequestUtil {
 
-	private BillingRecordRequestUtil() {
-	}
+	private BillingRecordRequestUtil() {}
 
 	public static BillingRecord createBillingRecordInstance(Type type, boolean validBillingRecord) {
 		return BillingRecord.create()

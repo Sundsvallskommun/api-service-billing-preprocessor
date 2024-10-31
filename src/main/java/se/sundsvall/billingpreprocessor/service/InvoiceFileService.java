@@ -71,7 +71,7 @@ public class InvoiceFileService {
 	}
 
 	public void transferFiles(String municipalityId) {
-		if(!sftpPropertiesConfig.getMap().containsKey(municipalityId)) {
+		if (!sftpPropertiesConfig.getMap().containsKey(municipalityId)) {
 			throw Problem.valueOf(BAD_REQUEST, String.format("File transfer for municipality id '%s' is not configured!", municipalityId));
 		}
 		try {
@@ -138,7 +138,6 @@ public class InvoiceFileService {
 
 				billingRecordsToProcess.forEach(billingRecord -> createBillingRecord(outputStream, billingRecord, invoiceCreator)
 					.ifPresent(billingRecordProcessErrors::add));
-
 
 				if (billingRecordsToProcess.size() > billingRecordProcessErrors.size()) { // At least one of the records should be successful for the file to be created
 					invoiceFileRepository.save(toInvoiceFileEntity(filename, type.name(), outputStream.toByteArray(), encoding, municipalityId));

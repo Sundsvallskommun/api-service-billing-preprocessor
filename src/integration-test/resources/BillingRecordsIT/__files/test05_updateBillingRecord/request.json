@@ -1,42 +1,36 @@
 {
-	"category": "ISYCASE",
-	"type": "EXTERNAL",
-	"status": "NEW",
 	"recipient": {
-		"partyId": "970cd619-51b0-40b9-9132-579e2f937c07",
 		"firstName": "Yuri",
 		"lastName": "Karpov",
 		"addressDetails": {
+			"city": "Louiseville",
 			"street": "Beachland avenue 3303",
-			"postalCode": "KY 40211",
-			"city": "Louiseville"
-		}
+			"postalCode": "KY 40211"
+		},
+		"partyId": "970cd619-51b0-40b9-9132-579e2f937c07"
 	},
 	"invoice": {
-		"customerId": "02",
-		"description": "Faktura för tjugo Boxercise-pass",
 		"customerReference": "YUI10KAR",
 		"dueDate": "2022-08-30",
-		"invoiceRows": [
-			{
-				"vatCode": "06",
-				"costPerUnit": 1500.0,
-				"quantity": 20,
-				"accountInformation": {
-					"costCenter": "1455000",
-					"subaccount": "485223",
-					"department": "899700",
-					"activity": "3022910",
-					"article": "Friskvårdssatsning",
-					"counterpart": "YUI10KAR"
-				},
-				"descriptions": [
-					"Testar stränglängd på 30 chars"
-				],
-				"detailedDescriptions": [
-					"Testar stränglängd över 30 chars"
-				]
-			}
-		]
-	}
+		"customerId": "02",
+		"description": "Faktura för tjugo Boxercise-pass",
+		"invoiceRows": [{
+			"quantity": 20,
+			"accountInformation": {
+				"activity": "3022910",
+				"costCenter": "1455000",
+				"subaccount": "485223",
+				"counterpart": "YUI10KAR",
+				"department": "899700",
+				"article": "Friskvårdssatsning"
+			},
+			"detailedDescriptions": ["Testar stränglängd över 30 chars"],
+			"descriptions": ["Testar stränglängd på 30 chars"],
+			"vatCode": "06",
+			"costPerUnit": 1500
+		}]
+	},
+	"category": "ISYCASE",
+	"type": "EXTERNAL",
+	"status": "NEW"
 }

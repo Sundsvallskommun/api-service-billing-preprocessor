@@ -34,7 +34,7 @@ public class InvoiceFileScheduler {
 	@SchedulerLock(name = "createfiles", lockAtMostFor = "${scheduler.shedlock-lock-at-most-for}")
 	public void executeCreateFiles() {
 		// Until separation of cron jobs per municipality is needed all are scheduled with same interval
-		for(String municipalityId : sftpPropertiesConfig.getMap().keySet()) {
+		for (String municipalityId : sftpPropertiesConfig.getMap().keySet()) {
 			RequestId.init();
 			LOGGER.info(LOG_CREATE_FILES_STARTED, municipalityId);
 			invoiceFileService.createFiles(municipalityId);
@@ -47,7 +47,7 @@ public class InvoiceFileScheduler {
 	@SchedulerLock(name = "transferfiles", lockAtMostFor = "${scheduler.shedlock-lock-at-most-for}")
 	public void executeTransferFiles() {
 		// Until separation of cron jobs per municipality is needed all are scheduled with same interval
-		for(String municipalityId : sftpPropertiesConfig.getMap().keySet()) {
+		for (String municipalityId : sftpPropertiesConfig.getMap().keySet()) {
 			RequestId.init();
 			LOGGER.info(LOG_TRANSFER_FILES_STARTED, municipalityId);
 			invoiceFileService.transferFiles(municipalityId);

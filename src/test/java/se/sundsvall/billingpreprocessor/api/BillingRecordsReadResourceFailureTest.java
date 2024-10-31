@@ -25,7 +25,7 @@ import se.sundsvall.billingpreprocessor.service.BillingRecordService;
 @ActiveProfiles("junit")
 class BillingRecordsReadResourceFailureTest {
 	private static final String PATH = "/{municipalityId}/billingrecords";
-	
+
 	@Autowired
 	private WebTestClient webTestClient;
 
