@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.DETAILED;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.STANDARD;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.INTERNAL;
 
@@ -52,6 +53,7 @@ class InternalInvoiceCreatorTest {
 	// Invoice row constants
 	private static final float COST_PER_UNIT = 1500f;
 	private static final String DESCRIPTION = "Uppdrag: ABC-123";
+	private static final String DETAILED_DESCRIPTION = "En mer detaljerad fakturaradsbeskrivning";
 	private static final float QUANTITY = 1f;
 
 	// Account information constants
@@ -186,7 +188,8 @@ class InternalInvoiceCreatorTest {
 			.withTotalAmount(COST_PER_UNIT * QUANTITY);
 
 		return invoiceRowEntity.withDescriptions(List.of(
-			createDescriptionEntity(1, invoiceRowEntity, STANDARD, DESCRIPTION)));
+			createDescriptionEntity(1, invoiceRowEntity, STANDARD, DESCRIPTION),
+			createDescriptionEntity(2, invoiceRowEntity, DETAILED, DETAILED_DESCRIPTION)));
 	}
 
 	private static DescriptionEntity createDescriptionEntity(int id, InvoiceRowEntity invoiceRowEntity, DescriptionType type, String text) {

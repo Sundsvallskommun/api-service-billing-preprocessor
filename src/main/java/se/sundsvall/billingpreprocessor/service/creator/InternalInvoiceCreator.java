@@ -7,6 +7,7 @@ import static se.sundsvall.billingpreprocessor.service.creator.config.InvoiceCre
 import static se.sundsvall.billingpreprocessor.service.mapper.InternalInvoiceMapper.toFileHeader;
 import static se.sundsvall.billingpreprocessor.service.mapper.InternalInvoiceMapper.toInvoiceAccountingRow;
 import static se.sundsvall.billingpreprocessor.service.mapper.InternalInvoiceMapper.toInvoiceDescriptionRow;
+import static se.sundsvall.billingpreprocessor.service.mapper.InternalInvoiceMapper.toInvoiceRowDescriptionRows;
 import static se.sundsvall.billingpreprocessor.service.mapper.InternalInvoiceMapper.toInvoiceFooter;
 import static se.sundsvall.billingpreprocessor.service.mapper.InternalInvoiceMapper.toInvoiceHeader;
 import static se.sundsvall.billingpreprocessor.service.mapper.InternalInvoiceMapper.toInvoiceRow;
@@ -47,33 +48,35 @@ public class InternalInvoiceCreator implements InvoiceCreator {
 
 	/**
 	 * Method returning the type that the creator can handle
-	 * 
+	 *
 	 * @return the type that the creator can handle
 	 */
+	@Override
 	public Type getProcessableType() {
 		return Type.valueOf(getConfiguration().getType());
 	}
 
 	/**
 	 * Method returning the category that the creator can handle
-	 * 
+	 *
 	 * @return the category that the creator can handle
 	 */
+	@Override
 	public String getProcessableCategory() {
 		return getConfiguration().getCategoryTag();
 	}
 
 	/**
 	 * Method creates a file header according to the specification for internal invoices
-	 * 
+	 *
 	 * @return             bytearray representing the file header
 	 * @throws IOException if byte array output stream can not be closed
 	 */
 	@Override
 	public byte[] createFileHeader() throws IOException {
 		final var encoding = Charset.forName(getConfiguration().getEncoding());
-		try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-			BeanWriter invoiceWriter = factory.createWriter(INTERNAL_INVOICE_BUILDER, new OutputStreamWriter(byteArrayOutputStream, encoding))) {
+		try (var byteArrayOutputStream = new ByteArrayOutputStream();
+			var invoiceWriter = factory.createWriter(INTERNAL_INVOICE_BUILDER, new OutputStreamWriter(byteArrayOutputStream, encoding))) {
 			invoiceWriter.write(toFileHeader());
 			invoiceWriter.flush();
 			return byteArrayOutputStream.toByteArray();
@@ -82,7 +85,7 @@ public class InternalInvoiceCreator implements InvoiceCreator {
 
 	/**
 	 * Method creates a invoice data section according to the specification for internal invoices
-	 * 
+	 *
 	 * @param  billingRecord containing the billing record to produce a invoice data section for
 	 * @return               bytearray representing the invoice data section
 	 * @throws IOException   if byte array output stream can not be closed
@@ -94,8 +97,8 @@ public class InternalInvoiceCreator implements InvoiceCreator {
 		}
 
 		final var encoding = Charset.forName(getConfiguration().getEncoding());
-		try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-			BeanWriter invoiceWriter = factory.createWriter(INTERNAL_INVOICE_BUILDER, new OutputStreamWriter(byteArrayOutputStream, encoding))) {
+		try (var byteArrayOutputStream = new ByteArrayOutputStream();
+			var invoiceWriter = factory.createWriter(INTERNAL_INVOICE_BUILDER, new OutputStreamWriter(byteArrayOutputStream, encoding))) {
 			processInvoice(invoiceWriter, billingRecord);
 			invoiceWriter.flush();
 			return byteArrayOutputStream.toByteArray();
@@ -116,6 +119,7 @@ public class InternalInvoiceCreator implements InvoiceCreator {
 
 	private void processInvoiceRow(BeanWriter invoiceWriter, InvoiceRowEntity invoiceRow) {
 		invoiceWriter.write(toInvoiceRow(invoiceRow));
+		toInvoiceRowDescriptionRows(invoiceRow).forEach(invoiceWriter::write);
 		invoiceWriter.write(toInvoiceAccountingRow(invoiceRow));
 	}
 }

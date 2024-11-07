@@ -11,7 +11,6 @@
 		"userId": "ALI23SNU"
 	},
 	"invoice": {
-		"ourReference": "Harvey Kneeslapper",
 		"customerReference": "Alice Snuffleupagus",
 		"dueDate": "2023-12-24",
 		"customerId": "16",
@@ -32,8 +31,7 @@
 			"descriptions": ["Köp av elektrisk tjänstecykel"],
 			"vatCode": "25",
 			"costPerUnit": 7995
-		}],
-		"referenceId": "19-ALI22SNU"
+		}]
 	},
 	"category": "ISYCASE",
 	"type": "EXTERNAL",

@@ -4,6 +4,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+import java.util.Map;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,9 +18,6 @@ import se.sundsvall.billingpreprocessor.integration.sftp.SftpProperties;
 import se.sundsvall.billingpreprocessor.integration.sftp.SftpPropertiesConfig;
 import se.sundsvall.billingpreprocessor.service.InvoiceFileService;
 import se.sundsvall.dept44.requestid.RequestId;
-
-import java.util.Map;
-import java.util.Set;
 
 @ExtendWith(MockitoExtension.class)
 class InvoiceFileSchedulerTest {

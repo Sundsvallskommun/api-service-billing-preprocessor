@@ -147,7 +147,6 @@ class BillingRecordsUpdateResourceFailureTest {
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations()).extracting(Violation::getField, Violation::getMessage).containsExactlyInAnyOrder(
-			tuple("billingRecord", "can not contain detailed description on invoice rows when billing record is of type INTERNAL"),
 			tuple("billingRecord", "can not contain vat code information on invoice rows when billing record is of type INTERNAL"),
 			tuple("billingRecord", "invoice.ourReference is mandatory when billing record is of type INTERNAL"),
 			tuple("billingRecord", "invoice.referenceId is mandatory when billing record is of type INTERNAL"),
