@@ -36,13 +36,13 @@ VALUES	(100, NULL, '5247000', '1620000', 'MIC00GOL', '910300', NULL, NULL, '9361
 -------------------------------------
 INSERT INTO description (text, `type`, invoice_row_id)
 VALUES	('Ordernummer: azi-330c-3fne-33', 'STANDARD', 100),
-		('Beställare: MIC00GOL 22940338', 'STANDARD', 100),
-		('Användare: Rocky Balboa ROC01BAL', 'STANDARD', 100),
-		('Passerkort utan foto', 'STANDARD', 100),
+		('Beställare: MIC00GOL 22940338', 'DETAILED', 100),
+		('Användare: Rocky Balboa ROC01BAL', 'DETAILED', 100),
+		('Passerkort utan foto', 'DETAILED', 100),
 		('Ordernummer: ewf-3fee-boe3-74', 'STANDARD', 200),
-		('Beställare: MAN22VEG 4480296', 'STANDARD', 200),
-		('Användare: Ivan Drago IVA02DRA', 'STANDARD', 200),
-		('Passerkort med foto', 'STANDARD', 200),
+		('Beställare: MAN22VEG 4480296', 'DETAILED', 200),
+		('Användare: Ivan Drago IVA02DRA', 'DETAILED', 200),
+		('Passerkort med foto', 'DETAILED', 200),
 		('Styrka: 100mg', 'STANDARD', 400);
 
 -------------------------------------
