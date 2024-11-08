@@ -15,7 +15,6 @@ import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
 
-import java.nio.charset.Charset;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -45,7 +44,7 @@ class BillingRecordsIT extends AbstractAppTest {
 	private BillingRecordRepository repository;
 
 	@Test
-	void test01_createBillingRecord() {
+	void test01_createExternalBillingRecord() {
 		setupCall()
 			.withServicePath("/2281/billingrecords")
 			.withHttpMethod(POST)
@@ -139,6 +138,17 @@ class BillingRecordsIT extends AbstractAppTest {
 			.withRequest(REQUEST_FILE)
 			.withExpectedResponseStatus(CREATED)
 			.withExpectedResponseHeader(LOCATION, of("^/2281/billingrecords/$"))
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test09_createInternalBillingRecord() {
+		setupCall()
+			.withServicePath("/2281/billingrecords")
+			.withHttpMethod(POST)
+			.withRequest(REQUEST_FILE)
+			.withExpectedResponseStatus(CREATED)
+			.withExpectedResponseHeader(LOCATION, of("^/2281/billingrecords/(.*)$"))
 			.sendRequestAndVerifyResponse();
 	}
 }

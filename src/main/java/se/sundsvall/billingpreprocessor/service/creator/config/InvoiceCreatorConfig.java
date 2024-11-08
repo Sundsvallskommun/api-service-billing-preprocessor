@@ -15,6 +15,7 @@ public class InvoiceCreatorConfig {
 
 	@Bean(INTERNAL_INVOICE_BUILDER)
 	StreamBuilder internalInvoiceStreamBuilder(InvoiceCreatorProperties properties) {
+
 		return new StreamBuilder(INTERNAL_INVOICE_BUILDER)
 			.format(FIXED_LENGTH)
 			.parser(new FixedLengthParserBuilder().recordTerminator(unescapeJava(properties.recordTerminator())))
@@ -24,6 +25,7 @@ public class InvoiceCreatorConfig {
 			.addRecord(se.sundsvall.billingpreprocessor.service.creator.definition.internal.InvoiceHeaderRow.class)
 			.addRecord(se.sundsvall.billingpreprocessor.service.creator.definition.internal.InvoiceDescriptionRow.class)
 			.addRecord(se.sundsvall.billingpreprocessor.service.creator.definition.internal.InvoiceRow.class)
+			.addRecord(se.sundsvall.billingpreprocessor.service.creator.definition.internal.InvoiceRowDescriptionRow.class)
 			.addRecord(se.sundsvall.billingpreprocessor.service.creator.definition.internal.InvoiceAccountingRow.class)
 			.addRecord(se.sundsvall.billingpreprocessor.service.creator.definition.internal.InvoiceFooterRow.class);
 	}

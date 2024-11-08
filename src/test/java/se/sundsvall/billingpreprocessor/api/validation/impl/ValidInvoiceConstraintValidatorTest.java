@@ -1,17 +1,5 @@
 package se.sundsvall.billingpreprocessor.api.validation.impl;
 
-import jakarta.validation.ConstraintValidatorContext;
-import jakarta.validation.ConstraintValidatorContext.ConstraintViolationBuilder;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
-import se.sundsvall.billingpreprocessor.api.model.Invoice;
-import se.sundsvall.billingpreprocessor.api.model.InvoiceRow;
-
-import java.util.List;
-
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -20,6 +8,19 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static se.sundsvall.billingpreprocessor.api.model.enums.Type.EXTERNAL;
 import static se.sundsvall.billingpreprocessor.api.model.enums.Type.INTERNAL;
+
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import jakarta.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidatorContext.ConstraintViolationBuilder;
+import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
+import se.sundsvall.billingpreprocessor.api.model.Invoice;
+import se.sundsvall.billingpreprocessor.api.model.InvoiceRow;
 
 @ExtendWith(MockitoExtension.class)
 class ValidInvoiceConstraintValidatorTest {
@@ -30,7 +31,7 @@ class ValidInvoiceConstraintValidatorTest {
 	@Mock
 	private ConstraintViolationBuilder builderMock;
 
-	private ValidInvoiceConstraintValidator validator = new ValidInvoiceConstraintValidator();
+	private final ValidInvoiceConstraintValidator validator = new ValidInvoiceConstraintValidator();
 
 	@Test
 	void withExternalType() {
@@ -78,20 +79,6 @@ class ValidInvoiceConstraintValidatorTest {
 		assertThat(validator.isValid(billingRecord, contextMock)).isTrue();
 
 		verifyNoInteractions(contextMock, builderMock);
-	}
-
-	@Test
-	void withInternalTypeAndDetailDescriptionsPresent() {
-		final var billingRecord = BillingRecord.create().withType(INTERNAL).withInvoice(Invoice.create().withReferenceId("refId").withOurReference("ourRef").withInvoiceRows(List.of(InvoiceRow.create().withDetailedDescriptions(List.of(
-			"detailedDescription")))));
-
-		when(contextMock.buildConstraintViolationWithTemplate(any())).thenReturn(builderMock);
-
-		assertThat(validator.isValid(billingRecord, contextMock)).isFalse();
-
-		verify(contextMock).disableDefaultConstraintViolation();
-		verify(contextMock).buildConstraintViolationWithTemplate("can not contain detailed description on invoice rows when billing record is of type INTERNAL");
-		verify(builderMock).addConstraintViolation();
 	}
 
 	@Test

@@ -36,12 +36,12 @@
 						"counterpart": "MAN22VEG",
 						"department": "910300"
 					},
-					"descriptions": [
-						"Ordernummer: ewf-3fee-boe3-74",
+					"detailedDescriptions": [
 						"Beställare: MAN22VEG 4480296",
 						"Användare: Ivan Drago IVA02DRA",
 						"Passerkort med foto"
 					],
+					"descriptions": ["Ordernummer: ewf-3fee-boe3-74"],
 					"costPerUnit": 200
 				}],
 				"referenceId": "IN-1998-1884-42"

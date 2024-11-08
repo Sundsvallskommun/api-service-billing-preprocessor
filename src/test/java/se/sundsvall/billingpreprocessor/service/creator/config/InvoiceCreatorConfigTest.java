@@ -69,6 +69,7 @@ class InvoiceCreatorConfigTest {
 				tuple("fileHeaderRow", "se.sundsvall.billingpreprocessor.service.creator.definition.internal.FileHeaderRow"),
 				tuple("invoiceHeaderRow", "se.sundsvall.billingpreprocessor.service.creator.definition.internal.InvoiceHeaderRow"),
 				tuple("invoiceRow", "se.sundsvall.billingpreprocessor.service.creator.definition.internal.InvoiceRow"),
+				tuple("invoiceRowDescriptionRow", "se.sundsvall.billingpreprocessor.service.creator.definition.internal.InvoiceRowDescriptionRow"),
 				tuple("invoiceDescriptionRow", "se.sundsvall.billingpreprocessor.service.creator.definition.internal.InvoiceDescriptionRow"),
 				tuple("invoiceAccountingRow", "se.sundsvall.billingpreprocessor.service.creator.definition.internal.InvoiceAccountingRow"),
 				tuple("invoiceFooterRow", "se.sundsvall.billingpreprocessor.service.creator.definition.internal.InvoiceFooterRow"));

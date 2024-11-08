@@ -13,8 +13,11 @@ import static se.sundsvall.billingpreprocessor.Constants.ERROR_INVOICE_NOT_PRESE
 import static se.sundsvall.billingpreprocessor.Constants.ERROR_OUR_REFERENCE_NOT_PRESENT;
 import static se.sundsvall.billingpreprocessor.Constants.ERROR_SUBACCOUNT_NOT_PRESENT;
 import static se.sundsvall.billingpreprocessor.Constants.ERROR_TOTAL_AMOUNT_NOT_PRESENT;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.DETAILED;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.STANDARD;
 import static se.sundsvall.billingpreprocessor.service.util.ProblemUtil.createInternalServerErrorProblem;
+
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.zalando.problem.ThrowableProblem;
@@ -28,13 +31,14 @@ import se.sundsvall.billingpreprocessor.service.creator.definition.internal.Invo
 import se.sundsvall.billingpreprocessor.service.creator.definition.internal.InvoiceFooterRow;
 import se.sundsvall.billingpreprocessor.service.creator.definition.internal.InvoiceHeaderRow;
 import se.sundsvall.billingpreprocessor.service.creator.definition.internal.InvoiceRow;
+import se.sundsvall.billingpreprocessor.service.creator.definition.internal.InvoiceRowDescriptionRow;
 
 public class InternalInvoiceMapper {
 	private InternalInvoiceMapper() {}
 
 	/**
 	 * method for creating file header row for internal invoice files
-	 * 
+	 *
 	 * @return FileHeaderRow for internal invoice files
 	 */
 	public static FileHeaderRow toFileHeader() {
@@ -43,7 +47,7 @@ public class InternalInvoiceMapper {
 
 	/**
 	 * Method for mapping invoice data to a invoice header row for an internal invoice file
-	 * 
+	 *
 	 * @param  billingRecordEntity entity representing the billingRecordEntity
 	 * @return                     InvoiceHeaderRow for internal invoice files representing provided data
 	 * @throws ThrowableProblem    if any mandatory data is missing
@@ -61,7 +65,7 @@ public class InternalInvoiceMapper {
 
 	/**
 	 * Method for mapping invoice data to a invoice description row for an internal invoice file
-	 * 
+	 *
 	 * @param  billingRecordEntity entity representing the billingRecordEntity
 	 * @return                     InvoiceDescriptionRow for internal invoice files representing provided data
 	 * @throws ThrowableProblem    if any mandatory data is missing
@@ -74,8 +78,29 @@ public class InternalInvoiceMapper {
 	}
 
 	/**
+	 * Method for mapping invoice row data to an invoice description row for an internal invoice file. Description rows
+	 * in entity with DescriptionType DETAILED will be transformed to a InvoiceRowDescriptionRow
+	 *
+	 * @param  invoiceRowEntity entity representing the invoiceRowEntity
+	 * @return                  A list of InvoiceRowDescriptionRow representing provided data
+	 */
+	public static List<InvoiceRowDescriptionRow> toInvoiceRowDescriptionRows(InvoiceRowEntity invoiceRowEntity) {
+		return ofNullable(invoiceRowEntity.getDescriptions()).orElse(emptyList()).stream()
+			.filter(description -> description.getType() == DETAILED)
+			.map(DescriptionEntity::getText)
+			.filter(StringUtils::isNotBlank)
+			.map(InternalInvoiceMapper::toInvoiceRowDescriptionRow)
+			.toList();
+	}
+
+	private static InvoiceRowDescriptionRow toInvoiceRowDescriptionRow(String text) {
+		return InvoiceRowDescriptionRow.create()
+			.withDescription(text);
+	}
+
+	/**
 	 * Method for mapping invoice row data to a invoice row for an internal invoice file
-	 * 
+	 *
 	 * @param  invoiceRowEntity entity representing the invoiceRowEntity
 	 * @return                  InvoiceRow for internal invoice files representing provided data
 	 * @throws ThrowableProblem if any mandatory data is missing
@@ -90,7 +115,7 @@ public class InternalInvoiceMapper {
 
 	/**
 	 * Method for mapping invoice accounting row data to a invoice row for an internal invoice file
-	 * 
+	 *
 	 * @param  invoiceRowEntity entity representing the invoiceRowEntity
 	 * @return                  InvoiceAccountingRow for internal invoice files representing provided data
 	 * @throws ThrowableProblem if any mandatory data is missing
@@ -111,7 +136,7 @@ public class InternalInvoiceMapper {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param  invoiceEntity
 	 * @return
 	 */

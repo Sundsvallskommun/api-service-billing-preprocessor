@@ -1,23 +1,17 @@
 package se.sundsvall.billingpreprocessor.api.validation.impl;
 
-import jakarta.validation.ConstraintValidator;
-import jakarta.validation.ConstraintValidatorContext;
-import org.springframework.util.ObjectUtils;
-import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
-import se.sundsvall.billingpreprocessor.api.model.Invoice;
-import se.sundsvall.billingpreprocessor.api.model.InvoiceRow;
-import se.sundsvall.billingpreprocessor.api.validation.ValidInvoice;
-
-import java.util.ArrayList;
-import java.util.Optional;
-
 import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.StringUtils.isNoneBlank;
 import static se.sundsvall.billingpreprocessor.api.model.enums.Type.EXTERNAL;
 import static se.sundsvall.billingpreprocessor.api.model.enums.Type.INTERNAL;
 
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
+import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
+import se.sundsvall.billingpreprocessor.api.model.Invoice;
+import se.sundsvall.billingpreprocessor.api.validation.ValidInvoice;
+
 public class ValidInvoiceConstraintValidator implements ConstraintValidator<ValidInvoice, BillingRecord> {
-	private static final String CUSTOM_ERROR_MESSAGE_INVOICE_ROW = "can not contain detailed description on invoice rows when billing record is of type " + INTERNAL;
 	private static final String CUSTOM_ERROR_MESSAGE_MISSING_REFERENCE_ID = "invoice.referenceId is mandatory when billing record is of type " + INTERNAL;
 	private static final String CUSTOM_ERROR_MESSAGE_MISSING_OUR_REFERENCE = "invoice.ourReference is mandatory when billing record is of type " + INTERNAL;
 	private static final String CUSTOM_ERROR_MESSAGE_MISSING_CUSTOMER_REFERENCE = "invoice.customerReference is mandatory when billing record is of type " + EXTERNAL;
@@ -35,11 +29,6 @@ public class ValidInvoiceConstraintValidator implements ConstraintValidator<Vali
 
 			if (!isValidOurReference(billingRecord.getInvoice())) {
 				useCustomMessageForValidation(context, CUSTOM_ERROR_MESSAGE_MISSING_OUR_REFERENCE);
-				isValid = false;
-			}
-
-			if (!isValidInvoiceRows(billingRecord.getInvoice())) {
-				useCustomMessageForValidation(context, CUSTOM_ERROR_MESSAGE_INVOICE_ROW);
 				isValid = false;
 			}
 		}
@@ -62,16 +51,6 @@ public class ValidInvoiceConstraintValidator implements ConstraintValidator<Vali
 
 	private boolean isValidOurReference(Invoice invoice) {
 		return isNoneBlank(invoice.getOurReference());
-	}
-
-	private boolean isValidInvoiceRows(Invoice invoice) {
-		// Verify that no detailed description rows exists for any of the provided invoice rows
-		return Optional.ofNullable(invoice)
-			.flatMap(i -> Optional.ofNullable(i.getInvoiceRows()))
-			.orElseGet(ArrayList::new)
-			.stream()
-			.map(InvoiceRow::getDetailedDescriptions)
-			.allMatch(ObjectUtils::isEmpty);
 	}
 
 	private void useCustomMessageForValidation(ConstraintValidatorContext constraintContext, String message) {

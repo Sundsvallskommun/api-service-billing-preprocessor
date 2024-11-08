@@ -1,0 +1,27 @@
+{
+	"invoice": {
+		"ourReference": "Harvey Kneeslapper",
+		"dueDate": "2023-12-24",
+		"customerId": "16",
+		"description": "R-row 1: Errand number 1234-54321",
+		"invoiceRows": [{
+			"quantity": 1,
+			"accountInformation": {
+				"costCenter": "15800100",
+				"subaccount": "936300",
+				"counterpart": "11830000",
+				"department": "920360"
+			},
+			"detailedDescriptions": [
+				"U-row A",
+				"U-row B"
+			],
+			"descriptions": ["R-row 2"],
+			"costPerUnit": 395
+		}],
+		"referenceId": "19-ALI22SNU"
+	},
+	"category": "ISYCASE",
+	"type": "INTERNAL",
+	"status": "NEW"
+}

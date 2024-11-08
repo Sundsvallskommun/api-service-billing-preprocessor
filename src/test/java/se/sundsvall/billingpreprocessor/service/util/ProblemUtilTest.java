@@ -12,7 +12,7 @@ class ProblemUtilTest {
 
 	@Test
 	void testCreateInternalServerErrorProblem() {
-		final var message = RandomStringUtils.randomAlphabetic(10);
+		final var message = RandomStringUtils.secure().nextAlphabetic(10);
 		final var problem = createInternalServerErrorProblem(message).get();
 
 		assertThat(problem).isNotNull();
@@ -23,7 +23,7 @@ class ProblemUtilTest {
 	@Test
 	void testCreateProblem() {
 		final var status = Status.I_AM_A_TEAPOT;
-		final var message = RandomStringUtils.randomAlphabetic(10);
+		final var message = RandomStringUtils.secure().nextAlphabetic(10);
 		final var problem = createProblem(status, message).get();
 
 		assertThat(problem).isNotNull();
