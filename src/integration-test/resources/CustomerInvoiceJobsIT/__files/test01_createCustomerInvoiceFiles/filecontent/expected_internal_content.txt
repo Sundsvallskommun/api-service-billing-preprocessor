@@ -1,0 +1,6 @@
+01300SKC
+H 20                                   25Mil                                                          Joakim von Anka               
+R Kundfaktura 2                                                                                       
+R Kaffefilter                                           14.00       300.00                       4200.00
+K           934100    350200    1234                4149999   120                                              4200.00              
+T 2281.00        

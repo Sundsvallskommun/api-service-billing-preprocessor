@@ -1,9 +1,9 @@
 01300SKC
 H 15                                   JAN00EDO                                                       MAN22VEG                      
-R Passerkort med foto f√∂r Ivan Drago (IVA02DRA)                                                       
+R Passerkort med foto fˆr Ivan Drago (IVA02DRA)                                                       
 R Ordernummer: ewf-3fee-boe3-74                          1.00       200.00                        200.00
-U Best√§llare: MAN22VEG 4480296                                                                        
-U Anv√§ndare: Ivan Drago IVA02DRA                                                                      
+U Best‰llare: MAN22VEG 4480296                                                                        
+U Anv‰ndare: Ivan Drago IVA02DRA                                                                      
 U Passerkort med foto                                                                                 
 K 1620000   936100    910300    5247                          MAN                                               200.00              
 T 200.00         

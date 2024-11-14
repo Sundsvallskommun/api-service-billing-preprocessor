@@ -121,7 +121,7 @@ public class BillingRecordsResource {
 	public ResponseEntity<Page<BillingRecord>> findBillingRecords(
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @PathVariable("municipalityId") @ValidMunicipalityId String municipalityId,
 		@Parameter(description = "Syntax description: [spring-filter](https://github.com/turkraft/spring-filter/blob/85730f950a5f8623159cc0eb4d737555f9382bb7/README.md#syntax)",
-			example = "category : 'CUSTOMER_INVOICE' and status : 'NEW'",
+			example = "category : 'ACCESS_CARD' and status : 'NEW'",
 			schema = @Schema(implementation = String.class)) @Filter final Specification<BillingRecordEntity> filter,
 		@ParameterObject final Pageable pageable) {
 		return ok(service.findBillingRecords(filter, pageable, municipalityId));

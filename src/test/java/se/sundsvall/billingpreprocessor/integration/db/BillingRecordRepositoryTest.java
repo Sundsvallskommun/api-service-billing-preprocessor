@@ -207,7 +207,7 @@ class BillingRecordRepositoryTest {
 
 	@Test
 	void findWithSpecification() {
-		final Specification<BillingRecordEntity> specification = filterSpecificationConverter.convert("(category : 'BILLING_RECORD' and status : 'APPROVED')");
+		final Specification<BillingRecordEntity> specification = filterSpecificationConverter.convert("(category : 'ACCESS_CARD' and status : 'APPROVED')");
 		final Pageable pageable = PageRequest.of(0, 20);
 
 		final var matches = repository.findAll(specification, pageable);
@@ -218,7 +218,7 @@ class BillingRecordRepositoryTest {
 		assertThat(matches.getTotalPages()).isEqualTo(1);
 		assertThat(matches)
 			.extracting(BillingRecordEntity::getId, BillingRecordEntity::getCategory, BillingRecordEntity::getStatus).containsExactly(
-				tuple("1310ee8b-ecf9-4fe1-ab9d-f19153b19d06", "BILLING_RECORD", APPROVED));
+				tuple("1310ee8b-ecf9-4fe1-ab9d-f19153b19d06", "ACCESS_CARD", APPROVED));
 	}
 
 	@Test
@@ -229,14 +229,16 @@ class BillingRecordRepositoryTest {
 		final var matches = repository.findAll(specification, pageable);
 
 		assertThat(matches).isNotNull();
-		assertThat(matches.getTotalElements()).isEqualTo(3);
-		assertThat(matches.getNumberOfElements()).isEqualTo(3);
+		assertThat(matches.getTotalElements()).isEqualTo(5);
+		assertThat(matches.getNumberOfElements()).isEqualTo(5);
 		assertThat(matches.getTotalPages()).isEqualTo(1);
 		assertThat(matches)
 			.extracting(BillingRecordEntity::getId, BillingRecordEntity::getCategory, BillingRecordEntity::getStatus).containsExactlyInAnyOrder(
-				tuple("71258e7d-5285-46ce-b9b2-877f8cad8edd", "BILLING_RECORD", NEW),
-				tuple("1310ee8b-ecf9-4fe1-ab9d-f19153b19d06", "BILLING_RECORD", APPROVED),
-				tuple("83e4d599-5b4d-431c-8ebc-81192e9401ee", "SALARY_AND_PENSION", NEW));
+				tuple("71258e7d-5285-46ce-b9b2-877f8cad8edd", "ACCESS_CARD", NEW),
+				tuple("1310ee8b-ecf9-4fe1-ab9d-f19153b19d06", "ACCESS_CARD", APPROVED),
+				tuple("83e4d599-5b4d-431c-8ebc-81192e9401ee", "SALARY_AND_PENSION", NEW),
+				tuple("389b847c-39e9-4321-ae5d-e736e0a5ff51", "CUSTOMER_INVOICE", NEW),
+				tuple("1c38bf5d-ed89-41ee-8090-37733f276ec9", "CUSTOMER_INVOICE", APPROVED));
 	}
 
 	@Test
@@ -247,13 +249,13 @@ class BillingRecordRepositoryTest {
 		final var matches = repository.findAll(specification, pageable);
 
 		assertThat(matches).isNotNull();
-		assertThat(matches.getTotalElements()).isEqualTo(3);
+		assertThat(matches.getTotalElements()).isEqualTo(5);
 		assertThat(matches.getNumber()).isZero();
 		assertThat(matches.getNumberOfElements()).isEqualTo(1);
-		assertThat(matches.getTotalPages()).isEqualTo(3);
+		assertThat(matches.getTotalPages()).isEqualTo(5);
 		assertThat(matches)
 			.extracting(BillingRecordEntity::getId, BillingRecordEntity::getCategory, BillingRecordEntity::getStatus).containsExactly(
-				tuple("71258e7d-5285-46ce-b9b2-877f8cad8edd", "BILLING_RECORD", NEW));
+				tuple("71258e7d-5285-46ce-b9b2-877f8cad8edd", "ACCESS_CARD", NEW));
 	}
 
 	@Test

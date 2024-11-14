@@ -1,0 +1,30 @@
+{
+	"approvedBy": "E_SERVICE",
+	"recipient": {
+		"organizationName": "Sundsvalls Kommun",
+		"legalId": "2120002411"
+	},
+	"invoice": {
+		"ourReference": "Janne Långben",
+		"customerReference": "2MIL",
+		"customerId": "20",
+		"description": "Kundfaktura",
+		"invoiceRows": [{
+			"accountInformation": {
+				"activity": "1234",
+				"costCenter": "49999999",
+				"subaccount": "934100",
+				"counterpart": "120",
+				"department": "350200"
+			},
+			"quantity": 14,
+			"detailedDescriptions": [],
+			"descriptions": ["Sillunch - bokning"],
+			"costPerUnit": 300
+		}],
+		"referenceId": "192021"
+	},
+	"category": "CUSTOMER_INVOICE",
+	"type": "INTERNAL",
+	"status": "APPROVED"
+}

@@ -48,7 +48,7 @@ import se.sundsvall.dept44.test.annotation.wiremock.WireMockAppTestSuite;
 @WireMockAppTestSuite(files = "classpath:/IsycaseJobsIT/", classes = Application.class)
 @Sql({
 	"/db/scripts/truncate.sql",
-	"/db/scripts/testdata-it.sql"
+	"/db/scripts/testdata-isycase-it.sql"
 })
 class IsycaseJobsIT extends AbstractAppTest {
 
@@ -136,7 +136,7 @@ class IsycaseJobsIT extends AbstractAppTest {
 
 	private String getResource(final String filePath) throws IOException {
 		final var path = getFile(getTestDirectoryPath() + filePath).toPath();
-		return readString(path, StandardCharsets.UTF_8)
+		return readString(path, StandardCharsets.ISO_8859_1)
 			.replaceAll(System.lineSeparator(), unescapeJava(properties.recordTerminator()));
 	}
 }

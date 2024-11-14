@@ -1,0 +1,51 @@
+{
+	"approvedBy": "E_SERVICE",
+	"recipient": {
+		"organizationName": "8892001002",
+		"addressDetails": {
+			"careOf": "",
+			"city": "ANKEBORG",
+			"street": "Ankeborgsvägen 123",
+			"postalCode": "123 45"
+		},
+		"partyId": "e0e69d58-5042-45be-8369-a88292a82b90"
+	},
+	"invoice": {
+		"ourReference": "Joakim von Anka",
+		"customerReference": "123",
+		"customerId": "20",
+		"description": "Kundfaktura",
+		"invoiceRows": [
+			{
+				"accountInformation": {
+					"costCenter": "41499999",
+					"subaccount": "344100",
+					"counterpart": "85000000",
+					"department": "340200"
+				},
+				"quantity": 1,
+				"detailedDescriptions": [],
+				"descriptions": ["Hyra inventarier"],
+				"costPerUnit": 1080,
+				"vatCode": "25"
+			},
+			{
+				"accountInformation": {
+					"costCenter": "41499999",
+					"subaccount": "313200",
+					"counterpart": "85000000",
+					"department": "340200"
+				},
+				"quantity": 1,
+				"detailedDescriptions": [],
+				"descriptions": ["Pengahantering i kassavalvet"],
+				"costPerUnit": 5650,
+				"vatCode": "25"
+			}
+		],
+		"referenceId": "192021"
+	},
+	"category": "CUSTOMER_INVOICE",
+	"type": "EXTERNAL",
+	"status": "APPROVED"
+}

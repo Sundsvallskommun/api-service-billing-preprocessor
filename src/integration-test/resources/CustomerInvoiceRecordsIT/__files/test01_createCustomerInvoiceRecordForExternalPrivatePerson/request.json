@@ -1,0 +1,38 @@
+{
+	"approvedBy": "E_SERVICE",
+	"recipient": {
+		"firstName": "Kalle",
+		"lastName": "Anka",
+		"addressDetails": {
+			"city": "ANKEBORG",
+			"street": "Ankeborg 160",
+			"postalCode": "123 45"
+		},
+		"partyId": "fb2f0290-3820-11ed-a261-0242ac121234"
+	},
+	"invoice": {
+		"ourReference": "kalle anka",
+		"customerReference": "Kalle Anka",
+		"customerId": "199001012385",
+		"description": "Kundfaktura",
+		"invoiceRows": [{
+			"accountInformation": {
+				"activity": "4165",
+				"costCenter": "43200000",
+				"subaccount": "345000",
+				"counterpart": "86000000",
+				"department": "315310",
+				"article": "3452000 - ANKEBORG"
+			},
+			"quantity": 3,
+			"detailedDescriptions": [],
+			"descriptions": ["Julmarknad Ankeborg. 3 marknad"],
+			"costPerUnit": 700,
+			"vatCode": "00"
+		}],
+		"referenceId": "185375"
+	},
+	"category": "CUSTOMER_INVOICE",
+	"type": "EXTERNAL",
+	"status": "APPROVED"
+}

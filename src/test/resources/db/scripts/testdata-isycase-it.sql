@@ -60,6 +60,4 @@ VALUES	('83e4d599-5b4d-431c-8ebc-81192e9401ee', NULL, 'Louiseville', 'Beachland 
 INSERT INTO file_configuration (`type`,category_tag,file_name_pattern, creator_name, encoding) 
 VALUES
 	 ('EXTERNAL','ISYCASE','KRISYCASE_{yyyyMMdd}.txt', 'ExternalInvoiceCreator', 'ISO-8859-1'),
-	 ('INTERNAL','ISYCASE','IPKISYCASE_{yyyyMMdd}.txt', 'InternalInvoiceCreator', 'ISO-8859-1'),
-     ('EXTERNAL','CUSTOMER_INVOICE','{yyyyMMdd}_kpform.txt', 'ExternalCustomerInvoiceCreator', 'ISO-8859-1'),
-     ('INTERNAL','CUSTOMER_INVOICE','{yyyyMMdd}_ipkfor.txt', 'InternalCustomerInvoiceCreator', 'ISO-8859-1');
+	 ('INTERNAL','ISYCASE','IPKISYCASE_{yyyyMMdd}.txt', 'InternalInvoiceCreator', 'ISO-8859-1');
