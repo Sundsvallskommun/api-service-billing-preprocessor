@@ -1,12 +1,14 @@
 package se.sundsvall.billingpreprocessor.api.model;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Null;
-import jakarta.validation.constraints.Pattern;
+import static io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY;
+import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
+
+import java.time.OffsetDateTime;
+import java.util.Objects;
+
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
+
 import se.sundsvall.billingpreprocessor.api.model.enums.Status;
 import se.sundsvall.billingpreprocessor.api.model.enums.Type;
 import se.sundsvall.billingpreprocessor.api.validation.ValidAddressDetails;
@@ -15,11 +17,11 @@ import se.sundsvall.billingpreprocessor.api.validation.ValidInvoice;
 import se.sundsvall.billingpreprocessor.api.validation.ValidInvoiceRows;
 import se.sundsvall.billingpreprocessor.api.validation.ValidRecipient;
 
-import java.time.OffsetDateTime;
-import java.util.Objects;
-
-import static io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY;
-import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
+import jakarta.validation.constraints.Pattern;
 
 @Schema(description = "Billing record model")
 @ValidApprovedBy
@@ -34,7 +36,7 @@ public class BillingRecord {
 	private String id;
 
 	@Schema(description = "Billing category", requiredMode = REQUIRED)
-	@Pattern(regexp = "ACCESS_CARD|SALARY_AND_PENSION|ISYCASE", message = "must be one of ACCESS_CARD or SALARY_AND_PENSION or ISYCASE")
+	@Pattern(regexp = "ACCESS_CARD|CUSTOMER_INVOICE|SALARY_AND_PENSION|ISYCASE", message = "must be one of ACCESS_CARD, CUSTOMER_INVOICE, SALARY_AND_PENSION or ISYCASE")
 	@NotNull
 	private String category;
 

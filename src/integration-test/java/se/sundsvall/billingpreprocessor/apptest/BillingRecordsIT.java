@@ -32,7 +32,7 @@ import se.sundsvall.dept44.test.annotation.wiremock.WireMockAppTestSuite;
 @WireMockAppTestSuite(files = "classpath:/BillingRecordsIT/", classes = Application.class)
 @Sql({
 	"/db/scripts/truncate.sql",
-	"/db/scripts/testdata-it.sql"
+	"/db/scripts/testdata-isycase-it.sql"
 })
 class BillingRecordsIT extends AbstractAppTest {
 

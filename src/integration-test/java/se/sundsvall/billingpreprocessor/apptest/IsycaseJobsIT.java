@@ -45,14 +45,14 @@ import se.sundsvall.dept44.test.annotation.wiremock.WireMockAppTestSuite;
 /**
  * Jobs IT tests.
  */
-@WireMockAppTestSuite(files = "classpath:/JobsIT/", classes = Application.class)
+@WireMockAppTestSuite(files = "classpath:/IsycaseJobsIT/", classes = Application.class)
 @Sql({
 	"/db/scripts/truncate.sql",
-	"/db/scripts/testdata-it.sql"
+	"/db/scripts/testdata-isycase-it.sql"
 })
-class JobsIT extends AbstractAppTest {
+class IsycaseJobsIT extends AbstractAppTest {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(JobsIT.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(IsycaseJobsIT.class);
 
 	@Container
 	private static final GenericContainer<?> SFTP_SERVER = new GenericContainer<>("atmoz/sftp:alpine-3.7")
@@ -136,7 +136,7 @@ class JobsIT extends AbstractAppTest {
 
 	private String getResource(final String filePath) throws IOException {
 		final var path = getFile(getTestDirectoryPath() + filePath).toPath();
-		return readString(path, StandardCharsets.UTF_8)
+		return readString(path, StandardCharsets.ISO_8859_1)
 			.replaceAll(System.lineSeparator(), unescapeJava(properties.recordTerminator()));
 	}
 }

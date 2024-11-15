@@ -4,7 +4,10 @@
 INSERT INTO billing_record (id, category, approved, approved_by, created, modified, status, `type`, municipality_id)
 VALUES	('71258e7d-5285-46ce-b9b2-877f8cad8edd', 'ACCESS_CARD', NULL, NULL, '2022-06-20 11:17:36.795', NULL, 'NEW', 'INTERNAL', '2281'),
 		('1310ee8b-ecf9-4fe1-ab9d-f19153b19d06', 'ACCESS_CARD', '2022-06-30 08:52:25.112', 'JOE01DOE', '2022-06-25 16:43:12.553', '2022-06-30 08:52:25.112', 'APPROVED', 'INTERNAL', '2281'),
-		('83e4d599-5b4d-431c-8ebc-81192e9401ee', 'SALARY_AND_PENSION', NULL, NULL, '2022-06-25 16:43:12.553', NULL, 'NEW', 'EXTERNAL', '2281');
+        ('83e4d599-5b4d-431c-8ebc-81192e9401ee', 'SALARY_AND_PENSION', NULL, NULL, '2022-06-25 16:43:12.553', NULL, 'NEW', 'EXTERNAL', '2281'),
+		('389b847c-39e9-4321-ae5d-e736e0a5ff51', 'CUSTOMER_INVOICE', '2024-06-30 08:52:25.112', 'JAN02DOE', '2024-06-25 16:43:12.553', '2024-06-30 08:52:25.112', 'NEW', 'EXTERNAL', '2281'),
+		('1c38bf5d-ed89-41ee-8090-37733f276ec9', 'CUSTOMER_INVOICE', '2024-07-30 08:52:25.112', 'JAN02DOE', '2024-07-25 16:43:12.553', '2024-07-30 08:52:25.112', 'APPROVED', 'INTERNAL', '2281');
+		
 
 -------------------------------------
 -- Invoices
@@ -12,7 +15,9 @@ VALUES	('71258e7d-5285-46ce-b9b2-877f8cad8edd', 'ACCESS_CARD', NULL, NULL, '2022
 INSERT INTO invoice (id, customer_id, customer_reference, description, `date`, due_date, our_reference, reference_id, total_amount)
 VALUES	('71258e7d-5285-46ce-b9b2-877f8cad8edd', '02', 'ROC01BAL', 'Passerkort utan foto för Rocky Balboa (ROC01BAL)', NULL, '2022-07-31', NULL, NULL, 150),
 		('1310ee8b-ecf9-4fe1-ab9d-f19153b19d06', '02', 'IVA02DRA', 'Passerkort med foto för Ivan Drago (IVA02DRA)', NULL, '2022-07-31', NULL, NULL, 200),
-		('83e4d599-5b4d-431c-8ebc-81192e9401ee', '16', 'YUI10KAR', 'Faktura för två Boxercise-pass', '2022-02-02', '2022-08-30', 'JOE01DOE', '1123-3241', 30000);
+		('83e4d599-5b4d-431c-8ebc-81192e9401ee', '16', 'YUI10KAR', 'Faktura för två Boxercise-pass', '2022-02-02', '2022-08-30', 'JOE01DOE', '1123-3241', 30000),
+        ('389b847c-39e9-4321-ae5d-e736e0a5ff51', '12', 'SIL01SIL', 'Faktura för sill', NULL, '2024-07-31', NULL, NULL, 200),
+        ('1c38bf5d-ed89-41ee-8090-37733f276ec9', '12', 'STR01STR', 'Faktura för strömming', NULL, '2024-07-31', NULL, NULL, 400);
 
 -------------------------------------
 -- Invoice rows
@@ -20,7 +25,9 @@ VALUES	('71258e7d-5285-46ce-b9b2-877f8cad8edd', '02', 'ROC01BAL', 'Passerkort ut
 INSERT INTO invoice_row (id, accural_key, activity, cost_center, counter_part, department, article, project, subaccount, cost_per_unit, quantity, total_amount, vat_code, invoice_id)
 VALUES	(100, NULL, '5247000', '1620000', NULL, '910300', NULL, NULL, '936100', 150, 1, 150, '00', '71258e7d-5285-46ce-b9b2-877f8cad8edd'),
 		(200, NULL, '5247000', '1620000', NULL, '910300', NULL, NULL, '936100', 200, 1, 200, '00', '1310ee8b-ecf9-4fe1-ab9d-f19153b19d06'),
-		(300, NULL, '3022910', '1455000', 'YUI10KAR', '899700', 'Friskvårdssatsning', NULL, NULL, 15000, 2, 30000, '25', '83e4d599-5b4d-431c-8ebc-81192e9401ee');
+		(300, NULL, '3022910', '1455000', 'YUI10KAR', '899700', 'Friskvårdssatsning', NULL, NULL, 15000, 2, 30000, '25', '83e4d599-5b4d-431c-8ebc-81192e9401ee'),
+		(400, NULL, '3022920', '1234000', 'SIL01SIL', '899700', 'Fisk', NULL, NULL, 100, 2, 200, '25', '389b847c-39e9-4321-ae5d-e736e0a5ff51'),
+		(500, NULL, '3022920', '1234000', 'YUI10KAR', '899700', 'Mer fisk', NULL, NULL, 200, 2, 400, '25', '1c38bf5d-ed89-41ee-8090-37733f276ec9');
 
 -------------------------------------
 -- Descriptions
@@ -33,7 +40,9 @@ VALUES	('Ordernummer: azi-330c-3fne-33', 'STANDARD', 100),
 		('Ordernummer: ewf-3fee-boe3-74', 'STANDARD', 200),
 		('Beställare: MAN22VEG 4480296', 'STANDARD', 200),
 		('Användare: Ivan Drago IVA02DRA', 'STANDARD', 200),
-		('Passerkort med foto', 'STANDARD', 200);
+		('Passerkort med foto', 'STANDARD', 200),
+		('Sill m.m.', 'STANDARD', 400),
+		('Strömming m.m', 'STANDARD', 500);
 
 -------------------------------------
 -- Recipients

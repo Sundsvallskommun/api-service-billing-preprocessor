@@ -17,6 +17,7 @@ import static se.sundsvall.billingpreprocessor.service.util.CalculationUtil.calc
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import se.sundsvall.billingpreprocessor.api.model.AccountInformation;
 import se.sundsvall.billingpreprocessor.api.model.AddressDetails;
@@ -32,6 +33,8 @@ import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.RecipientEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType;
+import se.sundsvall.billingpreprocessor.integration.db.model.enums.Status;
+import se.sundsvall.billingpreprocessor.integration.db.model.enums.Type;
 
 public final class BillingRecordMapper {
 
@@ -47,14 +50,14 @@ public final class BillingRecordMapper {
 	public static BillingRecordEntity toBillingRecordEntity(final BillingRecord billingRecord, String municipalityId) {
 		final var billingRecordEntity = BillingRecordEntity.create() // Create billing record entity
 			.withCategory(billingRecord.getCategory())
-			.withStatus(se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.valueOf(billingRecord.getStatus().toString()))
-			.withType(se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.valueOf(billingRecord.getType().toString()))
+			.withStatus(Status.valueOf(billingRecord.getStatus().toString()))
+			.withType(Type.valueOf(billingRecord.getType().toString()))
 			.withMunicipalityId(municipalityId);
 
 		billingRecordEntity.setRecipient(toRecipientEntity(billingRecordEntity, billingRecord.getRecipient())); // Add recipient entity to billing record entity
 		billingRecordEntity.setInvoice(toInvoiceEntity(billingRecordEntity, billingRecord.getInvoice())); // Add invoice entity to billing record entity
 
-		if (se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.APPROVED == billingRecordEntity.getStatus()) {
+		if (Status.APPROVED == billingRecordEntity.getStatus()) {
 			setApprovedBy(billingRecordEntity, billingRecord.getApprovedBy());
 		}
 
@@ -86,14 +89,14 @@ public final class BillingRecordMapper {
 	public static BillingRecordEntity updateEntity(final BillingRecordEntity billingRecordEntity, final BillingRecord billingRecord) {
 		billingRecordEntity // Update billing record entity with request data
 			.withCategory(billingRecord.getCategory())
-			.withStatus(se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.valueOf(billingRecord.getStatus().toString()))
-			.withType(se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.valueOf(billingRecord.getType().toString()));
+			.withStatus(Status.valueOf(billingRecord.getStatus().toString()))
+			.withType(Type.valueOf(billingRecord.getType().toString()));
 
 		billingRecordEntity.setRecipient(toRecipientEntity(billingRecordEntity, billingRecord.getRecipient())); // Update recipient entity of billing record entity with new information
 		billingRecordEntity.setInvoice(toInvoiceEntity(billingRecordEntity, billingRecord.getInvoice())); // Update invoice entity of billing record entity with new information
 
 		// Only set approved by and approved timestamp first time billing record receives approved status
-		if ((se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.APPROVED == billingRecordEntity.getStatus()) && isNull(billingRecordEntity.getApproved())) {
+		if ((Status.APPROVED == billingRecordEntity.getStatus()) && isNull(billingRecordEntity.getApproved())) {
 			setApprovedBy(billingRecordEntity, billingRecord.getApprovedBy());
 		}
 
@@ -181,11 +184,12 @@ public final class BillingRecordMapper {
 	}
 
 	private static AddressDetailsEmbeddable toAddressDetailsEmbeddable(final AddressDetails addressDetails) {
-		return AddressDetailsEmbeddable.create()
-			.withCareOf(addressDetails.getCareOf())
-			.withCity(addressDetails.getCity())
-			.withPostalCode(addressDetails.getPostalCode())
-			.withStreet(addressDetails.getStreet());
+		return Optional.ofNullable(addressDetails).map(details -> AddressDetailsEmbeddable.create()
+			.withCareOf(details.getCareOf())
+			.withCity(details.getCity())
+			.withPostalCode(details.getPostalCode())
+			.withStreet(details.getStreet()))
+			.orElse(null);
 	}
 
 	/**

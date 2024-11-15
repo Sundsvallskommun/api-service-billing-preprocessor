@@ -27,7 +27,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -51,6 +54,7 @@ import se.sundsvall.billingpreprocessor.service.creator.config.InvoiceCreatorPro
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
 @ActiveProfiles("junit")
 class ExternalInvoiceCreatorTest {
+
 	// billingRecord constants
 	private static final String ID = randomUUID().toString();
 	private static final String MUNICIPALITY_ID = "municipalityId";
@@ -63,7 +67,7 @@ class ExternalInvoiceCreatorTest {
 	// Invoice constants
 	private static final String CUSTOMER_REFERENCE = "Snurre Sprätto";
 	private static final String DESCRIPTION = "En fakturarad";
-	private static final LocalDate DATE = LocalDate.of(2024, 3, 06);
+	private static final LocalDate DATE = LocalDate.of(2024, 3, 6);
 	private static final LocalDate DUE_DATE = LocalDate.of(2024, 3, 30);
 	private static final String OUR_REFERENCE = "Johnny Bråttom";
 	private static final float INVOICE_TOTAL_AMOUNT = 1395f;
@@ -102,6 +106,7 @@ class ExternalInvoiceCreatorTest {
 	private InvoiceFileConfigurationRepository invoiceFileConfigurationRepositoryMock;
 
 	@Autowired
+	@Qualifier(value = "externalInvoiceCreator")
 	private ExternalInvoiceCreator creator;
 
 	@Autowired
