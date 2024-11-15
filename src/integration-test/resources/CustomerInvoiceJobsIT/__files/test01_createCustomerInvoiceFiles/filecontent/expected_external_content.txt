@@ -1,7 +1,7 @@
-!BillingPreProcessor 241114 Extern debitering                                                                                                             
+!BillingPreProcessor yyMMdd Extern debitering                                                                                                             
 S9901011234Ankeborg AB                                                           Ankeborgsvägen 123                 123 45 ANKEBORG                    850
 H9901011234      123                           Joakim von Anka               
-R9901011234Passerkort utan foro          100     108000   108000         25
+R9901011234Passerkort utan foto          100     108000   108000         25
 K        344100340200         4149999850000000108000             
 R9901011234Plåster                       100     565000   565000         25
 K        31320069420          4149999850000000565000             

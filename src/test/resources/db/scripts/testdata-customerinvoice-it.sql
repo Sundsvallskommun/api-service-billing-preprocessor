@@ -28,7 +28,7 @@ VALUES	  (600, NULL, '4165', '', '43200000', '86000000', '3452000 - ANKEBORG', N
 -- -----------------------------------
 INSERT INTO description (text, `type`, invoice_row_id)
 VALUES	  ('Användare: Kalle anka', 'STANDARD', 600),
-          ('Passerkort utan foro', 'STANDARD', 650),
+          ('Passerkort utan foto', 'STANDARD', 650),
           ('Plåster', 'STANDARD', 700),
           ('Kaffefilter', 'STANDARD', 750);
 
