@@ -6,8 +6,9 @@ import static se.sundsvall.billingpreprocessor.api.model.enums.Status.APPROVED;
 import static se.sundsvall.billingpreprocessor.api.model.enums.Type.EXTERNAL;
 import static se.sundsvall.billingpreprocessor.api.model.enums.Type.INTERNAL;
 
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 import se.sundsvall.billingpreprocessor.api.model.AccountInformation;
 import se.sundsvall.billingpreprocessor.api.model.AddressDetails;
 import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
@@ -29,6 +30,7 @@ public class BillingRecordRequestUtil {
 			.withId(validBillingRecord ? null : randomUUID().toString())
 			.withModified(validBillingRecord ? null : now())
 			.withStatus(APPROVED)
+			.withExtraParameters(Map.of("key", "value"))
 			.withType(type);
 	}
 

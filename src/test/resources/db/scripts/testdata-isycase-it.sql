@@ -61,3 +61,11 @@ INSERT INTO file_configuration (`type`,category_tag,file_name_pattern, creator_n
 VALUES
 	 ('EXTERNAL','ISYCASE','KRISYCASE_{yyyyMMdd}.txt', 'ExternalInvoiceCreator', 'ISO-8859-1'),
 	 ('INTERNAL','ISYCASE','IPKISYCASE_{yyyyMMdd}.txt', 'InternalInvoiceCreator', 'ISO-8859-1');
+
+-------------------------------------
+-- Extra parameters
+-------------------------------------
+INSERT INTO extra_parameter (billing_record_id, `key`, `value`)
+VALUES
+    ('71258e7d-5285-46ce-b9b2-877f8cad8edd', 'aKey', 'aValue'),
+    ('1310ee8b-ecf9-4fe1-ab9d-f19153b19d06', 'aKey', 'anotherValue');

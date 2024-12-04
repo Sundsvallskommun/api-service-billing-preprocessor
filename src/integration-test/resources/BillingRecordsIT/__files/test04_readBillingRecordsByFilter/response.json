@@ -19,6 +19,7 @@
 			"created": "2022-06-25T16:43:12.553+02:00",
 			"approvedBy": "JOE01DOE",
 			"modified": "2022-06-30T08:52:25.112+02:00",
+			"extraParameters": {"aKey": "anotherValue"},
 			"id": "1310ee8b-ecf9-4fe1-ab9d-f19153b19d06",
 			"invoice": {
 				"ourReference": "MAN22VEG",
@@ -65,6 +66,7 @@
 				"partyId": "970cd619-51b0-40b9-9132-579e2f937c07"
 			},
 			"modified": "2024-03-20T11:37:15.997+01:00",
+			"extraParameters": {},
 			"id": "200ee4a6-f7bc-4d82-80cb-ecd2d610475c",
 			"invoice": {
 				"date": "2024-03-18",

@@ -18,7 +18,6 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import se.sundsvall.billingpreprocessor.api.model.AccountInformation;
 import se.sundsvall.billingpreprocessor.api.model.AddressDetails;
 import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
@@ -56,6 +55,7 @@ public final class BillingRecordMapper {
 
 		billingRecordEntity.setRecipient(toRecipientEntity(billingRecordEntity, billingRecord.getRecipient())); // Add recipient entity to billing record entity
 		billingRecordEntity.setInvoice(toInvoiceEntity(billingRecordEntity, billingRecord.getInvoice())); // Add invoice entity to billing record entity
+		billingRecordEntity.setExtraParameters(billingRecord.getExtraParameters()); // Add extra parameters to billing record entity
 
 		if (Status.APPROVED == billingRecordEntity.getStatus()) {
 			setApprovedBy(billingRecordEntity, billingRecord.getApprovedBy());
@@ -94,6 +94,7 @@ public final class BillingRecordMapper {
 
 		billingRecordEntity.setRecipient(toRecipientEntity(billingRecordEntity, billingRecord.getRecipient())); // Update recipient entity of billing record entity with new information
 		billingRecordEntity.setInvoice(toInvoiceEntity(billingRecordEntity, billingRecord.getInvoice())); // Update invoice entity of billing record entity with new information
+		billingRecordEntity.setExtraParameters(billingRecord.getExtraParameters()); // Update extra parameters of billing record entity with new information
 
 		// Only set approved by and approved timestamp first time billing record receives approved status
 		if ((Status.APPROVED == billingRecordEntity.getStatus()) && isNull(billingRecordEntity.getApproved())) {
@@ -222,6 +223,7 @@ public final class BillingRecordMapper {
 			.withInvoice(toInvoice(billingRecordEntity.getInvoice()))
 			.withRecipient(toRecipient(billingRecordEntity.getRecipient()))
 			.withModified(billingRecordEntity.getModified())
+			.withExtraParameters(billingRecordEntity.getExtraParameters())
 			.withStatus(se.sundsvall.billingpreprocessor.api.model.enums.Status.valueOf(billingRecordEntity.getStatus().toString()))
 			.withType(se.sundsvall.billingpreprocessor.api.model.enums.Type.valueOf(billingRecordEntity.getType().toString()));
 	}
@@ -242,11 +244,12 @@ public final class BillingRecordMapper {
 	}
 
 	private static AddressDetails toAddressDetails(AddressDetailsEmbeddable addressDetailsEmbeddable) {
-		return AddressDetails.create()
+		return Optional.ofNullable(addressDetailsEmbeddable).map(details -> AddressDetails.create()
 			.withCareOf(addressDetailsEmbeddable.getCareOf())
 			.withCity(addressDetailsEmbeddable.getCity())
 			.withStreet(addressDetailsEmbeddable.getStreet())
-			.withtPostalCode(addressDetailsEmbeddable.getPostalCode());
+			.withtPostalCode(addressDetailsEmbeddable.getPostalCode()))
+			.orElse(null);
 	}
 
 	private static Invoice toInvoice(InvoiceEntity invoiceEntity) {

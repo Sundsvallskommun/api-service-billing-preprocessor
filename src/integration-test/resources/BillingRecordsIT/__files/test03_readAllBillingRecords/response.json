@@ -19,6 +19,7 @@
 			"created": "2022-06-25T16:43:12.553+02:00",
 			"approvedBy": "JOE01DOE",
 			"modified": "2022-06-30T08:52:25.112+02:00",
+			"extraParameters": {"aKey": "anotherValue"},
 			"id": "1310ee8b-ecf9-4fe1-ab9d-f19153b19d06",
 			"invoice": {
 				"ourReference": "MAN22VEG",
@@ -65,6 +66,7 @@
 				"partyId": "970cd619-51b0-40b9-9132-579e2f937c07"
 			},
 			"modified": "2024-03-20T11:37:15.997+01:00",
+			"extraParameters": {},
 			"id": "1abc9859-9141-43b0-91d9-43cd7d889690",
 			"invoice": {
 				"date": "2024-03-18",
@@ -109,6 +111,7 @@
 				"partyId": "970cd619-51b0-40b9-9132-579e2f937c07"
 			},
 			"modified": "2024-03-20T11:37:15.997+01:00",
+			"extraParameters": {},
 			"id": "200ee4a6-f7bc-4d82-80cb-ecd2d610475c",
 			"invoice": {
 				"date": "2024-03-18",
@@ -141,6 +144,7 @@
 		},
 		{
 			"created": "2022-06-20T11:17:36.795+02:00",
+			"extraParameters": {"aKey": "aValue"},
 			"id": "71258e7d-5285-46ce-b9b2-877f8cad8edd",
 			"invoice": {
 				"ourReference": "MIC00GOL",
@@ -184,6 +188,7 @@
 				},
 				"partyId": "970cd619-51b0-40b9-9132-579e2f937c07"
 			},
+			"extraParameters": {},
 			"id": "83e4d599-5b4d-431c-8ebc-81192e9401ee",
 			"invoice": {
 				"date": "2022-01-01",

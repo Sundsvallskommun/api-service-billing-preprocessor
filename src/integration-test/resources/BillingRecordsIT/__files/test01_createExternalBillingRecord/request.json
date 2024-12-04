@@ -10,6 +10,10 @@
 		"partyId": "f0882f1d-06bc-47fd-b017-1d8307f5ce95",
 		"userId": "ALI23SNU"
 	},
+	"extraParameters": {
+		"bestFriend": "Big Bird",
+		"snuffle": "trunk"
+	},
 	"invoice": {
 		"customerReference": "Alice Snuffleupagus",
 		"dueDate": "2023-12-24",

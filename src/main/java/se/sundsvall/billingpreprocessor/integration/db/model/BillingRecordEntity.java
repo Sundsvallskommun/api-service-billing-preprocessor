@@ -1,27 +1,32 @@
 package se.sundsvall.billingpreprocessor.integration.db.model;
 
 import static jakarta.persistence.CascadeType.ALL;
-import static jakarta.persistence.FetchType.LAZY;
+import static jakarta.persistence.FetchType.EAGER;
 import static java.time.OffsetDateTime.now;
 import static java.time.temporal.ChronoUnit.MILLIS;
 import static org.hibernate.annotations.TimeZoneStorageType.NORMALIZE;
 
-import java.io.Serializable;
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
-import java.util.Objects;
-
-import org.hibernate.annotations.TimeZoneStorage;
-import org.hibernate.annotations.UuidGenerator;
-
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapKeyColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import java.io.Serializable;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import org.hibernate.annotations.TimeZoneStorage;
+import org.hibernate.annotations.UuidGenerator;
 import se.sundsvall.billingpreprocessor.integration.db.model.enums.Status;
 import se.sundsvall.billingpreprocessor.integration.db.model.enums.Type;
 
@@ -66,11 +71,27 @@ public class BillingRecordEntity implements Serializable {
 	@TimeZoneStorage(NORMALIZE)
 	private OffsetDateTime modified;
 
-	@OneToOne(mappedBy = "billingRecord", cascade = ALL, fetch = LAZY, orphanRemoval = true)
+	@OneToOne(mappedBy = "billingRecord", cascade = ALL, orphanRemoval = true)
 	private RecipientEntity recipient;
 
-	@OneToOne(mappedBy = "billingRecord", cascade = ALL, fetch = LAZY, optional = false)
+	@OneToOne(mappedBy = "billingRecord", cascade = ALL, optional = false)
 	private InvoiceEntity invoice;
+
+	// Notice that both the key and value columns are escaped using "backticks" to avoid reserved word conflicts
+	@ElementCollection(fetch = EAGER)
+	@CollectionTable(
+		indexes = {
+			@Index(name = "idx_extra_parameter_key", columnList = "`key`"),
+			@Index(name = "idx_extra_parameter_value", columnList = "`value`")
+		},
+		name = "extra_parameter",
+		joinColumns = @JoinColumn(
+			name = "billing_record_id",
+			referencedColumnName = "id",
+			foreignKey = @ForeignKey(name = "fk_billing_record_id_extra_parameter")))
+	@MapKeyColumn(name = "`key`")
+	@Column(name = "`value`")
+	private Map<String, String> extraParameters;
 
 	@PrePersist
 	void onCreate() {
@@ -229,9 +250,29 @@ public class BillingRecordEntity implements Serializable {
 		return this;
 	}
 
+	public Map<String, String> getExtraParameters() {
+		return extraParameters;
+	}
+
+	public void setExtraParameters(Map<String, String> extraParameters) {
+		this.extraParameters = extraParameters;
+	}
+
+	public BillingRecordEntity withExtraParameters(Map<String, String> extraParameters) {
+		this.extraParameters = extraParameters;
+		return this;
+	}
+
+	public void addExtraParameter(String key, String value) {
+		if (extraParameters == null) {
+			extraParameters = new HashMap<>();
+		}
+		extraParameters.put(key, value);
+	}
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(municipalityId, category, approved, approvedBy, created, id, invoice, recipient, modified, status, type);
+		return Objects.hash(municipalityId, category, approved, approvedBy, created, id, invoice, recipient, modified, status, type, extraParameters);
 	}
 
 	@Override
@@ -248,23 +289,23 @@ public class BillingRecordEntity implements Serializable {
 		final BillingRecordEntity other = (BillingRecordEntity) obj;
 		return Objects.equals(municipalityId, other.municipalityId) && Objects.equals(category, other.category) && Objects.equals(approved, other.approved) && Objects.equals(approvedBy, other.approvedBy) && Objects.equals(created, other.created) && Objects
 			.equals(id, other.id) && Objects.equals(
-				invoice, other.invoice) && Objects.equals(recipient, other.recipient) && Objects.equals(modified, other.modified) && Objects.equals(status, other.status) && Objects.equals(type, other.type);
+				invoice, other.invoice) && Objects.equals(recipient, other.recipient) && Objects.equals(modified, other.modified) && Objects.equals(status, other.status) && Objects.equals(type, other.type) && Objects.equals(extraParameters,
+					other.extraParameters);
 	}
 
 	@Override
 	public String toString() {
-		final StringBuilder builder = new StringBuilder();
-		builder.append("BillingRecordEntity [id=").append(id)
-			.append(", municipalityId=").append(municipalityId)
-			.append(", category=").append(category)
-			.append(", type=").append(type)
-			.append(", status=").append(status)
-			.append(", approvedBy=").append(approvedBy)
-			.append(", approved=").append(approved)
-			.append(", created=").append(created)
-			.append(", modified=").append(modified)
-			.append(", recipient=").append(recipient)
-			.append(", invoice=").append(invoice).append("]");
-		return builder.toString();
+		return "BillingRecordEntity [id=" + id
+			+ ", municipalityId=" + municipalityId
+			+ ", category=" + category
+			+ ", type=" + type
+			+ ", status=" + status
+			+ ", approvedBy=" + approvedBy
+			+ ", approved=" + approved
+			+ ", created=" + created
+			+ ", modified=" + modified
+			+ ", recipient=" + recipient
+			+ ", invoice=" + invoice
+			+ ", extraParameters=" + extraParameters + "]";
 	}
 }

@@ -14,13 +14,12 @@ import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Descri
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.List;
-
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
-
 import se.sundsvall.billingpreprocessor.api.model.AccountInformation;
 import se.sundsvall.billingpreprocessor.api.model.AddressDetails;
 import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
@@ -50,6 +49,7 @@ class BillingRecordMapperTest {
 	private static final OffsetDateTime APPROVED_TIMESTAMP = now();
 	private static final OffsetDateTime CREATED_TIMESTAMP = now().minusDays(2);
 	private static final OffsetDateTime MODIFIED_TIMESTAMP = now().minusDays(1);
+	private static final Map<String, String> EXTRA_PARAMETERS = Map.of("key", "value", "key2", "value2");
 
 	// Invoice constants
 	private static final String CUSTOMER_ID = "customerId";
@@ -108,6 +108,7 @@ class BillingRecordMapperTest {
 		assertThat(billingRecordEntity.getStatus()).isEqualTo(STATUS);
 		assertThat(billingRecordEntity.getType()).isEqualTo(TYPE);
 		assertThat(billingRecordEntity.getMunicipalityId()).isEqualTo(MUNICIPALITY_ID);
+		assertThat(billingRecordEntity.getExtraParameters()).isEqualTo(EXTRA_PARAMETERS);
 
 		assertThat(billingRecordEntity)
 			.extracting(
@@ -663,7 +664,8 @@ class BillingRecordMapperTest {
 			.withInvoice(createInvoice())
 			.withRecipient(createRecipient())
 			.withStatus(se.sundsvall.billingpreprocessor.api.model.enums.Status.valueOf(STATUS.toString()))
-			.withType(se.sundsvall.billingpreprocessor.api.model.enums.Type.valueOf(TYPE.toString()));
+			.withType(se.sundsvall.billingpreprocessor.api.model.enums.Type.valueOf(TYPE.toString()))
+			.withExtraParameters(EXTRA_PARAMETERS);
 	}
 
 	private static Invoice createInvoice() {

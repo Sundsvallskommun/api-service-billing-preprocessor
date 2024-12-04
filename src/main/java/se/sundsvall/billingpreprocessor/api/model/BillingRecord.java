@@ -3,12 +3,17 @@ package se.sundsvall.billingpreprocessor.api.model;
 import static io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY;
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
+import jakarta.validation.constraints.Pattern;
 import java.time.OffsetDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
-
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
-
 import se.sundsvall.billingpreprocessor.api.model.enums.Status;
 import se.sundsvall.billingpreprocessor.api.model.enums.Type;
 import se.sundsvall.billingpreprocessor.api.validation.ValidAddressDetails;
@@ -16,12 +21,6 @@ import se.sundsvall.billingpreprocessor.api.validation.ValidApprovedBy;
 import se.sundsvall.billingpreprocessor.api.validation.ValidInvoice;
 import se.sundsvall.billingpreprocessor.api.validation.ValidInvoiceRows;
 import se.sundsvall.billingpreprocessor.api.validation.ValidRecipient;
-
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Null;
-import jakarta.validation.constraints.Pattern;
 
 @Schema(description = "Billing record model")
 @ValidApprovedBy
@@ -74,6 +73,9 @@ public class BillingRecord {
 	@DateTimeFormat(iso = ISO.DATE_TIME)
 	@Null
 	private OffsetDateTime modified;
+
+	@Schema(description = "A map of extra parameters for the billing record", example = "{\"key1\":\"value1\",\"key2\":\"value2\"}")
+	private Map<String, String> extraParameters;
 
 	public static BillingRecord create() {
 		return new BillingRecord();
@@ -209,9 +211,22 @@ public class BillingRecord {
 		return this;
 	}
 
+	public Map<String, String> getExtraParameters() {
+		return extraParameters;
+	}
+
+	public void setExtraParameters(Map<String, String> extraParameters) {
+		this.extraParameters = extraParameters;
+	}
+
+	public BillingRecord withExtraParameters(Map<String, String> extraParameters) {
+		this.extraParameters = extraParameters;
+		return this;
+	}
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(category, approved, approvedBy, created, id, invoice, recipient, modified, status, type);
+		return Objects.hash(category, approved, approvedBy, created, id, invoice, recipient, modified, status, type, extraParameters);
 	}
 
 	@Override
@@ -227,22 +242,21 @@ public class BillingRecord {
 		}
 		BillingRecord other = (BillingRecord) obj;
 		return Objects.equals(category, other.category) && Objects.equals(approved, other.approved) && Objects.equals(approvedBy, other.approvedBy) && Objects.equals(created, other.created) && Objects.equals(id, other.id) && Objects.equals(invoice,
-			other.invoice) && Objects.equals(recipient, other.recipient) && Objects.equals(modified, other.modified) && Objects.equals(status, other.status) && Objects.equals(type, other.type);
+			other.invoice) && Objects.equals(recipient, other.recipient) && Objects.equals(modified, other.modified) && Objects.equals(status, other.status) && Objects.equals(type, other.type) && Objects.equals(extraParameters, other.extraParameters);
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("BillingRecord[id=").append(id)
-			.append(", category=").append(category)
-			.append(", type=").append(type)
-			.append(", status=").append(status)
-			.append(", approvedBy=").append(approvedBy)
-			.append(", approved=").append(approved)
-			.append(", recipient=").append(recipient)
-			.append(", invoice=").append(invoice)
-			.append(", created=").append(created)
-			.append(", modified=").append(modified).append("]");
-		return builder.toString();
+		return "BillingRecord[id=" + id
+			+ ", category=" + category
+			+ ", type=" + type
+			+ ", status=" + status
+			+ ", approvedBy=" + approvedBy
+			+ ", approved=" + approved
+			+ ", recipient=" + recipient
+			+ ", invoice=" + invoice
+			+ ", created=" + created
+			+ ", modified=" + modified
+			+ ", extraParameters" + extraParameters + "]";
 	}
 }

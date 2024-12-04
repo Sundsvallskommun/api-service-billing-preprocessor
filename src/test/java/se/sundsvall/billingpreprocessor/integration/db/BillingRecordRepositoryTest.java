@@ -13,12 +13,12 @@ import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Status
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.REJECTED;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.EXTERNAL;
 
+import com.turkraft.springfilter.converter.FilterSpecificationConverter;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.turkraft.springfilter.converter.FilterSpecificationConverter;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,7 +30,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
-
 import se.sundsvall.billingpreprocessor.integration.db.model.AccountInformationEmbeddable;
 import se.sundsvall.billingpreprocessor.integration.db.model.AddressDetailsEmbeddable;
 import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
@@ -92,6 +91,7 @@ class BillingRecordRepositoryTest {
 	private static final Status STATUS = APPROVED;
 	private static final Type TYPE = EXTERNAL;
 	private static final String MUNICIPALITY_ID = "2281";
+	private static final Map<String, String> EXTRA_PARAMETERS = Map.of("key1", "value1", "key2", "value");
 
 	@Autowired
 	private BillingRecordRepository repository;
@@ -133,6 +133,7 @@ class BillingRecordRepositoryTest {
 		assertThat(billingRecord.getStatus()).isEqualTo(STATUS);
 		assertThat(billingRecord.getType()).isEqualTo(TYPE);
 		assertThat(billingRecord.getMunicipalityId()).isEqualTo(MUNICIPALITY_ID);
+		assertThat(billingRecord.getExtraParameters()).isEqualTo(EXTRA_PARAMETERS);
 	}
 
 	private static void verifyInvoice(final BillingRecordEntity billingRecord) {
@@ -354,6 +355,7 @@ class BillingRecordRepositoryTest {
 			.withApprovedBy(APPROVED_BY)
 			.withStatus(STATUS)
 			.withType(TYPE)
-			.withMunicipalityId(MUNICIPALITY_ID);
+			.withMunicipalityId(MUNICIPALITY_ID)
+			.withExtraParameters(EXTRA_PARAMETERS);
 	}
 }
