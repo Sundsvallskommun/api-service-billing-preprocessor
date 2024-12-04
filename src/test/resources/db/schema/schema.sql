@@ -20,6 +20,13 @@
         primary key (id)
     ) engine=InnoDB;
 
+    create table extra_parameter (
+        billing_record_id varchar(255) not null,
+        `key` varchar(255) not null,
+        `value` varchar(255),
+        primary key (billing_record_id, `key`)
+    ) engine=InnoDB;
+
     create table file_configuration (
         id bigint not null auto_increment,
         category_tag varchar(255) not null,
@@ -95,6 +102,9 @@
     create index idx_billing_record_municipality_id
            on billing_record (municipality_id);
 
+    create index idx_extra_parameter_key
+       on extra_parameter (`key`);
+
     create index idx_file_configuration_type_category_tag 
        on file_configuration (type, category_tag);
 
@@ -121,6 +131,11 @@
        foreign key (`invoice_row_id`) 
        references invoice_row (id);
 
+    alter table if exists extra_parameter 
+       add constraint fk_billing_record_id_extra_parameter 
+       foreign key (billing_record_id) 
+       references billing_record (id);
+
     alter table if exists invoice 
        add constraint fk_billing_record_id_invoice 
        foreign key (id) 
@@ -131,7 +146,7 @@
        foreign key (`invoice_id`) 
        references invoice (id);
 
-    alter table if exists recipient 
-       add constraint fk_billing_record_id_recipient 
-       foreign key (id) 
+    alter table if exists recipient
+       add constraint fk_billing_record_id_recipient
+       foreign key (id)
        references billing_record (id);

@@ -45,7 +45,7 @@ class InternalInvoiceCreatorTest {
 	private static final String CUSTOMER_ID = "16";
 	private static final String CUSTOMER_REFERENCE = "5ABC30DEF";
 	private static final String INVOICE_DESCRIPTION = "Extra utbetalning - Direktinsättning";
-	private static final LocalDate DATE = LocalDate.of(2024, 3, 06);
+	private static final LocalDate DATE = LocalDate.of(2024, 3, 6);
 	private static final LocalDate DUE_DATE = LocalDate.of(2024, 3, 30);
 	private static final String OUR_REFERENCE = "Johnny Bråttom";
 	private static final String REFERENCE_ID = "referenceId";

@@ -14,8 +14,8 @@ import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Status
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.INTERNAL;
 
 import java.time.OffsetDateTime;
+import java.util.Map;
 import java.util.Random;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -49,6 +49,7 @@ class BillingRecordEntityTest {
 		final var modified = now().minusWeeks(1);
 		final var status = REJECTED;
 		final var type = INTERNAL;
+		final var extraParameters = Map.of("key", "value", "key2", "value2");
 
 		final var entity = BillingRecordEntity.create()
 			.withMunicipalityId(municipalityId)
@@ -61,7 +62,8 @@ class BillingRecordEntityTest {
 			.withRecipient(recipient)
 			.withModified(modified)
 			.withStatus(status)
-			.withType(type);
+			.withType(type)
+			.withExtraParameters(extraParameters);
 
 		assertThat(entity).hasNoNullFieldsOrProperties();
 		assertThat(entity.getMunicipalityId()).isEqualTo(municipalityId);
@@ -75,6 +77,7 @@ class BillingRecordEntityTest {
 		assertThat(entity.getModified()).isEqualTo(modified);
 		assertThat(entity.getStatus()).isEqualTo(status);
 		assertThat(entity.getType()).isEqualTo(type);
+		assertThat(entity.getExtraParameters()).isEqualTo(extraParameters);
 	}
 
 	@Test
