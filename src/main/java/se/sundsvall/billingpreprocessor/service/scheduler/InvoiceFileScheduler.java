@@ -6,12 +6,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
-import se.sundsvall.billingpreprocessor.integration.sftp.SftpProperties;
 import se.sundsvall.billingpreprocessor.integration.sftp.SftpPropertiesConfig;
 import se.sundsvall.billingpreprocessor.service.InvoiceFileService;
 import se.sundsvall.dept44.requestid.RequestId;
-
-import java.util.Map;
 
 @Component
 public class InvoiceFileScheduler {

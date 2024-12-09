@@ -70,3 +70,11 @@ VALUES
     ('type1', 'category_tag1', 'file_name_pattern1', 'encoding_1', 'creator_name_1'),
     ('type1', 'category_tag2', 'file_name_pattern2', 'encoding_2', 'creator_name_2'),
     ('type3', 'category_tag3', 'file_name_pattern3', 'encoding_3', 'creator_name_3');
+
+-------------------------------------
+-- Extra parameters
+-------------------------------------
+INSERT INTO extra_parameter (billing_record_id, `key`, `value`)
+VALUES
+    ('71258e7d-5285-46ce-b9b2-877f8cad8edd', 'aKey', 'aValue'),
+    ('389b847c-39e9-4321-ae5d-e736e0a5ff51', 'aKey', 'anotherValue');

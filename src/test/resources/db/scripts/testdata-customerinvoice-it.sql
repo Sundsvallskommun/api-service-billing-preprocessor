@@ -49,3 +49,11 @@ VALUES
     ('INTERNAL','ISYCASE','IPKISYCASE_{yyyyMMdd}.txt', 'InternalInvoiceCreator', 'ISO-8859-1'),
     ('EXTERNAL','CUSTOMER_INVOICE','{yyyyMMdd}_kpform.txt', 'ExternalCustomerInvoiceCreator', 'ISO-8859-1'),
     ('INTERNAL','CUSTOMER_INVOICE','{yyyyMMdd}_ipkfor.txt', 'InternalCustomerInvoiceCreator', 'ISO-8859-1');
+
+-------------------------------------
+-- Extra parameters
+-------------------------------------
+INSERT INTO extra_parameter (billing_record_id, `key`, `value`)
+VALUES
+    ('23af2045-c96e-44d6-b0da-d2f8a38b9711', 'aKey', 'aValue'),
+    ('6b92f728-8698-47aa-b8c7-c67585df373e', 'aKey', 'anotherValue');
