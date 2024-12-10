@@ -30,8 +30,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.zalando.problem.ThrowableProblem;
 import se.sundsvall.billingpreprocessor.integration.db.InvoiceFileConfigurationRepository;
 import se.sundsvall.billingpreprocessor.integration.db.model.AccountInformationEmbeddable;
@@ -95,10 +95,10 @@ class ExternalInvoiceCreatorTest {
 	private static final String STREET = "Testgatan 12";
 	private static final String POSTAL_CODE = "85643";
 
-	@MockBean
+	@MockitoBean
 	private LegalIdProvider legalIdProviderMock;
 
-	@MockBean
+	@MockitoBean
 	private InvoiceFileConfigurationRepository invoiceFileConfigurationRepositoryMock;
 
 	@Autowired
@@ -107,6 +107,89 @@ class ExternalInvoiceCreatorTest {
 
 	@Autowired
 	private InvoiceCreatorProperties properties;
+
+	private static BillingRecordEntity createbillingRecordEntity() {
+		final var billingRecordEntity = BillingRecordEntity.create()
+			.withMunicipalityId(MUNICIPALITY_ID)
+			.withApproved(APPROVED_TIMESTAMP)
+			.withCreated(CREATED_TIMESTAMP)
+			.withId(ID)
+			.withModified(MODIFIED_TIMESTAMP)
+			.withStatus(STATUS)
+			.withType(TYPE);
+
+		billingRecordEntity
+			.withInvoice(createInvoiceEntity(billingRecordEntity))
+			.withRecipient(createRecipientEntity(billingRecordEntity));
+
+		return billingRecordEntity;
+	}
+
+	private static InvoiceEntity createInvoiceEntity(final BillingRecordEntity billingRecordEntity) {
+		final var invoiceEntity = InvoiceEntity.create()
+			.withBillingRecord(billingRecordEntity)
+			.withCustomerReference(CUSTOMER_REFERENCE)
+			.withDescription(DESCRIPTION)
+			.withDate(DATE)
+			.withDueDate(DUE_DATE)
+			.withId(ID)
+			.withOurReference(OUR_REFERENCE)
+			.withTotalAmount(INVOICE_TOTAL_AMOUNT);
+
+		return invoiceEntity.withInvoiceRows(List.of(createInvoiceRowEntity(1, invoiceEntity)));
+	}
+
+	private static InvoiceRowEntity createInvoiceRowEntity(final int id, final InvoiceEntity invoiceEntity) {
+		final var invoiceRowEntity = InvoiceRowEntity.create()
+			.withAccountInformation(createAccountInformationEmbeddable())
+			.withCostPerUnit(COST_PER_UNIT)
+			.withId(id)
+			.withInvoice(invoiceEntity)
+			.withQuantity(QUANTITY)
+			.withTotalAmount(COST_PER_UNIT * QUANTITY)
+			.withVatCode(VAT_CODE);
+
+		return invoiceRowEntity.withDescriptions(List.of(
+			createDescriptionEntity(1, invoiceRowEntity, STANDARD, DESCRIPTION),
+			createDescriptionEntity(2, invoiceRowEntity, DETAILED, DETAILED_DESCRIPTION)));
+	}
+
+	private static DescriptionEntity createDescriptionEntity(final int id, final InvoiceRowEntity invoiceRowEntity, final DescriptionType type, final String text) {
+		return DescriptionEntity.create()
+			.withId(id)
+			.withInvoiceRow(invoiceRowEntity)
+			.withText(text)
+			.withType(type);
+	}
+
+	private static AccountInformationEmbeddable createAccountInformationEmbeddable() {
+		return AccountInformationEmbeddable.create()
+			.withAccuralKey(ACCURAL_KEY)
+			.withActivity(ACTIVITY)
+			.withArticle(ARTICLE)
+			.withCostCenter(COST_CENTER)
+			.withCounterpart(COUNTERPART)
+			.withDepartment(DEPARTMENT)
+			.withProject(PROJECT)
+			.withSubaccount(SUBACCOUNT);
+	}
+
+	private static RecipientEntity createRecipientEntity(final BillingRecordEntity billingRecordEntity) {
+		return RecipientEntity.create()
+			.withAddressDetails(createAddressDetailsEmbeddable())
+			.withBillingRecord(billingRecordEntity)
+			.withId(ID)
+			.withOrganizationName(ORGANIZATION_NAME)
+			.withLegalId(LEGAL_ID);
+	}
+
+	private static AddressDetailsEmbeddable createAddressDetailsEmbeddable() {
+		return AddressDetailsEmbeddable.create()
+			.withCareOf(CARE_OF)
+			.withCity(CITY)
+			.withPostalCode(POSTAL_CODE)
+			.withStreet(STREET);
+	}
 
 	@Test
 	void validateImplementation() {
@@ -207,88 +290,5 @@ class ExternalInvoiceCreatorTest {
 	private String getResource(final String fileName) throws IOException, URISyntaxException {
 		return Files.readString(Paths.get(getClass().getClassLoader().getResource(fileName).toURI()), StandardCharsets.UTF_8)
 			.replaceAll(System.lineSeparator(), unescapeJava(properties.recordTerminator()));
-	}
-
-	private static BillingRecordEntity createbillingRecordEntity() {
-		final var billingRecordEntity = BillingRecordEntity.create()
-			.withMunicipalityId(MUNICIPALITY_ID)
-			.withApproved(APPROVED_TIMESTAMP)
-			.withCreated(CREATED_TIMESTAMP)
-			.withId(ID)
-			.withModified(MODIFIED_TIMESTAMP)
-			.withStatus(STATUS)
-			.withType(TYPE);
-
-		billingRecordEntity
-			.withInvoice(createInvoiceEntity(billingRecordEntity))
-			.withRecipient(createRecipientEntity(billingRecordEntity));
-
-		return billingRecordEntity;
-	}
-
-	private static InvoiceEntity createInvoiceEntity(BillingRecordEntity billingRecordEntity) {
-		final var invoiceEntity = InvoiceEntity.create()
-			.withBillingRecord(billingRecordEntity)
-			.withCustomerReference(CUSTOMER_REFERENCE)
-			.withDescription(DESCRIPTION)
-			.withDate(DATE)
-			.withDueDate(DUE_DATE)
-			.withId(ID)
-			.withOurReference(OUR_REFERENCE)
-			.withTotalAmount(INVOICE_TOTAL_AMOUNT);
-
-		return invoiceEntity.withInvoiceRows(List.of(createInvoiceRowEntity(1, invoiceEntity)));
-	}
-
-	private static InvoiceRowEntity createInvoiceRowEntity(int id, InvoiceEntity invoiceEntity) {
-		final var invoiceRowEntity = InvoiceRowEntity.create()
-			.withAccountInformation(createAccountInformationEmbeddable())
-			.withCostPerUnit(COST_PER_UNIT)
-			.withId(id)
-			.withInvoice(invoiceEntity)
-			.withQuantity(QUANTITY)
-			.withTotalAmount(COST_PER_UNIT * QUANTITY)
-			.withVatCode(VAT_CODE);
-
-		return invoiceRowEntity.withDescriptions(List.of(
-			createDescriptionEntity(1, invoiceRowEntity, STANDARD, DESCRIPTION),
-			createDescriptionEntity(2, invoiceRowEntity, DETAILED, DETAILED_DESCRIPTION)));
-	}
-
-	private static DescriptionEntity createDescriptionEntity(int id, InvoiceRowEntity invoiceRowEntity, DescriptionType type, String text) {
-		return DescriptionEntity.create()
-			.withId(id)
-			.withInvoiceRow(invoiceRowEntity)
-			.withText(text)
-			.withType(type);
-	}
-
-	private static AccountInformationEmbeddable createAccountInformationEmbeddable() {
-		return AccountInformationEmbeddable.create()
-			.withAccuralKey(ACCURAL_KEY)
-			.withActivity(ACTIVITY)
-			.withArticle(ARTICLE)
-			.withCostCenter(COST_CENTER)
-			.withCounterpart(COUNTERPART)
-			.withDepartment(DEPARTMENT)
-			.withProject(PROJECT)
-			.withSubaccount(SUBACCOUNT);
-	}
-
-	private static RecipientEntity createRecipientEntity(BillingRecordEntity billingRecordEntity) {
-		return RecipientEntity.create()
-			.withAddressDetails(createAddressDetailsEmbeddable())
-			.withBillingRecord(billingRecordEntity)
-			.withId(ID)
-			.withOrganizationName(ORGANIZATION_NAME)
-			.withLegalId(LEGAL_ID);
-	}
-
-	private static AddressDetailsEmbeddable createAddressDetailsEmbeddable() {
-		return AddressDetailsEmbeddable.create()
-			.withCareOf(CARE_OF)
-			.withCity(CITY)
-			.withPostalCode(POSTAL_CODE)
-			.withStreet(STREET);
 	}
 }

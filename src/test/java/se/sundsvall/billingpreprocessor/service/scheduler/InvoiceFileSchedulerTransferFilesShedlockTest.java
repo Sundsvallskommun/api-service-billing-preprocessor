@@ -13,7 +13,6 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -38,6 +37,42 @@ import se.sundsvall.billingpreprocessor.service.InvoiceFileService;
 @ActiveProfiles("junit")
 class InvoiceFileSchedulerTransferFilesShedlockTest {
 
+	private static LocalDateTime mockCalledTime;
+	@Autowired
+	private InvoiceFileService invoiceFileServiceMock;
+
+	@Autowired
+	private NamedParameterJdbcTemplate jdbcTemplate;
+
+	@Test
+	void verifyShedLockForTransferFiles() {
+		// Make sure scheduling occurs multiple times
+		await().until(() -> mockCalledTime != null && LocalDateTime.now().isAfter(mockCalledTime.plusSeconds(2)));
+
+		// Verify lock
+		await().atMost(5, SECONDS)
+			.untilAsserted(() -> assertThat(getLockedAt("transferfiles"))
+				.isCloseTo(LocalDateTime.now(systemUTC()), within(10, ChronoUnit.SECONDS)));
+
+		// Only one call should be made as long as transferFiles() is locked and mock is waiting for first call to finish
+		verify(invoiceFileServiceMock).transferFiles("2281");
+		verifyNoMoreInteractions(invoiceFileServiceMock);
+	}
+
+	private LocalDateTime getLockedAt(final String name) {
+		return jdbcTemplate.query(
+			"SELECT locked_at FROM shedlock WHERE name = :name",
+			Map.of("name", name),
+			this::mapTimestamp);
+	}
+
+	private LocalDateTime mapTimestamp(final ResultSet rs) throws SQLException {
+		if (rs.next()) {
+			return rs.getTimestamp("locked_at").toLocalDateTime();
+		}
+		return null;
+	}
+
 	@TestConfiguration
 	public static class ShedlockTestConfiguration {
 		@Bean
@@ -56,42 +91,5 @@ class InvoiceFileSchedulerTransferFilesShedlockTest {
 
 			return mockBean;
 		}
-	}
-
-	@Autowired
-	private InvoiceFileService invoiceFileServiceMock;
-
-	@Autowired
-	private NamedParameterJdbcTemplate jdbcTemplate;
-
-	private static LocalDateTime mockCalledTime;
-
-	@Test
-	void verifyShedLockForTransferFiles() {
-		// Make sure scheduling occurs multiple times
-		await().until(() -> mockCalledTime != null && LocalDateTime.now().isAfter(mockCalledTime.plusSeconds(2)));
-
-		// Verify lock
-		await().atMost(5, SECONDS)
-			.untilAsserted(() -> assertThat(getLockedAt("transferfiles"))
-				.isCloseTo(LocalDateTime.now(systemUTC()), within(10, ChronoUnit.SECONDS)));
-
-		// Only one call should be made as long as transferFiles() is locked and mock is waiting for first call to finish
-		verify(invoiceFileServiceMock).transferFiles("2281");
-		verifyNoMoreInteractions(invoiceFileServiceMock);
-	}
-
-	private LocalDateTime getLockedAt(String name) {
-		return jdbcTemplate.query(
-			"SELECT locked_at FROM shedlock WHERE name = :name",
-			Map.of("name", name),
-			this::mapTimestamp);
-	}
-
-	private LocalDateTime mapTimestamp(final ResultSet rs) throws SQLException {
-		if (rs.next()) {
-			return LocalDateTime.parse(rs.getString("locked_at"), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
-		}
-		return null;
 	}
 }

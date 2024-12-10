@@ -19,8 +19,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.zalando.problem.Problem;
 import org.zalando.problem.violations.ConstraintViolationProblem;
@@ -39,7 +39,7 @@ class BillingRecordsCreateResourceFailureTest {
 	@Autowired
 	private WebTestClient webTestClient;
 
-	@MockBean
+	@MockitoBean
 	private BillingRecordService serviceMock;
 
 	@Test
@@ -169,7 +169,7 @@ class BillingRecordsCreateResourceFailureTest {
 
 	@ParameterizedTest
 	@EnumSource(value = Type.class)
-	void createBillingRecordWithStatusApprovedAndNoApprovedBy(Type type) {
+	void createBillingRecordWithStatusApprovedAndNoApprovedBy(final Type type) {
 		// Parameter values
 		final var request = createBillingRecordInstance(type, true)
 			.withApprovedBy(null)

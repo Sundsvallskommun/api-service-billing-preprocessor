@@ -22,20 +22,18 @@ import org.mockito.Captor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import se.sundsvall.billingpreprocessor.Application;
 import se.sundsvall.billingpreprocessor.api.model.AccountInformation;
 import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
 import se.sundsvall.billingpreprocessor.api.model.Invoice;
 import se.sundsvall.billingpreprocessor.api.model.InvoiceRow;
-import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
 import se.sundsvall.billingpreprocessor.service.BillingRecordService;
 
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -47,7 +45,7 @@ class BillingRecordsResourceTest {
 	@Autowired
 	private WebTestClient webTestClient;
 
-	@MockBean
+	@MockitoBean
 	private BillingRecordService serviceMock;
 
 	@Captor
@@ -55,6 +53,50 @@ class BillingRecordsResourceTest {
 
 	@Captor
 	private ArgumentCaptor<List<BillingRecord>> billingRecordsCaptor;
+
+	private static BillingRecord createBillingRecordInstance() {
+		return BillingRecord.create()
+			.withCategory("ACCESS_CARD")
+			.withInvoice(createInvoiceInstance())
+			.withStatus(NEW)
+			.withType(INTERNAL);
+	}
+
+	private static Invoice createInvoiceInstance() {
+		return Invoice.create()
+			.withCustomerId("16")
+			.withDescription("Errand number: 2113-01784")
+			.withOurReference("Johan Doe")
+			.withReferenceId("22940338")
+			.withInvoiceRows(createInvoiceRowInstances());
+	}
+
+	private static List<InvoiceRow> createInvoiceRowInstances() {
+		return List.of(
+			InvoiceRow.create()
+				.withDescriptions(List.of("Ordernummer: azi-330c-3fne-33"))
+				.withQuantity(0f),
+			InvoiceRow.create()
+				.withDescriptions(List.of("Beställare: joh01doe 22940338"))
+				.withQuantity(0f),
+			InvoiceRow.create()
+				.withDescriptions(List.of("Användare: Johan Doe joh01doe"))
+				.withQuantity(0f),
+			InvoiceRow.create()
+				.withDescriptions(List.of("Passerkort utan foto"))
+				.withAccountInformation(createAccountInformationInstance())
+				.withCostPerUnit(150f)
+				.withQuantity(1f));
+	}
+
+	private static AccountInformation createAccountInformationInstance() {
+		return AccountInformation.create()
+			.withActivity("5247000")
+			.withDepartment("910300")
+			.withCostCenter("1620000")
+			.withSubaccount("936100")
+			.withCounterpart("counterPart");
+	}
 
 	@Test
 	void createBillingRecord() {
@@ -143,19 +185,20 @@ class BillingRecordsResourceTest {
 		final var matches = new PageImpl<>(List.of(BillingRecord.create()), pageable, 1);
 
 		// Mock
-		when(serviceMock.findBillingRecords(Mockito.<Specification<BillingRecordEntity>>any(), eq(pageable), any())).thenReturn(matches);
+		when(serviceMock.findBillingRecords(Mockito.any(), eq(pageable), any())).thenReturn(matches);
 
 		// Call
 		final var response = webTestClient.get().uri(builder -> builder.path(PATH).build(emptyMap()))
 			.exchange()
 			.expectStatus().isOk()
 			.expectHeader().contentType(APPLICATION_JSON)
-			.expectBody(new ParameterizedTypeReference<Page<BillingRecord>>() {})
+			.expectBody(new ParameterizedTypeReference<Page<BillingRecord>>() {
+			})
 			.returnResult()
 			.getResponseBody();
 
 		// Verification
-		verify(serviceMock).findBillingRecords(Mockito.<Specification<BillingRecordEntity>>any(), eq(pageable), eq(MUNICIPALITY_ID));
+		verify(serviceMock).findBillingRecords(Mockito.any(), eq(pageable), eq(MUNICIPALITY_ID));
 		assertThat(response).isNotNull().isEqualTo(matches);
 		assertThat(response.getContent()).hasSize(1);
 	}
@@ -170,7 +213,7 @@ class BillingRecordsResourceTest {
 		final var filter = "category:'ACCESS_CARD' and status:'NEW'";
 
 		// Mock
-		when(serviceMock.findBillingRecords(ArgumentMatchers.<Specification<BillingRecordEntity>>any(), eq(pageable), any())).thenReturn(matches);
+		when(serviceMock.findBillingRecords(ArgumentMatchers.any(), eq(pageable), any())).thenReturn(matches);
 
 		// Call
 		final var response = webTestClient.get().uri(builder -> builder.path(PATH)
@@ -180,12 +223,13 @@ class BillingRecordsResourceTest {
 			.exchange()
 			.expectStatus().isOk()
 			.expectHeader().contentType(APPLICATION_JSON)
-			.expectBody(new ParameterizedTypeReference<Page<BillingRecord>>() {})
+			.expectBody(new ParameterizedTypeReference<Page<BillingRecord>>() {
+			})
 			.returnResult()
 			.getResponseBody();
 
 		// Verification
-		verify(serviceMock).findBillingRecords(ArgumentMatchers.<Specification<BillingRecordEntity>>any(), eq(pageable), eq(MUNICIPALITY_ID));
+		verify(serviceMock).findBillingRecords(ArgumentMatchers.any(), eq(pageable), eq(MUNICIPALITY_ID));
 		assertThat(response).isNotNull().isEqualTo(matches);
 		assertThat(response.getContent()).hasSize(1);
 	}
@@ -227,49 +271,5 @@ class BillingRecordsResourceTest {
 
 		// Verification
 		verify(serviceMock).deleteBillingRecord(uuid, MUNICIPALITY_ID);
-	}
-
-	private static BillingRecord createBillingRecordInstance() {
-		return BillingRecord.create()
-			.withCategory("ACCESS_CARD")
-			.withInvoice(createInvoiceInstance())
-			.withStatus(NEW)
-			.withType(INTERNAL);
-	}
-
-	private static Invoice createInvoiceInstance() {
-		return Invoice.create()
-			.withCustomerId("16")
-			.withDescription("Errand number: 2113-01784")
-			.withOurReference("Johan Doe")
-			.withReferenceId("22940338")
-			.withInvoiceRows(createInvoiceRowInstances());
-	}
-
-	private static List<InvoiceRow> createInvoiceRowInstances() {
-		return List.of(
-			InvoiceRow.create()
-				.withDescriptions(List.of("Ordernummer: azi-330c-3fne-33"))
-				.withQuantity(0f),
-			InvoiceRow.create()
-				.withDescriptions(List.of("Beställare: joh01doe 22940338"))
-				.withQuantity(0f),
-			InvoiceRow.create()
-				.withDescriptions(List.of("Användare: Johan Doe joh01doe"))
-				.withQuantity(0f),
-			InvoiceRow.create()
-				.withDescriptions(List.of("Passerkort utan foto"))
-				.withAccountInformation(createAccountInformationInstance())
-				.withCostPerUnit(150f)
-				.withQuantity(1f));
-	}
-
-	private static AccountInformation createAccountInformationInstance() {
-		return AccountInformation.create()
-			.withActivity("5247000")
-			.withDepartment("910300")
-			.withCostCenter("1620000")
-			.withSubaccount("936100")
-			.withCounterpart("counterPart");
 	}
 }
