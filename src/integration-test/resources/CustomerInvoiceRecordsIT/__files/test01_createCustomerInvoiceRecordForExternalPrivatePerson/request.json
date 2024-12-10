@@ -15,21 +15,25 @@
 		"customerReference": "Kalle Anka",
 		"customerId": "199001012385",
 		"description": "Kundfaktura",
-		"invoiceRows": [{
-			"accountInformation": {
-				"activity": "4165",
-				"costCenter": "43200000",
-				"subaccount": "345000",
-				"counterpart": "86000000",
-				"department": "315310",
-				"article": "3452000 - ANKEBORG"
-			},
-			"quantity": 3,
-			"detailedDescriptions": [],
-			"descriptions": ["Julmarknad Ankeborg. 3 marknad"],
-			"costPerUnit": 700,
-			"vatCode": "00"
-		}],
+		"invoiceRows": [
+			{
+				"accountInformation": {
+					"activity": "4165",
+					"costCenter": "43200000",
+					"subaccount": "345000",
+					"counterpart": "86000000",
+					"department": "315310",
+					"article": "3452000 - ANKEBORG"
+				},
+				"quantity": 3,
+				"detailedDescriptions": [],
+				"descriptions": [
+					"Julmarknad Ankeborg. 3 marknad"
+				],
+				"costPerUnit": 700,
+				"vatCode": "00"
+			}
+		],
 		"referenceId": "185375"
 	},
 	"category": "CUSTOMER_INVOICE",

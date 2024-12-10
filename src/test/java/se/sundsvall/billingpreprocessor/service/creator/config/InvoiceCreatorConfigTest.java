@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-
 import se.sundsvall.billingpreprocessor.Application;
 
 @SpringBootTest(classes = Application.class, webEnvironment = MOCK)

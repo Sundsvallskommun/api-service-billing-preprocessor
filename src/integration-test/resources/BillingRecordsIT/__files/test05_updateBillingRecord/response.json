@@ -18,22 +18,28 @@
 		"dueDate": "2022-08-30",
 		"customerId": "02",
 		"description": "Faktura för tjugo Boxercise-pass",
-		"invoiceRows": [{
-			"totalAmount": 30000,
-			"quantity": 20,
-			"accountInformation": {
-				"activity": "3022910",
-				"costCenter": "1455000",
-				"subaccount": "485223",
-				"counterpart": "YUI10KAR",
-				"department": "899700",
-				"article": "Friskvårdssatsning"
-			},
-			"detailedDescriptions": ["Testar stränglängd över 30 chars"],
-			"descriptions": ["Testar stränglängd på 30 chars"],
-			"vatCode": "06",
-			"costPerUnit": 1500
-		}]
+		"invoiceRows": [
+			{
+				"totalAmount": 30000,
+				"quantity": 20,
+				"accountInformation": {
+					"activity": "3022910",
+					"costCenter": "1455000",
+					"subaccount": "485223",
+					"counterpart": "YUI10KAR",
+					"department": "899700",
+					"article": "Friskvårdssatsning"
+				},
+				"detailedDescriptions": [
+					"Testar stränglängd över 30 chars"
+				],
+				"descriptions": [
+					"Testar stränglängd på 30 chars"
+				],
+				"vatCode": "06",
+				"costPerUnit": 1500
+			}
+		]
 	},
 	"category": "ISYCASE",
 	"type": "EXTERNAL",

@@ -27,10 +27,8 @@ import static se.sundsvall.billingpreprocessor.service.util.ProblemUtil.createIn
 
 import java.time.LocalDate;
 import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
 import org.zalando.problem.ThrowableProblem;
-
 import se.sundsvall.billingpreprocessor.integration.db.model.AccountInformationEmbeddable;
 import se.sundsvall.billingpreprocessor.integration.db.model.AddressDetailsEmbeddable;
 import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;

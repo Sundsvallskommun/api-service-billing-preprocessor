@@ -1,5 +1,7 @@
 package se.sundsvall.billingpreprocessor.integration.db.model;
 
+import static jakarta.persistence.FetchType.LAZY;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -9,11 +11,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-
 import java.io.Serializable;
 import java.util.Objects;
-
-import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @Table(name = "recipient")

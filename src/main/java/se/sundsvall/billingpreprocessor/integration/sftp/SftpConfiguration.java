@@ -3,7 +3,6 @@ package se.sundsvall.billingpreprocessor.integration.sftp;
 import java.io.ByteArrayInputStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 import org.apache.sshd.sftp.client.SftpClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

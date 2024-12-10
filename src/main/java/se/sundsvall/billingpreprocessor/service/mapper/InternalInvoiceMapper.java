@@ -18,10 +18,8 @@ import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Descri
 import static se.sundsvall.billingpreprocessor.service.util.ProblemUtil.createInternalServerErrorProblem;
 
 import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
 import org.zalando.problem.ThrowableProblem;
-
 import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.DescriptionEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;

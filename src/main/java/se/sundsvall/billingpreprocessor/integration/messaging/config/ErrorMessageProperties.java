@@ -1,7 +1,6 @@
 package se.sundsvall.billingpreprocessor.integration.messaging.config;
 
 import java.util.List;
-
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties("errorreport")

@@ -9,12 +9,10 @@ import static se.sundsvall.billingpreprocessor.api.BillingRecordRequestUtil.crea
 import static se.sundsvall.billingpreprocessor.api.model.enums.Type.EXTERNAL;
 import static se.sundsvall.billingpreprocessor.api.model.enums.Type.INTERNAL;
 
-import java.util.List;
-import java.util.stream.Stream;
-
 import jakarta.validation.ConstraintValidatorContext;
 import jakarta.validation.ConstraintValidatorContext.ConstraintViolationBuilder;
-
+import java.util.List;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -23,7 +21,6 @@ import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import se.sundsvall.billingpreprocessor.api.model.AccountInformation;
 import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
 import se.sundsvall.billingpreprocessor.api.model.Invoice;

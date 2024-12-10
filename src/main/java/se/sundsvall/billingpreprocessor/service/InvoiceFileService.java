@@ -10,6 +10,7 @@ import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Status
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.INVOICED;
 import static se.sundsvall.billingpreprocessor.service.mapper.InvoiceFileMapper.toInvoiceFileEntity;
 
+import jakarta.transaction.Transactional;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.Charset;
 import java.time.OffsetDateTime;
@@ -18,14 +19,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.integration.file.remote.session.DelegatingSessionFactory;
 import org.springframework.stereotype.Service;
 import org.zalando.problem.Problem;
-
 import se.sundsvall.billingpreprocessor.integration.db.BillingRecordRepository;
 import se.sundsvall.billingpreprocessor.integration.db.InvoiceFileRepository;
 import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
@@ -35,8 +34,6 @@ import se.sundsvall.billingpreprocessor.integration.sftp.SftpConfiguration.Uploa
 import se.sundsvall.billingpreprocessor.integration.sftp.SftpPropertiesConfig;
 import se.sundsvall.billingpreprocessor.service.creator.InvoiceCreator;
 import se.sundsvall.billingpreprocessor.service.error.InvoiceFileError;
-
-import jakarta.transaction.Transactional;
 
 @Service
 public class InvoiceFileService {

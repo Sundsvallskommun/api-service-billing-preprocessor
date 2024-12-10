@@ -11,10 +11,8 @@ import java.text.SimpleDateFormat;
 import java.time.Clock;
 import java.util.Date;
 import java.util.regex.Pattern;
-
 import org.springframework.stereotype.Service;
 import org.zalando.problem.Problem;
-
 import se.sundsvall.billingpreprocessor.integration.db.InvoiceFileConfigurationRepository;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceFileConfigurationEntity;
 

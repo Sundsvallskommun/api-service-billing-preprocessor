@@ -10,14 +10,12 @@ import static se.sundsvall.billingpreprocessor.service.mapper.BillingRecordMappe
 import static se.sundsvall.billingpreprocessor.service.mapper.BillingRecordMapper.updateEntity;
 
 import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.zalando.problem.Problem;
-
 import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
 import se.sundsvall.billingpreprocessor.integration.db.BillingRecordRepository;
 import se.sundsvall.billingpreprocessor.integration.db.InvoiceFileConfigurationRepository;

@@ -17,23 +17,29 @@
 			"dueDate": "2023-12-24",
 			"customerId": "16",
 			"description": "Errand number: 2113-01784",
-			"invoiceRows": [{
-				"quantity": 1,
-				"accountInformation": {
-					"activity": "5756",
-					"costCenter": "15800100",
-					"subaccount": "936300",
-					"counterpart": "11830000",
-					"project": "11041",
-					"department": "920360",
-					"article": "Elektrisk cykel",
-					"accuralKey": "5647"
-				},
-				"detailedDescriptions": ["Detta ska faktureras Sundsvall Elnät AB"],
-				"descriptions": ["Köp av elektrisk tjänstecykel"],
-				"vatCode": "25",
-				"costPerUnit": 7995
-			}],
+			"invoiceRows": [
+				{
+					"quantity": 1,
+					"accountInformation": {
+						"activity": "5756",
+						"costCenter": "15800100",
+						"subaccount": "936300",
+						"counterpart": "11830000",
+						"project": "11041",
+						"department": "920360",
+						"article": "Elektrisk cykel",
+						"accuralKey": "5647"
+					},
+					"detailedDescriptions": [
+						"Detta ska faktureras Sundsvall Elnät AB"
+					],
+					"descriptions": [
+						"Köp av elektrisk tjänstecykel"
+					],
+					"vatCode": "25",
+					"costPerUnit": 7995
+				}
+			],
 			"referenceId": "19-ALI22SNU"
 		},
 		"category": "ISYCASE",
@@ -58,23 +64,29 @@
 			"dueDate": "2023-12-24",
 			"customerId": "16",
 			"description": "Errand number: 2113-01786",
-			"invoiceRows": [{
-				"quantity": 1,
-				"accountInformation": {
-					"activity": "5756",
-					"costCenter": "15800100",
-					"subaccount": "936300",
-					"counterpart": "11830000",
-					"project": "11041",
-					"department": "920360",
-					"article": "Elektrisk cykel",
-					"accuralKey": "5647"
-				},
-				"detailedDescriptions": ["Detta ska faktureras Sundsvall Elnät AB"],
-				"descriptions": ["Köp av elektrisk tjänstecykel"],
-				"vatCode": "25",
-				"costPerUnit": 7995
-			}],
+			"invoiceRows": [
+				{
+					"quantity": 1,
+					"accountInformation": {
+						"activity": "5756",
+						"costCenter": "15800100",
+						"subaccount": "936300",
+						"counterpart": "11830000",
+						"project": "11041",
+						"department": "920360",
+						"article": "Elektrisk cykel",
+						"accuralKey": "5647"
+					},
+					"detailedDescriptions": [
+						"Detta ska faktureras Sundsvall Elnät AB"
+					],
+					"descriptions": [
+						"Köp av elektrisk tjänstecykel"
+					],
+					"vatCode": "25",
+					"costPerUnit": 7995
+				}
+			],
 			"referenceId": "19-ALI22SNU"
 		},
 		"category": "ISYCASE",

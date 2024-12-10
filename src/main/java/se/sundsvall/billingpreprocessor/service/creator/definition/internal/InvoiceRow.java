@@ -1,11 +1,9 @@
 package se.sundsvall.billingpreprocessor.service.creator.definition.internal;
 
 import java.util.Objects;
-
 import org.beanio.annotation.Field;
 import org.beanio.annotation.Fields;
 import org.beanio.annotation.Record;
-
 import org.beanio.builder.Align;
 import se.sundsvall.billingpreprocessor.service.creator.config.InternalInvoiceFloatTypeHandler;
 
