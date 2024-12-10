@@ -7,12 +7,10 @@ import static se.sundsvall.billingpreprocessor.service.mapper.MessagingMapper.co
 import static se.sundsvall.billingpreprocessor.service.mapper.MessagingMapper.toEmail;
 
 import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import se.sundsvall.billingpreprocessor.integration.messaging.MessagingClient;
 import se.sundsvall.billingpreprocessor.integration.messaging.config.ErrorMessageProperties;
 import se.sundsvall.billingpreprocessor.service.error.InvoiceFileError;

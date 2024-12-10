@@ -2,7 +2,6 @@ package se.sundsvall.billingpreprocessor.service.creator.definition.external;
 
 import java.time.LocalDate;
 import java.util.Objects;
-
 import org.beanio.annotation.Field;
 import org.beanio.annotation.Fields;
 import org.beanio.annotation.Record;

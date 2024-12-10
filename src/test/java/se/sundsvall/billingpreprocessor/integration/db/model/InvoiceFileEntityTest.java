@@ -14,7 +14,6 @@ import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Invoic
 
 import java.time.OffsetDateTime;
 import java.util.Random;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

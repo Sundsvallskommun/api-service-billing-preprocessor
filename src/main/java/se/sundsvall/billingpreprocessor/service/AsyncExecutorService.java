@@ -2,7 +2,6 @@ package se.sundsvall.billingpreprocessor.service;
 
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-
 import se.sundsvall.dept44.requestid.RequestId;
 
 /**

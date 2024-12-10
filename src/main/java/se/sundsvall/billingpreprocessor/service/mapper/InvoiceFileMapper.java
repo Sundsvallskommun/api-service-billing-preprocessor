@@ -4,7 +4,6 @@ import static java.util.Optional.ofNullable;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileStatus.GENERATED;
 
 import java.nio.charset.Charset;
-
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceFileEntity;
 
 public final class InvoiceFileMapper {

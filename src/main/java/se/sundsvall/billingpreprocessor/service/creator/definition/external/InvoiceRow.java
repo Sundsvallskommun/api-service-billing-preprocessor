@@ -1,11 +1,9 @@
 package se.sundsvall.billingpreprocessor.service.creator.definition.external;
 
 import java.util.Objects;
-
 import org.beanio.annotation.Field;
 import org.beanio.annotation.Fields;
 import org.beanio.annotation.Record;
-
 import se.sundsvall.billingpreprocessor.service.creator.config.ExternalInvoiceFloatTypeHandler;
 
 @Record

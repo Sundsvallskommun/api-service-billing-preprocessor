@@ -6,7 +6,6 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 import java.util.Optional;
-
 import org.beanio.types.IntegerTypeHandler;
 
 public class InternalInvoiceIntegerTypeHandler extends IntegerTypeHandler {

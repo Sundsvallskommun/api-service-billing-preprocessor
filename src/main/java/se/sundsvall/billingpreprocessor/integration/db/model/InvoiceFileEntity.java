@@ -7,13 +7,6 @@ import static java.time.temporal.ChronoUnit.MILLIS;
 import static org.hibernate.annotations.TimeZoneStorageType.NORMALIZE;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileStatus.GENERATED;
 
-import java.io.Serializable;
-import java.time.OffsetDateTime;
-import java.util.Objects;
-
-import org.hibernate.Length;
-import org.hibernate.annotations.TimeZoneStorage;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,6 +15,11 @@ import jakarta.persistence.Index;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import java.io.Serializable;
+import java.time.OffsetDateTime;
+import java.util.Objects;
+import org.hibernate.Length;
+import org.hibernate.annotations.TimeZoneStorage;
 import se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileStatus;
 
 @Entity

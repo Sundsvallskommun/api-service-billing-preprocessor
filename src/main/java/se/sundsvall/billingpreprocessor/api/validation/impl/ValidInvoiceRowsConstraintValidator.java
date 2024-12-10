@@ -6,10 +6,9 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 import static se.sundsvall.billingpreprocessor.api.model.enums.Type.EXTERNAL;
 import static se.sundsvall.billingpreprocessor.api.model.enums.Type.INTERNAL;
 
-import java.util.Objects;
-
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import java.util.Objects;
 import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
 import se.sundsvall.billingpreprocessor.api.model.InvoiceRow;
 import se.sundsvall.billingpreprocessor.api.validation.ValidInvoiceRows;

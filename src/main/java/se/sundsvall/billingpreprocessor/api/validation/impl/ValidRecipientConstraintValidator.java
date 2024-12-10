@@ -7,7 +7,6 @@ import static se.sundsvall.billingpreprocessor.api.model.enums.Type.EXTERNAL;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-
 import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
 import se.sundsvall.billingpreprocessor.api.model.Recipient;
 import se.sundsvall.billingpreprocessor.api.validation.ValidRecipient;

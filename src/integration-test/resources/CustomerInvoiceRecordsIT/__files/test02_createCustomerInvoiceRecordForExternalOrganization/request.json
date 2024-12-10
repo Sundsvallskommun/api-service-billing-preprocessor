@@ -25,7 +25,9 @@
 				},
 				"quantity": 1,
 				"detailedDescriptions": [],
-				"descriptions": ["Hyra inventarier"],
+				"descriptions": [
+					"Hyra inventarier"
+				],
 				"costPerUnit": 1080,
 				"vatCode": "25"
 			},
@@ -38,7 +40,9 @@
 				},
 				"quantity": 1,
 				"detailedDescriptions": [],
-				"descriptions": ["Pengahantering i kassavalvet"],
+				"descriptions": [
+					"Pengahantering i kassavalvet"
+				],
 				"costPerUnit": 5650,
 				"vatCode": "25"
 			}

@@ -15,7 +15,6 @@ import static org.hamcrest.core.AllOf.allOf;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

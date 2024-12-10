@@ -1,8 +1,7 @@
 package se.sundsvall.billingpreprocessor.api.model;
 
-import java.util.Objects;
-
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.Objects;
 
 @Schema(description = "Address details model")
 public class AddressDetails {

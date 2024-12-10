@@ -10,7 +10,6 @@ import static se.sundsvall.billingpreprocessor.service.util.ProblemUtil.createPr
 
 import org.springframework.stereotype.Component;
 import org.zalando.problem.Problem;
-
 import se.sundsvall.billingpreprocessor.integration.party.PartyClient;
 
 @Component

@@ -1,14 +1,20 @@
 {
 	"request": {
 		"headers": {
-			"Authorization": {"equalTo": "Bearer MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3"},
-			"x-request-id": {"matches": "^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$"}
+			"Authorization": {
+				"equalTo": "Bearer MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3"
+			},
+			"x-request-id": {
+				"matches": "^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$"
+			}
 		},
 		"method": "GET",
 		"urlPath": "/api-party/2281/PRIVATE/970cd619-51b0-40b9-9132-579e2f937c07/legalId"
 	},
 	"response": {
-		"headers": {"content-type": "application/problem+json"},
+		"headers": {
+			"content-type": "application/problem+json"
+		},
 		"bodyFileName": "test01_createInvoiceFiles/responses/api-party--get-legal-id-for-private-response.json",
 		"status": 404
 	},
