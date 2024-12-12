@@ -124,16 +124,15 @@ public final class BillingRecordMapper {
 	private static InvoiceEntity toInvoiceEntity(final BillingRecordEntity billingRecordEntity, final Invoice invoice) {
 		final var invoiceEntity = ofNullable(billingRecordEntity.getInvoice()).orElse(InvoiceEntity.create().withBillingRecord(billingRecordEntity));
 
-		ofNullable(invoice).ifPresent(i -> 
-			invoiceEntity.withCustomerId(i.getCustomerId())
-				.withCustomerReference(i.getCustomerReference())
-				.withDescription(i.getDescription())
-				.withDate(i.getDate())
-				.withDueDate(i.getDueDate())
-				.withInvoiceRows(toInvoiceRowEntities(invoiceEntity, i.getInvoiceRows()))
-				.withOurReference(i.getOurReference())
-				.withReferenceId(i.getReferenceId())
-				.withTotalAmount(calculateTotalInvoiceAmount(invoiceEntity)));
+		ofNullable(invoice).ifPresent(i -> invoiceEntity.withCustomerId(i.getCustomerId())
+			.withCustomerReference(i.getCustomerReference())
+			.withDescription(i.getDescription())
+			.withDate(i.getDate())
+			.withDueDate(i.getDueDate())
+			.withInvoiceRows(toInvoiceRowEntities(invoiceEntity, i.getInvoiceRows()))
+			.withOurReference(i.getOurReference())
+			.withReferenceId(i.getReferenceId())
+			.withTotalAmount(calculateTotalInvoiceAmount(invoiceEntity)));
 
 		return invoiceEntity;
 	}
