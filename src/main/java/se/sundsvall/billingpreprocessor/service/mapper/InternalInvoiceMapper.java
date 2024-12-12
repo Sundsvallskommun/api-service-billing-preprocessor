@@ -146,7 +146,10 @@ public class InternalInvoiceMapper {
 	}
 
 	private static String extractDescription(InvoiceRowEntity invoiceRowEntity) {
-		return ofNullable(invoiceRowEntity.getDescriptions()).orElse(emptyList()).stream()
+		return ofNullable(invoiceRowEntity)
+			.map(InvoiceRowEntity::getDescriptions)
+			.orElse(emptyList())
+			.stream()
 			.filter(description -> description.getType() == STANDARD)
 			.map(DescriptionEntity::getText)
 			.filter(StringUtils::isNoneBlank)

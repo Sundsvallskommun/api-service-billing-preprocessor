@@ -154,6 +154,16 @@ class ExternalInvoiceMapperTest {
 		assertThat(e.getMessage()).isEqualTo("Internal Server Error: Recipient counterpart is not present");
 	}
 
+	@Test
+	void toCustomerWhenMissingInvoiceData() {
+		final var billingRecordEntity = createbillingRecordEntity().withInvoice(null);
+
+		final var e = assertThrows(ThrowableProblem.class, () -> ExternalInvoiceMapper.toCustomer(LEGAL_ID, billingRecordEntity));
+
+		assertThat(e.getStatus()).isEqualTo(INTERNAL_SERVER_ERROR);
+		assertThat(e.getMessage()).isEqualTo("Internal Server Error: Recipient counterpart is not present");
+	}
+
 	@ParameterizedTest
 	@MethodSource("toCustomerWhenMissingVitalDataArgumentProvider")
 	void toCustomerWhenMissingVitalData(final String legalId, final RecipientEntity recipientEntity, final String expectedMessage) {

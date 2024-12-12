@@ -141,6 +141,7 @@ class InternalInvoiceMapperTest {
 
 	private static Stream<Arguments> toInvoiceRowWhenMissingVitalDataArgumentProvider() {
 		return Stream.of(
+			Arguments.of(null, "Description is not present"),
 			Arguments.of(createInvoiceRowEntity(1, null).withDescriptions(null), "Description is not present"),
 			Arguments.of(createInvoiceRowEntity(1, null).withDescriptions(List.of(DescriptionEntity.create().withType(DETAILED).withText("text"))), "Description is not present"),
 			Arguments.of(createInvoiceRowEntity(1, null).withDescriptions(List.of(DescriptionEntity.create().withType(STANDARD).withText("    "))), "Description is not present"),

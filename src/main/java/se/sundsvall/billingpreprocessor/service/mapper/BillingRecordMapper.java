@@ -17,7 +17,7 @@ import static se.sundsvall.billingpreprocessor.service.util.CalculationUtil.calc
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 import se.sundsvall.billingpreprocessor.api.model.AccountInformation;
 import se.sundsvall.billingpreprocessor.api.model.AddressDetails;
 import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
@@ -47,6 +47,10 @@ public final class BillingRecordMapper {
 	 * @return                a object of class BillingRecordEntity representing the incoming BillingRecord object
 	 */
 	public static BillingRecordEntity toBillingRecordEntity(final BillingRecord billingRecord, String municipalityId) {
+		if (isNull(billingRecord)) {
+			return null;
+		}
+
 		final var billingRecordEntity = BillingRecordEntity.create() // Create billing record entity
 			.withCategory(billingRecord.getCategory())
 			.withStatus(Status.valueOf(billingRecord.getStatus().toString()))
@@ -75,6 +79,7 @@ public final class BillingRecordMapper {
 		return ofNullable(billingRecords)
 			.map(records -> records.stream()
 				.map(r -> toBillingRecordEntity(r, municipalityId))
+				.filter(Objects::nonNull)
 				.toList())
 			.orElse(emptyList());
 	}
@@ -87,10 +92,14 @@ public final class BillingRecordMapper {
 	 * @return                     the updated billingRecordEntity object
 	 */
 	public static BillingRecordEntity updateEntity(final BillingRecordEntity billingRecordEntity, final BillingRecord billingRecord) {
-		billingRecordEntity // Update billing record entity with request data
-			.withCategory(billingRecord.getCategory())
-			.withStatus(Status.valueOf(billingRecord.getStatus().toString()))
-			.withType(Type.valueOf(billingRecord.getType().toString()));
+		if (isNull(billingRecord)) {
+			return billingRecordEntity;
+		}
+
+		// Update billing record entity with request data
+		ofNullable(billingRecord.getCategory()).ifPresent(billingRecordEntity::setCategory);
+		ofNullable(billingRecord.getStatus()).ifPresent(v -> billingRecordEntity.setStatus(Status.valueOf(v.toString())));
+		ofNullable(billingRecord.getType()).ifPresent(v -> billingRecordEntity.setType(Type.valueOf(v.toString())));
 
 		billingRecordEntity.setRecipient(toRecipientEntity(billingRecordEntity, billingRecord.getRecipient())); // Update recipient entity of billing record entity with new information
 		billingRecordEntity.setInvoice(toInvoiceEntity(billingRecordEntity, billingRecord.getInvoice())); // Update invoice entity of billing record entity with new information
@@ -108,22 +117,25 @@ public final class BillingRecordMapper {
 
 	private static void setApprovedBy(final BillingRecordEntity billingRecordEntity, String approvedBy) {
 		billingRecordEntity
-			.withApproved(now(ZoneId.systemDefault()))
+			.withApproved(now(ZoneId.systemDefault()).truncatedTo(MILLIS))
 			.withApprovedBy(approvedBy);
 	}
 
 	private static InvoiceEntity toInvoiceEntity(final BillingRecordEntity billingRecordEntity, final Invoice invoice) {
 		final var invoiceEntity = ofNullable(billingRecordEntity.getInvoice()).orElse(InvoiceEntity.create().withBillingRecord(billingRecordEntity));
 
-		return invoiceEntity.withCustomerId(invoice.getCustomerId())
-			.withCustomerReference(invoice.getCustomerReference())
-			.withDescription(invoice.getDescription())
-			.withDate(invoice.getDate())
-			.withDueDate(invoice.getDueDate())
-			.withInvoiceRows(toInvoiceRowEntities(invoiceEntity, invoice.getInvoiceRows()))
-			.withOurReference(invoice.getOurReference())
-			.withReferenceId(invoice.getReferenceId())
-			.withTotalAmount(calculateTotalInvoiceAmount(invoiceEntity));
+		ofNullable(invoice).ifPresent(i -> 
+			invoiceEntity.withCustomerId(i.getCustomerId())
+				.withCustomerReference(i.getCustomerReference())
+				.withDescription(i.getDescription())
+				.withDate(i.getDate())
+				.withDueDate(i.getDueDate())
+				.withInvoiceRows(toInvoiceRowEntities(invoiceEntity, i.getInvoiceRows()))
+				.withOurReference(i.getOurReference())
+				.withReferenceId(i.getReferenceId())
+				.withTotalAmount(calculateTotalInvoiceAmount(invoiceEntity)));
+
+		return invoiceEntity;
 	}
 
 	private static List<InvoiceRowEntity> toInvoiceRowEntities(final InvoiceEntity invoiceEntity, final List<InvoiceRow> invoiceRows) {
@@ -157,16 +169,16 @@ public final class BillingRecordMapper {
 	}
 
 	private static AccountInformationEmbeddable toAccountInformationEmbeddable(final AccountInformation accountInformation) {
-		return isNull(accountInformation) ? AccountInformationEmbeddable.create()
-			: AccountInformationEmbeddable.create()
-				.withAccuralKey(accountInformation.getAccuralKey())
-				.withActivity(accountInformation.getActivity())
-				.withArticle(accountInformation.getArticle())
-				.withCostCenter(accountInformation.getCostCenter())
-				.withCounterpart(accountInformation.getCounterpart())
-				.withDepartment(accountInformation.getDepartment())
-				.withProject(accountInformation.getProject())
-				.withSubaccount(accountInformation.getSubaccount());
+		return ofNullable(accountInformation).map(a -> AccountInformationEmbeddable.create()
+			.withAccuralKey(a.getAccuralKey())
+			.withActivity(a.getActivity())
+			.withArticle(a.getArticle())
+			.withCostCenter(a.getCostCenter())
+			.withCounterpart(a.getCounterpart())
+			.withDepartment(a.getDepartment())
+			.withProject(a.getProject())
+			.withSubaccount(a.getSubaccount()))
+			.orElse(AccountInformationEmbeddable.create());
 	}
 
 	private static RecipientEntity toRecipientEntity(final BillingRecordEntity billingRecord, final Recipient recipient) {
@@ -185,11 +197,11 @@ public final class BillingRecordMapper {
 	}
 
 	private static AddressDetailsEmbeddable toAddressDetailsEmbeddable(final AddressDetails addressDetails) {
-		return Optional.ofNullable(addressDetails).map(details -> AddressDetailsEmbeddable.create()
-			.withCareOf(details.getCareOf())
-			.withCity(details.getCity())
-			.withPostalCode(details.getPostalCode())
-			.withStreet(details.getStreet()))
+		return ofNullable(addressDetails).map(a -> AddressDetailsEmbeddable.create()
+			.withCareOf(a.getCareOf())
+			.withCity(a.getCity())
+			.withPostalCode(a.getPostalCode())
+			.withStreet(a.getStreet()))
 			.orElse(null);
 	}
 
@@ -204,6 +216,7 @@ public final class BillingRecordMapper {
 		return ofNullable(billingRecordEntities).orElse(emptyList())
 			.stream()
 			.map(BillingRecordMapper::toBillingRecord)
+			.filter(Objects::nonNull)
 			.toList();
 	}
 
@@ -214,37 +227,35 @@ public final class BillingRecordMapper {
 	 * @return                     a object of class BillingRecord representing the incoming BillingRecordEntity object
 	 */
 	public static BillingRecord toBillingRecord(final BillingRecordEntity billingRecordEntity) {
-		return BillingRecord.create()
-			.withCategory(billingRecordEntity.getCategory())
-			.withApproved(billingRecordEntity.getApproved())
-			.withApprovedBy(billingRecordEntity.getApprovedBy())
-			.withCreated(billingRecordEntity.getCreated())
-			.withId(billingRecordEntity.getId())
-			.withInvoice(toInvoice(billingRecordEntity.getInvoice()))
-			.withRecipient(toRecipient(billingRecordEntity.getRecipient()))
-			.withModified(billingRecordEntity.getModified())
-			.withExtraParameters(billingRecordEntity.getExtraParameters())
-			.withStatus(se.sundsvall.billingpreprocessor.api.model.enums.Status.valueOf(billingRecordEntity.getStatus().toString()))
-			.withType(se.sundsvall.billingpreprocessor.api.model.enums.Type.valueOf(billingRecordEntity.getType().toString()));
+		return ofNullable(billingRecordEntity).map(b -> BillingRecord.create()
+			.withCategory(b.getCategory())
+			.withApproved(b.getApproved())
+			.withApprovedBy(b.getApprovedBy())
+			.withCreated(b.getCreated())
+			.withId(b.getId())
+			.withInvoice(toInvoice(b.getInvoice()))
+			.withRecipient(toRecipient(b.getRecipient()))
+			.withModified(b.getModified())
+			.withExtraParameters(b.getExtraParameters())
+			.withStatus(se.sundsvall.billingpreprocessor.api.model.enums.Status.valueOf(b.getStatus().toString()))
+			.withType(se.sundsvall.billingpreprocessor.api.model.enums.Type.valueOf(b.getType().toString())))
+			.orElse(null);
 	}
 
 	private static Recipient toRecipient(RecipientEntity recipientEntity) {
-		if (isNull(recipientEntity)) {
-			return null;
-		}
-
-		return Recipient.create()
-			.withAddressDetails(toAddressDetails(recipientEntity.getAddressDetails()))
-			.withFirstName(recipientEntity.getFirstName())
-			.withLastName(recipientEntity.getLastName())
-			.withOrganizationName(recipientEntity.getOrganizationName())
-			.withPartyId(recipientEntity.getPartyId())
-			.withLegalId(recipientEntity.getLegalId())
-			.withUserId(recipientEntity.getUserId());
+		return ofNullable(recipientEntity).map(r -> Recipient.create()
+			.withAddressDetails(toAddressDetails(r.getAddressDetails()))
+			.withFirstName(r.getFirstName())
+			.withLastName(r.getLastName())
+			.withOrganizationName(r.getOrganizationName())
+			.withPartyId(r.getPartyId())
+			.withLegalId(r.getLegalId())
+			.withUserId(r.getUserId()))
+			.orElse(null);
 	}
 
 	private static AddressDetails toAddressDetails(AddressDetailsEmbeddable addressDetailsEmbeddable) {
-		return Optional.ofNullable(addressDetailsEmbeddable).map(details -> AddressDetails.create()
+		return ofNullable(addressDetailsEmbeddable).map(details -> AddressDetails.create()
 			.withCareOf(addressDetailsEmbeddable.getCareOf())
 			.withCity(addressDetailsEmbeddable.getCity())
 			.withStreet(addressDetailsEmbeddable.getStreet())
@@ -253,45 +264,49 @@ public final class BillingRecordMapper {
 	}
 
 	private static Invoice toInvoice(InvoiceEntity invoiceEntity) {
-		return Invoice.create()
-			.withCustomerId(invoiceEntity.getCustomerId())
-			.withCustomerReference(invoiceEntity.getCustomerReference())
-			.withDescription(invoiceEntity.getDescription())
-			.withDate(invoiceEntity.getDate())
-			.withDueDate(invoiceEntity.getDueDate())
-			.withInvoiceRows(toInvoiceRows(invoiceEntity.getInvoiceRows()))
-			.withOurReference(invoiceEntity.getOurReference())
-			.withReferenceId(invoiceEntity.getReferenceId())
-			.withTotalAmount(invoiceEntity.getTotalAmount());
+		return ofNullable(invoiceEntity).map(i -> Invoice.create()
+			.withCustomerId(i.getCustomerId())
+			.withCustomerReference(i.getCustomerReference())
+			.withDescription(i.getDescription())
+			.withDate(i.getDate())
+			.withDueDate(i.getDueDate())
+			.withInvoiceRows(toInvoiceRows(i.getInvoiceRows()))
+			.withOurReference(i.getOurReference())
+			.withReferenceId(i.getReferenceId())
+			.withTotalAmount(i.getTotalAmount()))
+			.orElse(null);
 	}
 
 	private static List<InvoiceRow> toInvoiceRows(List<InvoiceRowEntity> invoiceRowEntities) {
 		return ofNullable(invoiceRowEntities).orElse(emptyList()).stream()
 			.map(BillingRecordMapper::toInvoiceRow)
+			.filter(Objects::nonNull)
 			.toList();
 	}
 
 	private static InvoiceRow toInvoiceRow(InvoiceRowEntity invoiceRowEntity) {
-		return InvoiceRow.create()
-			.withAccountInformation(toAccountInformation(invoiceRowEntity.getAccountInformation()))
-			.withCostPerUnit(invoiceRowEntity.getCostPerUnit())
-			.withDescriptions(toDescription(STANDARD, invoiceRowEntity.getDescriptions()))
-			.withDetailedDescriptions(toDescription(DETAILED, invoiceRowEntity.getDescriptions()))
-			.withQuantity(invoiceRowEntity.getQuantity())
-			.withTotalAmount(invoiceRowEntity.getTotalAmount())
-			.withVatCode(invoiceRowEntity.getVatCode());
+		return ofNullable(invoiceRowEntity).map(i -> InvoiceRow.create()
+			.withAccountInformation(toAccountInformation(i.getAccountInformation()))
+			.withCostPerUnit(i.getCostPerUnit())
+			.withDescriptions(toDescription(STANDARD, i.getDescriptions()))
+			.withDetailedDescriptions(toDescription(DETAILED, i.getDescriptions()))
+			.withQuantity(i.getQuantity())
+			.withTotalAmount(i.getTotalAmount())
+			.withVatCode(i.getVatCode()))
+			.orElse(null);
 	}
 
 	private static AccountInformation toAccountInformation(AccountInformationEmbeddable accountInformationEmbeddable) {
-		return AccountInformation.create()
-			.withAccuralKey(accountInformationEmbeddable.getAccuralKey())
-			.withActivity(accountInformationEmbeddable.getActivity())
-			.withArticle(accountInformationEmbeddable.getArticle())
-			.withCostCenter(accountInformationEmbeddable.getCostCenter())
-			.withCounterpart(accountInformationEmbeddable.getCounterpart())
-			.withDepartment(accountInformationEmbeddable.getDepartment())
-			.withProject(accountInformationEmbeddable.getProject())
-			.withSubaccount(accountInformationEmbeddable.getSubaccount());
+		return ofNullable(accountInformationEmbeddable).map(a -> AccountInformation.create()
+			.withAccuralKey(a.getAccuralKey())
+			.withActivity(a.getActivity())
+			.withArticle(a.getArticle())
+			.withCostCenter(a.getCostCenter())
+			.withCounterpart(a.getCounterpart())
+			.withDepartment(a.getDepartment())
+			.withProject(a.getProject())
+			.withSubaccount(a.getSubaccount()))
+			.orElse(null);
 	}
 
 	private static List<String> toDescription(DescriptionType type, List<DescriptionEntity> descriptionEntities) {
