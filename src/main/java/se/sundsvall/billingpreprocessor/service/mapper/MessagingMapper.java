@@ -39,6 +39,7 @@ public final class MessagingMapper {
 		final var commonErrors = ofNullable(errors).orElse(emptyList()).stream()
 			.filter(InvoiceFileError::isCommonError)
 			.toList();
+
 		final var recordSpecificErrors = CollectionUtils.subtract(ofNullable(errors).orElse(emptyList()), commonErrors);
 
 		if (!recordSpecificErrors.isEmpty()) {

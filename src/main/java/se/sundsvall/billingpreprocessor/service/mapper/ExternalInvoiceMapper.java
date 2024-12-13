@@ -1,7 +1,6 @@
 package se.sundsvall.billingpreprocessor.service.mapper;
 
 import static java.util.Collections.emptyList;
-import static java.util.Objects.isNull;
 import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.ObjectUtils.allNotNull;
 import static se.sundsvall.billingpreprocessor.Constants.ERROR_ACCOUNT_INFORMATION_NOT_PRESENT;
@@ -50,7 +49,7 @@ public class ExternalInvoiceMapper {
 
 	/**
 	 * method for creating file header row for external invoice files
-	 * 
+	 *
 	 * @param  generatingSystem the generating system for the file
 	 * @param  invoiceType      type of invoice
 	 * @return                  FileHeaderRow for external invoice files
@@ -65,7 +64,7 @@ public class ExternalInvoiceMapper {
 
 	/**
 	 * Method for mapping recipient data to a customer row for an external invoice file
-	 * 
+	 *
 	 * @param  legalId             legal id of invoice recipient
 	 * @param  billingRecordEntity entity representing the billingRecordEntity
 	 * @return                     CustomerRow for external invoice files representing provided data
@@ -85,7 +84,7 @@ public class ExternalInvoiceMapper {
 
 	/**
 	 * Method for mapping invoice data to an invoice header row for an external invoice file
-	 * 
+	 *
 	 * @param  legalId             legal id of invoice recipient
 	 * @param  billingRecordEntity entity representing the billingRecordEntity
 	 * @return                     InvoiceHeaderRow for external invoice files representing provided data
@@ -103,7 +102,7 @@ public class ExternalInvoiceMapper {
 
 	/**
 	 * Method for mapping invoice row data to an invoice row for an external invoice file
-	 * 
+	 *
 	 * @param  legalId          legal id of invoice recipient
 	 * @param  invoiceRowEntity entity representing the invoiceRowEntity
 	 * @return                  InvoiceRow for external invoice files representing provided data
@@ -121,7 +120,7 @@ public class ExternalInvoiceMapper {
 
 	/**
 	 * Method for mapping invoice row data to an invoice description row for an external invoice file
-	 * 
+	 *
 	 * @param  legalId          legal id of invoice recipient
 	 * @param  invoiceRowEntity entity representing the invoiceRowEntity
 	 * @return                  A list of InvoiceDescriptionRows representing provided data
@@ -137,7 +136,7 @@ public class ExternalInvoiceMapper {
 
 	/**
 	 * Method for mapping invoice row data to an invoice accounting row for an external invoice file
-	 * 
+	 *
 	 * @param  invoiceRowEntity entity representing the invoiceRowEntity
 	 * @return                  InvoiceAccountingRow for external invoice files representing provided data
 	 * @throws ThrowableProblem if any mandatory data is missing
@@ -158,7 +157,7 @@ public class ExternalInvoiceMapper {
 
 	/**
 	 * Method for mapping invoice data to an invoice footer row for an external invoice file
-	 * 
+	 *
 	 * @param  billingRecordEntity entity representing the billingRecordEntity
 	 * @return                     InvoiceFooterRow for external invoice files representing provided data
 	 * @throws ThrowableProblem    if any mandatory data is missing
@@ -203,11 +202,9 @@ public class ExternalInvoiceMapper {
 	}
 
 	private static String extractCounterpart(InvoiceEntity invoiceEntity) {
-		if (isNull(invoiceEntity)) {
-			return null;
-		}
-
-		return ofNullable(invoiceEntity.getInvoiceRows()).orElse(emptyList())
+		return ofNullable(invoiceEntity)
+			.map(InvoiceEntity::getInvoiceRows)
+			.orElse(emptyList())
 			.stream()
 			.map(InvoiceRowEntity::getAccountInformation)
 			.map(AccountInformationEmbeddable::getCounterpart)

@@ -13,6 +13,7 @@ import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Descri
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -229,6 +230,11 @@ class BillingRecordMapperTest {
 	}
 
 	@Test
+	void tobillingRecordEntityForNull() {
+		assertThat(BillingRecordMapper.toBillingRecordEntity(null, MUNICIPALITY_ID)).isNull();
+	}
+
+	@Test
 	void tobillingRecordEntityWithNoRecipient() {
 		final var billingRecord = createbillingRecord().withRecipient(null);
 		final var billingRecordEntity = BillingRecordMapper.toBillingRecordEntity(billingRecord, MUNICIPALITY_ID);
@@ -248,8 +254,11 @@ class BillingRecordMapperTest {
 
 	@Test
 	void toBillingRecordEntitiesForFullInstance() {
-		final var billingRecord = createbillingRecord();
-		final var billingRecordEntities = BillingRecordMapper.toBillingRecordEntities(List.of(billingRecord), MUNICIPALITY_ID);
+		final var records = new ArrayList<BillingRecord>();
+		records.add(createbillingRecord());
+		records.add(null);
+
+		final var billingRecordEntities = BillingRecordMapper.toBillingRecordEntities(records, MUNICIPALITY_ID);
 
 		assertThat(billingRecordEntities).isNotNull().hasSize(1);
 		final var billingRecordEntity = billingRecordEntities.get(0);
@@ -385,7 +394,15 @@ class BillingRecordMapperTest {
 		final var billingRecord = createbillingRecord().withRecipient(null);
 		final var billingRecordEntity = BillingRecordMapper.toBillingRecordEntities(List.of(billingRecord), MUNICIPALITY_ID);
 
-		assertThat(billingRecordEntity.get(0).getRecipient()).isNull();
+		assertThat(billingRecordEntity.getFirst().getRecipient()).isNull();
+	}
+
+	@Test
+	void tobillingRecordEntitiesWithNoInvoice() {
+		final var billingRecord = createbillingRecord().withInvoice(null);
+		final var billingRecordEntity = BillingRecordMapper.toBillingRecordEntities(List.of(billingRecord), MUNICIPALITY_ID);
+
+		assertThat(billingRecordEntity.getFirst().getInvoice()).isNotNull().hasAllNullFieldsOrPropertiesExcept("billingRecord");
 	}
 
 	@ParameterizedTest
@@ -557,6 +574,11 @@ class BillingRecordMapperTest {
 	}
 
 	@Test
+	void tobillingRecordForNull() {
+		assertThat(BillingRecordMapper.toBillingRecord(null)).isNull();
+	}
+
+	@Test
 	void tobillingRecordWhenNoDescriptions() {
 		final var billingRecordEntity = createbillingRecordEntity();
 		billingRecordEntity.getInvoice().getInvoiceRows().forEach(row -> row.setDescriptions(null));
@@ -574,6 +596,23 @@ class BillingRecordMapperTest {
 	}
 
 	@Test
+	void tobillingRecordWhenNoAddress() {
+		final var billingRecordEntity = createbillingRecordEntity();
+		billingRecordEntity.getRecipient().setAddressDetails(null);
+		final var billingRecord = BillingRecordMapper.toBillingRecord(billingRecordEntity);
+
+		assertThat(billingRecord.getRecipient().getAddressDetails()).isNull();
+	}
+
+	@Test
+	void tobillingRecordWhenNoInvoice() {
+		final var billingRecordEntity = createbillingRecordEntity().withInvoice(null);
+		final var billingRecord = BillingRecordMapper.toBillingRecord(billingRecordEntity);
+
+		assertThat(billingRecord.getInvoice()).isNull();
+	}
+
+	@Test
 	void tobillingRecordsForNull() {
 		final var billingRecords = BillingRecordMapper.toBillingRecords(null);
 
@@ -582,7 +621,10 @@ class BillingRecordMapperTest {
 
 	@Test
 	void tobillingRecords() {
-		final var billingRecords = BillingRecordMapper.toBillingRecords(List.of(createbillingRecordEntity(), createbillingRecordEntity(), createbillingRecordEntity()));
+		final var entities = new ArrayList<BillingRecordEntity>();
+		entities.addAll(List.of(createbillingRecordEntity(), createbillingRecordEntity(), createbillingRecordEntity()));
+		entities.add(null);
+		final var billingRecords = BillingRecordMapper.toBillingRecords(entities);
 
 		assertThat(billingRecords).hasSize(3);
 	}
