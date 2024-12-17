@@ -1,10 +1,10 @@
 package se.sundsvall.billingpreprocessor.integration.party;
 
-import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
 import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
 import static se.sundsvall.billingpreprocessor.integration.party.config.PartyConfiguration.CLIENT_ID;
 
 import generated.se.sundsvall.party.PartyType;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import java.util.Optional;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +16,7 @@ import se.sundsvall.billingpreprocessor.integration.party.config.PartyConfigurat
 	url = "${integration.party.url}",
 	configuration = PartyConfiguration.class,
 	dismiss404 = true)
+@CircuitBreaker(name = CLIENT_ID)
 public interface PartyClient {
 
 	/**
@@ -29,8 +30,6 @@ public interface PartyClient {
 	 *                                              type and party id.
 	 * @throws org.zalando.problem.ThrowableProblem on errors
 	 */
-	@GetMapping(path = "/{municipalityId}/{type}/{partyId}/legalId", produces = {
-		TEXT_PLAIN_VALUE, APPLICATION_PROBLEM_JSON_VALUE
-	})
+	@GetMapping(path = "/{municipalityId}/{type}/{partyId}/legalId", produces = TEXT_PLAIN_VALUE)
 	Optional<String> getLegalId(@PathVariable("municipalityId") String municipalityId, @PathVariable("type") PartyType partyType, @PathVariable("partyId") String partyId);
 }
