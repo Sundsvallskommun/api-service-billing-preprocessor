@@ -20,8 +20,8 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import se.sundsvall.billingpreprocessor.integration.messaging.MessagingClient;
 import se.sundsvall.billingpreprocessor.integration.messaging.config.ErrorMessageProperties;
 import se.sundsvall.billingpreprocessor.integration.messaging.config.ErrorMessageProperties.ErrorMailTemplate;
@@ -40,13 +40,13 @@ class MessagingServiceTest {
 	private static final List<InvoiceFileError> ERRORS = List.of(InvoiceFileError.create("error"));
 	private static final String MUNICIPALITY_ID = "municipalityId";
 
-	@MockBean
+	@MockitoBean
 	private MessagingClient messagingClientMock;
 
-	@MockBean
+	@MockitoBean
 	private ErrorMessageProperties errorMessagePropertiesMock;
 
-	@MockBean
+	@MockitoBean
 	private ErrorMailTemplate errorMailTemplateMock;
 
 	@Captor
@@ -120,11 +120,8 @@ class MessagingServiceTest {
 					.isEqualTo("ExecutionDate: %s ListItem: error RequestId: %s Sender: sender SenderName: applicationName"
 						.formatted(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE), RequestId.get()));
 			})
-			.satisfiesOnlyOnce(request -> {
-				assertThat(request.getEmailAddress()).isEqualTo("recipient.1");
-			}).satisfiesOnlyOnce(request -> {
-				assertThat(request.getEmailAddress()).isEqualTo("recipient.2");
-			});
+			.satisfiesOnlyOnce(request -> assertThat(request.getEmailAddress()).isEqualTo("recipient.1"))
+			.satisfiesOnlyOnce(request -> assertThat(request.getEmailAddress()).isEqualTo("recipient.2"));
 	}
 
 	@Test
@@ -192,10 +189,7 @@ class MessagingServiceTest {
 					.isEqualTo("ExecutionDate: %s ListItem: error RequestId: %s Sender: sender SenderName: applicationName"
 						.formatted(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE), RequestId.get()));
 			})
-			.satisfiesOnlyOnce(request -> {
-				assertThat(request.getEmailAddress()).isEqualTo("recipient.1");
-			}).satisfiesOnlyOnce(request -> {
-				assertThat(request.getEmailAddress()).isEqualTo("recipient.2");
-			});
+			.satisfiesOnlyOnce(request -> assertThat(request.getEmailAddress()).isEqualTo("recipient.1"))
+			.satisfiesOnlyOnce(request -> assertThat(request.getEmailAddress()).isEqualTo("recipient.2"));
 	}
 }

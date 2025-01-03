@@ -23,6 +23,7 @@ import se.sundsvall.dept44.common.validators.annotation.impl.ValidBase64Constrai
 import se.sundsvall.dept44.requestid.RequestId;
 
 public final class MessagingMapper {
+
 	private static final ValidBase64ConstraintValidator BASE64_VALIDATOR = new ValidBase64ConstraintValidator();
 	private static final Encoder BASE64_ENCODER = Base64.getEncoder();
 

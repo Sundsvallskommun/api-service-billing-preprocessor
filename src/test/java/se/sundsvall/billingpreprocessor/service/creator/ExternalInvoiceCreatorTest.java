@@ -30,8 +30,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.zalando.problem.ThrowableProblem;
 import se.sundsvall.billingpreprocessor.integration.db.InvoiceFileConfigurationRepository;
 import se.sundsvall.billingpreprocessor.integration.db.model.AccountInformationEmbeddable;
@@ -95,10 +95,10 @@ class ExternalInvoiceCreatorTest {
 	private static final String STREET = "Testgatan 12";
 	private static final String POSTAL_CODE = "85643";
 
-	@MockBean
+	@MockitoBean
 	private LegalIdProvider legalIdProviderMock;
 
-	@MockBean
+	@MockitoBean
 	private InvoiceFileConfigurationRepository invoiceFileConfigurationRepositoryMock;
 
 	@Autowired

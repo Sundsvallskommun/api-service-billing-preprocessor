@@ -23,8 +23,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.zalando.problem.ThrowableProblem;
 import se.sundsvall.billingpreprocessor.integration.db.InvoiceFileConfigurationRepository;
 import se.sundsvall.billingpreprocessor.integration.db.model.AccountInformationEmbeddable;
@@ -65,7 +65,7 @@ class InternalInvoiceCreatorTest {
 	private static final String PROJECT = "11041";
 	private static final String SUBACCOUNT = "936300";
 
-	@MockBean
+	@MockitoBean
 	private InvoiceFileConfigurationRepository invoiceFileConfigurationRepositoryMock;
 
 	@Autowired

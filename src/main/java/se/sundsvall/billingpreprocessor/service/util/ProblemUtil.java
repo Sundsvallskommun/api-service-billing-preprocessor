@@ -7,7 +7,7 @@ import org.zalando.problem.Problem;
 import org.zalando.problem.Status;
 import org.zalando.problem.ThrowableProblem;
 
-public class ProblemUtil {
+public final class ProblemUtil {
 	private ProblemUtil() {}
 
 	public static Supplier<ThrowableProblem> createInternalServerErrorProblem(String message) {

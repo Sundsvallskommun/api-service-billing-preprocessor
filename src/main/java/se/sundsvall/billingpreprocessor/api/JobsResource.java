@@ -26,31 +26,39 @@ import se.sundsvall.dept44.requestid.RequestId;
 @Validated
 @RequestMapping("/{municipalityId}/jobs")
 @Tag(name = "Jobs", description = "Jobs resources")
-public class JobsResource {
+class JobsResource {
 
 	private final AsyncExecutorService service;
 
-	public JobsResource(AsyncExecutorService service) {
+	JobsResource(AsyncExecutorService service) {
 		this.service = service;
 	}
 
-	@PostMapping(path = "/filecreator", produces = APPLICATION_PROBLEM_JSON_VALUE)
-	@Operation(summary = "Triggers job for creating files from billing records with status APPROVED")
-	@ApiResponse(responseCode = "202", description = "Successful Operation", useReturnTypeSchema = true)
-	@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
-	@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
-	public ResponseEntity<Void> createFileEntities(@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @PathVariable("municipalityId") @ValidMunicipalityId String municipalityId) {
+	@PostMapping(path = "/filecreator")
+	@Operation(summary = "Triggers job for creating files from billing records with status APPROVED", responses = {
+		@ApiResponse(responseCode = "202", description = "Successful Operation", useReturnTypeSchema = true),
+		@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class))),
+		@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
+	})
+	ResponseEntity<Void> createFileEntities(@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @PathVariable("municipalityId") @ValidMunicipalityId String municipalityId) {
+
 		service.createFiles(RequestId.get(), municipalityId);
-		return accepted().header(CONTENT_TYPE, ALL_VALUE).build();
+		return accepted()
+			.header(CONTENT_TYPE, ALL_VALUE)
+			.build();
 	}
 
-	@PostMapping(path = "/filetransferrer", produces = APPLICATION_PROBLEM_JSON_VALUE)
-	@Operation(summary = "Triggers job for transferring files with status CREATED or SEND_FAILED to final destination")
-	@ApiResponse(responseCode = "202", description = "Successful Operation", useReturnTypeSchema = true)
-	@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
-	@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
-	public ResponseEntity<Void> transferFiles(@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @PathVariable("municipalityId") @ValidMunicipalityId String municipalityId) {
+	@PostMapping(path = "/filetransferrer")
+	@Operation(summary = "Triggers job for transferring files with status CREATED or SEND_FAILED to final destination", responses = {
+		@ApiResponse(responseCode = "202", description = "Successful Operation", useReturnTypeSchema = true),
+		@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class))),
+		@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
+	})
+	ResponseEntity<Void> transferFiles(@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @PathVariable("municipalityId") @ValidMunicipalityId String municipalityId) {
+
 		service.transferFiles(RequestId.get(), municipalityId);
-		return accepted().header(CONTENT_TYPE, ALL_VALUE).build();
+		return accepted()
+			.header(CONTENT_TYPE, ALL_VALUE)
+			.build();
 	}
 }

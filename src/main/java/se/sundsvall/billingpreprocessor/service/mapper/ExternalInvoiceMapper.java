@@ -43,7 +43,7 @@ import se.sundsvall.billingpreprocessor.service.creator.definition.external.Invo
 import se.sundsvall.billingpreprocessor.service.creator.definition.external.InvoiceHeaderRow;
 import se.sundsvall.billingpreprocessor.service.creator.definition.external.InvoiceRow;
 
-public class ExternalInvoiceMapper {
+public final class ExternalInvoiceMapper {
 
 	private ExternalInvoiceMapper() {}
 
