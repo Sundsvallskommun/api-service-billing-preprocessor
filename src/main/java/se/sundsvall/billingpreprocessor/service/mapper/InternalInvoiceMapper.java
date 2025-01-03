@@ -31,7 +31,8 @@ import se.sundsvall.billingpreprocessor.service.creator.definition.internal.Invo
 import se.sundsvall.billingpreprocessor.service.creator.definition.internal.InvoiceRow;
 import se.sundsvall.billingpreprocessor.service.creator.definition.internal.InvoiceRowDescriptionRow;
 
-public class InternalInvoiceMapper {
+public final class InternalInvoiceMapper {
+
 	private InternalInvoiceMapper() {}
 
 	/**

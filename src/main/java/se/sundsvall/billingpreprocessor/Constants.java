@@ -1,7 +1,6 @@
 package se.sundsvall.billingpreprocessor;
 
 public final class Constants {
-	private Constants() {}
 
 	public static final byte[] EMPTY_ARRAY = new byte[0];
 
@@ -34,4 +33,6 @@ public final class Constants {
 
 	public static final String EXTERNAL_INVOICE_TYPE = "Extern debitering";
 	public static final String GENERATING_SYSTEM = "BillingPreProcessor";
+
+	private Constants() {}
 }

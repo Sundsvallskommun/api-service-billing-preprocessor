@@ -19,8 +19,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.zalando.problem.Problem;
 import org.zalando.problem.violations.ConstraintViolationProblem;
@@ -39,7 +39,7 @@ class BillingRecordsCreateResourceFailureTest {
 	@Autowired
 	private WebTestClient webTestClient;
 
-	@MockBean
+	@MockitoBean
 	private BillingRecordService serviceMock;
 
 	@Test
@@ -56,8 +56,8 @@ class BillingRecordsCreateResourceFailureTest {
 		assertThat(response).isNotNull();
 		assertThat(response.getTitle()).isEqualTo("Bad Request");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
-		assertThat(response.getDetail()).isEqualTo("Required request body is missing: public org.springframework.http.ResponseEntity<java.lang.Void> "
-			+ "se.sundsvall.billingpreprocessor.api.BillingRecordsResource.createBillingRecord(java.lang.String,se.sundsvall.billingpreprocessor.api.model.BillingRecord)");
+		assertThat(response.getDetail()).isEqualTo(
+			"Required request body is missing: org.springframework.http.ResponseEntity<java.lang.Void> se.sundsvall.billingpreprocessor.api.BillingRecordsResource.createBillingRecord(java.lang.String,se.sundsvall.billingpreprocessor.api.model.BillingRecord)");
 
 		// Verification
 		verifyNoInteractions(serviceMock);

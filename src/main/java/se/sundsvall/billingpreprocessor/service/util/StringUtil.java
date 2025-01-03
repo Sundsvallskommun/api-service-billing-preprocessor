@@ -4,7 +4,8 @@ import static java.util.Optional.ofNullable;
 
 import org.apache.commons.lang3.StringUtils;
 
-public class StringUtil {
+public final class StringUtil {
+
 	private StringUtil() {}
 
 	public static String formatLegalId(String value) {
