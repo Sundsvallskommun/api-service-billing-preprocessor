@@ -18,6 +18,7 @@ import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Descri
 import static se.sundsvall.billingpreprocessor.service.util.ProblemUtil.createInternalServerErrorProblem;
 
 import java.util.List;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.zalando.problem.ThrowableProblem;
 import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
@@ -120,7 +121,10 @@ public final class InternalInvoiceMapper {
 	 * @throws ThrowableProblem if any mandatory data is missing
 	 */
 	public static InvoiceAccountingRow toInvoiceAccountingRow(InvoiceRowEntity invoiceRowEntity) {
-		final var accountInformationEmbeddable = ofNullable(invoiceRowEntity.getAccountInformation()).orElseThrow(createInternalServerErrorProblem(ERROR_ACCOUNT_INFORMATION_NOT_PRESENT));
+		final var accountInformationEmbeddable = ofNullable(invoiceRowEntity.getAccountInformation())
+			.filter(CollectionUtils::isNotEmpty)
+			.map(List::getFirst)
+			.orElseThrow(createInternalServerErrorProblem(ERROR_ACCOUNT_INFORMATION_NOT_PRESENT));
 
 		return InvoiceAccountingRow.create()
 			.withCostCenter(ofNullable(accountInformationEmbeddable.getCostCenter()).orElseThrow(createInternalServerErrorProblem(ERROR_COSTCENTER_NOT_PRESENT)))

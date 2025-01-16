@@ -242,7 +242,7 @@ class ExternalInvoiceCreatorTest {
 
 	private static InvoiceRowEntity createInvoiceRowEntity(int id, InvoiceEntity invoiceEntity) {
 		final var invoiceRowEntity = InvoiceRowEntity.create()
-			.withAccountInformation(createAccountInformationEmbeddable())
+			.withAccountInformation(List.of(createAccountInformationEmbeddable()))
 			.withCostPerUnit(COST_PER_UNIT)
 			.withId(id)
 			.withInvoice(invoiceEntity)

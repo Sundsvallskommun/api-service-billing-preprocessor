@@ -22,13 +22,23 @@ VALUES	('71258e7d-5285-46ce-b9b2-877f8cad8edd', '02', 'ROC01BAL', 'Passerkort ut
 -------------------------------------
 -- Invoice rows
 -------------------------------------
-INSERT INTO invoice_row (id, accural_key, activity, cost_center, counter_part, department, article, project, subaccount, cost_per_unit, quantity, total_amount, vat_code, invoice_id)
-VALUES	(100, NULL, '5247000', '1620000', NULL, '910300', NULL, NULL, '936100', 150, 1, 150, '00', '71258e7d-5285-46ce-b9b2-877f8cad8edd'),
-		(200, NULL, '5247000', '1620000', NULL, '910300', NULL, NULL, '936100', 200, 1, 200, '00', '1310ee8b-ecf9-4fe1-ab9d-f19153b19d06'),
-		(300, NULL, '3022910', '1455000', 'YUI10KAR', '899700', 'Friskvårdssatsning', NULL, NULL, 15000, 2, 30000, '25', '83e4d599-5b4d-431c-8ebc-81192e9401ee'),
-		(400, NULL, '3022920', '1234000', 'SIL01SIL', '899700', 'Fisk', NULL, NULL, 100, 2, 200, '25', '389b847c-39e9-4321-ae5d-e736e0a5ff51'),
-		(500, NULL, '3022920', '1234000', 'YUI10KAR', '899700', 'Mer fisk', NULL, NULL, 200, 2, 400, '25', '1c38bf5d-ed89-41ee-8090-37733f276ec9');
+INSERT INTO invoice_row (id, cost_per_unit, quantity, total_amount, vat_code, invoice_id)
+VALUES	(100, 150, 1, 150, '00', '71258e7d-5285-46ce-b9b2-877f8cad8edd'),
+		(200, 200, 1, 200, '00', '1310ee8b-ecf9-4fe1-ab9d-f19153b19d06'),
+		(300, 15000, 2, 30000, '25', '83e4d599-5b4d-431c-8ebc-81192e9401ee'),
+		(400, 100, 2, 200, '25', '389b847c-39e9-4321-ae5d-e736e0a5ff51'),
+		(500, 200, 2, 400, '25', '1c38bf5d-ed89-41ee-8090-37733f276ec9');
 
+-- -----------------------------------
+-- Account information
+-- -----------------------------------
+INSERT INTO account_information (invoice_row_id, accural_key, activity, cost_center, counter_part, department, article, project, subaccount)
+VALUES	(100, NULL, '5247000', '1620000', NULL, '910300', NULL, NULL, '936100'),
+		(200, NULL, '5247000', '1620000', NULL, '910300', NULL, NULL, '936100'),
+		(300, NULL, '3022910', '1455000', 'YUI10KAR', '899700', 'Friskvårdssatsning', NULL, NULL),
+		(400, NULL, '3022920', '1234000', 'SIL01SIL', '899700', 'Fisk', NULL, NULL),
+		(500, NULL, '3022920', '1234000', 'YUI10KAR', '899700', 'Mer fisk', NULL, NULL);
+		
 -------------------------------------
 -- Descriptions
 -------------------------------------

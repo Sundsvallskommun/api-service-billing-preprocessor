@@ -1,16 +1,19 @@
 package se.sundsvall.billingpreprocessor.integration.db.model;
 
+import static jakarta.persistence.FetchType.EAGER;
 import static java.util.Optional.ofNullable;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -49,8 +52,17 @@ public class InvoiceRowEntity implements Serializable {
 	@Column(name = "quantity")
 	private Float quantity;
 
-	@Embedded
-	private AccountInformationEmbeddable accountInformation;
+	@ElementCollection(fetch = EAGER)
+	@CollectionTable(
+		indexes = {
+			@Index(name = "idx_invoice_row_id", columnList = "invoice_row_id")
+		},
+		name = "account_information",
+		joinColumns = @JoinColumn(
+			name = "invoice_row_id",
+			referencedColumnName = "id",
+			foreignKey = @ForeignKey(name = "fk_invoice_row_id_account_information")))
+	private List<AccountInformationEmbeddable> accountInformation;
 
 	public static InvoiceRowEntity create() {
 		return new InvoiceRowEntity();
@@ -149,15 +161,15 @@ public class InvoiceRowEntity implements Serializable {
 		return this;
 	}
 
-	public AccountInformationEmbeddable getAccountInformation() {
+	public List<AccountInformationEmbeddable> getAccountInformation() {
 		return accountInformation;
 	}
 
-	public void setAccountInformation(AccountInformationEmbeddable accountInformation) {
+	public void setAccountInformation(List<AccountInformationEmbeddable> accountInformation) {
 		this.accountInformation = accountInformation;
 	}
 
-	public InvoiceRowEntity withAccountInformation(AccountInformationEmbeddable accountInformation) {
+	public InvoiceRowEntity withAccountInformation(List<AccountInformationEmbeddable> accountInformation) {
 		this.accountInformation = accountInformation;
 		return this;
 	}
@@ -172,13 +184,10 @@ public class InvoiceRowEntity implements Serializable {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
+		if ((obj == null) || (getClass() != obj.getClass())) {
 			return false;
 		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		InvoiceRowEntity other = (InvoiceRowEntity) obj;
+		final var other = (InvoiceRowEntity) obj;
 		return Objects.equals(accountInformation, other.accountInformation) && Objects.equals(costPerUnit, other.costPerUnit) && Objects.equals(descriptions, other.descriptions) && id == other.id && Objects.equals(invoice,
 			other.invoice) && Objects.equals(quantity, other.quantity) && Objects.equals(totalAmount, other.totalAmount) && Objects.equals(vatCode, other.vatCode);
 	}
@@ -186,7 +195,7 @@ public class InvoiceRowEntity implements Serializable {
 	@Override
 	public String toString() {
 		final var invoiceEntityId = invoice == null ? null : invoice.getId();
-		StringBuilder builder = new StringBuilder();
+		final var builder = new StringBuilder();
 		builder.append("InvoiceRowEntity [id=").append(id)
 			.append(", invoice=").append(invoiceEntityId)
 			.append(", descriptions=").append(descriptions)

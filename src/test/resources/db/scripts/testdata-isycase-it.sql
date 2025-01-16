@@ -23,13 +23,24 @@ VALUES	('71258e7d-5285-46ce-b9b2-877f8cad8edd', '15', 'JAN00EDO', 'Passerkort ut
 -------------------------------------
 -- Invoice rows
 -------------------------------------
-INSERT INTO invoice_row (id, accural_key, activity, cost_center, counter_part, department, article, project, subaccount, cost_per_unit, quantity, total_amount, vat_code, invoice_id)
-VALUES	(100, NULL, '5247000', '1620000', 'MIC00GOL', '910300', NULL, NULL, '936100', 150, 1, 150, NULL, '71258e7d-5285-46ce-b9b2-877f8cad8edd'),
-		(200, NULL, '5247000', '1620000', 'MAN22VEG', '910300', NULL, NULL, '936100', 200, 1, 200, NULL, '1310ee8b-ecf9-4fe1-ab9d-f19153b19d06'),
-		(300, NULL, '3022910', '1455000', 'YUI10KAR', '899700', 'Friskvårdssatsning', NULL, '485223', 15000, 2, 30000, '25', '83e4d599-5b4d-431c-8ebc-81192e9401ee'),
-		(400, NULL, '3022910', '1455000', 'YUI10KAR', '899700', 'Smärtstillande medicin', NULL, '485223', 100000, 2, 200000, '25', '200ee4a6-f7bc-4d82-80cb-ecd2d610475c'),
-		(401, NULL, '3022910', '1455000', 'YUI10KAR', '899700', 'Smärtstillande medicin', NULL, '485223', 100000, 2, 200000, '25', 'b4ee0334-33c3-4eff-984e-3dd5252760a9'),
-		(500, NULL, '3022910', '1455000', 'YUI10KAR', '899700', 'Ej behandlingsbar rad', NULL, '485223', 100000, 2, 200000, '25', '1abc9859-9141-43b0-91d9-43cd7d889690');
+INSERT INTO invoice_row (id, cost_per_unit, quantity, total_amount, vat_code, invoice_id)
+VALUES	(100, 150, 1, 150, NULL, '71258e7d-5285-46ce-b9b2-877f8cad8edd'),
+		(200, 200, 1, 200, NULL, '1310ee8b-ecf9-4fe1-ab9d-f19153b19d06'),
+		(300, 15000, 2, 30000, '25', '83e4d599-5b4d-431c-8ebc-81192e9401ee'),
+		(400, 100000, 2, 200000, '25', '200ee4a6-f7bc-4d82-80cb-ecd2d610475c'),
+		(401, 100000, 2, 200000, '25', 'b4ee0334-33c3-4eff-984e-3dd5252760a9'),
+		(500, 100000, 2, 200000, '25', '1abc9859-9141-43b0-91d9-43cd7d889690');
+
+-- -----------------------------------
+-- Account information
+-- -----------------------------------
+INSERT INTO account_information (invoice_row_id, accural_key, activity, cost_center, counter_part, department, article, project, subaccount)
+VALUES	(100, NULL, '5247000', '1620000', 'MIC00GOL', '910300', NULL, NULL, '936100'),
+		(200, NULL, '5247000', '1620000', 'MAN22VEG', '910300', NULL, NULL, '936100'),
+		(300, NULL, '3022910', '1455000', 'YUI10KAR', '899700', 'Friskvårdssatsning', NULL, '485223'),
+		(400, NULL, '3022910', '1455000', 'YUI10KAR', '899700', 'Smärtstillande medicin', NULL, '485223'),
+		(401, NULL, '3022910', '1455000', 'YUI10KAR', '899700', 'Smärtstillande medicin', NULL, '485223'),
+		(500, NULL, '3022910', '1455000', 'YUI10KAR', '899700', 'Ej behandlingsbar rad', NULL, '485223');
 
 -------------------------------------
 -- Descriptions

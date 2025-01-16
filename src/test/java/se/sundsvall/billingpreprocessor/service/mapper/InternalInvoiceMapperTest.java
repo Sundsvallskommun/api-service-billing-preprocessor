@@ -1,6 +1,7 @@
 package se.sundsvall.billingpreprocessor.service.mapper;
 
 import static java.time.OffsetDateTime.now;
+import static java.util.Collections.emptyList;
 import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -183,16 +184,17 @@ class InternalInvoiceMapperTest {
 	private static Stream<Arguments> toInvoiceAccountingRowWhenMissingVitalDataArgumentProvider() {
 		return Stream.of(
 			Arguments.of(createInvoiceRowEntity(1, null).withAccountInformation(null), "Account information is not present"),
-			Arguments.of(createInvoiceRowEntity(1, null).withAccountInformation(AccountInformationEmbeddable.create()), "Costcenter is not present"),
-			Arguments.of(createInvoiceRowEntity(1, null).withAccountInformation(AccountInformationEmbeddable.create()
-				.withCostCenter(COST_CENTER)), "Sub account is not present"),
-			Arguments.of(createInvoiceRowEntity(1, null).withAccountInformation(AccountInformationEmbeddable.create()
+			Arguments.of(createInvoiceRowEntity(1, null).withAccountInformation(emptyList()), "Account information is not present"),
+			Arguments.of(createInvoiceRowEntity(1, null).withAccountInformation(List.of(AccountInformationEmbeddable.create())), "Costcenter is not present"),
+			Arguments.of(createInvoiceRowEntity(1, null).withAccountInformation(List.of(AccountInformationEmbeddable.create()
+				.withCostCenter(COST_CENTER))), "Sub account is not present"),
+			Arguments.of(createInvoiceRowEntity(1, null).withAccountInformation(List.of(AccountInformationEmbeddable.create()
 				.withCostCenter(COST_CENTER)
-				.withSubaccount(SUBACCOUNT)), "Department is not present"),
-			Arguments.of(createInvoiceRowEntity(1, null).withAccountInformation(AccountInformationEmbeddable.create()
+				.withSubaccount(SUBACCOUNT))), "Department is not present"),
+			Arguments.of(createInvoiceRowEntity(1, null).withAccountInformation(List.of(AccountInformationEmbeddable.create()
 				.withCostCenter(COST_CENTER)
 				.withSubaccount(SUBACCOUNT)
-				.withDepartment(DEPARTMENT)), "Counterpart is not present"));
+				.withDepartment(DEPARTMENT))), "Counterpart is not present"));
 	}
 
 	@Test
@@ -247,7 +249,7 @@ class InternalInvoiceMapperTest {
 
 	private static InvoiceRowEntity createInvoiceRowEntity(int id, InvoiceEntity invoiceEntity) {
 		final var invoiceRowEntity = InvoiceRowEntity.create()
-			.withAccountInformation(createAccountInformationEmbeddable())
+			.withAccountInformation(List.of(createAccountInformationEmbeddable()))
 			.withCostPerUnit(COST_PER_UNIT)
 			.withId(id)
 			.withInvoice(invoiceEntity)

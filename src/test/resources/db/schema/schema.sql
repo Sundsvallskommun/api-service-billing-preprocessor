@@ -1,4 +1,16 @@
 
+    create table account_information (
+        invoice_row_id bigint not null,
+        accural_key varchar(255),
+        activity varchar(255),
+        article varchar(255),
+        cost_center varchar(255),
+        counter_part varchar(255),
+        department varchar(255),
+        project varchar(255),
+        subaccount varchar(255)
+    ) engine=InnoDB;
+
     create table billing_record (
         approved datetime(6),
         created datetime(6),
@@ -68,15 +80,7 @@
         quantity float(23),
         total_amount float(23),
         id bigint not null auto_increment,
-        accural_key varchar(255),
-        activity varchar(255),
-        article varchar(255),
-        cost_center varchar(255),
-        counter_part varchar(255),
-        department varchar(255),
         `invoice_id` varchar(255) not null,
-        project varchar(255),
-        subaccount varchar(255),
         vat_code varchar(255),
         primary key (id)
     ) engine=InnoDB;
@@ -96,13 +100,16 @@
         primary key (id)
     ) engine=InnoDB;
 
+    create index idx_invoice_row_id 
+       on account_information (invoice_row_id);
+
     create index idx_billing_record_category_status 
        on billing_record (category, status);
 
-    create index idx_billing_record_municipality_id
-           on billing_record (municipality_id);
+    create index idx_billing_record_municipality_id 
+       on billing_record (municipality_id);
 
-    create index idx_extra_parameter_key
+    create index idx_extra_parameter_key 
        on extra_parameter (`key`);
 
     create index idx_file_configuration_type_category_tag 
@@ -120,11 +127,16 @@
     create index idx_invoice_file_status 
        on invoice_file (status);
 
-    create index idx_invoice_file_municipality_id
+    create index idx_invoice_file_municipality_id 
        on invoice_file (municipality_id);
 
     alter table if exists invoice_file 
        add constraint uq_file_name unique (name);
+
+    alter table if exists account_information 
+       add constraint fk_invoice_row_id_account_information 
+       foreign key (invoice_row_id) 
+       references invoice_row (id);
 
     alter table if exists description 
        add constraint fk_invoice_row_id_description 
@@ -146,7 +158,7 @@
        foreign key (`invoice_id`) 
        references invoice (id);
 
-    alter table if exists recipient
-       add constraint fk_billing_record_id_recipient
-       foreign key (id)
+    alter table if exists recipient 
+       add constraint fk_billing_record_id_recipient 
+       foreign key (id) 
        references billing_record (id);

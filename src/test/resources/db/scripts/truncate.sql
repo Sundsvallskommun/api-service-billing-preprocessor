@@ -1,5 +1,6 @@
 SET FOREIGN_KEY_CHECKS = 0;
 TRUNCATE table description;
+TRUNCATE table account_information;
 TRUNCATE table invoice_row;
 TRUNCATE table invoice;
 TRUNCATE table recipient;

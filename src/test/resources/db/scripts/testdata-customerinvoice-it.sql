@@ -17,11 +17,20 @@ VALUES	  ('23af2045-c96e-44d6-b0da-d2f8a38b9711', '20', '123', 'Kundfaktura 1', 
 -- -----------------------------------
 -- Invoice rows
 -- -----------------------------------
-INSERT INTO invoice_row (id, accural_key, activity, cost_center, counter_part, department, article, project, subaccount, cost_per_unit, quantity, total_amount, vat_code, invoice_id)
-VALUES	  (600, NULL, '4165', '', '43200000', '86000000', '3452000 - ANKEBORG', NULL, '345000', '700', '3', '2100', '00', '6d762c41-6ecb-4306-9594-316240e01a68'),
-          (650, NULL, NULL, '', '85000000', '340200', '41499999', NULL, '344100', '1080', '1', '1080', '25', '23af2045-c96e-44d6-b0da-d2f8a38b9711'),
-          (700, NULL, NULL, '', '85000000', '69420', '41499999', NULL, '313200', '5650', '1', '5650', '25', '23af2045-c96e-44d6-b0da-d2f8a38b9711'),
-          (750, NULL, '1234', '', '120', '350200', '41499999', NULL, '934100', '300', '14', '4200', NULL, '6b92f728-8698-47aa-b8c7-c67585df373e');
+INSERT INTO invoice_row (id, cost_per_unit, quantity, total_amount, vat_code, invoice_id)
+VALUES	  (600, '700', '3', '2100', '00', '6d762c41-6ecb-4306-9594-316240e01a68'),
+          (650, '1080', '1', '1080', '25', '23af2045-c96e-44d6-b0da-d2f8a38b9711'),
+          (700, '5650', '1', '5650', '25', '23af2045-c96e-44d6-b0da-d2f8a38b9711'),
+          (750, '300', '14', '4200', NULL, '6b92f728-8698-47aa-b8c7-c67585df373e');
+
+-- -----------------------------------
+-- Account information
+-- -----------------------------------
+INSERT INTO account_information (invoice_row_id, accural_key, activity, cost_center, counter_part, department, article, project, subaccount)
+VALUES	  (600, NULL, '4165', '', '43200000', '86000000', '3452000 - ANKEBORG', NULL, '345000'),
+          (650, NULL, NULL, '', '85000000', '340200', '41499999', NULL, '344100'),
+          (700, NULL, NULL, '', '85000000', '69420', '41499999', NULL, '313200'),
+          (750, NULL, '1234', '', '120', '350200', '41499999', NULL, '934100');
 
 -- -----------------------------------
 -- Descriptions
