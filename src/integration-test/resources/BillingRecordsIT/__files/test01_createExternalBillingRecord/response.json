@@ -1,0 +1,53 @@
+{
+	"id": "${json-unit.regex}^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$",
+	"category": "ISYCASE",
+	"type": "EXTERNAL",
+	"status": "NEW",
+	"recipient": {
+		"partyId": "f0882f1d-06bc-47fd-b017-1d8307f5ce95",
+		"firstName": "Alice",
+		"lastName": "Snuffleupagus",
+		"userId": "ALI23SNU",
+		"addressDetails": {
+			"street": "Sesame Street 7",
+			"postalCode": "12345",
+			"city": "Grouchytown"
+		}
+	},
+	"invoice": {
+		"customerId": "16",
+		"description": "Errand number: 2113-01784",
+		"customerReference": "Alice Snuffleupagus",
+		"dueDate": "2023-12-24",
+		"totalAmount": 7995.0,
+		"invoiceRows": [
+			{
+				"descriptions": [
+					"Köp av elektrisk tjänstecykel"
+				],
+				"detailedDescriptions": [
+					"Detta ska faktureras Sundsvall Elnät AB"
+				],
+				"totalAmount": 7995.0,
+				"vatCode": "25",
+				"costPerUnit": 7995.0,
+				"quantity": 1.0,
+				"accountInformation": {
+					"costCenter": "15800100",
+					"subaccount": "936300",
+					"department": "920360",
+					"accuralKey": "5647",
+					"activity": "5756",
+					"article": "Elektrisk cykel",
+					"project": "11041",
+					"counterpart": "11830000"
+				}
+			}
+		]
+	},
+	"created": "${json-unit.regex}^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.?\\d{0,10}(Z|[+-]\\d{2}:\\d{2})?$",
+	"extraParameters": {
+		"bestFriend": "Big Bird",
+		"snuffle": "trunk"
+	}
+}
