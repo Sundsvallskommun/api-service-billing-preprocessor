@@ -26,6 +26,7 @@ import static se.sundsvall.billingpreprocessor.service.util.ProblemUtil.createIn
 
 import java.time.LocalDate;
 import java.util.List;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.zalando.problem.ThrowableProblem;
 import se.sundsvall.billingpreprocessor.integration.db.model.AccountInformationEmbeddable;
@@ -142,7 +143,11 @@ public final class ExternalInvoiceMapper {
 	 * @throws ThrowableProblem if any mandatory data is missing
 	 */
 	public static InvoiceAccountingRow toInvoiceAccountingRow(InvoiceRowEntity invoiceRowEntity) {
-		final var accountInformationEmbeddable = ofNullable(invoiceRowEntity.getAccountInformation()).orElseThrow(createInternalServerErrorProblem(ERROR_ACCOUNT_INFORMATION_NOT_PRESENT));
+		final var accountInformationEmbeddable = ofNullable(invoiceRowEntity.getAccountInformation())
+			.filter(CollectionUtils::isNotEmpty)
+			.map(List::getFirst)
+			.orElseThrow(createInternalServerErrorProblem(ERROR_ACCOUNT_INFORMATION_NOT_PRESENT));
+
 		return InvoiceAccountingRow.create()
 			.withCostCenter(ofNullable(accountInformationEmbeddable.getCostCenter()).orElseThrow(createInternalServerErrorProblem(ERROR_COSTCENTER_NOT_PRESENT)))
 			.withSubAccount(ofNullable(accountInformationEmbeddable.getSubaccount()).orElseThrow(createInternalServerErrorProblem(ERROR_SUBACCOUNT_NOT_PRESENT)))
@@ -207,6 +212,8 @@ public final class ExternalInvoiceMapper {
 			.orElse(emptyList())
 			.stream()
 			.map(InvoiceRowEntity::getAccountInformation)
+			.filter(CollectionUtils::isNotEmpty)
+			.map(List::getFirst)
 			.map(AccountInformationEmbeddable::getCounterpart)
 			.filter(StringUtils::isNotBlank)
 			.findFirst()

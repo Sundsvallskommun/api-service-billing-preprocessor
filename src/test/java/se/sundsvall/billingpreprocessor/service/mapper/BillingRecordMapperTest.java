@@ -194,7 +194,7 @@ class BillingRecordMapperTest {
 
 		billingRecordEntity.getInvoice().getInvoiceRows().forEach(invoiceRow -> {
 			// Assert invoice row account information embeddable values
-			assertThat(invoiceRow.getAccountInformation()).isNotNull()
+			assertThat(invoiceRow.getAccountInformation()).hasSize(1)
 				.extracting(
 					AccountInformationEmbeddable::getAccuralKey,
 					AccountInformationEmbeddable::getActivity,
@@ -205,14 +205,15 @@ class BillingRecordMapperTest {
 					AccountInformationEmbeddable::getProject,
 					AccountInformationEmbeddable::getSubaccount)
 				.containsExactly(
-					ACCURAL_KEY,
-					ACTIVITY,
-					ARTICLE,
-					COST_CENTER,
-					COUNTERPART,
-					DEPARTMENT,
-					PROJECT,
-					SUBACCOUNT);
+					tuple(
+						ACCURAL_KEY,
+						ACTIVITY,
+						ARTICLE,
+						COST_CENTER,
+						COUNTERPART,
+						DEPARTMENT,
+						PROJECT,
+						SUBACCOUNT));
 
 			// Assert invoice row description entity values
 			assertThat(invoiceRow.getDescriptions()).isNotEmpty()
@@ -354,7 +355,7 @@ class BillingRecordMapperTest {
 
 		billingRecordEntity.getInvoice().getInvoiceRows().forEach(invoiceRow -> {
 			// Assert invoice row account information embeddable values
-			assertThat(invoiceRow.getAccountInformation()).isNotNull()
+			assertThat(invoiceRow.getAccountInformation()).hasSize(1)
 				.extracting(
 					AccountInformationEmbeddable::getAccuralKey,
 					AccountInformationEmbeddable::getActivity,
@@ -365,14 +366,15 @@ class BillingRecordMapperTest {
 					AccountInformationEmbeddable::getProject,
 					AccountInformationEmbeddable::getSubaccount)
 				.containsExactly(
-					ACCURAL_KEY,
-					ACTIVITY,
-					ARTICLE,
-					COST_CENTER,
-					COUNTERPART,
-					DEPARTMENT,
-					PROJECT,
-					SUBACCOUNT);
+					tuple(
+						ACCURAL_KEY,
+						ACTIVITY,
+						ARTICLE,
+						COST_CENTER,
+						COUNTERPART,
+						DEPARTMENT,
+						PROJECT,
+						SUBACCOUNT));
 
 			// Assert invoice row description entity values
 			assertThat(invoiceRow.getDescriptions()).isNotEmpty()
@@ -447,7 +449,7 @@ class BillingRecordMapperTest {
 		billingRecord.getInvoice().getInvoiceRows().forEach(row -> row.setAccountInformation(null));
 		final var billingRecordEntity = BillingRecordMapper.toBillingRecordEntity(billingRecord, MUNICIPALITY_ID);
 
-		billingRecordEntity.getInvoice().getInvoiceRows().forEach(row -> assertThat(row.getAccountInformation()).isNotNull().hasAllNullFieldsOrProperties());
+		billingRecordEntity.getInvoice().getInvoiceRows().forEach(row -> assertThat(row.getAccountInformation()).isEmpty());
 	}
 
 	@Test
@@ -647,7 +649,7 @@ class BillingRecordMapperTest {
 
 	private static InvoiceRowEntity createInvoiceRowEntity(int id, InvoiceEntity invoiceEntity) {
 		final var invoiceRowEntity = InvoiceRowEntity.create()
-			.withAccountInformation(createAccountInformationEmbeddable())
+			.withAccountInformation(List.of(createAccountInformationEmbeddable()))
 			.withCostPerUnit(COST_PER_UNIT)
 			.withId(id)
 			.withInvoice(invoiceEntity)

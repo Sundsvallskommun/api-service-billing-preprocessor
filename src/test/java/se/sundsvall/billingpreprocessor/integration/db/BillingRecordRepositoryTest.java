@@ -155,15 +155,17 @@ class BillingRecordRepositoryTest {
 	private static void verifyInvoiceRow(final BillingRecordEntity billingRecord) {
 		final var invoiceRow = billingRecord.getInvoice().getInvoiceRows().get(0);
 
-		assertThat(invoiceRow.getAccountInformation()).isNotNull();
-		assertThat(invoiceRow.getAccountInformation().getAccuralKey()).isEqualTo(ACCURAL_KEY);
-		assertThat(invoiceRow.getAccountInformation().getActivity()).isEqualTo(ACTIVITY);
-		assertThat(invoiceRow.getAccountInformation().getArticle()).isEqualTo(ARTICLE);
-		assertThat(invoiceRow.getAccountInformation().getCostCenter()).isEqualTo(COST_CENTER);
-		assertThat(invoiceRow.getAccountInformation().getCounterpart()).isEqualTo(COUNTER_PART);
-		assertThat(invoiceRow.getAccountInformation().getDepartment()).isEqualTo(DEPARTMENT);
-		assertThat(invoiceRow.getAccountInformation().getProject()).isEqualTo(PROJECT);
-		assertThat(invoiceRow.getAccountInformation().getSubaccount()).isEqualTo(SUBACCOUNT);
+		assertThat(invoiceRow.getAccountInformation()).hasSize(1).satisfiesExactly(ai -> {
+			assertThat(ai.getAccuralKey()).isEqualTo(ACCURAL_KEY);
+			assertThat(ai.getActivity()).isEqualTo(ACTIVITY);
+			assertThat(ai.getArticle()).isEqualTo(ARTICLE);
+			assertThat(ai.getCostCenter()).isEqualTo(COST_CENTER);
+			assertThat(ai.getCounterpart()).isEqualTo(COUNTER_PART);
+			assertThat(ai.getDepartment()).isEqualTo(DEPARTMENT);
+			assertThat(ai.getProject()).isEqualTo(PROJECT);
+			assertThat(ai.getSubaccount()).isEqualTo(SUBACCOUNT);
+		});
+
 		assertThat(invoiceRow.getCostPerUnit()).isEqualTo(COST_PER_UNIT);
 
 		// Verify invoice row description data
@@ -306,7 +308,7 @@ class BillingRecordRepositoryTest {
 
 	private static List<InvoiceRowEntity> createInvoiceRows(final InvoiceEntity invoice) {
 		return List.of(InvoiceRowEntity.create()
-			.withAccountInformation(createAccountInformation())
+			.withAccountInformation(List.of(createAccountInformation()))
 			.withCostPerUnit(COST_PER_UNIT)
 			.withInvoice(invoice)
 			.withQuantity(QUANTITY)

@@ -37,7 +37,7 @@ class InvoiceRowEntityTest {
 		final var vatCode = "vatCode";
 
 		final var entity = InvoiceRowEntity.create()
-			.withAccountInformation(accountInormation)
+			.withAccountInformation(List.of(accountInormation))
 			.withCostPerUnit(costPerUnit)
 			.withDescriptions(List.of(description))
 			.withId(id)
@@ -47,7 +47,7 @@ class InvoiceRowEntityTest {
 			.withVatCode(vatCode);
 
 		assertThat(entity).hasNoNullFieldsOrProperties();
-		assertThat(entity.getAccountInformation()).isEqualTo(accountInormation);
+		assertThat(entity.getAccountInformation()).containsExactly(accountInormation);
 		assertThat(entity.getCostPerUnit()).isEqualTo(costPerUnit);
 		assertThat(entity.getDescriptions()).containsExactly(description);
 		assertThat(entity.getId()).isEqualTo(id);

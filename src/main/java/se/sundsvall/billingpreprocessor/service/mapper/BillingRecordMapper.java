@@ -18,6 +18,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import org.apache.commons.collections4.CollectionUtils;
 import se.sundsvall.billingpreprocessor.api.model.AccountInformation;
 import se.sundsvall.billingpreprocessor.api.model.AddressDetails;
 import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
@@ -167,7 +168,7 @@ public final class BillingRecordMapper {
 			.collect(toCollection(ArrayList::new));
 	}
 
-	private static AccountInformationEmbeddable toAccountInformationEmbeddable(final AccountInformation accountInformation) {
+	private static List<AccountInformationEmbeddable> toAccountInformationEmbeddable(final AccountInformation accountInformation) {
 		return ofNullable(accountInformation).map(a -> AccountInformationEmbeddable.create()
 			.withAccuralKey(a.getAccuralKey())
 			.withActivity(a.getActivity())
@@ -177,7 +178,8 @@ public final class BillingRecordMapper {
 			.withDepartment(a.getDepartment())
 			.withProject(a.getProject())
 			.withSubaccount(a.getSubaccount()))
-			.orElse(AccountInformationEmbeddable.create());
+			.map(List::of)
+			.orElse(emptyList());
 	}
 
 	private static RecipientEntity toRecipientEntity(final BillingRecordEntity billingRecord, final Recipient recipient) {
@@ -295,16 +297,19 @@ public final class BillingRecordMapper {
 			.orElse(null);
 	}
 
-	private static AccountInformation toAccountInformation(AccountInformationEmbeddable accountInformationEmbeddable) {
-		return ofNullable(accountInformationEmbeddable).map(a -> AccountInformation.create()
-			.withAccuralKey(a.getAccuralKey())
-			.withActivity(a.getActivity())
-			.withArticle(a.getArticle())
-			.withCostCenter(a.getCostCenter())
-			.withCounterpart(a.getCounterpart())
-			.withDepartment(a.getDepartment())
-			.withProject(a.getProject())
-			.withSubaccount(a.getSubaccount()))
+	private static AccountInformation toAccountInformation(List<AccountInformationEmbeddable> accountInformationEmbeddable) {
+		return ofNullable(accountInformationEmbeddable)
+			.filter(CollectionUtils::isNotEmpty)
+			.map(List::getFirst)
+			.map(a -> AccountInformation.create()
+				.withAccuralKey(a.getAccuralKey())
+				.withActivity(a.getActivity())
+				.withArticle(a.getArticle())
+				.withCostCenter(a.getCostCenter())
+				.withCounterpart(a.getCounterpart())
+				.withDepartment(a.getDepartment())
+				.withProject(a.getProject())
+				.withSubaccount(a.getSubaccount()))
 			.orElse(null);
 	}
 
