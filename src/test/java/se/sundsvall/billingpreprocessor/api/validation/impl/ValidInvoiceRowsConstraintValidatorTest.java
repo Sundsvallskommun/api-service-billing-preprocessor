@@ -147,12 +147,9 @@ class ValidInvoiceRowsConstraintValidatorTest {
 
 	@ParameterizedTest
 	@MethodSource("faultyAccountInformationArgumentProvider")
-	void withFaultyAccountInformation(Type type) {
+	void withFaultyAccountInformation(Type type, AccountInformation accountInformation) {
 		final var billingRecord = BillingRecord.create().withType(type).withInvoice(Invoice.create().withInvoiceRows(List.of(InvoiceRow.create()
-			.withAccountInformation(List.of(AccountInformation.create()
-				.withDepartment(DEPARTMENT)
-				.withSubaccount(SUBACCOUNT)
-				.withCostCenter(COSTCENTER))))));
+			.withAccountInformation(List.of(accountInformation)))));
 
 		when(contextMock.buildConstraintViolationWithTemplate(any())).thenReturn(builderMock);
 
