@@ -1,0 +1,68 @@
+{
+	"id": "${json-unit.regex}^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$",
+	"category": "CUSTOMER_INVOICE",
+	"type": "EXTERNAL",
+	"status": "APPROVED",
+	"approvedBy": "E_SERVICE",
+	"approved": "${json-unit.regex}^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.?\\d{0,10}(Z|[+-]\\d{2}:\\d{2})?$",
+	"recipient": {
+		"partyId": "fb2f0290-3820-11ed-a261-0242ac121234",
+		"firstName": "Kalle",
+		"lastName": "Anka",
+		"addressDetails": {
+			"street": "Ankeborg 160",
+			"postalCode": "123 45",
+			"city": "ANKEBORG"
+		}
+	},
+	"invoice": {
+		"customerId": "199001012385",
+		"description": "Kundfaktura",
+		"ourReference": "kalle anka",
+		"customerReference": "Kalle Anka",
+		"referenceId": "185375",
+		"totalAmount": 2100.0,
+		"invoiceRows": [
+			{
+				"descriptions": [
+					"Julmarknad Ankeborg. 3 marknad"
+				],
+				"totalAmount": 2100.0,
+				"vatCode": "00",
+				"costPerUnit": 700.0,
+				"quantity": 3.0,
+				"accountInformation": [
+					{
+						"costCenter": "43200000",
+						"subaccount": "345000",
+						"department": "315310",
+						"activity": "4165",
+						"article": "3452000 - KNATTE",
+						"counterpart": "86000000",
+						"amount": 700.0
+					},
+					{
+						"costCenter": "43200000",
+						"subaccount": "345000",
+						"department": "315310",
+						"activity": "4165",
+						"article": "3452000 - FNATTE",
+						"counterpart": "86000000",
+						"amount": 700.0
+					},
+					{
+						"costCenter": "43200000",
+						"subaccount": "345000",
+						"department": "315310",
+						"activity": "4165",
+						"article": "3452000 - TJATTE",
+						"counterpart": "86000000",
+						"amount": 700.0
+					}
+				]
+			}
+		]
+	},
+	"created": "${json-unit.regex}^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.?\\d{0,10}(Z|[+-]\\d{2}:\\d{2})?$",
+	"extraParameters": {}
+}

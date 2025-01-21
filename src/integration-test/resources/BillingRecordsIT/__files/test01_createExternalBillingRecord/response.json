@@ -32,16 +32,30 @@
 				"vatCode": "25",
 				"costPerUnit": 7995.0,
 				"quantity": 1.0,
-				"accountInformation": {
-					"costCenter": "15800100",
-					"subaccount": "936300",
-					"department": "920360",
-					"accuralKey": "5647",
-					"activity": "5756",
-					"article": "Elektrisk cykel",
-					"project": "11041",
-					"counterpart": "11830000"
-				}
+				"accountInformation": [
+					{
+						"activity": "5756",
+						"costCenter": "15800100",
+						"subaccount": "936300",
+						"counterpart": "11830000",
+						"project": "11041",
+						"department": "920360",
+						"article": "Elektrisk cykel",
+						"accuralKey": "5647",
+						"amount": 6995
+					},
+					{
+						"activity": "1337",
+						"costCenter": "13370000",
+						"subaccount": "133700",
+						"counterpart": "13370000",
+						"project": "13370",
+						"department": "133700",
+						"article": "Försäkring",
+						"accuralKey": "1337",
+						"amount": 1000
+					}
+				]
 			}
 		]
 	},

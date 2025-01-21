@@ -17,12 +17,15 @@
 		"description": "Kundfaktura",
 		"invoiceRows": [
 			{
-				"accountInformation": {
-					"costCenter": "41499999",
-					"subaccount": "344100",
-					"counterpart": "85000000",
-					"department": "340200"
-				},
+				"accountInformation": [
+					{
+						"costCenter": "41499999",
+						"subaccount": "344100",
+						"counterpart": "85000000",
+						"department": "340200",
+						"amount": 1080
+					}
+				],
 				"quantity": 1,
 				"detailedDescriptions": [],
 				"descriptions": [
@@ -32,12 +35,15 @@
 				"vatCode": "25"
 			},
 			{
-				"accountInformation": {
-					"costCenter": "41499999",
-					"subaccount": "313200",
-					"counterpart": "85000000",
-					"department": "340200"
-				},
+				"accountInformation": [
+					{
+						"costCenter": "41499999",
+						"subaccount": "313200",
+						"counterpart": "85000000",
+						"department": "340200",
+						"amount": 5650
+					}
+				],
 				"quantity": 1,
 				"detailedDescriptions": [],
 				"descriptions": [

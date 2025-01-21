@@ -34,13 +34,15 @@ VALUES	(100, 150, 1, 150, NULL, '71258e7d-5285-46ce-b9b2-877f8cad8edd'),
 -- -----------------------------------
 -- Account information
 -- -----------------------------------
-INSERT INTO account_information (invoice_row_id, accural_key, activity, cost_center, counter_part, department, article, project, subaccount)
-VALUES	(100, NULL, '5247000', '1620000', 'MIC00GOL', '910300', NULL, NULL, '936100'),
-		(200, NULL, '5247000', '1620000', 'MAN22VEG', '910300', NULL, NULL, '936100'),
-		(300, NULL, '3022910', '1455000', 'YUI10KAR', '899700', 'Friskvårdssatsning', NULL, '485223'),
-		(400, NULL, '3022910', '1455000', 'YUI10KAR', '899700', 'Smärtstillande medicin', NULL, '485223'),
-		(401, NULL, '3022910', '1455000', 'YUI10KAR', '899700', 'Smärtstillande medicin', NULL, '485223'),
-		(500, NULL, '3022910', '1455000', 'YUI10KAR', '899700', 'Ej behandlingsbar rad', NULL, '485223');
+INSERT INTO account_information (invoice_row_id, accural_key, activity, cost_center, counter_part, department, article, project, subaccount, amount)
+VALUES	(100, NULL, '5247000', '1620000', 'MIC00GOL', '910300', NULL, NULL, '936100', 150),
+		(200, NULL, '5247000', '1620000', 'MAN22VEG', '910300', NULL, NULL, '936100', 200),
+		(300, NULL, '3022910', '1455000', 'YUI10KAR', '899700', 'Lokalhyra', NULL, '485223', 22000),
+		(300, NULL, '3022920', '1456000', 'YUI10KAR', '899710', 'Instruktör', NULL, '485223', 8000),
+		(400, NULL, '3022910', '1455000', 'YUI10KAR', '899700', 'Sprutor', NULL, '485223', 190000),
+		(400, NULL, '3022910', '1455010', 'YUI10KAR', '899710', 'Injektion', NULL, '485223', 10000),
+		(401, NULL, '3022910', '1455000', 'YUI10KAR', '899700', 'Smärtstillande medicin', NULL, '485223', 200000),
+		(500, NULL, '3022910', '1455000', 'YUI10KAR', '899700', 'Ej behandlingsbar rad', NULL, '485223', 200000);
 
 -------------------------------------
 -- Descriptions

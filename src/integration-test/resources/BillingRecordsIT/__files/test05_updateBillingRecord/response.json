@@ -22,14 +22,35 @@
 			{
 				"totalAmount": 30000,
 				"quantity": 20,
-				"accountInformation": {
-					"activity": "3022910",
-					"costCenter": "1455000",
-					"subaccount": "485223",
-					"counterpart": "YUI10KAR",
-					"department": "899700",
-					"article": "Friskvårdssatsning"
-				},
+				"accountInformation": [
+					{
+						"costCenter": "1455000",
+						"subaccount": "485223",
+						"department": "899700",
+						"activity": "3022910",
+						"article": "Lokalhyra",
+						"counterpart": "YUI10KAR",
+						"amount": 16000.0
+					},
+					{
+						"costCenter": "1455000",
+						"subaccount": "485223",
+						"department": "899700",
+						"activity": "3022910",
+						"article": "Hyra utrustning",
+						"counterpart": "YUI10KAR",
+						"amount": 6000.0
+					},
+					{
+						"costCenter": "1456000",
+						"subaccount": "485223",
+						"department": "899710",
+						"activity": "3022920",
+						"article": "Instruktör",
+						"counterpart": "YUI10KAR",
+						"amount": 8000.0
+					}
+				],
 				"detailedDescriptions": [
 					"Testar stränglängd över 30 chars"
 				],
