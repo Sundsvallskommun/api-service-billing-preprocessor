@@ -27,6 +27,7 @@ class AccountInformationTest {
 	void testBuilderMethods() {
 		final var accuralKey = "accuralKey";
 		final var activity = "activity";
+		final var amount = 1234.56f;
 		final var costCenter = "costCenter";
 		final var counterpart = "counterpart";
 		final var department = "department";
@@ -37,6 +38,7 @@ class AccountInformationTest {
 		final var bean = AccountInformation.create()
 			.withAccuralKey(accuralKey)
 			.withActivity(activity)
+			.withAmount(amount)
 			.withCostCenter(costCenter)
 			.withCounterpart(counterpart)
 			.withDepartment(department)
@@ -46,6 +48,7 @@ class AccountInformationTest {
 
 		assertThat(bean.getAccuralKey()).isEqualTo(accuralKey);
 		assertThat(bean.getActivity()).isEqualTo(activity);
+		assertThat(bean.getAmount()).isEqualTo(amount);
 		assertThat(bean.getCostCenter()).isEqualTo(costCenter);
 		assertThat(bean.getCounterpart()).isEqualTo(counterpart);
 		assertThat(bean.getDepartment()).isEqualTo(department);

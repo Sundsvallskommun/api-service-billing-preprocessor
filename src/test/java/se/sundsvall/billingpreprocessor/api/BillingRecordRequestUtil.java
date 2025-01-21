@@ -6,6 +6,7 @@ import static se.sundsvall.billingpreprocessor.api.model.enums.Status.APPROVED;
 import static se.sundsvall.billingpreprocessor.api.model.enums.Type.EXTERNAL;
 import static se.sundsvall.billingpreprocessor.api.model.enums.Type.INTERNAL;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import se.sundsvall.billingpreprocessor.api.model.AccountInformation;
@@ -61,7 +62,7 @@ public class BillingRecordRequestUtil {
 
 	public static InvoiceRow createInvoiceRowInstance(boolean validInvoiceRows, Type type) {
 		return InvoiceRow.create()
-			.withAccountInformation(createAccountInformationInstance(validInvoiceRows))
+			.withAccountInformation(createAccountInformationInstances(validInvoiceRows))
 			.withCostPerUnit(123f)
 			.withDescriptions(List.of(validInvoiceRows ? "description" : "a longer description than thirty characters"))
 			.withDetailedDescriptions(validInvoiceRows && INTERNAL == type ? null : List.of("detailedDescription"))
@@ -70,8 +71,25 @@ public class BillingRecordRequestUtil {
 			.withVatCode(validInvoiceRows ? INTERNAL == type ? null : "00" : INTERNAL == type ? "00" : null);
 	}
 
+	public static List<AccountInformation> createAccountInformationInstances(boolean validAccountInformation) {
+		return validAccountInformation ? List.of(AccountInformation.create()
+			.withCounterpart("counterPart")
+			.withDepartment("department")
+			.withCostCenter("costCenter")
+			.withSubaccount("subAccount")
+			.withAmount(1234.56f)) : createFaultyList();
+	}
+
+	private static List<AccountInformation> createFaultyList() {
+		final var acList = new ArrayList<>(List.of(AccountInformation.create()));
+		acList.add(null);
+
+		return acList;
+	}
+
 	public static AccountInformation createAccountInformationInstance(boolean validAccountInformation) {
 		return validAccountInformation ? AccountInformation.create()
+			.withAmount(456f)
 			.withCounterpart("counterPart")
 			.withDepartment("department")
 			.withCostCenter("costCenter")

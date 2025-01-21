@@ -1,5 +1,6 @@
 package se.sundsvall.billingpreprocessor.api.validation.impl;
 
+import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -11,6 +12,8 @@ import static se.sundsvall.billingpreprocessor.api.model.enums.Type.INTERNAL;
 
 import jakarta.validation.ConstraintValidatorContext;
 import jakarta.validation.ConstraintValidatorContext.ConstraintViolationBuilder;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
@@ -29,6 +32,12 @@ import se.sundsvall.billingpreprocessor.api.model.enums.Type;
 
 @ExtendWith(MockitoExtension.class)
 class ValidInvoiceRowsConstraintValidatorTest {
+
+	private static final Float AMOUNT = 112f;
+	private static final String COSTCENTER = "costcenter";
+	private static final String COUNTERPART = "counterpart";
+	private static final String DEPARTMENT = "department";
+	private static final String SUBACCOUNT = "subaccount";
 
 	@Mock
 	private ConstraintValidatorContext contextMock;
@@ -55,7 +64,7 @@ class ValidInvoiceRowsConstraintValidatorTest {
 	@Test
 	void withInvoiceRowsContainingNoPricePerUnit() {
 		final var billingRecord = BillingRecord.create().withInvoice(Invoice.create().withInvoiceRows(List.of(InvoiceRow.create()
-			.withAccountInformation(createAccountInformationInstance(true)))));
+			.withAccountInformation(List.of(createAccountInformationInstance(true))))));
 
 		assertThat(validator.isValid(billingRecord, contextMock)).isTrue();
 
@@ -66,7 +75,7 @@ class ValidInvoiceRowsConstraintValidatorTest {
 	void withInternalTypeAndVatPresent() {
 		final var billingRecord = BillingRecord.create().withType(INTERNAL).withInvoice(Invoice.create()
 			.withInvoiceRows(List.of(InvoiceRow.create()
-				.withAccountInformation(createAccountInformationInstance(true))
+				.withAccountInformation(List.of(createAccountInformationInstance(true)))
 				.withCostPerUnit(10f)
 				.withVatCode("25"))));
 
@@ -82,7 +91,7 @@ class ValidInvoiceRowsConstraintValidatorTest {
 	@Test
 	void withExternalTypeAndVatNotPresent() {
 		final var billingRecord = BillingRecord.create().withType(EXTERNAL).withInvoice(Invoice.create().withInvoiceRows(List.of(InvoiceRow.create()
-			.withAccountInformation(createAccountInformationInstance(true))
+			.withAccountInformation(List.of(createAccountInformationInstance(true)))
 			.withCostPerUnit(10f))));
 
 		when(contextMock.buildConstraintViolationWithTemplate(any())).thenReturn(builderMock);
@@ -96,8 +105,36 @@ class ValidInvoiceRowsConstraintValidatorTest {
 
 	@ParameterizedTest
 	@EnumSource(value = Type.class)
-	void withNoAccountInformation(Type type) {
+	void withAccountInformationNull(Type type) {
 		final var billingRecord = BillingRecord.create().withType(type).withInvoice(Invoice.create().withInvoiceRows(List.of(InvoiceRow.create())));
+
+		when(contextMock.buildConstraintViolationWithTemplate(any())).thenReturn(builderMock);
+
+		assertThat(validator.isValid(billingRecord, contextMock)).isFalse();
+
+		verify(contextMock).disableDefaultConstraintViolation();
+		verify(contextMock).buildConstraintViolationWithTemplate("at least one invoice row must have accountInformation");
+		verify(builderMock).addConstraintViolation();
+	}
+
+	@ParameterizedTest
+	@EnumSource(value = Type.class)
+	void withAccountInformationEmptyList(Type type) {
+		final var billingRecord = BillingRecord.create().withType(type).withInvoice(Invoice.create().withInvoiceRows(List.of(InvoiceRow.create().withAccountInformation(emptyList()))));
+
+		when(contextMock.buildConstraintViolationWithTemplate(any())).thenReturn(builderMock);
+
+		assertThat(validator.isValid(billingRecord, contextMock)).isFalse();
+
+		verify(contextMock).disableDefaultConstraintViolation();
+		verify(contextMock).buildConstraintViolationWithTemplate("at least one invoice row must have accountInformation");
+		verify(builderMock).addConstraintViolation();
+	}
+
+	@ParameterizedTest
+	@EnumSource(value = Type.class)
+	void withAccountInformationLIstOnlyContainsNullValues(Type type) {
+		final var billingRecord = BillingRecord.create().withType(type).withInvoice(Invoice.create().withInvoiceRows(List.of(InvoiceRow.create().withAccountInformation(new ArrayList<>(Collections.nCopies(3, null))))));
 
 		when(contextMock.buildConstraintViolationWithTemplate(any())).thenReturn(builderMock);
 
@@ -112,53 +149,63 @@ class ValidInvoiceRowsConstraintValidatorTest {
 	@MethodSource("faultyAccountInformationArgumentProvider")
 	void withFaultyAccountInformation(Type type) {
 		final var billingRecord = BillingRecord.create().withType(type).withInvoice(Invoice.create().withInvoiceRows(List.of(InvoiceRow.create()
-			.withAccountInformation(AccountInformation.create()
-				.withDepartment("Department")
-				.withSubaccount("Subaccount")
-				.withCostCenter("CostCenter")))));
+			.withAccountInformation(List.of(AccountInformation.create()
+				.withDepartment(DEPARTMENT)
+				.withSubaccount(SUBACCOUNT)
+				.withCostCenter(COSTCENTER))))));
 
 		when(contextMock.buildConstraintViolationWithTemplate(any())).thenReturn(builderMock);
 
 		assertThat(validator.isValid(billingRecord, contextMock)).isFalse();
 
 		verify(contextMock).disableDefaultConstraintViolation();
-		verify(contextMock).buildConstraintViolationWithTemplate("when accountInformation is present costCenter, subaccount, department and counterpart are mandatory");
+		verify(contextMock).buildConstraintViolationWithTemplate("amount, costCenter, subaccount, department and counterpart must be present for invoice rows containing accountInformation");
 		verify(builderMock).addConstraintViolation();
 	}
 
 	private static Stream<Arguments> faultyAccountInformationArgumentProvider() {
 		// Invalid parameter scenarios
 		return Stream.of(
-			Arguments.of(EXTERNAL, createAccountInformation(null, "Counterpart", "Department", "Subaccount")),
-			Arguments.of(INTERNAL, createAccountInformation(null, "Counterpart", "Department", "Subaccount")),
-			Arguments.of(EXTERNAL, createAccountInformation("CostCenter", null, "Department", "Subaccount")),
-			Arguments.of(INTERNAL, createAccountInformation("CostCenter", null, "Department", "Subaccount")),
-			Arguments.of(EXTERNAL, createAccountInformation("CostCenter", "Counterpart", null, "Subaccount")),
-			Arguments.of(INTERNAL, createAccountInformation("CostCenter", "Counterpart", null, "Subaccount")),
-			Arguments.of(EXTERNAL, createAccountInformation("CostCenter", "Counterpart", "Department", null)),
-			Arguments.of(INTERNAL, createAccountInformation("CostCenter", "Counterpart", "Department", null)),
+			Arguments.of(EXTERNAL, createAccountInformation(null, COSTCENTER, COUNTERPART, DEPARTMENT, SUBACCOUNT)),
+			Arguments.of(INTERNAL, createAccountInformation(null, COSTCENTER, COUNTERPART, DEPARTMENT, SUBACCOUNT)),
+			Arguments.of(EXTERNAL, createAccountInformation(null, COSTCENTER, COUNTERPART, DEPARTMENT, SUBACCOUNT)),
+			Arguments.of(INTERNAL, createAccountInformation(null, COSTCENTER, COUNTERPART, DEPARTMENT, SUBACCOUNT)),
+			Arguments.of(EXTERNAL, createAccountInformation(null, COSTCENTER, COUNTERPART, DEPARTMENT, SUBACCOUNT)),
+			Arguments.of(INTERNAL, createAccountInformation(null, COSTCENTER, COUNTERPART, DEPARTMENT, SUBACCOUNT)),
+			Arguments.of(EXTERNAL, createAccountInformation(null, COSTCENTER, COUNTERPART, DEPARTMENT, SUBACCOUNT)),
+			Arguments.of(INTERNAL, createAccountInformation(null, COSTCENTER, COUNTERPART, DEPARTMENT, SUBACCOUNT)),
 
-			Arguments.of(EXTERNAL, createAccountInformation("", "Counterpart", "Department", "Subaccount")),
-			Arguments.of(INTERNAL, createAccountInformation("", "Counterpart", "Department", "Subaccount")),
-			Arguments.of(EXTERNAL, createAccountInformation("CostCenter", "", "Department", "Subaccount")),
-			Arguments.of(INTERNAL, createAccountInformation("CostCenter", "", "Department", "Subaccount")),
-			Arguments.of(EXTERNAL, createAccountInformation("CostCenter", "Counterpart", "", "Subaccount")),
-			Arguments.of(INTERNAL, createAccountInformation("CostCenter", "Counterpart", "", "Subaccount")),
-			Arguments.of(EXTERNAL, createAccountInformation("CostCenter", "Counterpart", "Department", "")),
-			Arguments.of(INTERNAL, createAccountInformation("CostCenter", "Counterpart", "Department", "")),
+			Arguments.of(EXTERNAL, createAccountInformation(AMOUNT, null, COUNTERPART, DEPARTMENT, SUBACCOUNT)),
+			Arguments.of(INTERNAL, createAccountInformation(AMOUNT, null, COUNTERPART, DEPARTMENT, SUBACCOUNT)),
+			Arguments.of(EXTERNAL, createAccountInformation(AMOUNT, COSTCENTER, null, DEPARTMENT, SUBACCOUNT)),
+			Arguments.of(INTERNAL, createAccountInformation(AMOUNT, COSTCENTER, null, DEPARTMENT, SUBACCOUNT)),
+			Arguments.of(EXTERNAL, createAccountInformation(AMOUNT, COSTCENTER, COUNTERPART, null, SUBACCOUNT)),
+			Arguments.of(INTERNAL, createAccountInformation(AMOUNT, COSTCENTER, COUNTERPART, null, SUBACCOUNT)),
+			Arguments.of(EXTERNAL, createAccountInformation(AMOUNT, COSTCENTER, COUNTERPART, DEPARTMENT, null)),
+			Arguments.of(INTERNAL, createAccountInformation(AMOUNT, COSTCENTER, COUNTERPART, DEPARTMENT, null)),
 
-			Arguments.of(EXTERNAL, createAccountInformation(" ", "Counterpart", "Department", "Subaccount")),
-			Arguments.of(INTERNAL, createAccountInformation(" ", "Counterpart", "Department", "Subaccount")),
-			Arguments.of(EXTERNAL, createAccountInformation("CostCenter", " ", "Department", "Subaccount")),
-			Arguments.of(INTERNAL, createAccountInformation("CostCenter", " ", "Department", "Subaccount")),
-			Arguments.of(EXTERNAL, createAccountInformation("CostCenter", "Counterpart", " ", "Subaccount")),
-			Arguments.of(INTERNAL, createAccountInformation("CostCenter", "Counterpart", " ", "Subaccount")),
-			Arguments.of(EXTERNAL, createAccountInformation("CostCenter", "Counterpart", "Department", " ")),
-			Arguments.of(INTERNAL, createAccountInformation("CostCenter", "Counterpart", "Department", " ")));
+			Arguments.of(EXTERNAL, createAccountInformation(AMOUNT, "", COUNTERPART, DEPARTMENT, SUBACCOUNT)),
+			Arguments.of(INTERNAL, createAccountInformation(AMOUNT, "", COUNTERPART, DEPARTMENT, SUBACCOUNT)),
+			Arguments.of(EXTERNAL, createAccountInformation(AMOUNT, COSTCENTER, "", DEPARTMENT, SUBACCOUNT)),
+			Arguments.of(INTERNAL, createAccountInformation(AMOUNT, COSTCENTER, "", DEPARTMENT, SUBACCOUNT)),
+			Arguments.of(EXTERNAL, createAccountInformation(AMOUNT, COSTCENTER, COUNTERPART, "", SUBACCOUNT)),
+			Arguments.of(INTERNAL, createAccountInformation(AMOUNT, COSTCENTER, COUNTERPART, "", SUBACCOUNT)),
+			Arguments.of(EXTERNAL, createAccountInformation(AMOUNT, COSTCENTER, COUNTERPART, DEPARTMENT, "")),
+			Arguments.of(INTERNAL, createAccountInformation(AMOUNT, COSTCENTER, COUNTERPART, DEPARTMENT, "")),
+
+			Arguments.of(EXTERNAL, createAccountInformation(AMOUNT, " ", COUNTERPART, DEPARTMENT, SUBACCOUNT)),
+			Arguments.of(INTERNAL, createAccountInformation(AMOUNT, " ", COUNTERPART, DEPARTMENT, SUBACCOUNT)),
+			Arguments.of(EXTERNAL, createAccountInformation(AMOUNT, COSTCENTER, " ", DEPARTMENT, SUBACCOUNT)),
+			Arguments.of(INTERNAL, createAccountInformation(AMOUNT, COSTCENTER, " ", DEPARTMENT, SUBACCOUNT)),
+			Arguments.of(EXTERNAL, createAccountInformation(AMOUNT, COSTCENTER, COUNTERPART, " ", SUBACCOUNT)),
+			Arguments.of(INTERNAL, createAccountInformation(AMOUNT, COSTCENTER, COUNTERPART, " ", SUBACCOUNT)),
+			Arguments.of(EXTERNAL, createAccountInformation(AMOUNT, COSTCENTER, COUNTERPART, DEPARTMENT, " ")),
+			Arguments.of(INTERNAL, createAccountInformation(AMOUNT, COSTCENTER, COUNTERPART, DEPARTMENT, " ")));
 	}
 
-	private static AccountInformation createAccountInformation(String costCenter, String counterpart, String department, String subAccount) {
+	private static AccountInformation createAccountInformation(Float amount, String costCenter, String counterpart, String department, String subAccount) {
 		return AccountInformation.create()
+			.withAmount(amount)
 			.withCostCenter(costCenter)
 			.withCounterpart(counterpart)
 			.withDepartment(department)
@@ -170,15 +217,15 @@ class ValidInvoiceRowsConstraintValidatorTest {
 	void withAccountInformationInCompleteOnOneRow(Type type) {
 		final var billingRecord = BillingRecord.create().withType(type).withInvoice(Invoice.create()
 			.withInvoiceRows(List.of(
-				InvoiceRow.create().withAccountInformation(createAccountInformationInstance(true)),
-				InvoiceRow.create().withAccountInformation(createAccountInformationInstance(true).withCounterpart(null)))));
+				InvoiceRow.create().withAccountInformation(List.of(createAccountInformationInstance(true))),
+				InvoiceRow.create().withAccountInformation(List.of(createAccountInformationInstance(true).withCounterpart(null))))));
 
 		when(contextMock.buildConstraintViolationWithTemplate(any())).thenReturn(builderMock);
 
 		assertThat(validator.isValid(billingRecord, contextMock)).isFalse();
 
 		verify(contextMock).disableDefaultConstraintViolation();
-		verify(contextMock).buildConstraintViolationWithTemplate("when accountInformation is present costCenter, subaccount, department and counterpart are mandatory");
+		verify(contextMock).buildConstraintViolationWithTemplate("amount, costCenter, subaccount, department and counterpart must be present for invoice rows containing accountInformation");
 		verify(builderMock).addConstraintViolation();
 	}
 }

@@ -27,7 +27,7 @@ class InvoiceRowTest {
 
 	@Test
 	void testBuilderMethods() {
-		final var accountInformation = AccountInformation.create();
+		final var accountInformation = List.of(AccountInformation.create());
 		final var costPerUnit = new Random().nextFloat();
 		final var descriptions = List.of("description");
 		final var detailedDescriptions = List.of("detailedDescription");

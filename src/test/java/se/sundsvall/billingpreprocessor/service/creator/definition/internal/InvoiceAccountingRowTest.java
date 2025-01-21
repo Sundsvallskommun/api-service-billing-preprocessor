@@ -45,7 +45,7 @@ class InvoiceAccountingRowTest {
 			.withObject(object)
 			.withProject(project)
 			.withSubAccount(subaccount)
-			.withTotalAmount(totalAmount);
+			.withAmount(totalAmount);
 
 		assertThat(bean.getAccuralKey()).isEqualTo(accuralKey);
 		assertThat(bean.getActivity()).isEqualTo(activity);
@@ -55,7 +55,7 @@ class InvoiceAccountingRowTest {
 		assertThat(bean.getObject()).isEqualTo(object);
 		assertThat(bean.getProject()).isEqualTo(project);
 		assertThat(bean.getSubAccount()).isEqualTo(subaccount);
-		assertThat(bean.getTotalAmount()).isEqualTo(totalAmount);
+		assertThat(bean.getAmount()).isEqualTo(totalAmount);
 	}
 
 	@Test

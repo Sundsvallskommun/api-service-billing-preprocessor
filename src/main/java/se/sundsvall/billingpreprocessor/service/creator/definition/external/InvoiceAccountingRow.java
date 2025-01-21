@@ -36,7 +36,7 @@ public class InvoiceAccountingRow {
 	private String counterpart;
 
 	@Field(at = 40, length = 12, handlerName = ExternalInvoiceFloatTypeHandler.NAME, padding = '0', align = RIGHT)
-	private Float totalAmount;
+	private Float amount;
 
 	@Field(at = 52, length = 13, maxLength = 13, nillable = true, trim = true)
 	private String accuralKey;
@@ -136,16 +136,16 @@ public class InvoiceAccountingRow {
 		return this;
 	}
 
-	public Float getTotalAmount() {
-		return totalAmount;
+	public Float getAmount() {
+		return amount;
 	}
 
-	public void setTotalAmount(Float totalAmount) {
-		this.totalAmount = totalAmount;
+	public void setAmount(Float amount) {
+		this.amount = amount;
 	}
 
-	public InvoiceAccountingRow withTotalAmount(Float totalAmount) {
-		this.totalAmount = totalAmount;
+	public InvoiceAccountingRow withAmount(Float amount) {
+		this.amount = amount;
 		return this;
 	}
 
@@ -164,7 +164,7 @@ public class InvoiceAccountingRow {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(accuralKey, activity, costCenter, counterpart, object, operation, project, subAccount, totalAmount);
+		return Objects.hash(accuralKey, activity, costCenter, counterpart, object, operation, project, subAccount, amount);
 	}
 
 	@Override
@@ -172,19 +172,18 @@ public class InvoiceAccountingRow {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof InvoiceAccountingRow)) {
+		if (!(obj instanceof final InvoiceAccountingRow other)) {
 			return false;
 		}
-		InvoiceAccountingRow other = (InvoiceAccountingRow) obj;
 		return Objects.equals(accuralKey, other.accuralKey) && Objects.equals(activity, other.activity) && Objects.equals(costCenter, other.costCenter) && Objects.equals(counterpart, other.counterpart) && Objects.equals(object, other.object)
-			&& Objects.equals(operation, other.operation) && Objects.equals(project, other.project) && Objects.equals(subAccount, other.subAccount) && Objects.equals(totalAmount, other.totalAmount);
+			&& Objects.equals(operation, other.operation) && Objects.equals(project, other.project) && Objects.equals(subAccount, other.subAccount) && Objects.equals(amount, other.amount);
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
+		final var builder = new StringBuilder();
 		builder.append("InvoiceAccountingRow [costCenter=").append(costCenter).append(", subAccount=").append(subAccount).append(", operation=").append(operation).append(", activity=").append(activity).append(", project=").append(project).append(
-			", object=").append(object).append(", counterpart=").append(counterpart).append(", totalAmount=").append(totalAmount).append(", accuralKey=").append(accuralKey).append("]");
+			", object=").append(object).append(", counterpart=").append(counterpart).append(", amount=").append(amount).append(", accuralKey=").append(accuralKey).append("]");
 		return builder.toString();
 	}
 }

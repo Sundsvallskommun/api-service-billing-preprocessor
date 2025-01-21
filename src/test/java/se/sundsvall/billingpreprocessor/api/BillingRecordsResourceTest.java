@@ -259,7 +259,7 @@ class BillingRecordsResourceTest {
 				.withQuantity(0f),
 			InvoiceRow.create()
 				.withDescriptions(List.of("Passerkort utan foto"))
-				.withAccountInformation(createAccountInformationInstance())
+				.withAccountInformation(List.of(createAccountInformationInstance()))
 				.withCostPerUnit(150f)
 				.withQuantity(1f));
 	}
@@ -267,6 +267,7 @@ class BillingRecordsResourceTest {
 	private static AccountInformation createAccountInformationInstance() {
 		return AccountInformation.create()
 			.withActivity("5247000")
+			.withAmount(100f)
 			.withDepartment("910300")
 			.withCostCenter("1620000")
 			.withSubaccount("936100")

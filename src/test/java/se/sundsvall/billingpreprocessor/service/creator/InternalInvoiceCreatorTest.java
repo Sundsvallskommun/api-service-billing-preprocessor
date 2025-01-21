@@ -55,15 +55,27 @@ class InternalInvoiceCreatorTest {
 	private static final String DETAILED_DESCRIPTION = "En mer detaljerad fakturaradsbeskrivning";
 	private static final float QUANTITY = 1f;
 
-	// Account information constants
-	private static final String ACCURAL_KEY = "117";
-	private static final String ACTIVITY = "5756";
-	private static final String ARTICLE = "117";
-	private static final String COST_CENTER = "15800100";
-	private static final String COUNTERPART = "116";
-	private static final String DEPARTMENT = "920360";
-	private static final String PROJECT = "11041";
-	private static final String SUBACCOUNT = "936300";
+	// Account information constants (post 1)
+	private static final Float ACCOUNTING_AMOUNT_1 = 300f;
+	private static final String ACCURAL_KEY_1 = "117";
+	private static final String ACTIVITY_1 = "5756";
+	private static final String ARTICLE_1 = "117";
+	private static final String COST_CENTER_1 = "15800100";
+	private static final String COUNTERPART_1 = "116";
+	private static final String DEPARTMENT_1 = "920360";
+	private static final String PROJECT_1 = "11041";
+	private static final String SUBACCOUNT_1 = "936300";
+
+	// Account information constants (post 2)
+	private static final Float ACCOUNTING_AMOUNT_2 = 1200f;
+	private static final String ACCURAL_KEY_2 = "119";
+	private static final String ACTIVITY_2 = "5546";
+	private static final String ARTICLE_2 = "119";
+	private static final String COST_CENTER_2 = "16300200";
+	private static final String COUNTERPART_2 = "114";
+	private static final String DEPARTMENT_2 = "902011";
+	private static final String PROJECT_2 = "11042";
+	private static final String SUBACCOUNT_2 = "554800";
 
 	@MockitoBean
 	private InvoiceFileConfigurationRepository invoiceFileConfigurationRepositoryMock;
@@ -180,7 +192,7 @@ class InternalInvoiceCreatorTest {
 
 	private static InvoiceRowEntity createInvoiceRowEntity(int id, InvoiceEntity invoiceEntity) {
 		final var invoiceRowEntity = InvoiceRowEntity.create()
-			.withAccountInformation(List.of(createAccountInformationEmbeddable()))
+			.withAccountInformation(createAccountInformationEmbeddables())
 			.withCostPerUnit(COST_PER_UNIT)
 			.withId(id)
 			.withInvoice(invoiceEntity)
@@ -200,15 +212,27 @@ class InternalInvoiceCreatorTest {
 			.withType(type);
 	}
 
-	private static AccountInformationEmbeddable createAccountInformationEmbeddable() {
-		return AccountInformationEmbeddable.create()
-			.withAccuralKey(ACCURAL_KEY)
-			.withActivity(ACTIVITY)
-			.withArticle(ARTICLE)
-			.withCostCenter(COST_CENTER)
-			.withCounterpart(COUNTERPART)
-			.withDepartment(DEPARTMENT)
-			.withProject(PROJECT)
-			.withSubaccount(SUBACCOUNT);
+	private static List<AccountInformationEmbeddable> createAccountInformationEmbeddables() {
+		return List.of(
+			AccountInformationEmbeddable.create()
+				.withAccuralKey(ACCURAL_KEY_1)
+				.withActivity(ACTIVITY_1)
+				.withAmount(ACCOUNTING_AMOUNT_1)
+				.withArticle(ARTICLE_1)
+				.withCostCenter(COST_CENTER_1)
+				.withCounterpart(COUNTERPART_1)
+				.withDepartment(DEPARTMENT_1)
+				.withProject(PROJECT_1)
+				.withSubaccount(SUBACCOUNT_1),
+			AccountInformationEmbeddable.create()
+				.withAccuralKey(ACCURAL_KEY_2)
+				.withActivity(ACTIVITY_2)
+				.withAmount(ACCOUNTING_AMOUNT_2)
+				.withArticle(ARTICLE_2)
+				.withCostCenter(COST_CENTER_2)
+				.withCounterpart(COUNTERPART_2)
+				.withDepartment(DEPARTMENT_2)
+				.withProject(PROJECT_2)
+				.withSubaccount(SUBACCOUNT_2));
 	}
 }
