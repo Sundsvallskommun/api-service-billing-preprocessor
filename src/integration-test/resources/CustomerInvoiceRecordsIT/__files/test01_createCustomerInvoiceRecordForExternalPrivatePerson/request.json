@@ -17,14 +17,35 @@
 		"description": "Kundfaktura",
 		"invoiceRows": [
 			{
-				"accountInformation": {
-					"activity": "4165",
-					"costCenter": "43200000",
-					"subaccount": "345000",
-					"counterpart": "86000000",
-					"department": "315310",
-					"article": "3452000 - ANKEBORG"
-				},
+				"accountInformation": [
+					{
+						"activity": "4165",
+						"costCenter": "43200000",
+						"subaccount": "345000",
+						"counterpart": "86000000",
+						"department": "315310",
+						"article": "3452000 - KNATTE",
+						"amount": 700
+					},
+					{
+						"activity": "4165",
+						"costCenter": "43200000",
+						"subaccount": "345000",
+						"counterpart": "86000000",
+						"department": "315310",
+						"article": "3452000 - FNATTE",
+						"amount": 700
+					},
+					{
+						"activity": "4165",
+						"costCenter": "43200000",
+						"subaccount": "345000",
+						"counterpart": "86000000",
+						"department": "315310",
+						"article": "3452000 - TJATTE",
+						"amount": 700
+					}
+				],
 				"quantity": 3,
 				"detailedDescriptions": [],
 				"descriptions": [

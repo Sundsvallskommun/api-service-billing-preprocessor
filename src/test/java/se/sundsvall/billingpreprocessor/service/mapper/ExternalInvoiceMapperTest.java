@@ -62,6 +62,7 @@ class ExternalInvoiceMapperTest {
 	private static final String VAT_CODE = "vatCode";
 
 	// Account information constants
+	private static final float ACCOUNTING_AMOUNT = 9843f;
 	private static final String ACCURAL_KEY = "accuralKey";
 	private static final String ACTIVITY = "activity";
 	private static final String ARTICLE = "article";
@@ -263,24 +264,26 @@ class ExternalInvoiceMapperTest {
 
 	@Test
 	void toInvoiceAccountingRow() {
-		final var bean = ExternalInvoiceMapper.toInvoiceAccountingRow(createInvoiceRowEntity(1, null));
+		final var result = ExternalInvoiceMapper.toInvoiceAccountingRows(createInvoiceRowEntity(1, null));
 
-		assertThat(bean.getAccuralKey()).isEqualTo(ACCURAL_KEY);
-		assertThat(bean.getActivity()).isEqualTo(ACTIVITY);
-		assertThat(bean.getCostCenter()).isEqualTo(COST_CENTER);
-		assertThat(bean.getCounterpart()).isEqualTo(COUNTERPART);
-		assertThat(bean.getObject()).isEqualTo(ARTICLE);
-		assertThat(bean.getOperation()).isEqualTo(DEPARTMENT);
-		assertThat(bean.getProject()).isEqualTo(PROJECT);
-		assertThat(bean.getSubAccount()).isEqualTo(SUBACCOUNT);
-		assertThat(bean.getTotalAmount()).isEqualTo(COST_PER_UNIT * QUANTITY);
+		assertThat(result).hasSize(1).satisfiesExactly(bean -> {
+			assertThat(bean.getAccuralKey()).isEqualTo(ACCURAL_KEY);
+			assertThat(bean.getActivity()).isEqualTo(ACTIVITY);
+			assertThat(bean.getCostCenter()).isEqualTo(COST_CENTER);
+			assertThat(bean.getCounterpart()).isEqualTo(COUNTERPART);
+			assertThat(bean.getObject()).isEqualTo(ARTICLE);
+			assertThat(bean.getOperation()).isEqualTo(DEPARTMENT);
+			assertThat(bean.getProject()).isEqualTo(PROJECT);
+			assertThat(bean.getSubAccount()).isEqualTo(SUBACCOUNT);
+			assertThat(bean.getAmount()).isEqualTo(ACCOUNTING_AMOUNT);
+		});
 	}
 
 	@ParameterizedTest
 	@MethodSource("toInvoiceAccountingRowWhenMissingVitalDataArgumentProvider")
 	void toInvoiceAccountingRowWhenMissingVitalData(final InvoiceRowEntity invoiceRowEntity, final String expectedMessage) {
 
-		final var e = assertThrows(ThrowableProblem.class, () -> ExternalInvoiceMapper.toInvoiceAccountingRow(invoiceRowEntity));
+		final var e = assertThrows(ThrowableProblem.class, () -> ExternalInvoiceMapper.toInvoiceAccountingRows(invoiceRowEntity));
 
 		assertThat(e.getStatus()).isEqualTo(INTERNAL_SERVER_ERROR);
 		assertThat(e.getMessage()).isEqualTo("Internal Server Error: %s".formatted(expectedMessage));
@@ -288,7 +291,6 @@ class ExternalInvoiceMapperTest {
 
 	private static Stream<Arguments> toInvoiceAccountingRowWhenMissingVitalDataArgumentProvider() {
 		return Stream.of(
-			Arguments.of(createInvoiceRowEntity(1, null).withAccountInformation(null), "Account information is not present"),
 			Arguments.of(createInvoiceRowEntity(1, null).withAccountInformation(List.of(AccountInformationEmbeddable.create())), "Costcenter is not present"),
 			Arguments.of(createInvoiceRowEntity(1, null).withAccountInformation(List.of(AccountInformationEmbeddable.create()
 				.withCostCenter(COST_CENTER))), "Sub account is not present"),
@@ -298,7 +300,12 @@ class ExternalInvoiceMapperTest {
 			Arguments.of(createInvoiceRowEntity(1, null).withAccountInformation(List.of(AccountInformationEmbeddable.create()
 				.withCostCenter(COST_CENTER)
 				.withSubaccount(SUBACCOUNT)
-				.withDepartment(DEPARTMENT))), "Counterpart is not present"));
+				.withDepartment(DEPARTMENT))), "Counterpart is not present"),
+			Arguments.of(createInvoiceRowEntity(1, null).withAccountInformation(List.of(AccountInformationEmbeddable.create()
+				.withCostCenter(COST_CENTER)
+				.withSubaccount(SUBACCOUNT)
+				.withDepartment(DEPARTMENT)
+				.withCounterpart(COUNTERPART))), "Accounting amount is not present"));
 	}
 
 	@Test
@@ -379,6 +386,7 @@ class ExternalInvoiceMapperTest {
 		return AccountInformationEmbeddable.create()
 			.withAccuralKey(ACCURAL_KEY)
 			.withActivity(ACTIVITY)
+			.withAmount(ACCOUNTING_AMOUNT)
 			.withArticle(ARTICLE)
 			.withCostCenter(COST_CENTER)
 			.withCounterpart(COUNTERPART)

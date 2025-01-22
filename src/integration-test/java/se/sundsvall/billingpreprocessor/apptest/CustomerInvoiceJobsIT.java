@@ -34,7 +34,7 @@ import se.sundsvall.dept44.test.annotation.wiremock.WireMockAppTestSuite;
 	"/db/scripts/testdata-customerinvoice-it.sql"
 })
 class CustomerInvoiceJobsIT extends AbstractAppTest {
-	
+
 	@Autowired
 	private InvoiceFileRepository repository;
 

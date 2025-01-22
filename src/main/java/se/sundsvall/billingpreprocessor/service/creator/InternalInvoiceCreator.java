@@ -5,7 +5,7 @@ import static java.util.Optional.ofNullable;
 import static se.sundsvall.billingpreprocessor.Constants.EMPTY_ARRAY;
 import static se.sundsvall.billingpreprocessor.service.creator.config.InvoiceCreatorConfig.INTERNAL_INVOICE_BUILDER;
 import static se.sundsvall.billingpreprocessor.service.mapper.InternalInvoiceMapper.toFileHeader;
-import static se.sundsvall.billingpreprocessor.service.mapper.InternalInvoiceMapper.toInvoiceAccountingRow;
+import static se.sundsvall.billingpreprocessor.service.mapper.InternalInvoiceMapper.toInvoiceAccountingRows;
 import static se.sundsvall.billingpreprocessor.service.mapper.InternalInvoiceMapper.toInvoiceDescriptionRow;
 import static se.sundsvall.billingpreprocessor.service.mapper.InternalInvoiceMapper.toInvoiceFooter;
 import static se.sundsvall.billingpreprocessor.service.mapper.InternalInvoiceMapper.toInvoiceHeader;
@@ -118,6 +118,6 @@ public class InternalInvoiceCreator implements InvoiceCreator {
 	private void processInvoiceRow(BeanWriter invoiceWriter, InvoiceRowEntity invoiceRow) {
 		invoiceWriter.write(toInvoiceRow(invoiceRow));
 		toInvoiceRowDescriptionRows(invoiceRow).forEach(invoiceWriter::write);
-		invoiceWriter.write(toInvoiceAccountingRow(invoiceRow));
+		toInvoiceAccountingRows(invoiceRow).forEach(invoiceWriter::write);
 	}
 }

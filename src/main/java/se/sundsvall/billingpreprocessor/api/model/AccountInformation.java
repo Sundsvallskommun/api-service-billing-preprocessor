@@ -30,6 +30,9 @@ public class AccountInformation {
 	@Schema(description = "Counterpart", example = "11830000")
 	private String counterpart;
 
+	@Schema(description = "Amount", example = "1399.95")
+	private Float amount;
+
 	public static AccountInformation create() {
 		return new AccountInformation();
 	}
@@ -138,38 +141,37 @@ public class AccountInformation {
 		return this;
 	}
 
+	public Float getAmount() {
+		return amount;
+	}
+
+	public void setAmount(Float amount) {
+		this.amount = amount;
+	}
+
+	public AccountInformation withAmount(Float amount) {
+		this.amount = amount;
+		return this;
+	}
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(accuralKey, activity, costCenter, counterpart, department, article, project, subaccount);
+		return Objects.hash(accuralKey, activity, article, costCenter, counterpart, department, project, subaccount, amount);
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		AccountInformation other = (AccountInformation) obj;
-		return Objects.equals(accuralKey, other.accuralKey) && Objects.equals(activity, other.activity) && Objects.equals(costCenter, other.costCenter) && Objects.equals(counterpart, other.counterpart) && Objects.equals(department, other.department)
-			&& Objects.equals(article, other.article) && Objects.equals(project, other.project) && Objects.equals(subaccount, other.subaccount);
+		if (this == obj) { return true; }
+		if (!(obj instanceof final AccountInformation other)) { return false; }
+		return Objects.equals(accuralKey, other.accuralKey) && Objects.equals(activity, other.activity) && Objects.equals(article, other.article) && Objects.equals(costCenter, other.costCenter) && Objects.equals(counterpart, other.counterpart) && Objects
+			.equals(department, other.department) && Objects.equals(project, other.project) && Objects.equals(subaccount, other.subaccount) && Objects.equals(amount, other.amount);
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("AccountInformation [costCenter=").append(costCenter)
-			.append(", subaccount=").append(subaccount)
-			.append(", department=").append(department)
-			.append(", activity=").append(activity)
-			.append(", accuralKey=").append(accuralKey)
-			.append(", article=").append(article)
-			.append(", project=").append(project)
-			.append(", counterpart=").append(counterpart).append("]");
+		final var builder = new StringBuilder();
+		builder.append("AccountInformation [costCenter=").append(costCenter).append(", subaccount=").append(subaccount).append(", department=").append(department).append(", accuralKey=").append(accuralKey).append(", activity=").append(activity).append(
+			", article=").append(article).append(", project=").append(project).append(", counterpart=").append(counterpart).append(", amount=").append(amount).append("]");
 		return builder.toString();
 	}
 }

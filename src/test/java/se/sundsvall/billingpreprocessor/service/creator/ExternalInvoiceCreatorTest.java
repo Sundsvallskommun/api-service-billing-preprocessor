@@ -75,14 +75,25 @@ class ExternalInvoiceCreatorTest {
 	private static final String VAT_CODE = "25";
 
 	// Account information constants
-	private static final String ACCURAL_KEY = "5647";
-	private static final String ACTIVITY = "5756";
-	private static final String ARTICLE = "Elcykel";
-	private static final String COST_CENTER = "15800100";
-	private static final String COUNTERPART = "118";
-	private static final String DEPARTMENT = "920360";
-	private static final String PROJECT = "11041";
-	private static final String SUBACCOUNT = "936300";
+	private static final Float ACCOUNTING_AMOUNT_1 = 895f;
+	private static final String ACCURAL_KEY_1 = "5647";
+	private static final String ACTIVITY_1 = "5756";
+	private static final String ARTICLE_1 = "Interim";
+	private static final String COST_CENTER_1 = "15800100";
+	private static final String COUNTERPART_1 = "118";
+	private static final String DEPARTMENT_1 = "920360";
+	private static final String PROJECT_1 = "11041";
+	private static final String SUBACCOUNT_1 = "936300";
+
+	private static final Float ACCOUNTING_AMOUNT_2 = 500f;
+	private static final String ACCURAL_KEY_2 = "6658";
+	private static final String ACTIVITY_2 = "3313";
+	private static final String ARTICLE_2 = "Övrigt";
+	private static final String COST_CENTER_2 = "40050303";
+	private static final String COUNTERPART_2 = "228";
+	private static final String DEPARTMENT_2 = "902911";
+	private static final String PROJECT_2 = "35073";
+	private static final String SUBACCOUNT_2 = "553229";
 
 	// Recipient constants
 	private static final String ORGANIZATION_NAME = "Testbolaget AB";
@@ -242,7 +253,7 @@ class ExternalInvoiceCreatorTest {
 
 	private static InvoiceRowEntity createInvoiceRowEntity(int id, InvoiceEntity invoiceEntity) {
 		final var invoiceRowEntity = InvoiceRowEntity.create()
-			.withAccountInformation(List.of(createAccountInformationEmbeddable()))
+			.withAccountInformation(createAccountInformationEmbeddables())
 			.withCostPerUnit(COST_PER_UNIT)
 			.withId(id)
 			.withInvoice(invoiceEntity)
@@ -263,16 +274,28 @@ class ExternalInvoiceCreatorTest {
 			.withType(type);
 	}
 
-	private static AccountInformationEmbeddable createAccountInformationEmbeddable() {
-		return AccountInformationEmbeddable.create()
-			.withAccuralKey(ACCURAL_KEY)
-			.withActivity(ACTIVITY)
-			.withArticle(ARTICLE)
-			.withCostCenter(COST_CENTER)
-			.withCounterpart(COUNTERPART)
-			.withDepartment(DEPARTMENT)
-			.withProject(PROJECT)
-			.withSubaccount(SUBACCOUNT);
+	private static List<AccountInformationEmbeddable> createAccountInformationEmbeddables() {
+		return List.of(
+			AccountInformationEmbeddable.create()
+				.withAccuralKey(ACCURAL_KEY_1)
+				.withActivity(ACTIVITY_1)
+				.withAmount(ACCOUNTING_AMOUNT_1)
+				.withArticle(ARTICLE_1)
+				.withCostCenter(COST_CENTER_1)
+				.withCounterpart(COUNTERPART_1)
+				.withDepartment(DEPARTMENT_1)
+				.withProject(PROJECT_1)
+				.withSubaccount(SUBACCOUNT_1),
+			AccountInformationEmbeddable.create()
+				.withAccuralKey(ACCURAL_KEY_2)
+				.withActivity(ACTIVITY_2)
+				.withAmount(ACCOUNTING_AMOUNT_2)
+				.withArticle(ARTICLE_2)
+				.withCostCenter(COST_CENTER_2)
+				.withCounterpart(COUNTERPART_2)
+				.withDepartment(DEPARTMENT_2)
+				.withProject(PROJECT_2)
+				.withSubaccount(SUBACCOUNT_2));
 	}
 
 	private static RecipientEntity createRecipientEntity(BillingRecordEntity billingRecordEntity) {

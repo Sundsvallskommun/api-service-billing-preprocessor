@@ -26,11 +26,13 @@ VALUES	  (600, '700', '3', '2100', '00', '6d762c41-6ecb-4306-9594-316240e01a68')
 -- -----------------------------------
 -- Account information
 -- -----------------------------------
-INSERT INTO account_information (invoice_row_id, accural_key, activity, cost_center, counter_part, department, article, project, subaccount)
-VALUES	  (600, NULL, '4165', '', '43200000', '86000000', '3452000 - ANKEBORG', NULL, '345000'),
-          (650, NULL, NULL, '', '85000000', '340200', '41499999', NULL, '344100'),
-          (700, NULL, NULL, '', '85000000', '69420', '41499999', NULL, '313200'),
-          (750, NULL, '1234', '', '120', '350200', '41499999', NULL, '934100');
+INSERT INTO account_information (invoice_row_id, accural_key, activity, cost_center, counter_part, department, article, project, subaccount, amount)
+VALUES	  (600, NULL, '4165', '', '43200000', '86000000', '3452000 - KNATTE', NULL, '345000', 700),
+          (600, NULL, '4166', '', '43200000', '86000000', '3452000 - FNATTE', NULL, '345000', 700),
+          (600, NULL, '4167', '', '43200000', '86000000', '3452000 - TJATTE', NULL, '345000', 700),
+          (650, NULL, NULL, '', '85000000', '340200', '41499999', NULL, '344100', 1080),
+          (700, NULL, NULL, '', '85000000', '69420', '41499999', NULL, '313200', 5650),
+          (750, NULL, '1234', '', '120', '350200', '41499999', NULL, '934100', 4200);
 
 -- -----------------------------------
 -- Descriptions

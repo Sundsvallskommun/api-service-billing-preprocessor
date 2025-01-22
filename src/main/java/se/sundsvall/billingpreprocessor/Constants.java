@@ -2,9 +2,10 @@ package se.sundsvall.billingpreprocessor;
 
 public final class Constants {
 
-	public static final byte[] EMPTY_ARRAY = new byte[0];
+	public static final byte[] EMPTY_ARRAY = {};
 
 	public static final String ERROR_ACCOUNT_INFORMATION_NOT_PRESENT = "Account information is not present";
+	public static final String ERROR_ACCOUNT_INFORMATION_AMOUNT_NOT_PRESENT = "Accounting amount is not present";
 	public static final String ERROR_COSTCENTER_NOT_PRESENT = "Costcenter is not present";
 	public static final String ERROR_COUNTERPART_NOT_PRESENT = "Counterpart is not present";
 	public static final String ERROR_CUSTOMER_ID_NOT_PRESENT = "Customer id is not present";

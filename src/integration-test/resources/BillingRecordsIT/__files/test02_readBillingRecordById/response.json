@@ -17,13 +17,16 @@
 			{
 				"totalAmount": 200,
 				"quantity": 1,
-				"accountInformation": {
-					"activity": "5247000",
-					"costCenter": "1620000",
-					"subaccount": "936100",
-					"counterpart": "MAN22VEG",
-					"department": "910300"
-				},
+				"accountInformation": [
+					{
+						"costCenter": "1620000",
+						"subaccount": "936100",
+						"department": "910300",
+						"activity": "5247000",
+						"counterpart": "MAN22VEG",
+						"amount": 200.0
+					}
+				],
 				"detailedDescriptions": [
 					"Beställare: MAN22VEG 4480296",
 					"Användare: Ivan Drago IVA02DRA",

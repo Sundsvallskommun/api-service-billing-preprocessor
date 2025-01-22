@@ -1,0 +1,42 @@
+{
+	"id": "${json-unit.regex}^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$",
+	"category": "CUSTOMER_INVOICE",
+	"type": "INTERNAL",
+	"status": "APPROVED",
+	"approvedBy": "E_SERVICE",
+	"approved": "${json-unit.regex}^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.?\\d{0,10}(Z|[+-]\\d{2}:\\d{2})?$",
+	"recipient": {
+		"legalId": "2120002411",
+		"organizationName": "Sundsvalls Kommun"
+	},
+	"invoice": {
+		"customerId": "20",
+		"description": "Kundfaktura",
+		"ourReference": "Janne Långben",
+		"customerReference": "2MIL",
+		"referenceId": "192021",
+		"totalAmount": 4200.0,
+		"invoiceRows": [
+			{
+				"descriptions": [
+					"Sillunch - bokning"
+				],
+				"totalAmount": 4200.0,
+				"costPerUnit": 300.0,
+				"quantity": 14.0,
+				"accountInformation": [
+					{
+						"costCenter": "49999999",
+						"subaccount": "934100",
+						"department": "350200",
+						"activity": "1234",
+						"counterpart": "120",
+						"amount": 4200.0
+					}
+				]
+			}
+		]
+	},
+	"created": "${json-unit.regex}^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.?\\d{0,10}(Z|[+-]\\d{2}:\\d{2})?$",
+	"extraParameters": {}
+}

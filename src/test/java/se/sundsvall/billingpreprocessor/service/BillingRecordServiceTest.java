@@ -337,7 +337,7 @@ class BillingRecordServiceTest {
 				.withQuantity(0f),
 			InvoiceRow.create()
 				.withDescriptions(List.of("Passerkort utan foto"))
-				.withAccountInformation(createAccountInformationInstance())
+				.withAccountInformation(List.of(createAccountInformationInstance()))
 				.withCostPerUnit(150f)
 				.withQuantity(1f));
 	}

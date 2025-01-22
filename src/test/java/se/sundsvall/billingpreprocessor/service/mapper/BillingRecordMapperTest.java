@@ -76,6 +76,7 @@ class BillingRecordMapperTest {
 	// Account information constants
 	private static final String ACCURAL_KEY = "accuralKey";
 	private static final String ACTIVITY = "activity";
+	private static final Float ACCOUNTING_AMOUNT = 3359.89f;
 	private static final String ARTICLE = "article";
 	private static final String COST_CENTER = "costCenter";
 	private static final String COUNTERPART = "counterpart";
@@ -192,12 +193,13 @@ class BillingRecordMapperTest {
 		assertThat(billingRecordEntity.getInvoice().getInvoiceRows())
 			.extracting(InvoiceRowEntity::getInvoice).isNotNull().allMatch(invoice -> invoice == billingRecordEntity.getInvoice());
 
-		billingRecordEntity.getInvoice().getInvoiceRows().forEach(invoiceRow -> {
+		assertThat(billingRecordEntity.getInvoice().getInvoiceRows()).hasSize(2).satisfiesExactlyInAnyOrder(invoiceRow -> {
 			// Assert invoice row account information embeddable values
 			assertThat(invoiceRow.getAccountInformation()).hasSize(1)
 				.extracting(
 					AccountInformationEmbeddable::getAccuralKey,
 					AccountInformationEmbeddable::getActivity,
+					AccountInformationEmbeddable::getAmount,
 					AccountInformationEmbeddable::getArticle,
 					AccountInformationEmbeddable::getCostCenter,
 					AccountInformationEmbeddable::getCounterpart,
@@ -208,6 +210,7 @@ class BillingRecordMapperTest {
 					tuple(
 						ACCURAL_KEY,
 						ACTIVITY,
+						ACCOUNTING_AMOUNT,
 						ARTICLE,
 						COST_CENTER,
 						COUNTERPART,
@@ -215,6 +218,9 @@ class BillingRecordMapperTest {
 						PROJECT,
 						SUBACCOUNT));
 
+		}, invoiceRow -> {
+			assertThat(invoiceRow.getAccountInformation()).isEmpty();
+		}).allSatisfy(invoiceRow -> {
 			// Assert invoice row description entity values
 			assertThat(invoiceRow.getDescriptions()).isNotEmpty()
 				.extracting(
@@ -353,12 +359,13 @@ class BillingRecordMapperTest {
 		assertThat(billingRecordEntity.getInvoice().getInvoiceRows())
 			.extracting(InvoiceRowEntity::getInvoice).isNotNull().allMatch(invoice -> invoice == billingRecordEntity.getInvoice());
 
-		billingRecordEntity.getInvoice().getInvoiceRows().forEach(invoiceRow -> {
+		assertThat(billingRecordEntity.getInvoice().getInvoiceRows()).hasSize(2).satisfiesExactlyInAnyOrder(invoiceRow -> {
 			// Assert invoice row account information embeddable values
 			assertThat(invoiceRow.getAccountInformation()).hasSize(1)
 				.extracting(
 					AccountInformationEmbeddable::getAccuralKey,
 					AccountInformationEmbeddable::getActivity,
+					AccountInformationEmbeddable::getAmount,
 					AccountInformationEmbeddable::getArticle,
 					AccountInformationEmbeddable::getCostCenter,
 					AccountInformationEmbeddable::getCounterpart,
@@ -369,6 +376,7 @@ class BillingRecordMapperTest {
 					tuple(
 						ACCURAL_KEY,
 						ACTIVITY,
+						ACCOUNTING_AMOUNT,
 						ARTICLE,
 						COST_CENTER,
 						COUNTERPART,
@@ -376,6 +384,9 @@ class BillingRecordMapperTest {
 						PROJECT,
 						SUBACCOUNT));
 
+		}, invoiceRow -> {
+			assertThat(invoiceRow.getAccountInformation()).isEmpty();
+		}).allSatisfy(invoiceRow -> {
 			// Assert invoice row description entity values
 			assertThat(invoiceRow.getDescriptions()).isNotEmpty()
 				.extracting(
@@ -541,7 +552,7 @@ class BillingRecordMapperTest {
 					AccountInformation::getDepartment,
 					AccountInformation::getProject,
 					AccountInformation::getSubaccount)
-				.containsExactly(
+				.containsExactly(tuple(
 					ACCURAL_KEY,
 					ACTIVITY,
 					ARTICLE,
@@ -549,7 +560,7 @@ class BillingRecordMapperTest {
 					COUNTERPART,
 					DEPARTMENT,
 					PROJECT,
-					SUBACCOUNT);
+					SUBACCOUNT));
 
 			// Assert invoice row description values
 			assertThat(invoiceRow.getDescriptions()).containsExactly(DESCRIPTION_1);
@@ -719,14 +730,14 @@ class BillingRecordMapperTest {
 			.withDescription(DESCRIPTION)
 			.withDate(DATE)
 			.withDueDate(DUE_DATE)
-			.withInvoiceRows(List.of(createInvoiceRow(), createInvoiceRow()))
+			.withInvoiceRows(List.of(createInvoiceRow(false), createInvoiceRow(true)))
 			.withOurReference(OUR_REFERENCE)
 			.withReferenceId(REFERENCE_ID);
 	}
 
-	private static InvoiceRow createInvoiceRow() {
+	private static InvoiceRow createInvoiceRow(boolean withAccountInformation) {
 		return InvoiceRow.create()
-			.withAccountInformation(createAccountInformation())
+			.withAccountInformation(withAccountInformation ? List.of(createAccountInformation()) : null)
 			.withCostPerUnit(COST_PER_UNIT)
 			.withDescriptions(DESCRIPTIONS)
 			.withDetailedDescriptions(DETAILED_DESCRIPTIONS)
@@ -743,7 +754,8 @@ class BillingRecordMapperTest {
 			.withCounterpart(COUNTERPART)
 			.withDepartment(DEPARTMENT)
 			.withProject(PROJECT)
-			.withSubaccount(SUBACCOUNT);
+			.withSubaccount(SUBACCOUNT)
+			.withAmount(ACCOUNTING_AMOUNT);
 	}
 
 	private static Recipient createRecipient() {

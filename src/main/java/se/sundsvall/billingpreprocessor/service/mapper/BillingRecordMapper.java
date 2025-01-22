@@ -18,7 +18,6 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import org.apache.commons.collections4.CollectionUtils;
 import se.sundsvall.billingpreprocessor.api.model.AccountInformation;
 import se.sundsvall.billingpreprocessor.api.model.AddressDetails;
 import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
@@ -147,7 +146,7 @@ public final class BillingRecordMapper {
 	private static InvoiceRowEntity toInvoiceRowEntity(final InvoiceEntity invoiceEntity, final InvoiceRow invoiceRow) {
 		final var invoiceRowEntity = InvoiceRowEntity.create().withInvoice(invoiceEntity);
 
-		return invoiceRowEntity.withAccountInformation(toAccountInformationEmbeddable(invoiceRow.getAccountInformation()))
+		return invoiceRowEntity.withAccountInformation(toAccountInformationEmbeddables(invoiceRow.getAccountInformation()))
 			.withCostPerUnit(invoiceRow.getCostPerUnit())
 			.withQuantity(invoiceRow.getQuantity())
 			.withDescriptions(toDescriptionEntities(invoiceRowEntity, invoiceRow.getDescriptions(), invoiceRow.getDetailedDescriptions()))
@@ -168,18 +167,24 @@ public final class BillingRecordMapper {
 			.collect(toCollection(ArrayList::new));
 	}
 
-	private static List<AccountInformationEmbeddable> toAccountInformationEmbeddable(final AccountInformation accountInformation) {
+	private static List<AccountInformationEmbeddable> toAccountInformationEmbeddables(final List<AccountInformation> accountInformation) {
+		return ofNullable(accountInformation).orElse(emptyList()).stream()
+			.map(BillingRecordMapper::toAccountInformationEmbeddable)
+			.toList();
+	}
+
+	private static AccountInformationEmbeddable toAccountInformationEmbeddable(final AccountInformation accountInformation) {
 		return ofNullable(accountInformation).map(a -> AccountInformationEmbeddable.create()
 			.withAccuralKey(a.getAccuralKey())
 			.withActivity(a.getActivity())
+			.withAmount(a.getAmount())
 			.withArticle(a.getArticle())
 			.withCostCenter(a.getCostCenter())
 			.withCounterpart(a.getCounterpart())
 			.withDepartment(a.getDepartment())
 			.withProject(a.getProject())
 			.withSubaccount(a.getSubaccount()))
-			.map(List::of)
-			.orElse(emptyList());
+			.orElse(null);
 	}
 
 	private static RecipientEntity toRecipientEntity(final BillingRecordEntity billingRecord, final Recipient recipient) {
@@ -287,7 +292,7 @@ public final class BillingRecordMapper {
 
 	private static InvoiceRow toInvoiceRow(InvoiceRowEntity invoiceRowEntity) {
 		return ofNullable(invoiceRowEntity).map(i -> InvoiceRow.create()
-			.withAccountInformation(toAccountInformation(i.getAccountInformation()))
+			.withAccountInformation(toAccountInformationList(i.getAccountInformation()))
 			.withCostPerUnit(i.getCostPerUnit())
 			.withDescriptions(toDescription(STANDARD, i.getDescriptions()))
 			.withDetailedDescriptions(toDescription(DETAILED, i.getDescriptions()))
@@ -297,13 +302,19 @@ public final class BillingRecordMapper {
 			.orElse(null);
 	}
 
-	private static AccountInformation toAccountInformation(List<AccountInformationEmbeddable> accountInformationEmbeddable) {
+	private static List<AccountInformation> toAccountInformationList(List<AccountInformationEmbeddable> accountInformationEmbeddables) {
+		return ofNullable(accountInformationEmbeddables).orElse(emptyList()).stream()
+			.map(BillingRecordMapper::toAccountInformation)
+			.filter(Objects::nonNull)
+			.toList();
+	}
+
+	private static AccountInformation toAccountInformation(AccountInformationEmbeddable accountInformationEmbeddable) {
 		return ofNullable(accountInformationEmbeddable)
-			.filter(CollectionUtils::isNotEmpty)
-			.map(List::getFirst)
 			.map(a -> AccountInformation.create()
 				.withAccuralKey(a.getAccuralKey())
 				.withActivity(a.getActivity())
+				.withAmount(accountInformationEmbeddable.getAmount())
 				.withArticle(a.getArticle())
 				.withCostCenter(a.getCostCenter())
 				.withCounterpart(a.getCounterpart())

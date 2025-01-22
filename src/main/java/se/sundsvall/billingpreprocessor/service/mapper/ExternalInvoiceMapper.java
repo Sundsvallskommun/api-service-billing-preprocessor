@@ -3,7 +3,7 @@ package se.sundsvall.billingpreprocessor.service.mapper;
 import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.ObjectUtils.allNotNull;
-import static se.sundsvall.billingpreprocessor.Constants.ERROR_ACCOUNT_INFORMATION_NOT_PRESENT;
+import static se.sundsvall.billingpreprocessor.Constants.ERROR_ACCOUNT_INFORMATION_AMOUNT_NOT_PRESENT;
 import static se.sundsvall.billingpreprocessor.Constants.ERROR_COSTCENTER_NOT_PRESENT;
 import static se.sundsvall.billingpreprocessor.Constants.ERROR_COUNTERPART_NOT_PRESENT;
 import static se.sundsvall.billingpreprocessor.Constants.ERROR_CUSTOMER_REFERENCE_NOT_PRESENT;
@@ -136,28 +136,26 @@ public final class ExternalInvoiceMapper {
 	}
 
 	/**
-	 * Method for mapping invoice row data to an invoice accounting row for an external invoice file
+	 * Method for mapping accounting information on invoice row data to a list of invoice accounting rows for an external
+	 * invoice file
 	 *
 	 * @param  invoiceRowEntity entity representing the invoiceRowEntity
-	 * @return                  InvoiceAccountingRow for external invoice files representing provided data
+	 * @return                  A list of invoiceAccountingRow for external invoice files representing provided data
 	 * @throws ThrowableProblem if any mandatory data is missing
 	 */
-	public static InvoiceAccountingRow toInvoiceAccountingRow(InvoiceRowEntity invoiceRowEntity) {
-		final var accountInformationEmbeddable = ofNullable(invoiceRowEntity.getAccountInformation())
-			.filter(CollectionUtils::isNotEmpty)
-			.map(List::getFirst)
-			.orElseThrow(createInternalServerErrorProblem(ERROR_ACCOUNT_INFORMATION_NOT_PRESENT));
-
-		return InvoiceAccountingRow.create()
-			.withCostCenter(ofNullable(accountInformationEmbeddable.getCostCenter()).orElseThrow(createInternalServerErrorProblem(ERROR_COSTCENTER_NOT_PRESENT)))
-			.withSubAccount(ofNullable(accountInformationEmbeddable.getSubaccount()).orElseThrow(createInternalServerErrorProblem(ERROR_SUBACCOUNT_NOT_PRESENT)))
-			.withOperation(ofNullable(accountInformationEmbeddable.getDepartment()).orElseThrow(createInternalServerErrorProblem(ERROR_OPERATION_NOT_PRESENT)))
-			.withActivity(accountInformationEmbeddable.getActivity())
-			.withProject(accountInformationEmbeddable.getProject())
-			.withObject(accountInformationEmbeddable.getArticle())
-			.withCounterpart(ofNullable(accountInformationEmbeddable.getCounterpart()).orElseThrow(createInternalServerErrorProblem(ERROR_COUNTERPART_NOT_PRESENT)))
-			.withTotalAmount(invoiceRowEntity.getTotalAmount())
-			.withAccuralKey(accountInformationEmbeddable.getAccuralKey());
+	public static List<InvoiceAccountingRow> toInvoiceAccountingRows(InvoiceRowEntity invoiceRowEntity) {
+		return ofNullable(invoiceRowEntity.getAccountInformation()).orElse(emptyList()).stream()
+			.map(ai -> InvoiceAccountingRow.create()
+				.withCostCenter(ofNullable(ai.getCostCenter()).orElseThrow(createInternalServerErrorProblem(ERROR_COSTCENTER_NOT_PRESENT)))
+				.withSubAccount(ofNullable(ai.getSubaccount()).orElseThrow(createInternalServerErrorProblem(ERROR_SUBACCOUNT_NOT_PRESENT)))
+				.withOperation(ofNullable(ai.getDepartment()).orElseThrow(createInternalServerErrorProblem(ERROR_OPERATION_NOT_PRESENT)))
+				.withActivity(ai.getActivity())
+				.withProject(ai.getProject())
+				.withObject(ai.getArticle())
+				.withCounterpart(ofNullable(ai.getCounterpart()).orElseThrow(createInternalServerErrorProblem(ERROR_COUNTERPART_NOT_PRESENT)))
+				.withAmount(ofNullable(ai.getAmount()).orElseThrow(createInternalServerErrorProblem(ERROR_ACCOUNT_INFORMATION_AMOUNT_NOT_PRESENT)))
+				.withAccuralKey(ai.getAccuralKey()))
+			.toList();
 	}
 
 	/**

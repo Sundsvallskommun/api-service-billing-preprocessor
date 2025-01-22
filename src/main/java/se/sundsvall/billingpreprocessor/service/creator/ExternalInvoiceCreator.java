@@ -8,7 +8,7 @@ import static se.sundsvall.billingpreprocessor.Constants.GENERATING_SYSTEM;
 import static se.sundsvall.billingpreprocessor.service.creator.config.InvoiceCreatorConfig.EXTERNAL_INVOICE_BUILDER;
 import static se.sundsvall.billingpreprocessor.service.mapper.ExternalInvoiceMapper.toCustomer;
 import static se.sundsvall.billingpreprocessor.service.mapper.ExternalInvoiceMapper.toFileHeader;
-import static se.sundsvall.billingpreprocessor.service.mapper.ExternalInvoiceMapper.toInvoiceAccountingRow;
+import static se.sundsvall.billingpreprocessor.service.mapper.ExternalInvoiceMapper.toInvoiceAccountingRows;
 import static se.sundsvall.billingpreprocessor.service.mapper.ExternalInvoiceMapper.toInvoiceDescriptionRows;
 import static se.sundsvall.billingpreprocessor.service.mapper.ExternalInvoiceMapper.toInvoiceFooter;
 import static se.sundsvall.billingpreprocessor.service.mapper.ExternalInvoiceMapper.toInvoiceHeader;
@@ -51,33 +51,35 @@ public class ExternalInvoiceCreator implements InvoiceCreator {
 
 	/**
 	 * Method returning the type that the creator can handle
-	 * 
+	 *
 	 * @return the type that the creator can handle
 	 */
+	@Override
 	public Type getProcessableType() {
 		return Type.valueOf(getConfiguration().getType());
 	}
 
 	/**
 	 * Method returning the category that the creator can handle
-	 * 
+	 *
 	 * @return the category that the creator can handle
 	 */
+	@Override
 	public String getProcessableCategory() {
 		return getConfiguration().getCategoryTag();
 	}
 
 	/**
 	 * Method creates a file header according to the specification for external invoices
-	 * 
+	 *
 	 * @return             bytearray representing the file header
 	 * @throws IOException if byte array output stream can not be closed
 	 */
 	@Override
 	public byte[] createFileHeader() throws IOException {
 		final var encoding = Charset.forName(getConfiguration().getEncoding());
-		try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-			BeanWriter invoiceWriter = factory.createWriter(EXTERNAL_INVOICE_BUILDER, new OutputStreamWriter(byteArrayOutputStream, encoding))) {
+		try (var byteArrayOutputStream = new ByteArrayOutputStream();
+			var invoiceWriter = factory.createWriter(EXTERNAL_INVOICE_BUILDER, new OutputStreamWriter(byteArrayOutputStream, encoding))) {
 			invoiceWriter.write(toFileHeader(GENERATING_SYSTEM, EXTERNAL_INVOICE_TYPE));
 			invoiceWriter.flush();
 			return byteArrayOutputStream.toByteArray();
@@ -86,7 +88,7 @@ public class ExternalInvoiceCreator implements InvoiceCreator {
 
 	/**
 	 * Method creates a invoice data section according to the specification for external invoices
-	 * 
+	 *
 	 * @param  billingRecord containing the billing record to produce a invoice data section for
 	 * @return               bytearray representing the invoice data section
 	 * @throws IOException   if byte array output stream can not be closed
@@ -98,8 +100,8 @@ public class ExternalInvoiceCreator implements InvoiceCreator {
 		}
 
 		final var encoding = Charset.forName(getConfiguration().getEncoding());
-		try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-			BeanWriter invoiceWriter = factory.createWriter(EXTERNAL_INVOICE_BUILDER, new OutputStreamWriter(byteArrayOutputStream, encoding))) {
+		try (var byteArrayOutputStream = new ByteArrayOutputStream();
+			var invoiceWriter = factory.createWriter(EXTERNAL_INVOICE_BUILDER, new OutputStreamWriter(byteArrayOutputStream, encoding))) {
 			processInvoice(invoiceWriter, billingRecord);
 			invoiceWriter.flush();
 			return byteArrayOutputStream.toByteArray();
@@ -123,7 +125,7 @@ public class ExternalInvoiceCreator implements InvoiceCreator {
 	private void processInvoiceRow(BeanWriter invoiceWriter, String recipientLegalId, InvoiceRowEntity invoiceRow) {
 		invoiceWriter.write(toInvoiceRow(recipientLegalId, invoiceRow));
 		toInvoiceDescriptionRows(recipientLegalId, invoiceRow).forEach(invoiceWriter::write);
-		invoiceWriter.write(toInvoiceAccountingRow(invoiceRow));
+		toInvoiceAccountingRows(invoiceRow).forEach(invoiceWriter::write);
 	}
 
 	private String extractLegalId(BillingRecordEntity billingRecord) {

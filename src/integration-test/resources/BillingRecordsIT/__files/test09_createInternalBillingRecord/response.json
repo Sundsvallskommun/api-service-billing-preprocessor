@@ -1,0 +1,39 @@
+{
+	"id": "${json-unit.regex}^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$",
+	"category": "ISYCASE",
+	"type": "INTERNAL",
+	"status": "NEW",
+	"invoice": {
+		"customerId": "16",
+		"description": "R-row 1: Errand number 1234-54321",
+		"ourReference": "Harvey Kneeslapper",
+		"referenceId": "19-ALI22SNU",
+		"dueDate": "2023-12-24",
+		"totalAmount": 395.0,
+		"invoiceRows": [
+			{
+				"descriptions": [
+					"R-row 2"
+				],
+				"detailedDescriptions": [
+					"U-row A",
+					"U-row B"
+				],
+				"totalAmount": 395.0,
+				"costPerUnit": 395.0,
+				"quantity": 1.0,
+				"accountInformation": [
+					{
+						"costCenter": "15800100",
+						"subaccount": "936300",
+						"department": "920360",
+						"counterpart": "11830000",
+						"amount": 395.0
+					}
+				]
+			}
+		]
+	},
+	"created": "${json-unit.regex}^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.?\\d{0,10}(Z|[+-]\\d{2}:\\d{2})?$",
+	"extraParameters": {}
+}

@@ -1,0 +1,66 @@
+{
+	"id": "${json-unit.regex}^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$",
+	"category": "CUSTOMER_INVOICE",
+	"type": "EXTERNAL",
+	"status": "APPROVED",
+	"approvedBy": "E_SERVICE",
+	"approved": "${json-unit.regex}^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.?\\d{0,10}(Z|[+-]\\d{2}:\\d{2})?$",
+	"recipient": {
+		"partyId": "e0e69d58-5042-45be-8369-a88292a82b90",
+		"organizationName": "8892001002",
+		"addressDetails": {
+			"street": "Ankeborgsvägen 123",
+			"careOf": "",
+			"postalCode": "123 45",
+			"city": "ANKEBORG"
+		}
+	},
+	"invoice": {
+		"customerId": "20",
+		"description": "Kundfaktura",
+		"ourReference": "Joakim von Anka",
+		"customerReference": "123",
+		"referenceId": "192021",
+		"totalAmount": 6730.0,
+		"invoiceRows": [
+			{
+				"descriptions": [
+					"Hyra inventarier"
+				],
+				"totalAmount": 1080.0,
+				"vatCode": "25",
+				"costPerUnit": 1080.0,
+				"quantity": 1.0,
+				"accountInformation": [
+					{
+						"costCenter": "41499999",
+						"subaccount": "344100",
+						"department": "340200",
+						"counterpart": "85000000",
+						"amount": 1080.0
+					}
+				]
+			},
+			{
+				"descriptions": [
+					"Pengahantering i kassavalvet"
+				],
+				"totalAmount": 5650.0,
+				"vatCode": "25",
+				"costPerUnit": 5650.0,
+				"quantity": 1.0,
+				"accountInformation": [
+					{
+						"costCenter": "41499999",
+						"subaccount": "313200",
+						"department": "340200",
+						"counterpart": "85000000",
+						"amount": 5650.0
+					}
+				]
+			}
+		]
+	},
+	"created": "${json-unit.regex}^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.?\\d{0,10}(Z|[+-]\\d{2}:\\d{2})?$",
+	"extraParameters": {}
+}

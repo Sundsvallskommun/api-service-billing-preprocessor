@@ -33,6 +33,9 @@ public class AccountInformationEmbeddable implements Serializable {
 	@Column(name = "counter_part")
 	private String counterpart;
 
+	@Column(name = "amount")
+	private Float amount;
+
 	public static AccountInformationEmbeddable create() {
 		return new AccountInformationEmbeddable();
 	}
@@ -141,38 +144,37 @@ public class AccountInformationEmbeddable implements Serializable {
 		return this;
 	}
 
+	public Float getAmount() {
+		return amount;
+	}
+
+	public void setAmount(Float amount) {
+		this.amount = amount;
+	}
+
+	public AccountInformationEmbeddable withAmount(Float amount) {
+		this.amount = amount;
+		return this;
+	}
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(accuralKey, activity, costCenter, counterpart, department, article, project, subaccount);
+		return Objects.hash(accuralKey, activity, article, costCenter, counterpart, department, project, subaccount, amount);
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		AccountInformationEmbeddable other = (AccountInformationEmbeddable) obj;
-		return Objects.equals(accuralKey, other.accuralKey) && Objects.equals(activity, other.activity) && Objects.equals(costCenter, other.costCenter) && Objects.equals(counterpart, other.counterpart) && Objects.equals(department, other.department)
-			&& Objects.equals(article, other.article) && Objects.equals(project, other.project) && Objects.equals(subaccount, other.subaccount);
+		if (this == obj) { return true; }
+		if (!(obj instanceof final AccountInformationEmbeddable other)) { return false; }
+		return Objects.equals(accuralKey, other.accuralKey) && Objects.equals(activity, other.activity) && Objects.equals(article, other.article) && Objects.equals(costCenter, other.costCenter) && Objects.equals(counterpart, other.counterpart) && Objects
+			.equals(department, other.department) && Objects.equals(project, other.project) && Objects.equals(subaccount, other.subaccount) && Objects.equals(amount, other.amount);
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("AccountInformationEmbeddable [costCenter=").append(costCenter)
-			.append(", subaccount=").append(subaccount)
-			.append(", department=").append(department)
-			.append(", accuralKey=").append(accuralKey)
-			.append(", activity=").append(activity)
-			.append(", article=").append(article)
-			.append(", project=").append(project)
-			.append(", counterpart=").append(counterpart).append("]");
+		final var builder = new StringBuilder();
+		builder.append("AccountInformationEmbeddable [costCenter=").append(costCenter).append(", subaccount=").append(subaccount).append(", department=").append(department).append(", accuralKey=").append(accuralKey).append(", activity=").append(activity)
+			.append(", article=").append(article).append(", project=").append(project).append(", counterpart=").append(counterpart).append(", amount=").append(amount).append("]");
 		return builder.toString();
 	}
 }

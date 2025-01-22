@@ -35,9 +35,8 @@ public class InvoiceRow {
 	@Schema(description = "Total amount of units", example = "9.0")
 	private Float quantity;
 
-	@Schema(implementation = AccountInformation.class)
-	@Valid
-	private AccountInformation accountInformation;
+	@ArraySchema(arraySchema = @Schema(implementation = AccountInformation.class, description = "Account information"))
+	private List<@Valid AccountInformation> accountInformation;
 
 	public static InvoiceRow create() {
 		return new InvoiceRow();
@@ -121,15 +120,15 @@ public class InvoiceRow {
 		return this;
 	}
 
-	public AccountInformation getAccountInformation() {
+	public List<AccountInformation> getAccountInformation() {
 		return accountInformation;
 	}
 
-	public void setAccountInformation(AccountInformation accountInformation) {
+	public void setAccountInformation(List<AccountInformation> accountInformation) {
 		this.accountInformation = accountInformation;
 	}
 
-	public InvoiceRow withAccountInformation(AccountInformation accountInformation) {
+	public InvoiceRow withAccountInformation(List<AccountInformation> accountInformation) {
 		this.accountInformation = accountInformation;
 		return this;
 	}
@@ -144,20 +143,17 @@ public class InvoiceRow {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
+		if ((obj == null) || (getClass() != obj.getClass())) {
 			return false;
 		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		InvoiceRow other = (InvoiceRow) obj;
+		final var other = (InvoiceRow) obj;
 		return Objects.equals(accountInformation, other.accountInformation) && Objects.equals(costPerUnit, other.costPerUnit) && Objects.equals(descriptions, other.descriptions) && Objects.equals(detailedDescriptions, other.detailedDescriptions)
 			&& Objects.equals(quantity, other.quantity) && Objects.equals(totalAmount, other.totalAmount) && Objects.equals(vatCode, other.vatCode);
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
+		final var builder = new StringBuilder();
 		builder.append("InvoiceRow [descriptions=").append(descriptions)
 			.append(", detailedDescriptions=").append(detailedDescriptions)
 			.append(", totalAmount=").append(totalAmount)

@@ -7,12 +7,15 @@
 		"invoiceRows": [
 			{
 				"quantity": 1,
-				"accountInformation": {
-					"costCenter": "15800100",
-					"subaccount": "936300",
-					"counterpart": "11830000",
-					"department": "920360"
-				},
+				"accountInformation": [
+					{
+						"costCenter": "15800100",
+						"subaccount": "936300",
+						"counterpart": "11830000",
+						"department": "920360",
+						"amount": 395
+					}
+				],
 				"detailedDescriptions": [
 					"U-row A",
 					"U-row B"
