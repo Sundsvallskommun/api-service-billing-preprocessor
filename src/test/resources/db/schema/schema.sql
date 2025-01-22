@@ -1,5 +1,6 @@
 
     create table account_information (
+        amount float(23),
         invoice_row_id bigint not null,
         accural_key varchar(255),
         activity varchar(255),

@@ -20,6 +20,8 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import se.sundsvall.billingpreprocessor.Application;
 import se.sundsvall.billingpreprocessor.integration.db.BillingRecordRepository;
@@ -43,8 +45,15 @@ class BillingRecordsIT extends AbstractAppTest {
 	@Autowired
 	private BillingRecordRepository repository;
 
+	@Autowired
+	private PlatformTransactionManager transactionManager;
+
+	private TransactionTemplate transactionTemplate;
+
 	@Test
 	void test01_createExternalBillingRecord() {
+		transactionTemplate = new TransactionTemplate(transactionManager);
+
 		final var location = setupCall()
 			.withServicePath("/2281/billingrecords")
 			.withHttpMethod(POST)
@@ -62,6 +71,18 @@ class BillingRecordsIT extends AbstractAppTest {
 			.withExpectedResponseHeader(CONTENT_TYPE, CONTENT_TYPE_JSON)
 			.withExpectedResponse(RESPONSE_FILE)
 			.sendRequestAndVerifyResponse();
+
+		// Verify that calculation of amount in the account information object has been done correctly
+		transactionTemplate.executeWithoutResult(status -> {
+			final var entity = repository.getReferenceById(location.getPath().substring(location.getPath().lastIndexOf('/') + 1));
+			assertThat(entity.getInvoice().getInvoiceRows()).hasSize(1).allSatisfy(ir -> {
+				assertThat(ir.getQuantity()).isEqualTo(1);
+				assertThat(ir.getCostPerUnit()).isEqualTo(7995);
+				assertThat(ir.getAccountInformation()).hasSize(1).allSatisfy(ai -> {
+					assertThat(ai.getAmount()).isEqualTo(ir.getQuantity() * ir.getCostPerUnit());
+				});
+			});
+		});
 	}
 
 	@Test
