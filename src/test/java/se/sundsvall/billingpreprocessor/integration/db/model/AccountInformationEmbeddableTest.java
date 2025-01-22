@@ -27,6 +27,7 @@ class AccountInformationEmbeddableTest {
 	void hasValidBuilderMethods() {
 		final var accuralKey = "accuralKey";
 		final var activity = "activity";
+		final var amount = 321f;
 		final var costCenter = "costCenter";
 		final var counterpart = "counterpart";
 		final var department = "department";
@@ -37,6 +38,7 @@ class AccountInformationEmbeddableTest {
 		final var embeddable = AccountInformationEmbeddable.create()
 			.withAccuralKey(accuralKey)
 			.withActivity(activity)
+			.withAmount(amount)
 			.withCostCenter(costCenter)
 			.withCounterpart(counterpart)
 			.withDepartment(department)
@@ -47,6 +49,7 @@ class AccountInformationEmbeddableTest {
 		assertThat(embeddable).hasNoNullFieldsOrProperties();
 		assertThat(embeddable.getAccuralKey()).isEqualTo(accuralKey);
 		assertThat(embeddable.getActivity()).isEqualTo(activity);
+		assertThat(embeddable.getAmount()).isEqualTo(amount);
 		assertThat(embeddable.getCostCenter()).isEqualTo(costCenter);
 		assertThat(embeddable.getCounterpart()).isEqualTo(counterpart);
 		assertThat(embeddable.getDepartment()).isEqualTo(department);

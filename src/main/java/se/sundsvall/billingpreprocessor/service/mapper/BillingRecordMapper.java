@@ -147,7 +147,7 @@ public final class BillingRecordMapper {
 	private static InvoiceRowEntity toInvoiceRowEntity(final InvoiceEntity invoiceEntity, final InvoiceRow invoiceRow) {
 		final var invoiceRowEntity = InvoiceRowEntity.create().withInvoice(invoiceEntity);
 
-		return invoiceRowEntity.withAccountInformation(toAccountInformationEmbeddable(invoiceRow.getAccountInformation()))
+		return invoiceRowEntity.withAccountInformation(toAccountInformationEmbeddable(invoiceRow))
 			.withCostPerUnit(invoiceRow.getCostPerUnit())
 			.withQuantity(invoiceRow.getQuantity())
 			.withDescriptions(toDescriptionEntities(invoiceRowEntity, invoiceRow.getDescriptions(), invoiceRow.getDetailedDescriptions()))
@@ -168,8 +168,8 @@ public final class BillingRecordMapper {
 			.collect(toCollection(ArrayList::new));
 	}
 
-	private static List<AccountInformationEmbeddable> toAccountInformationEmbeddable(final AccountInformation accountInformation) {
-		return ofNullable(accountInformation).map(a -> AccountInformationEmbeddable.create()
+	private static List<AccountInformationEmbeddable> toAccountInformationEmbeddable(final InvoiceRow invoiceRow) {
+		return ofNullable(invoiceRow.getAccountInformation()).map(a -> AccountInformationEmbeddable.create()
 			.withAccuralKey(a.getAccuralKey())
 			.withActivity(a.getActivity())
 			.withArticle(a.getArticle())
@@ -177,7 +177,8 @@ public final class BillingRecordMapper {
 			.withCounterpart(a.getCounterpart())
 			.withDepartment(a.getDepartment())
 			.withProject(a.getProject())
-			.withSubaccount(a.getSubaccount()))
+			.withSubaccount(a.getSubaccount())
+			.withAmount(calculateTotalInvoiceRowAmount(invoiceRow)))
 			.map(List::of)
 			.orElse(emptyList());
 	}
