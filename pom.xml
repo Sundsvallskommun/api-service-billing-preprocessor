@@ -12,14 +12,12 @@
 	<artifactId>api-service-billing-preprocessor</artifactId>
 	<version>3.0</version>
 	<name>api-service-billing-preprocessor</name>
-
 	<properties>
 		<!-- Service properties -->
 		<spring-filter.version>3.1.9</spring-filter.version>
 		<beanio.version>3.2.0</beanio.version>
 		<commons-text.version>1.13.0</commons-text.version>
 		<apache.sshd.version>2.14.0</apache.sshd.version>
-		<shedlock.version>6.2.0</shedlock.version>
 		<com.jcraft.version>0.1.55</com.jcraft.version>
 		<generated-sources-path>${project.build.directory}/generated-sources</generated-sources-path>
 	</properties>
@@ -33,6 +31,10 @@
 		<dependency>
 			<groupId>se.sundsvall.dept44</groupId>
 			<artifactId>dept44-common-validators</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>se.sundsvall.dept44</groupId>
+			<artifactId>dept44-starter-scheduler</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>se.sundsvall.dept44</groupId>
@@ -77,16 +79,6 @@
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.javacrumbs.shedlock</groupId>
-			<artifactId>shedlock-spring</artifactId>
-			<version>${shedlock.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>net.javacrumbs.shedlock</groupId>
-			<artifactId>shedlock-provider-jdbc-template</artifactId>
-			<version>${shedlock.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate.orm</groupId>

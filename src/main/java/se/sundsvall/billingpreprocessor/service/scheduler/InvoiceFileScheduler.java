@@ -1,13 +1,12 @@
 package se.sundsvall.billingpreprocessor.service.scheduler;
 
-import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import se.sundsvall.billingpreprocessor.integration.sftp.SftpPropertiesConfig;
 import se.sundsvall.billingpreprocessor.service.InvoiceFileService;
 import se.sundsvall.dept44.requestid.RequestId;
+import se.sundsvall.dept44.scheduling.Dept44Scheduled;
 
 @Component
 public class InvoiceFileScheduler {
@@ -26,11 +25,14 @@ public class InvoiceFileScheduler {
 		this.sftpPropertiesConfig = sftpPropertiesConfig;
 	}
 
-	@Scheduled(cron = "${scheduler.createfiles.cron}")
-	@SchedulerLock(name = "createfiles", lockAtMostFor = "${scheduler.shedlock-lock-at-most-for}")
+	@Dept44Scheduled(
+		cron = "${scheduler.createfiles.cron}",
+		name = "${scheduler.createfiles.name}",
+		lockAtMostFor = "${scheduler.shedlock-lock-at-most-for}",
+		maximumExecutionTime = "${scheduler.maximum-execution-time}")
 	public void executeCreateFiles() {
 		// Until separation of cron jobs per municipality is needed all are scheduled with same interval
-		for (String municipalityId : sftpPropertiesConfig.getMap().keySet()) {
+		for (final String municipalityId : sftpPropertiesConfig.getMap().keySet()) {
 			RequestId.init();
 			LOGGER.info(LOG_CREATE_FILES_STARTED, municipalityId);
 			invoiceFileService.createFiles(municipalityId);
@@ -39,11 +41,14 @@ public class InvoiceFileScheduler {
 		}
 	}
 
-	@Scheduled(cron = "${scheduler.transferfiles.cron}")
-	@SchedulerLock(name = "transferfiles", lockAtMostFor = "${scheduler.shedlock-lock-at-most-for}")
+	@Dept44Scheduled(
+		cron = "${scheduler.transferfiles.cron}",
+		name = "${scheduler.transferfiles.name}",
+		lockAtMostFor = "${scheduler.shedlock-lock-at-most-for}",
+		maximumExecutionTime = "${scheduler.maximum-execution-time}")
 	public void executeTransferFiles() {
 		// Until separation of cron jobs per municipality is needed all are scheduled with same interval
-		for (String municipalityId : sftpPropertiesConfig.getMap().keySet()) {
+		for (final String municipalityId : sftpPropertiesConfig.getMap().keySet()) {
 			RequestId.init();
 			LOGGER.info(LOG_TRANSFER_FILES_STARTED, municipalityId);
 			invoiceFileService.transferFiles(municipalityId);
