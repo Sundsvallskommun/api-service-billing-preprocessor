@@ -17,6 +17,7 @@ import static org.zalando.problem.Status.NOT_FOUND;
 import static se.sundsvall.billingpreprocessor.api.model.enums.Status.NEW;
 import static se.sundsvall.billingpreprocessor.api.model.enums.Type.INTERNAL;
 
+import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -328,18 +329,18 @@ class BillingRecordServiceTest {
 		return List.of(
 			InvoiceRow.create()
 				.withDescriptions(List.of("Ordernummer: azi-330c-3fne-33"))
-				.withQuantity(0f),
+				.withQuantity(BigDecimal.ZERO),
 			InvoiceRow.create()
 				.withDescriptions(List.of("Beställare: joh01doe 22940338"))
-				.withQuantity(0f),
+				.withQuantity(BigDecimal.ZERO),
 			InvoiceRow.create()
 				.withDescriptions(List.of("Användare: Johan Doe joh01doe"))
-				.withQuantity(0f),
+				.withQuantity(BigDecimal.ZERO),
 			InvoiceRow.create()
 				.withDescriptions(List.of("Passerkort utan foto"))
 				.withAccountInformation(List.of(createAccountInformationInstance()))
-				.withCostPerUnit(150f)
-				.withQuantity(1f));
+				.withCostPerUnit(BigDecimal.valueOf(150d))
+				.withQuantity(BigDecimal.ONE));
 	}
 
 	private static AccountInformation createAccountInformationInstance() {

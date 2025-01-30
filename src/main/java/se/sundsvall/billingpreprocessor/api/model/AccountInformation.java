@@ -1,6 +1,7 @@
 package se.sundsvall.billingpreprocessor.api.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.math.BigDecimal;
 import java.util.Objects;
 
 @Schema(description = "Account information model")
@@ -31,7 +32,7 @@ public class AccountInformation {
 	private String counterpart;
 
 	@Schema(description = "Amount", example = "1399.95")
-	private Float amount;
+	private BigDecimal amount;
 
 	public static AccountInformation create() {
 		return new AccountInformation();
@@ -141,15 +142,15 @@ public class AccountInformation {
 		return this;
 	}
 
-	public Float getAmount() {
+	public BigDecimal getAmount() {
 		return amount;
 	}
 
-	public void setAmount(Float amount) {
+	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
 	}
 
-	public AccountInformation withAmount(Float amount) {
+	public AccountInformation withAmount(BigDecimal amount) {
 		this.amount = amount;
 		return this;
 	}

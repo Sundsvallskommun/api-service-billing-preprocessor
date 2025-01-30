@@ -2,11 +2,12 @@ package se.sundsvall.billingpreprocessor.service.creator.definition.external;
 
 import static org.beanio.builder.Align.RIGHT;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 import org.beanio.annotation.Field;
 import org.beanio.annotation.Fields;
 import org.beanio.annotation.Record;
-import se.sundsvall.billingpreprocessor.service.creator.config.ExternalInvoiceFloatTypeHandler;
+import se.sundsvall.billingpreprocessor.service.creator.config.ExternalInvoiceBigDecimalTypeHandler;
 
 @Record
 @Fields({
@@ -14,22 +15,22 @@ import se.sundsvall.billingpreprocessor.service.creator.config.ExternalInvoiceFl
 })
 public class InvoiceFooterRow {
 
-	@Field(at = 1, length = 15, handlerName = ExternalInvoiceFloatTypeHandler.NAME, format = "+00000000000000;-00000000000000", align = RIGHT)
-	private Float totalAmount;
+	@Field(at = 1, length = 15, handlerName = ExternalInvoiceBigDecimalTypeHandler.NAME, format = "+00000000000000;-00000000000000", align = RIGHT)
+	private BigDecimal totalAmount;
 
 	public static InvoiceFooterRow create() {
 		return new InvoiceFooterRow();
 	}
 
-	public Float getTotalAmount() {
+	public BigDecimal getTotalAmount() {
 		return totalAmount;
 	}
 
-	public void setTotalAmount(Float totalAmount) {
+	public void setTotalAmount(BigDecimal totalAmount) {
 		this.totalAmount = totalAmount;
 	}
 
-	public InvoiceFooterRow withTotalAmount(Float totalAmount) {
+	public InvoiceFooterRow withTotalAmount(BigDecimal totalAmount) {
 		this.totalAmount = totalAmount;
 		return this;
 	}
@@ -44,16 +45,15 @@ public class InvoiceFooterRow {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof InvoiceFooterRow)) {
+		if (!(obj instanceof final InvoiceFooterRow other)) {
 			return false;
 		}
-		InvoiceFooterRow other = (InvoiceFooterRow) obj;
 		return Objects.equals(totalAmount, other.totalAmount);
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
+		final var builder = new StringBuilder();
 		builder.append("InvoiceFooterRow [totalAmount=").append(totalAmount).append("]");
 		return builder.toString();
 	}

@@ -9,6 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.AllOf.allOf;
 
+import java.math.BigDecimal;
 import org.junit.jupiter.api.Test;
 
 class AccountInformationEmbeddableTest {
@@ -27,7 +28,7 @@ class AccountInformationEmbeddableTest {
 	void hasValidBuilderMethods() {
 		final var accuralKey = "accuralKey";
 		final var activity = "activity";
-		final var amount = 2345.67f;
+		final var amount = BigDecimal.valueOf(2345.67d);
 		final var costCenter = "costCenter";
 		final var counterpart = "counterpart";
 		final var department = "department";

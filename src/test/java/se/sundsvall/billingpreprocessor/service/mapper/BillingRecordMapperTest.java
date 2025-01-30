@@ -11,6 +11,7 @@ import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.DETAILED;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.STANDARD;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -60,23 +61,23 @@ class BillingRecordMapperTest {
 	private static final LocalDate DUE_DATE = LocalDate.now().plusDays(30);
 	private static final String OUR_REFERENCE = "ourReference";
 	private static final String REFERENCE_ID = "referenceId";
-	private static final float INVOICE_TOTAL_AMOUNT = 2469f;
+	private static final BigDecimal INVOICE_TOTAL_AMOUNT = BigDecimal.valueOf(2469d);
 
 	// Invoice row constants
-	private static final float COST_PER_UNIT = 123.45f;
+	private static final BigDecimal COST_PER_UNIT = BigDecimal.valueOf(123.45d);
 	private static final String DESCRIPTION_1 = "description_1";
 	private static final String DESCRIPTION_2 = "description_2";
 	private static final List<String> DESCRIPTIONS = List.of(DESCRIPTION_1, DESCRIPTION_2);
 	private static final String DETAILED_DESCRIPTION_1 = "detailed_description_1";
 	private static final String DETAILED_DESCRIPTION_2 = "detailed_description_2";
 	private static final List<String> DETAILED_DESCRIPTIONS = List.of(DETAILED_DESCRIPTION_1, DETAILED_DESCRIPTION_2);
-	private static final float QUANTITY = 10f;
+	private static final BigDecimal QUANTITY = BigDecimal.valueOf(10d);
 	private static final String VAT_CODE = "vatCode";
 
 	// Account information constants
 	private static final String ACCURAL_KEY = "accuralKey";
 	private static final String ACTIVITY = "activity";
-	private static final Float ACCOUNTING_AMOUNT = 3359.89f;
+	private static final BigDecimal ACCOUNTING_AMOUNT = BigDecimal.valueOf(3359.89d);
 	private static final String ARTICLE = "article";
 	private static final String COST_CENTER = "costCenter";
 	private static final String COUNTERPART = "counterpart";
@@ -154,29 +155,18 @@ class BillingRecordMapperTest {
 				STREET);
 
 		// Assert invoice entity values
-		assertThat(billingRecordEntity.getInvoice()).isNotNull()
-			.extracting(
-				InvoiceEntity::getBillingRecord,
-				InvoiceEntity::getCustomerId,
-				InvoiceEntity::getCustomerReference,
-				InvoiceEntity::getDescription,
-				InvoiceEntity::getDate,
-				InvoiceEntity::getDueDate,
-				InvoiceEntity::getId,
-				InvoiceEntity::getOurReference,
-				InvoiceEntity::getReferenceId,
-				InvoiceEntity::getTotalAmount)
-			.containsExactly(
-				billingRecordEntity,
-				CUSTOMER_ID,
-				CUSTOMER_REFERENCE,
-				DESCRIPTION,
-				DATE,
-				DUE_DATE,
-				null,
-				OUR_REFERENCE,
-				REFERENCE_ID,
-				INVOICE_TOTAL_AMOUNT);
+		assertThat(billingRecordEntity.getInvoice()).isNotNull().satisfies(entity -> {
+			assertThat(entity.getBillingRecord()).isEqualTo(billingRecordEntity);
+			assertThat(entity.getCustomerId()).isEqualTo(CUSTOMER_ID);
+			assertThat(entity.getCustomerReference()).isEqualTo(CUSTOMER_REFERENCE);
+			assertThat(entity.getDescription()).isEqualTo(DESCRIPTION);
+			assertThat(entity.getDate()).isEqualTo(DATE);
+			assertThat(entity.getDueDate()).isEqualTo(DUE_DATE);
+			assertThat(entity.getId()).isNull();
+			assertThat(entity.getOurReference()).isEqualTo(OUR_REFERENCE);
+			assertThat(entity.getReferenceId()).isEqualTo(REFERENCE_ID);
+			assertThat(entity.getTotalAmount()).isEqualByComparingTo(INVOICE_TOTAL_AMOUNT);
+		});
 
 		// Assert invoice row entity values
 		assertThat(billingRecordEntity.getInvoice().getInvoiceRows()).isNotNull()
@@ -187,8 +177,8 @@ class BillingRecordMapperTest {
 				InvoiceRowEntity::getTotalAmount,
 				InvoiceRowEntity::getVatCode)
 			.containsExactly(
-				tuple(COST_PER_UNIT, 0L, QUANTITY, COST_PER_UNIT * QUANTITY, VAT_CODE),
-				tuple(COST_PER_UNIT, 0L, QUANTITY, COST_PER_UNIT * QUANTITY, VAT_CODE));
+				tuple(COST_PER_UNIT, 0L, QUANTITY, COST_PER_UNIT.multiply(QUANTITY), VAT_CODE),
+				tuple(COST_PER_UNIT, 0L, QUANTITY, COST_PER_UNIT.multiply(QUANTITY), VAT_CODE));
 
 		assertThat(billingRecordEntity.getInvoice().getInvoiceRows())
 			.extracting(InvoiceRowEntity::getInvoice).isNotNull().allMatch(invoice -> invoice == billingRecordEntity.getInvoice());
@@ -320,29 +310,18 @@ class BillingRecordMapperTest {
 				STREET);
 
 		// Assert invoice entity values
-		assertThat(billingRecordEntity.getInvoice()).isNotNull()
-			.extracting(
-				InvoiceEntity::getBillingRecord,
-				InvoiceEntity::getCustomerId,
-				InvoiceEntity::getCustomerReference,
-				InvoiceEntity::getDescription,
-				InvoiceEntity::getDate,
-				InvoiceEntity::getDueDate,
-				InvoiceEntity::getId,
-				InvoiceEntity::getOurReference,
-				InvoiceEntity::getReferenceId,
-				InvoiceEntity::getTotalAmount)
-			.containsExactly(
-				billingRecordEntity,
-				CUSTOMER_ID,
-				CUSTOMER_REFERENCE,
-				DESCRIPTION,
-				DATE,
-				DUE_DATE,
-				null,
-				OUR_REFERENCE,
-				REFERENCE_ID,
-				INVOICE_TOTAL_AMOUNT);
+		assertThat(billingRecordEntity.getInvoice()).isNotNull().satisfies(entity -> {
+			assertThat(entity.getBillingRecord()).isEqualTo(billingRecordEntity);
+			assertThat(entity.getCustomerId()).isEqualTo(CUSTOMER_ID);
+			assertThat(entity.getCustomerReference()).isEqualTo(CUSTOMER_REFERENCE);
+			assertThat(entity.getDescription()).isEqualTo(DESCRIPTION);
+			assertThat(entity.getDate()).isEqualTo(DATE);
+			assertThat(entity.getDueDate()).isEqualTo(DUE_DATE);
+			assertThat(entity.getId()).isNull();
+			assertThat(entity.getOurReference()).isEqualTo(OUR_REFERENCE);
+			assertThat(entity.getReferenceId()).isEqualTo(REFERENCE_ID);
+			assertThat(entity.getTotalAmount()).isEqualByComparingTo(INVOICE_TOTAL_AMOUNT);
+		});
 
 		// Assert invoice row entity values
 		assertThat(billingRecordEntity.getInvoice().getInvoiceRows()).isNotNull()
@@ -353,8 +332,8 @@ class BillingRecordMapperTest {
 				InvoiceRowEntity::getTotalAmount,
 				InvoiceRowEntity::getVatCode)
 			.containsExactly(
-				tuple(COST_PER_UNIT, 0L, QUANTITY, COST_PER_UNIT * QUANTITY, VAT_CODE),
-				tuple(COST_PER_UNIT, 0L, QUANTITY, COST_PER_UNIT * QUANTITY, VAT_CODE));
+				tuple(COST_PER_UNIT, 0L, QUANTITY, COST_PER_UNIT.multiply(QUANTITY), VAT_CODE),
+				tuple(COST_PER_UNIT, 0L, QUANTITY, COST_PER_UNIT.multiply(QUANTITY), VAT_CODE));
 
 		assertThat(billingRecordEntity.getInvoice().getInvoiceRows())
 			.extracting(InvoiceRowEntity::getInvoice).isNotNull().allMatch(invoice -> invoice == billingRecordEntity.getInvoice());
@@ -537,8 +516,8 @@ class BillingRecordMapperTest {
 				InvoiceRow::getTotalAmount,
 				InvoiceRow::getVatCode)
 			.containsExactly(
-				tuple(COST_PER_UNIT, QUANTITY, COST_PER_UNIT * QUANTITY, VAT_CODE),
-				tuple(COST_PER_UNIT, QUANTITY, COST_PER_UNIT * QUANTITY, VAT_CODE));
+				tuple(COST_PER_UNIT, QUANTITY, COST_PER_UNIT.multiply(QUANTITY), VAT_CODE),
+				tuple(COST_PER_UNIT, QUANTITY, COST_PER_UNIT.multiply(QUANTITY), VAT_CODE));
 
 		billingRecord.getInvoice().getInvoiceRows().forEach(invoiceRow -> {
 			// Assert invoice row account information values
@@ -665,7 +644,7 @@ class BillingRecordMapperTest {
 			.withId(id)
 			.withInvoice(invoiceEntity)
 			.withQuantity(QUANTITY)
-			.withTotalAmount(COST_PER_UNIT * QUANTITY)
+			.withTotalAmount(COST_PER_UNIT.multiply(QUANTITY))
 			.withVatCode(VAT_CODE);
 
 		return invoiceRowEntity.withDescriptions(List.of(createDescription(1, invoiceRowEntity, STANDARD, DESCRIPTION_1), createDescription(2, invoiceRowEntity, DETAILED, DETAILED_DESCRIPTION_1)));

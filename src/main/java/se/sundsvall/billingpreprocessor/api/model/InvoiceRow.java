@@ -9,6 +9,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 
@@ -23,17 +24,17 @@ public class InvoiceRow {
 
 	@Schema(description = "Total sum of invoice row", example = "1399.95", accessMode = READ_ONLY)
 	@Null
-	private Float totalAmount;
+	private BigDecimal totalAmount;
 
 	@Schema(description = "VAT code for invoice row", example = "25")
 	@Pattern(regexp = "00|06|12|25", message = "must be one of 00, 06, 12 or 25")
 	private String vatCode;
 
 	@Schema(description = "Cost per unit", example = "155.55")
-	private Float costPerUnit;
+	private BigDecimal costPerUnit;
 
 	@Schema(description = "Total amount of units", example = "9.0")
-	private Float quantity;
+	private BigDecimal quantity;
 
 	@ArraySchema(arraySchema = @Schema(implementation = AccountInformation.class, description = "Account information"))
 	private List<@Valid AccountInformation> accountInformation;
@@ -68,15 +69,15 @@ public class InvoiceRow {
 		return this;
 	}
 
-	public Float getTotalAmount() {
+	public BigDecimal getTotalAmount() {
 		return totalAmount;
 	}
 
-	public void setTotalAmount(Float totalAmount) {
+	public void setTotalAmount(BigDecimal totalAmount) {
 		this.totalAmount = totalAmount;
 	}
 
-	public InvoiceRow withTotalAmount(Float totalAmount) {
+	public InvoiceRow withTotalAmount(BigDecimal totalAmount) {
 		this.totalAmount = totalAmount;
 		return this;
 	}
@@ -94,28 +95,28 @@ public class InvoiceRow {
 		return this;
 	}
 
-	public Float getCostPerUnit() {
+	public BigDecimal getCostPerUnit() {
 		return costPerUnit;
 	}
 
-	public void setCostPerUnit(Float costPerUnit) {
+	public void setCostPerUnit(BigDecimal costPerUnit) {
 		this.costPerUnit = costPerUnit;
 	}
 
-	public InvoiceRow withCostPerUnit(Float costPerUnit) {
+	public InvoiceRow withCostPerUnit(BigDecimal costPerUnit) {
 		this.costPerUnit = costPerUnit;
 		return this;
 	}
 
-	public Float getQuantity() {
+	public BigDecimal getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(Float quantity) {
+	public void setQuantity(BigDecimal quantity) {
 		this.quantity = quantity;
 	}
 
-	public InvoiceRow withQuantity(Float quantity) {
+	public InvoiceRow withQuantity(BigDecimal quantity) {
 		this.quantity = quantity;
 		return this;
 	}

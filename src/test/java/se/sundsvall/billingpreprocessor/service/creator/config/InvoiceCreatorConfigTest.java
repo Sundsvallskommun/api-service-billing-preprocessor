@@ -35,8 +35,8 @@ class InvoiceCreatorConfigTest {
 			assertThat(streamConfig.getFormat()).isEqualTo("fixedlength");
 			assertThat(streamConfig.getParserFactory().getInstance()).isInstanceOf(FixedLengthRecordParserFactory.class);
 			assertThat(streamConfig.getHandlerList()).hasSize(1).satisfiesExactly(config -> {
-				assertThat(config.getName()).isEqualTo("externalInvoiceFloatTypeHandler");
-				assertThat(config.getInstance()).isInstanceOf(ExternalInvoiceFloatTypeHandler.class);
+				assertThat(config.getName()).isEqualTo("externalInvoiceBigDecimalTypeHandler");
+				assertThat(config.getInstance()).isInstanceOf(ExternalInvoiceBigDecimalTypeHandler.class);
 			});
 			assertThat(streamConfig.getChildren()).extracting("name", "type").containsExactlyInAnyOrder(
 				tuple("fileHeaderRow", "se.sundsvall.billingpreprocessor.service.creator.definition.external.FileHeaderRow"),
@@ -58,8 +58,8 @@ class InvoiceCreatorConfigTest {
 			assertThat(streamConfig.getFormat()).isEqualTo("fixedlength");
 			assertThat(streamConfig.getParserFactory().getInstance()).isInstanceOf(FixedLengthRecordParserFactory.class);
 			assertThat(streamConfig.getHandlerList()).hasSize(2).satisfiesExactlyInAnyOrder(config -> {
-				assertThat(config.getName()).isEqualTo("internalInvoiceFloatTypeHandler");
-				assertThat(config.getInstance()).isInstanceOf(InternalInvoiceFloatTypeHandler.class);
+				assertThat(config.getName()).isEqualTo("internalInvoiceBigDecimalTypeHandler");
+				assertThat(config.getInstance()).isInstanceOf(InternalInvoiceBigDecimalTypeHandler.class);
 			}, config -> {
 				assertThat(config.getName()).isEqualTo("internalInvoiceIntegerTypeHandler");
 				assertThat(config.getInstance()).isInstanceOf(InternalInvoiceIntegerTypeHandler.class);

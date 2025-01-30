@@ -11,6 +11,7 @@ import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Descri
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.INTERNAL;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -47,16 +48,16 @@ class InternalInvoiceCreatorTest {
 	private static final LocalDate DUE_DATE = LocalDate.of(2024, 3, 30);
 	private static final String OUR_REFERENCE = "Johnny Bråttom";
 	private static final String REFERENCE_ID = "referenceId";
-	private static final float INVOICE_TOTAL_AMOUNT = 1500f;
+	private static final BigDecimal INVOICE_TOTAL_AMOUNT = BigDecimal.valueOf(1500d);
 
 	// Invoice row constants
-	private static final float COST_PER_UNIT = 1500f;
+	private static final BigDecimal COST_PER_UNIT = BigDecimal.valueOf(1500d);
 	private static final String DESCRIPTION = "Uppdrag: ABC-123";
 	private static final String DETAILED_DESCRIPTION = "En mer detaljerad fakturaradsbeskrivning";
-	private static final float QUANTITY = 1f;
+	private static final BigDecimal QUANTITY = BigDecimal.ONE;
 
 	// Account information constants (post 1)
-	private static final Float ACCOUNTING_AMOUNT_1 = 300f;
+	private static final BigDecimal ACCOUNTING_AMOUNT_1 = BigDecimal.valueOf(300d);
 	private static final String ACCURAL_KEY_1 = "117";
 	private static final String ACTIVITY_1 = "5756";
 	private static final String ARTICLE_1 = "117";
@@ -67,7 +68,7 @@ class InternalInvoiceCreatorTest {
 	private static final String SUBACCOUNT_1 = "936300";
 
 	// Account information constants (post 2)
-	private static final Float ACCOUNTING_AMOUNT_2 = 1200f;
+	private static final BigDecimal ACCOUNTING_AMOUNT_2 = BigDecimal.valueOf(1200d);
 	private static final String ACCURAL_KEY_2 = "119";
 	private static final String ACTIVITY_2 = "5546";
 	private static final String ARTICLE_2 = "119";
@@ -197,7 +198,7 @@ class InternalInvoiceCreatorTest {
 			.withId(id)
 			.withInvoice(invoiceEntity)
 			.withQuantity(QUANTITY)
-			.withTotalAmount(COST_PER_UNIT * QUANTITY);
+			.withTotalAmount(COST_PER_UNIT.multiply(QUANTITY));
 
 		return invoiceRowEntity.withDescriptions(List.of(
 			createDescriptionEntity(1, invoiceRowEntity, STANDARD, DESCRIPTION),

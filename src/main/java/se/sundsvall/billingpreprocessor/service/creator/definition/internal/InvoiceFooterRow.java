@@ -1,10 +1,11 @@
 package se.sundsvall.billingpreprocessor.service.creator.definition.internal;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 import org.beanio.annotation.Field;
 import org.beanio.annotation.Fields;
 import org.beanio.annotation.Record;
-import se.sundsvall.billingpreprocessor.service.creator.config.InternalInvoiceFloatTypeHandler;
+import se.sundsvall.billingpreprocessor.service.creator.config.InternalInvoiceBigDecimalTypeHandler;
 
 @Record
 @Fields({
@@ -12,22 +13,22 @@ import se.sundsvall.billingpreprocessor.service.creator.config.InternalInvoiceFl
 })
 public class InvoiceFooterRow {
 
-	@Field(at = 2, length = 15, handlerName = InternalInvoiceFloatTypeHandler.NAME)
-	private Float totalAmount;
+	@Field(at = 2, length = 15, handlerName = InternalInvoiceBigDecimalTypeHandler.NAME)
+	private BigDecimal totalAmount;
 
 	public static InvoiceFooterRow create() {
 		return new InvoiceFooterRow();
 	}
 
-	public Float getTotalAmount() {
+	public BigDecimal getTotalAmount() {
 		return totalAmount;
 	}
 
-	public void setTotalAmount(Float totalAmount) {
+	public void setTotalAmount(BigDecimal totalAmount) {
 		this.totalAmount = totalAmount;
 	}
 
-	public InvoiceFooterRow withTotalAmount(Float totalAmount) {
+	public InvoiceFooterRow withTotalAmount(BigDecimal totalAmount) {
 		this.totalAmount = totalAmount;
 		return this;
 	}
@@ -42,16 +43,15 @@ public class InvoiceFooterRow {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof InvoiceFooterRow)) {
+		if (!(obj instanceof final InvoiceFooterRow other)) {
 			return false;
 		}
-		InvoiceFooterRow other = (InvoiceFooterRow) obj;
 		return Objects.equals(totalAmount, other.totalAmount);
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
+		final var builder = new StringBuilder();
 		builder.append("InvoiceFooterRow [totalAmount=").append(totalAmount).append("]");
 		return builder.toString();
 	}

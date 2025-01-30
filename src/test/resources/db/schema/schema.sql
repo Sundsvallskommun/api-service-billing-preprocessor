@@ -1,6 +1,6 @@
 
     create table account_information (
-        amount float(23),
+        amount decimal(38,2),
         invoice_row_id bigint not null,
         accural_key varchar(255),
         activity varchar(255),
@@ -53,7 +53,7 @@
     create table invoice (
         `date` date,
         due_date date,
-        total_amount float(23),
+        total_amount decimal(38,2),
         customer_id varchar(255),
         customer_reference varchar(255),
         description varchar(255),
@@ -77,9 +77,9 @@
     ) engine=InnoDB;
 
     create table invoice_row (
-        cost_per_unit float(23),
-        quantity float(23),
-        total_amount float(23),
+        cost_per_unit decimal(38,2),
+        quantity decimal(38,2),
+        total_amount decimal(38,2),
         id bigint not null auto_increment,
         `invoice_id` varchar(255) not null,
         vat_code varchar(255),

@@ -9,6 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Random;
 import org.junit.jupiter.api.Test;
@@ -28,11 +29,11 @@ class InvoiceRowTest {
 	@Test
 	void testBuilderMethods() {
 		final var accountInformation = List.of(AccountInformation.create());
-		final var costPerUnit = new Random().nextFloat();
+		final var costPerUnit = BigDecimal.valueOf(new Random().nextDouble());
 		final var descriptions = List.of("description");
 		final var detailedDescriptions = List.of("detailedDescription");
-		final var quantity = 2f;
-		final var totalAmount = costPerUnit * quantity;
+		final var quantity = BigDecimal.valueOf(2l);
+		final var totalAmount = costPerUnit.multiply(quantity);
 		final var vatCode = "vatCode";
 
 		final var bean = InvoiceRow.create()

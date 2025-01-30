@@ -19,6 +19,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -41,16 +42,16 @@ public class InvoiceRowEntity implements Serializable {
 	private List<DescriptionEntity> descriptions;
 
 	@Column(name = "total_amount")
-	private Float totalAmount;
+	private BigDecimal totalAmount;
 
 	@Column(name = "vat_code")
 	private String vatCode;
 
 	@Column(name = "cost_per_unit")
-	private Float costPerUnit;
+	private BigDecimal costPerUnit;
 
 	@Column(name = "quantity")
-	private Float quantity;
+	private BigDecimal quantity;
 
 	@ElementCollection(fetch = EAGER)
 	@CollectionTable(
@@ -109,15 +110,15 @@ public class InvoiceRowEntity implements Serializable {
 		return this;
 	}
 
-	public Float getTotalAmount() {
+	public BigDecimal getTotalAmount() {
 		return totalAmount;
 	}
 
-	public void setTotalAmount(Float totalAmount) {
+	public void setTotalAmount(BigDecimal totalAmount) {
 		this.totalAmount = totalAmount;
 	}
 
-	public InvoiceRowEntity withTotalAmount(Float totalAmount) {
+	public InvoiceRowEntity withTotalAmount(BigDecimal totalAmount) {
 		this.totalAmount = totalAmount;
 		return this;
 	}
@@ -135,28 +136,28 @@ public class InvoiceRowEntity implements Serializable {
 		return this;
 	}
 
-	public Float getCostPerUnit() {
+	public BigDecimal getCostPerUnit() {
 		return costPerUnit;
 	}
 
-	public void setCostPerUnit(Float costPerUnit) {
+	public void setCostPerUnit(BigDecimal costPerUnit) {
 		this.costPerUnit = costPerUnit;
 	}
 
-	public InvoiceRowEntity withCostPerUnit(Float costPerUnit) {
+	public InvoiceRowEntity withCostPerUnit(BigDecimal costPerUnit) {
 		this.costPerUnit = costPerUnit;
 		return this;
 	}
 
-	public Float getQuantity() {
+	public BigDecimal getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(Float quantity) {
+	public void setQuantity(BigDecimal quantity) {
 		this.quantity = quantity;
 	}
 
-	public InvoiceRowEntity withQuantity(Float quantity) {
+	public InvoiceRowEntity withQuantity(BigDecimal quantity) {
 		this.quantity = quantity;
 		return this;
 	}

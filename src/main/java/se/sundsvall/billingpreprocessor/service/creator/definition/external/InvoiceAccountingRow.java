@@ -2,11 +2,12 @@ package se.sundsvall.billingpreprocessor.service.creator.definition.external;
 
 import static org.beanio.builder.Align.RIGHT;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 import org.beanio.annotation.Field;
 import org.beanio.annotation.Fields;
 import org.beanio.annotation.Record;
-import se.sundsvall.billingpreprocessor.service.creator.config.ExternalInvoiceFloatTypeHandler;
+import se.sundsvall.billingpreprocessor.service.creator.config.ExternalInvoiceBigDecimalTypeHandler;
 
 @Record
 @Fields({
@@ -35,8 +36,8 @@ public class InvoiceAccountingRow {
 	@Field(at = 37, length = 3)
 	private String counterpart;
 
-	@Field(at = 40, length = 12, handlerName = ExternalInvoiceFloatTypeHandler.NAME, padding = '0', align = RIGHT)
-	private Float amount;
+	@Field(at = 40, length = 12, handlerName = ExternalInvoiceBigDecimalTypeHandler.NAME, padding = '0', align = RIGHT)
+	private BigDecimal amount;
 
 	@Field(at = 52, length = 13, maxLength = 13, nillable = true, trim = true)
 	private String accuralKey;
@@ -136,15 +137,15 @@ public class InvoiceAccountingRow {
 		return this;
 	}
 
-	public Float getAmount() {
+	public BigDecimal getAmount() {
 		return amount;
 	}
 
-	public void setAmount(Float amount) {
+	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
 	}
 
-	public InvoiceAccountingRow withAmount(Float amount) {
+	public InvoiceAccountingRow withAmount(BigDecimal amount) {
 		this.amount = amount;
 		return this;
 	}

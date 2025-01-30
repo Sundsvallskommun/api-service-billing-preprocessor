@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Null;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
@@ -45,7 +46,7 @@ public class Invoice {
 
 	@Schema(description = "Total sum of all invoice rows", example = "1399.95", accessMode = READ_ONLY)
 	@Null
-	private Float totalAmount;
+	private BigDecimal totalAmount;
 
 	@ArraySchema(schema = @Schema(implementation = InvoiceRow.class, requiredMode = REQUIRED))
 	@NotEmpty
@@ -147,15 +148,15 @@ public class Invoice {
 		return this;
 	}
 
-	public Float getTotalAmount() {
+	public BigDecimal getTotalAmount() {
 		return totalAmount;
 	}
 
-	public void setTotalAmount(Float totalAmount) {
+	public void setTotalAmount(BigDecimal totalAmount) {
 		this.totalAmount = totalAmount;
 	}
 
-	public Invoice withTotalAmount(Float totalAmount) {
+	public Invoice withTotalAmount(BigDecimal totalAmount) {
 		this.totalAmount = totalAmount;
 		return this;
 	}
@@ -183,20 +184,17 @@ public class Invoice {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
+		if ((obj == null) || (getClass() != obj.getClass())) {
 			return false;
 		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		Invoice other = (Invoice) obj;
+		final var other = (Invoice) obj;
 		return Objects.equals(customerId, other.customerId) && Objects.equals(customerReference, other.customerReference) && Objects.equals(description, other.description) && Objects.equals(invoiceRows, other.invoiceRows) && Objects.equals(
 			ourReference, other.ourReference) && Objects.equals(referenceId, other.referenceId) && Objects.equals(date, other.date) && Objects.equals(dueDate, other.dueDate) && Objects.equals(totalAmount, other.totalAmount);
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
+		final var builder = new StringBuilder();
 		builder.append("Invoice [customerId=").append(customerId)
 			.append(", description=").append(description)
 			.append(", ourReference=").append(ourReference)

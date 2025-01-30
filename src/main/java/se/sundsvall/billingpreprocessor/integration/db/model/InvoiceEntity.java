@@ -14,6 +14,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +56,7 @@ public class InvoiceEntity implements Serializable {
 	private LocalDate dueDate;
 
 	@Column(name = "total_amount")
-	private Float totalAmount;
+	private BigDecimal totalAmount;
 
 	@OneToMany(fetch = LAZY, mappedBy = "invoice", cascade = ALL, orphanRemoval = true)
 	private List<InvoiceRowEntity> invoiceRows;
@@ -181,15 +182,15 @@ public class InvoiceEntity implements Serializable {
 		return this;
 	}
 
-	public Float getTotalAmount() {
+	public BigDecimal getTotalAmount() {
 		return totalAmount;
 	}
 
-	public void setTotalAmount(Float totalAmount) {
+	public void setTotalAmount(BigDecimal totalAmount) {
 		this.totalAmount = totalAmount;
 	}
 
-	public InvoiceEntity withTotalAmount(Float totalAmount) {
+	public InvoiceEntity withTotalAmount(BigDecimal totalAmount) {
 		this.totalAmount = totalAmount;
 		return this;
 	}
@@ -219,13 +220,10 @@ public class InvoiceEntity implements Serializable {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
+		if ((obj == null) || (getClass() != obj.getClass())) {
 			return false;
 		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		InvoiceEntity other = (InvoiceEntity) obj;
+		final var other = (InvoiceEntity) obj;
 		return Objects.equals(billingRecord, other.billingRecord) && Objects.equals(customerId, other.customerId) && Objects.equals(customerReference, other.customerReference) && Objects.equals(description, other.description) && Objects.equals(date,
 			other.date) && Objects.equals(dueDate, other.dueDate) && Objects.equals(id, other.id) && Objects.equals(invoiceRows, other.invoiceRows) && Objects.equals(ourReference, other.ourReference) && Objects.equals(referenceId, other.referenceId)
 			&& Objects.equals(totalAmount, other.totalAmount);
@@ -234,7 +232,7 @@ public class InvoiceEntity implements Serializable {
 	@Override
 	public String toString() {
 		final var billingRecordId = billingRecord == null ? null : billingRecord.getId();
-		StringBuilder builder = new StringBuilder();
+		final var builder = new StringBuilder();
 		builder.append("InvoiceEntity [id=").append(id)
 			.append(", billingRecord=").append(billingRecordId)
 			.append(", customerId=").append(customerId)
