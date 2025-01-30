@@ -5,17 +5,27 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static se.sundsvall.billingpreprocessor.service.util.CalculationUtil.calculateTotalInvoiceAmount;
 import static se.sundsvall.billingpreprocessor.service.util.CalculationUtil.calculateTotalInvoiceRowAmount;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import se.sundsvall.billingpreprocessor.api.model.InvoiceRow;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;
 
 class CalculationUtilTest {
-	private static final float COST_PER_UNIT = 123f;
-	private static final float QUANTITY = 45f;
-	private static final int ROW_AMOUNT = 10;
+	private BigDecimal costPerUnit;
+	private BigDecimal quantity;
+	private BigDecimal rowAmount;
+
+	@BeforeEach
+	void initialize() {
+		costPerUnit = BigDecimal.valueOf(new Random().nextDouble());
+		quantity = BigDecimal.valueOf(new Random().nextInt(1, 100));
+		rowAmount = BigDecimal.valueOf(new Random().nextInt(1, 100));
+	}
 
 	@Test
 	void testCalculateTotalInvoiceAmountWithNull() {
@@ -34,12 +44,18 @@ class CalculationUtilTest {
 
 	@Test
 	void testCalculateTotalInvoiceAmountWithInvoiceWithRowList() {
-		assertThat(calculateTotalInvoiceAmount(InvoiceEntity.create().withInvoiceRows(createRows(false)))).isEqualTo(COST_PER_UNIT * QUANTITY * ROW_AMOUNT);
+		assertThat(calculateTotalInvoiceAmount(InvoiceEntity.create().withInvoiceRows(createRows(false)))).isEqualTo(costPerUnit.multiply(quantity).multiply(rowAmount));
 	}
 
 	@Test
 	void testCalculateTotalInvoiceAmountWithInvoiceWithRowListContainingNullSum() {
-		assertThat(calculateTotalInvoiceAmount(InvoiceEntity.create().withInvoiceRows(createRows(true)))).isEqualTo(COST_PER_UNIT * QUANTITY * ROW_AMOUNT / 2);
+		final var rows = createRows(true);
+		final var totalAmount = rows.stream()
+			.filter(row -> row.getTotalAmount() != null)
+			.map(InvoiceRowEntity::getTotalAmount)
+			.reduce(BigDecimal.ZERO, BigDecimal::add);
+
+		assertThat(calculateTotalInvoiceAmount(InvoiceEntity.create().withInvoiceRows(createRows(true)))).isEqualTo(totalAmount);
 	}
 
 	@Test
@@ -54,24 +70,24 @@ class CalculationUtilTest {
 
 	@Test
 	void testCalculateTotalInvoiceRowAmountWithEmptyAmount() {
-		assertThat(calculateTotalInvoiceRowAmount(InvoiceRow.create().withQuantity(QUANTITY))).isNull();
+		assertThat(calculateTotalInvoiceRowAmount(InvoiceRow.create().withQuantity(quantity))).isNull();
 	}
 
 	@Test
 	void testCalculateTotalInvoiceRowAmountWithEmptyQuantity() {
-		assertThat(calculateTotalInvoiceRowAmount(InvoiceRow.create().withCostPerUnit(COST_PER_UNIT))).isNull();
+		assertThat(calculateTotalInvoiceRowAmount(InvoiceRow.create().withCostPerUnit(costPerUnit))).isNull();
 	}
 
 	@Test
 	void testCalculateTotalInvoiceRowAmount() {
-		assertThat(calculateTotalInvoiceRowAmount(InvoiceRow.create().withCostPerUnit(COST_PER_UNIT).withQuantity(QUANTITY))).isEqualTo(COST_PER_UNIT * QUANTITY);
+		assertThat(calculateTotalInvoiceRowAmount(InvoiceRow.create().withCostPerUnit(costPerUnit).withQuantity(quantity))).isEqualTo(costPerUnit.multiply(quantity));
 	}
 
-	private static List<InvoiceRowEntity> createRows(boolean noTotalAmount) {
+	private List<InvoiceRowEntity> createRows(boolean noTotalAmount) {
 		final var rows = new ArrayList<InvoiceRowEntity>();
 
-		for (int i = 0; i < ROW_AMOUNT; i++) {
-			rows.add(InvoiceRowEntity.create().withTotalAmount(noTotalAmount && i % 2 == 0 ? null : COST_PER_UNIT * QUANTITY));
+		for (var i = 0; i < rowAmount.intValue(); i++) {
+			rows.add(InvoiceRowEntity.create().withTotalAmount(noTotalAmount && i % 2 == 0 ? null : costPerUnit.multiply(quantity)));
 		}
 
 		return rows;

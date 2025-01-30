@@ -6,6 +6,7 @@ import static se.sundsvall.billingpreprocessor.api.model.enums.Status.APPROVED;
 import static se.sundsvall.billingpreprocessor.api.model.enums.Type.EXTERNAL;
 import static se.sundsvall.billingpreprocessor.api.model.enums.Type.INTERNAL;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -57,17 +58,17 @@ public class BillingRecordRequestUtil {
 			.withDescription("description")
 			.withOurReference(type == INTERNAL && !validInvoice ? null : "reference")
 			.withReferenceId(type == INTERNAL && !validInvoice ? null : "referenceId")
-			.withTotalAmount(validInvoice ? null : 123f);
+			.withTotalAmount(validInvoice ? null : BigDecimal.valueOf(123d));
 	}
 
 	public static InvoiceRow createInvoiceRowInstance(boolean validInvoiceRows, Type type) {
 		return InvoiceRow.create()
 			.withAccountInformation(createAccountInformationInstances(validInvoiceRows))
-			.withCostPerUnit(123f)
+			.withCostPerUnit(BigDecimal.valueOf(123d))
 			.withDescriptions(List.of(validInvoiceRows ? "description" : "a longer description than thirty characters"))
 			.withDetailedDescriptions(validInvoiceRows && INTERNAL == type ? null : List.of("detailedDescription"))
-			.withQuantity(1f)
-			.withTotalAmount(validInvoiceRows ? null : 123f)
+			.withQuantity(BigDecimal.valueOf(1d))
+			.withTotalAmount(validInvoiceRows ? null : BigDecimal.valueOf(123d))
 			.withVatCode(validInvoiceRows ? INTERNAL == type ? null : "00" : INTERNAL == type ? "00" : null);
 	}
 
@@ -77,7 +78,7 @@ public class BillingRecordRequestUtil {
 			.withDepartment("department")
 			.withCostCenter("costCenter")
 			.withSubaccount("subAccount")
-			.withAmount(1234.56f)) : createFaultyList();
+			.withAmount(BigDecimal.valueOf(1234.56d))) : createFaultyList();
 	}
 
 	private static List<AccountInformation> createFaultyList() {
@@ -89,7 +90,7 @@ public class BillingRecordRequestUtil {
 
 	public static AccountInformation createAccountInformationInstance(boolean validAccountInformation) {
 		return validAccountInformation ? AccountInformation.create()
-			.withAmount(456f)
+			.withAmount(BigDecimal.valueOf(456d))
 			.withCounterpart("counterPart")
 			.withDepartment("department")
 			.withCostCenter("costCenter")

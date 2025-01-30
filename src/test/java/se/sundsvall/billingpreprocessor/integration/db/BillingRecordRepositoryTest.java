@@ -14,6 +14,7 @@ import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Status
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.EXTERNAL;
 
 import com.turkraft.springfilter.converter.FilterSpecificationConverter;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -63,9 +64,9 @@ class BillingRecordRepositoryTest {
 	private static final String SUBACCOUNT = "subaccount";
 	private static final String STANDARD_TEXT = "standardText";
 	private static final String DETAILED_TEXT = "detailedText";
-	private static final Float COST_PER_UNIT = 13.37f;
-	private static final Float QUANTITY = 10.0f;
-	private static final Float TOTAL_ROW_AMOUNT = COST_PER_UNIT * QUANTITY;
+	private static final BigDecimal COST_PER_UNIT = BigDecimal.valueOf(13.37d);
+	private static final BigDecimal QUANTITY = BigDecimal.valueOf(10.0d);
+	private static final BigDecimal TOTAL_ROW_AMOUNT = COST_PER_UNIT.multiply(QUANTITY);
 	private static final String VAT_CODE = "06";
 	private static final String CUSTOMER_ID = "customerId";
 	private static final String CUSTOMER_REFERENCE = "customerReference";
@@ -74,7 +75,7 @@ class BillingRecordRepositoryTest {
 	private static final LocalDate DUE_DATE = LocalDate.now().plusWeeks(1);
 	private static final String OUR_REFERENCE = "ourReference";
 	private static final String REFERENCE_ID = "referenceId";
-	private static final Float TOTAL_AMOUNT = COST_PER_UNIT * TOTAL_ROW_AMOUNT;
+	private static final BigDecimal TOTAL_AMOUNT = COST_PER_UNIT.multiply(TOTAL_ROW_AMOUNT);
 	private static final String CARE_OF = "careOf";
 	private static final String CITY = "city";
 	private static final String STREET = "street";

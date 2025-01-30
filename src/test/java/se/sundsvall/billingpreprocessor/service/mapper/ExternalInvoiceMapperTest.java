@@ -11,6 +11,7 @@ import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Descri
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.APPROVED;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.EXTERNAL;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -52,17 +53,17 @@ class ExternalInvoiceMapperTest {
 	private static final LocalDate DUE_DATE = LocalDate.now().plusDays(30);
 	private static final String OUR_REFERENCE = "ourReference";
 	private static final String REFERENCE_ID = "referenceId";
-	private static final float INVOICE_TOTAL_AMOUNT = 2469f;
+	private static final BigDecimal INVOICE_TOTAL_AMOUNT = BigDecimal.valueOf(2469d);
 
 	// Invoice row constants
-	private static final float COST_PER_UNIT = 123.45f;
+	private static final BigDecimal COST_PER_UNIT = BigDecimal.valueOf(123.45d);
 	private static final String DETAILED_DESCRIPTION_1 = "detailed_description_1";
 	private static final String DETAILED_DESCRIPTION_2 = "detailed_description_2";
-	private static final float QUANTITY = 10f;
+	private static final BigDecimal QUANTITY = BigDecimal.valueOf(10d);
 	private static final String VAT_CODE = "vatCode";
 
 	// Account information constants
-	private static final float ACCOUNTING_AMOUNT = 9843f;
+	private static final BigDecimal ACCOUNTING_AMOUNT = BigDecimal.valueOf(9843d);
 	private static final String ACCURAL_KEY = "accuralKey";
 	private static final String ACTIVITY = "activity";
 	private static final String ARTICLE = "article";
@@ -223,7 +224,7 @@ class ExternalInvoiceMapperTest {
 		assertThat(bean.getLegalId()).isEqualTo(LEGAL_ID);
 		assertThat(bean.getQuantity()).isEqualTo(QUANTITY);
 		assertThat(bean.getText()).isEqualTo(DESCRIPTION);
-		assertThat(bean.getTotalAmount()).isEqualTo(QUANTITY * COST_PER_UNIT);
+		assertThat(bean.getTotalAmount()).isEqualTo(QUANTITY.multiply(COST_PER_UNIT));
 		assertThat(bean.getVatCode()).isEqualTo(VAT_CODE);
 	}
 
@@ -365,7 +366,7 @@ class ExternalInvoiceMapperTest {
 			.withId(id)
 			.withInvoice(invoiceEntity)
 			.withQuantity(QUANTITY)
-			.withTotalAmount(COST_PER_UNIT * QUANTITY)
+			.withTotalAmount(COST_PER_UNIT.multiply(QUANTITY))
 			.withVatCode(VAT_CODE);
 
 		return invoiceRowEntity.withDescriptions(List.of(
