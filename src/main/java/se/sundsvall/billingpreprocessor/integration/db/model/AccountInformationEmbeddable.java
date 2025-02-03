@@ -3,6 +3,7 @@ package se.sundsvall.billingpreprocessor.integration.db.model;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Objects;
 
 @Embeddable
@@ -34,7 +35,7 @@ public class AccountInformationEmbeddable implements Serializable {
 	private String counterpart;
 
 	@Column(name = "amount")
-	private Float amount;
+	private BigDecimal amount;
 
 	public static AccountInformationEmbeddable create() {
 		return new AccountInformationEmbeddable();
@@ -144,15 +145,15 @@ public class AccountInformationEmbeddable implements Serializable {
 		return this;
 	}
 
-	public Float getAmount() {
+	public BigDecimal getAmount() {
 		return amount;
 	}
 
-	public void setAmount(Float amount) {
+	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
 	}
 
-	public AccountInformationEmbeddable withAmount(Float amount) {
+	public AccountInformationEmbeddable withAmount(BigDecimal amount) {
 		this.amount = amount;
 		return this;
 	}

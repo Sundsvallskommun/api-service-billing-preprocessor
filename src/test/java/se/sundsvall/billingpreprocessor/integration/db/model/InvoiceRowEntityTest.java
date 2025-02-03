@@ -10,6 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.AllOf.allOf;
 
+import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
@@ -28,12 +29,12 @@ class InvoiceRowEntityTest {
 	@Test
 	void hasValidBuilderMethods() {
 		final var accountInormation = AccountInformationEmbeddable.create();
-		final var costPerUnit = 13.37f;
+		final var costPerUnit = BigDecimal.valueOf(13.37d);
 		final var description = DescriptionEntity.create();
 		final var id = 1234L;
 		final var invoice = InvoiceEntity.create();
-		final var quantity = 13.0f;
-		final var totalAmount = costPerUnit * quantity;
+		final var quantity = BigDecimal.valueOf(13.0d);
+		final var totalAmount = costPerUnit.multiply(quantity);
 		final var vatCode = "vatCode";
 
 		final var entity = InvoiceRowEntity.create()

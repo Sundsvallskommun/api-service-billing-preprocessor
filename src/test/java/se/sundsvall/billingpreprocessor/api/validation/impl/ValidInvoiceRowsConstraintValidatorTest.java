@@ -12,6 +12,7 @@ import static se.sundsvall.billingpreprocessor.api.model.enums.Type.INTERNAL;
 
 import jakarta.validation.ConstraintValidatorContext;
 import jakarta.validation.ConstraintValidatorContext.ConstraintViolationBuilder;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -33,7 +34,7 @@ import se.sundsvall.billingpreprocessor.api.model.enums.Type;
 @ExtendWith(MockitoExtension.class)
 class ValidInvoiceRowsConstraintValidatorTest {
 
-	private static final Float AMOUNT = 112f;
+	private static final BigDecimal AMOUNT = BigDecimal.valueOf(112d);
 	private static final String COSTCENTER = "costcenter";
 	private static final String COUNTERPART = "counterpart";
 	private static final String DEPARTMENT = "department";
@@ -76,7 +77,7 @@ class ValidInvoiceRowsConstraintValidatorTest {
 		final var billingRecord = BillingRecord.create().withType(INTERNAL).withInvoice(Invoice.create()
 			.withInvoiceRows(List.of(InvoiceRow.create()
 				.withAccountInformation(List.of(createAccountInformationInstance(true)))
-				.withCostPerUnit(10f)
+				.withCostPerUnit(BigDecimal.valueOf(10d))
 				.withVatCode("25"))));
 
 		when(contextMock.buildConstraintViolationWithTemplate(any())).thenReturn(builderMock);
@@ -92,7 +93,7 @@ class ValidInvoiceRowsConstraintValidatorTest {
 	void withExternalTypeAndVatNotPresent() {
 		final var billingRecord = BillingRecord.create().withType(EXTERNAL).withInvoice(Invoice.create().withInvoiceRows(List.of(InvoiceRow.create()
 			.withAccountInformation(List.of(createAccountInformationInstance(true)))
-			.withCostPerUnit(10f))));
+			.withCostPerUnit(BigDecimal.valueOf(10d)))));
 
 		when(contextMock.buildConstraintViolationWithTemplate(any())).thenReturn(builderMock);
 
@@ -200,7 +201,7 @@ class ValidInvoiceRowsConstraintValidatorTest {
 			Arguments.of(INTERNAL, createAccountInformation(AMOUNT, COSTCENTER, COUNTERPART, DEPARTMENT, " ")));
 	}
 
-	private static AccountInformation createAccountInformation(Float amount, String costCenter, String counterpart, String department, String subAccount) {
+	private static AccountInformation createAccountInformation(BigDecimal amount, String costCenter, String counterpart, String department, String subAccount) {
 		return AccountInformation.create()
 			.withAmount(amount)
 			.withCostCenter(costCenter)

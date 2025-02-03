@@ -11,6 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
@@ -44,7 +45,7 @@ class InvoiceTest {
 		final var invoiceRows = List.of(InvoiceRow.create());
 		final var ourReference = "ourReference";
 		final var referenceId = "referenceId";
-		final var totalAmount = 12345.67f;
+		final var totalAmount = BigDecimal.valueOf(12345.67d);
 
 		final var bean = Invoice.create()
 			.withCustomerId(customerId)

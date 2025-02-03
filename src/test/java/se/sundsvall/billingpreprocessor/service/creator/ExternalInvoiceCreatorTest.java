@@ -16,6 +16,7 @@ import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Status
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.EXTERNAL;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -66,16 +67,16 @@ class ExternalInvoiceCreatorTest {
 	private static final LocalDate DATE = LocalDate.of(2024, 3, 6);
 	private static final LocalDate DUE_DATE = LocalDate.of(2024, 3, 30);
 	private static final String OUR_REFERENCE = "Johnny Bråttom";
-	private static final float INVOICE_TOTAL_AMOUNT = 1395f;
+	private static final BigDecimal INVOICE_TOTAL_AMOUNT = BigDecimal.valueOf(1395d);
 
 	// Invoice row constants
-	private static final float COST_PER_UNIT = 1395f;
+	private static final BigDecimal COST_PER_UNIT = BigDecimal.valueOf(1395d);
 	private static final String DETAILED_DESCRIPTION = "En mer detaljerad fakturaradsbeskrivning";
-	private static final float QUANTITY = 1f;
+	private static final BigDecimal QUANTITY = BigDecimal.ONE;
 	private static final String VAT_CODE = "25";
 
 	// Account information constants
-	private static final Float ACCOUNTING_AMOUNT_1 = 895f;
+	private static final BigDecimal ACCOUNTING_AMOUNT_1 = BigDecimal.valueOf(895d);
 	private static final String ACCURAL_KEY_1 = "5647";
 	private static final String ACTIVITY_1 = "5756";
 	private static final String ARTICLE_1 = "Interim";
@@ -85,7 +86,7 @@ class ExternalInvoiceCreatorTest {
 	private static final String PROJECT_1 = "11041";
 	private static final String SUBACCOUNT_1 = "936300";
 
-	private static final Float ACCOUNTING_AMOUNT_2 = 500f;
+	private static final BigDecimal ACCOUNTING_AMOUNT_2 = BigDecimal.valueOf(500d);
 	private static final String ACCURAL_KEY_2 = "6658";
 	private static final String ACTIVITY_2 = "3313";
 	private static final String ARTICLE_2 = "Övrigt";
@@ -258,7 +259,7 @@ class ExternalInvoiceCreatorTest {
 			.withId(id)
 			.withInvoice(invoiceEntity)
 			.withQuantity(QUANTITY)
-			.withTotalAmount(COST_PER_UNIT * QUANTITY)
+			.withTotalAmount(COST_PER_UNIT.multiply(QUANTITY))
 			.withVatCode(VAT_CODE);
 
 		return invoiceRowEntity.withDescriptions(List.of(

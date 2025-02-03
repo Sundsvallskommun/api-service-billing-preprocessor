@@ -1,10 +1,11 @@
 package se.sundsvall.billingpreprocessor.service.creator.definition.external;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 import org.beanio.annotation.Field;
 import org.beanio.annotation.Fields;
 import org.beanio.annotation.Record;
-import se.sundsvall.billingpreprocessor.service.creator.config.ExternalInvoiceFloatTypeHandler;
+import se.sundsvall.billingpreprocessor.service.creator.config.ExternalInvoiceBigDecimalTypeHandler;
 
 @Record
 @Fields({
@@ -18,14 +19,14 @@ public class InvoiceRow {
 	@Field(at = 11, length = 30)
 	private String text;
 
-	@Field(at = 41, length = 8, handlerName = ExternalInvoiceFloatTypeHandler.NAME)
-	private Float quantity;
+	@Field(at = 41, length = 8, handlerName = ExternalInvoiceBigDecimalTypeHandler.NAME)
+	private BigDecimal quantity;
 
-	@Field(at = 49, length = 9, handlerName = ExternalInvoiceFloatTypeHandler.NAME)
-	private Float costPerUnit;
+	@Field(at = 49, length = 9, handlerName = ExternalInvoiceBigDecimalTypeHandler.NAME)
+	private BigDecimal costPerUnit;
 
-	@Field(at = 58, length = 15, handlerName = ExternalInvoiceFloatTypeHandler.NAME)
-	private Float totalAmount;
+	@Field(at = 58, length = 15, handlerName = ExternalInvoiceBigDecimalTypeHandler.NAME)
+	private BigDecimal totalAmount;
 
 	@Field(at = 73, length = 2)
 	private String vatCode;
@@ -60,41 +61,41 @@ public class InvoiceRow {
 		return this;
 	}
 
-	public Float getQuantity() {
+	public BigDecimal getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(Float quantity) {
+	public void setQuantity(BigDecimal quantity) {
 		this.quantity = quantity;
 	}
 
-	public InvoiceRow withQuantity(Float quantity) {
+	public InvoiceRow withQuantity(BigDecimal quantity) {
 		this.quantity = quantity;
 		return this;
 	}
 
-	public Float getCostPerUnit() {
+	public BigDecimal getCostPerUnit() {
 		return costPerUnit;
 	}
 
-	public void setCostPerUnit(Float costPerUnit) {
+	public void setCostPerUnit(BigDecimal costPerUnit) {
 		this.costPerUnit = costPerUnit;
 	}
 
-	public InvoiceRow withCostPerUnit(Float costPerUnit) {
+	public InvoiceRow withCostPerUnit(BigDecimal costPerUnit) {
 		this.costPerUnit = costPerUnit;
 		return this;
 	}
 
-	public Float getTotalAmount() {
+	public BigDecimal getTotalAmount() {
 		return totalAmount;
 	}
 
-	public void setTotalAmount(Float totalAmount) {
+	public void setTotalAmount(BigDecimal totalAmount) {
 		this.totalAmount = totalAmount;
 	}
 
-	public InvoiceRow withTotalAmount(Float totalAmount) {
+	public InvoiceRow withTotalAmount(BigDecimal totalAmount) {
 		this.totalAmount = totalAmount;
 		return this;
 	}
@@ -122,17 +123,16 @@ public class InvoiceRow {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof InvoiceRow)) {
+		if (!(obj instanceof final InvoiceRow other)) {
 			return false;
 		}
-		InvoiceRow other = (InvoiceRow) obj;
 		return Objects.equals(costPerUnit, other.costPerUnit) && Objects.equals(legalId, other.legalId) && Objects.equals(quantity, other.quantity) && Objects.equals(text, other.text) && Objects.equals(totalAmount, other.totalAmount) && Objects
 			.equals(vatCode, other.vatCode);
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
+		final var builder = new StringBuilder();
 		builder.append("InvoiceRow [legalId=").append(legalId).append(", text=").append(text).append(", quantity=").append(quantity).append(", costPerUnit=").append(costPerUnit).append(", totalAmount=").append(totalAmount).append(", vatCode=")
 			.append(vatCode).append("]");
 		return builder.toString();
