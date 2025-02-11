@@ -1,0 +1,58 @@
+{
+	"id": "${json-unit.regex}^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$",
+	"category": "SALARY_AND_PENSION",
+	"type": "INTERNAL",
+	"status": "NEW",
+	"invoice": {
+		"customerId": "10",
+		"description": "Extra löneutbetalning - Direktinsättning",
+		"ourReference": "Lola Luftnagle",
+		"customerReference": "HAN99MON",
+		"referenceId": "N/A",
+		"totalAmount": 1530.0,
+		"invoiceRows": [
+			{
+				"descriptions": [
+					"Ärendenummer: LoP-25020123"
+				],
+				"totalAmount": 1500.0,
+				"costPerUnit": 1500.0,
+				"quantity": 1.0,
+				"accountInformation": [
+					{
+						"costCenter": "15810100",
+						"subaccount": "936300",
+						"department": "920360",
+						"activity": "5756",
+						"counterpart": "110",
+						"amount": 1500.0
+					}
+				]
+			},
+			{
+				"descriptions": [
+					"Utvecklingskostnad 2%"
+				],
+				"totalAmount": 30.0,
+				"costPerUnit": 30.0,
+				"quantity": 1.0,
+				"accountInformation": [
+					{
+						"costCenter": "15810100",
+						"subaccount": "936300",
+						"department": "920360",
+						"activity": "5756",
+						"counterpart": "110",
+						"amount": 30.0
+					}
+				]
+			}
+		]
+	},
+	"created": "${json-unit.regex}^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.?\\d{0,10}(Z|[+-]\\d{2}:\\d{2})?$",
+	"extraParameters": {
+		"errandId": "cd25a29e-3e58-4fbd-979a-ece33b528d12",
+		"errandNumber": "LoP-25020123",
+		"referenceName": "Hanna Montana"
+	}
+}

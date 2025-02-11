@@ -1,0 +1,8 @@
+01300SKC
+H 10                                   HAN99MON                                                       Lola Luftnagle                
+R Extra löneutbetalning - Direktinsättning                                                            
+R Ärendenummer: LoP-25020123                             1.00      1500.00                       1500.00
+K 15810100  936300    920360    5756                          110                                              1500.00              
+R Utvecklingskostnad 2%                                  1.00        30.00                         30.00
+K 15810100  936300    920360    5756                          110                                                30.00              
+T 1530.00        

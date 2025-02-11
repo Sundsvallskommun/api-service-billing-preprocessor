@@ -51,16 +51,6 @@ VALUES	  ('23af2045-c96e-44d6-b0da-d2f8a38b9711', NULL, 'ANKEBORG', 'Ankeborgsv√
           ('6b92f728-8698-47aa-b8c7-c67585df373e', NULL, NULL, NULL, 'KY 40211', NULL, NULL, NULL, NULL, NULL),
           ('6d762c41-6ecb-4306-9594-316240e01a68', NULL, 'ANKEBORG', 'Ankeborg 160', '123 45', 'Kalle', 'Anka', NULL, '970cd619-51b0-40b9-9132-579e2f937c07', NULL);
 
--- -----------------------------------
--- Invoice file configuration
--- -----------------------------------
-INSERT INTO file_configuration (`type`,category_tag,file_name_pattern, creator_name, encoding)
-VALUES
-    ('EXTERNAL','ISYCASE','KRISYCASE_{yyyyMMdd}.txt', 'ExternalInvoiceCreator', 'ISO-8859-1'),
-    ('INTERNAL','ISYCASE','IPKISYCASE_{yyyyMMdd}.txt', 'InternalInvoiceCreator', 'ISO-8859-1'),
-    ('EXTERNAL','CUSTOMER_INVOICE','{yyyyMMdd}_kpform.txt', 'ExternalCustomerInvoiceCreator', 'ISO-8859-1'),
-    ('INTERNAL','CUSTOMER_INVOICE','{yyyyMMdd}_ipkfor.txt', 'InternalCustomerInvoiceCreator', 'ISO-8859-1');
-
 -------------------------------------
 -- Extra parameters
 -------------------------------------

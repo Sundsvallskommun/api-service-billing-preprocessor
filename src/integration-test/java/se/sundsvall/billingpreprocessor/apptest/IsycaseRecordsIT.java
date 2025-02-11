@@ -29,12 +29,12 @@ import se.sundsvall.dept44.test.annotation.wiremock.WireMockAppTestSuite;
 /**
  * Billing Records IT tests.
  */
-@WireMockAppTestSuite(files = "classpath:/BillingRecordsIT/", classes = Application.class)
+@WireMockAppTestSuite(files = "classpath:/IsycaseRecordsIT/", classes = Application.class)
 @Sql({
 	"/db/scripts/truncate.sql",
 	"/db/scripts/testdata-isycase-it.sql"
 })
-class BillingRecordsIT extends AbstractAppTest {
+class IsycaseRecordsIT extends AbstractAppTest {
 
 	private static final String REQUEST_FILE = "request.json";
 	private static final String RESPONSE_FILE = "response.json";

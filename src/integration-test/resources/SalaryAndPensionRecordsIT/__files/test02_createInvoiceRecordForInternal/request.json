@@ -1,0 +1,55 @@
+{
+	"invoice": {
+		"referenceId": "N/A",
+		"customerId": "10",
+		"description": "Extra löneutbetalning - Direktinsättning",
+		"invoiceRows": [
+			{
+				"descriptions": [
+					"Ärendenummer: LoP-25020123"
+				],
+				"detailedDescriptions": [],
+				"costPerUnit": 1500,
+				"quantity": 1,
+				"accountInformation": [
+					{
+						"costCenter": "15810100",
+						"subaccount": "936300",
+						"department": "920360",
+						"activity": "5756",
+						"counterpart": "110",
+						"amount": 1500
+					}
+				]
+			},
+			{
+				"descriptions": [
+					"Utvecklingskostnad 2%"
+				],
+				"detailedDescriptions": [],
+				"costPerUnit": 30,
+				"quantity": 1,
+				"accountInformation": [
+					{
+						"costCenter": "15810100",
+						"subaccount": "936300",
+						"department": "920360",
+						"activity": "5756",
+						"counterpart": "110",
+						"amount": 30
+					}
+				]
+			}
+		],
+		"customerReference": "HAN99MON",
+		"ourReference": "Lola Luftnagle"
+	},
+	"category": "SALARY_AND_PENSION",
+	"type": "INTERNAL",
+	"status": "NEW",
+	"extraParameters": {
+		"errandNumber": "LoP-25020123",
+		"errandId": "cd25a29e-3e58-4fbd-979a-ece33b528d12",
+		"referenceName": "Hanna Montana"
+	}
+}

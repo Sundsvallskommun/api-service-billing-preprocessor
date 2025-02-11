@@ -68,14 +68,6 @@ VALUES	('83e4d599-5b4d-431c-8ebc-81192e9401ee', NULL, 'Louiseville', 'Beachland 
 		('1abc9859-9141-43b0-91d9-43cd7d889690', NULL, 'Louiseville', 'Beachland avenue 3308', 'KY 40211', 'Yuri', 'Karpov', NULL, '970cd619-51b0-40b9-9132-579e2f937c07', NULL);
 
 -------------------------------------
--- Invoice file configuration
--------------------------------------
-INSERT INTO file_configuration (`type`,category_tag,file_name_pattern, creator_name, encoding) 
-VALUES
-	 ('EXTERNAL','ISYCASE','KRISYCASE_{yyyyMMdd}.txt', 'ExternalInvoiceCreator', 'ISO-8859-1'),
-	 ('INTERNAL','ISYCASE','IPKISYCASE_{yyyyMMdd}.txt', 'InternalInvoiceCreator', 'ISO-8859-1');
-
--------------------------------------
 -- Extra parameters
 -------------------------------------
 INSERT INTO extra_parameter (billing_record_id, `key`, `value`)
