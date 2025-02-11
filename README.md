@@ -1,6 +1,6 @@
 # Billing PreProcessor
 
-_The service provides functionality to store invoices with associated accounting information, as well as their respective status (created, attested, invoiced or rejected). The records that have status attested will be included in a generated file that is sent to the Raindance system for invoicing and accounting. The sent invoices will then be changed to status invoiced._
+_The service provides functionality for storing invoicing records and associated accounting information, as well as their respective status (created, attested, invoiced or rejected). The records that have status attested will be included in a generated file that is sent to the Raindance system for invoicing and accounting. The sent invoices will then be changed to status invoiced._
 
 _The service contains two periodic jobs that are executed at certain intervals, one to create the invoice files to be sent and one to send files to the Raindance system. These jobs are executed once per day._
 

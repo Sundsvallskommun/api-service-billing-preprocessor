@@ -1,0 +1,5 @@
+{
+	"detail": "legalentity error: {detail=A LegalEntity with id ac653c32-b26c-47e8-8c3d-4d18c1b5111c was not found, status=404 Not Found, title=The LegalEntity was not found.}",
+	"title": "Not Found",
+	"status": 404
+}

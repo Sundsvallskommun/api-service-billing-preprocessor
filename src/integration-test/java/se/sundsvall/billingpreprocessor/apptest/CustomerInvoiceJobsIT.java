@@ -14,10 +14,12 @@ import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.I
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 
+import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
@@ -52,9 +54,14 @@ class CustomerInvoiceJobsIT extends AbstractAppTest {
 			.withExpectedResponseBodyIsNull()
 			.sendRequestAndVerifyResponse();
 
-		final var invoiceFiles = repository.findAll();
+		Awaitility.await()
+			.atMost(Duration.of(5, SECONDS))
+			.ignoreExceptions()
+			.until(this::assertFileEntries);
+	}
 
-		assertThat(invoiceFiles).hasSize(2)
+	private boolean assertFileEntries() {
+		assertThat(repository.findAll()).hasSize(2)
 			.allSatisfy(file -> {
 				assertThat(file.getCreated()).isCloseTo(OffsetDateTime.now(), within(2, SECONDS));
 				assertThat(file.getSent()).isNull();
@@ -71,6 +78,8 @@ class CustomerInvoiceJobsIT extends AbstractAppTest {
 				assertThat(file.getName()).isEqualTo("%s_kpform.txt".formatted(LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE)));
 				assertThat(file.getType()).isEqualTo(EXTERNAL.name());
 			});
+
+		return true;
 	}
 
 	private String getResource(final String filePath) throws IOException {

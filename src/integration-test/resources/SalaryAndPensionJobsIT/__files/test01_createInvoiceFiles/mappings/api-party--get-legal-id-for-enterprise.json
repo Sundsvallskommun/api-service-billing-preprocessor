@@ -1,0 +1,22 @@
+{
+	"request": {
+		"headers": {
+			"Authorization": {
+				"equalTo": "Bearer MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3"
+			},
+			"x-request-id": {
+				"matches": "^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$"
+			}
+		},
+		"method": "GET",
+		"urlPath": "/api-party/2281/ENTERPRISE/ac653c32-b26c-47e8-8c3d-4d18c1b5111c/legalId"
+	},
+	"response": {
+		"headers": {
+			"Content-Type": "text/plain"
+		},
+		"body": "166512345678",
+		"status": 200
+	},
+	"name": "api-party--get-legal-id-for-enterprise"
+}
