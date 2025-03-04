@@ -20,7 +20,6 @@
 		"description": "Kundfaktura",
 		"ourReference": "kalle anka",
 		"customerReference": "Kalle Anka",
-		"referenceId": "185375",
 		"totalAmount": 2100.0,
 		"invoiceRows": [
 			{

@@ -8,7 +8,6 @@
 		"description": "Extra löneutbetalning - Direktinsättning",
 		"ourReference": "Lola Luftnagle",
 		"customerReference": "HAN99MON",
-		"referenceId": "N/A",
 		"totalAmount": 1530.0,
 		"invoiceRows": [
 			{

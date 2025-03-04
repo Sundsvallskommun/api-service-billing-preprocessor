@@ -39,17 +39,6 @@ class ValidInvoiceConstraintValidatorTest {
 	}
 
 	@Test
-	void withExternalTypeAndCustomerReferenceNotPresent() {
-		when(contextMock.buildConstraintViolationWithTemplate(any())).thenReturn(builderMock);
-
-		assertThat(validator.isValid(BillingRecord.create().withType(EXTERNAL).withInvoice(Invoice.create()), contextMock)).isFalse();
-
-		verify(contextMock).disableDefaultConstraintViolation();
-		verify(contextMock).buildConstraintViolationWithTemplate("invoice.customerReference is mandatory when billing record is of type EXTERNAL");
-		verify(builderMock).addConstraintViolation();
-	}
-
-	@Test
 	void withInternalTypeAndInvoiceNotPresent() {
 		assertThat(validator.isValid(BillingRecord.create().withType(INTERNAL), contextMock)).isTrue();
 
@@ -58,21 +47,21 @@ class ValidInvoiceConstraintValidatorTest {
 
 	@Test
 	void withInternalTypeAndInvoiceRowsNotPresent() {
-		assertThat(validator.isValid(BillingRecord.create().withType(INTERNAL).withInvoice(Invoice.create().withReferenceId("refId").withOurReference("ourRef")), contextMock)).isTrue();
+		assertThat(validator.isValid(BillingRecord.create().withType(INTERNAL).withInvoice(Invoice.create().withOurReference("ourRef")), contextMock)).isTrue();
 
 		verifyNoInteractions(contextMock, builderMock);
 	}
 
 	@Test
 	void withInternalTypeAndDetailDescriptionsNotPresent() {
-		assertThat(validator.isValid(BillingRecord.create().withType(INTERNAL).withInvoice(Invoice.create().withReferenceId("refId").withOurReference("ourRef").withInvoiceRows(List.of(InvoiceRow.create()))), contextMock)).isTrue();
+		assertThat(validator.isValid(BillingRecord.create().withType(INTERNAL).withInvoice(Invoice.create().withOurReference("ourRef").withInvoiceRows(List.of(InvoiceRow.create()))), contextMock)).isTrue();
 
 		verifyNoInteractions(contextMock, builderMock);
 	}
 
 	@Test
 	void withInternalTypeAndEmptyListAsDetailDescriptions() {
-		final var billingRecord = BillingRecord.create().withType(INTERNAL).withInvoice(Invoice.create().withReferenceId("refId").withOurReference("ourRef").withInvoiceRows(List.of(InvoiceRow.create().withDetailedDescriptions(emptyList()))));
+		final var billingRecord = BillingRecord.create().withType(INTERNAL).withInvoice(Invoice.create().withOurReference("ourRef").withInvoiceRows(List.of(InvoiceRow.create().withDetailedDescriptions(emptyList()))));
 
 		assertThat(validator.isValid(billingRecord, contextMock)).isTrue();
 
@@ -80,21 +69,10 @@ class ValidInvoiceConstraintValidatorTest {
 	}
 
 	@Test
-	void withInternalTypeAndReferenceIdNotPresent() {
-		when(contextMock.buildConstraintViolationWithTemplate(any())).thenReturn(builderMock);
-
-		assertThat(validator.isValid(BillingRecord.create().withType(INTERNAL).withInvoice(Invoice.create().withOurReference("ourRef").withInvoiceRows(List.of(InvoiceRow.create()))), contextMock)).isFalse();
-
-		verify(contextMock).disableDefaultConstraintViolation();
-		verify(contextMock).buildConstraintViolationWithTemplate("invoice.referenceId is mandatory when billing record is of type INTERNAL");
-		verify(builderMock).addConstraintViolation();
-	}
-
-	@Test
 	void withInternalTypeAndOurReferenceNotPresent() {
 		when(contextMock.buildConstraintViolationWithTemplate(any())).thenReturn(builderMock);
 
-		assertThat(validator.isValid(BillingRecord.create().withType(INTERNAL).withInvoice(Invoice.create().withReferenceId("refId").withInvoiceRows(List.of(InvoiceRow.create()))), contextMock)).isFalse();
+		assertThat(validator.isValid(BillingRecord.create().withType(INTERNAL).withInvoice(Invoice.create().withInvoiceRows(List.of(InvoiceRow.create()))), contextMock)).isFalse();
 
 		verify(contextMock).disableDefaultConstraintViolation();
 		verify(contextMock).buildConstraintViolationWithTemplate("invoice.ourReference is mandatory when billing record is of type INTERNAL");

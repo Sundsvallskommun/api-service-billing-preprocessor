@@ -12,13 +12,13 @@ VALUES	('71258e7d-5285-46ce-b9b2-877f8cad8edd', 'ISYCASE', NULL, NULL, '2022-06-
 -------------------------------------
 -- Invoices
 -------------------------------------
-INSERT INTO invoice (id, customer_id, customer_reference, description, `date`, due_date, our_reference, reference_id, total_amount)
-VALUES	('71258e7d-5285-46ce-b9b2-877f8cad8edd', '15', 'JAN00EDO', 'Passerkort utan foto för Rocky Balboa (ROC01BAL)', NULL, NULL, 'MIC00GOL', 'IN-5538-4432-36', 150),
-		('1310ee8b-ecf9-4fe1-ab9d-f19153b19d06', '15', 'JAN00EDO', 'Passerkort med foto för Ivan Drago (IVA02DRA)', NULL, NULL, 'MAN22VEG', 'IN-1998-1884-42', 200),
-		('83e4d599-5b4d-431c-8ebc-81192e9401ee', '02', 'YUI10KAR', 'Faktura för två Boxercise-pass', '2022-01-01', '2022-08-30', NULL, NULL, 30000),
-		('200ee4a6-f7bc-4d82-80cb-ecd2d610475c', '02', 'YUI10KAR', 'Faktura för skadebehandling', '2024-03-18', '2024-05-31', 'MIC00GOL', 'X17', 200000),
-		('b4ee0334-33c3-4eff-984e-3dd5252760a9', '02', 'YUI10KAR', 'Faktura för skadebehandling', '2024-03-18', '2024-05-31', 'MIC00GOL', 'X17', 200000),
-		('1abc9859-9141-43b0-91d9-43cd7d889690', '02', 'YUI10KAR', 'En faktura som ej kan behandlas', '2024-03-18', '2024-05-31', 'MIC00GOL', 'X17', 200000);
+INSERT INTO invoice (id, customer_id, customer_reference, description, `date`, due_date, our_reference, total_amount)
+VALUES	('71258e7d-5285-46ce-b9b2-877f8cad8edd', '15', 'JAN00EDO', 'Passerkort utan foto för Rocky Balboa (ROC01BAL)', NULL, NULL, 'MIC00GOL',  150),
+		('1310ee8b-ecf9-4fe1-ab9d-f19153b19d06', '15', 'JAN00EDO', 'Passerkort med foto för Ivan Drago (IVA02DRA)', NULL, NULL, 'MAN22VEG',  200),
+		('83e4d599-5b4d-431c-8ebc-81192e9401ee', '02', 'YUI10KAR', 'Faktura för två Boxercise-pass', '2022-01-01', '2022-08-30', NULL, 30000),
+		('200ee4a6-f7bc-4d82-80cb-ecd2d610475c', '02', 'YUI10KAR', 'Faktura för skadebehandling', '2024-03-18', '2024-05-31', 'MIC00GOL',  200000),
+		('b4ee0334-33c3-4eff-984e-3dd5252760a9', '02', 'YUI10KAR', 'Faktura för skadebehandling', '2024-03-18', '2024-05-31', 'MIC00GOL',  200000),
+		('1abc9859-9141-43b0-91d9-43cd7d889690', '02', 'YUI10KAR', 'En faktura som ej kan behandlas', '2024-03-18', '2024-05-31', 'MIC00GOL',  200000);
 
 -------------------------------------
 -- Invoice rows

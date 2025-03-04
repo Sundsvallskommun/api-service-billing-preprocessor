@@ -12,12 +12,12 @@ VALUES	('71258e7d-5285-46ce-b9b2-877f8cad8edd', 'ACCESS_CARD', NULL, NULL, '2022
 -------------------------------------
 -- Invoices
 -------------------------------------
-INSERT INTO invoice (id, customer_id, customer_reference, description, `date`, due_date, our_reference, reference_id, total_amount)
-VALUES	('71258e7d-5285-46ce-b9b2-877f8cad8edd', '02', 'ROC01BAL', 'Passerkort utan foto för Rocky Balboa (ROC01BAL)', NULL, '2022-07-31', NULL, NULL, 150),
-		('1310ee8b-ecf9-4fe1-ab9d-f19153b19d06', '02', 'IVA02DRA', 'Passerkort med foto för Ivan Drago (IVA02DRA)', NULL, '2022-07-31', NULL, NULL, 200),
-		('83e4d599-5b4d-431c-8ebc-81192e9401ee', '16', 'YUI10KAR', 'Faktura för två Boxercise-pass', '2022-02-02', '2022-08-30', 'JOE01DOE', '1123-3241', 30000),
-        ('389b847c-39e9-4321-ae5d-e736e0a5ff51', '12', 'SIL01SIL', 'Faktura för sill', NULL, '2024-07-31', NULL, NULL, 200),
-        ('1c38bf5d-ed89-41ee-8090-37733f276ec9', '12', 'STR01STR', 'Faktura för strömming', NULL, '2024-07-31', NULL, NULL, 400);
+INSERT INTO invoice (id, customer_id, customer_reference, description, `date`, due_date, our_reference, total_amount)
+VALUES	('71258e7d-5285-46ce-b9b2-877f8cad8edd', '02', 'ROC01BAL', 'Passerkort utan foto för Rocky Balboa (ROC01BAL)', NULL, '2022-07-31', NULL, 150),
+		('1310ee8b-ecf9-4fe1-ab9d-f19153b19d06', '02', 'IVA02DRA', 'Passerkort med foto för Ivan Drago (IVA02DRA)', NULL, '2022-07-31', NULL, 200),
+		('83e4d599-5b4d-431c-8ebc-81192e9401ee', '16', 'YUI10KAR', 'Faktura för två Boxercise-pass', '2022-02-02', '2022-08-30', 'JOE01DOE', 30000),
+        ('389b847c-39e9-4321-ae5d-e736e0a5ff51', '12', 'SIL01SIL', 'Faktura för sill', NULL, '2024-07-31', NULL, 200),
+        ('1c38bf5d-ed89-41ee-8090-37733f276ec9', '12', 'STR01STR', 'Faktura för strömming', NULL, '2024-07-31', NULL, 400);
 
 -------------------------------------
 -- Invoice rows

@@ -28,8 +28,7 @@
 				],
 				"costPerUnit": 300
 			}
-		],
-		"referenceId": "192021"
+		]
 	},
 	"category": "CUSTOMER_INVOICE",
 	"type": "INTERNAL",

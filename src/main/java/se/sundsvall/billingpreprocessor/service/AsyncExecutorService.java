@@ -5,10 +5,8 @@ import org.springframework.stereotype.Service;
 import se.sundsvall.dept44.requestid.RequestId;
 
 /**
- * Class responsible for async-execution of scheduled jobs.
- *
- * The purpose with this is to detach the execution from the calling thread
- * when the call is initialized from the REST-API.
+ * Class responsible for async-execution of scheduled jobs. The purpose with this is to detach the execution from the
+ * calling thread when the call is initialized from the REST-API.
  */
 @Service
 public class AsyncExecutorService {

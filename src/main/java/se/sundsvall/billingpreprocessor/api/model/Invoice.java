@@ -30,11 +30,9 @@ public class Invoice {
 	@Schema(description = "Our reference", example = "Harvey Kneeslapper")
 	private String ourReference;
 
-	@Schema(description = "Customer reference", example = "Alice Snuffleupagus")
+	@Schema(description = "Customer reference", example = "Alice Snuffleupagus", requiredMode = REQUIRED)
+	@NotBlank
 	private String customerReference;
-
-	@Schema(description = "Reference id. Mandatory for INTERNAL billing record.", example = "19-ALI22SNU")
-	private String referenceId;
 
 	@Schema(description = "Date for the invoice", example = "2022-12-24")
 	@DateTimeFormat(iso = ISO.DATE)
@@ -109,19 +107,6 @@ public class Invoice {
 		return this;
 	}
 
-	public String getReferenceId() {
-		return referenceId;
-	}
-
-	public void setReferenceId(String referenceId) {
-		this.referenceId = referenceId;
-	}
-
-	public Invoice withReferenceId(String referenceId) {
-		this.referenceId = referenceId;
-		return this;
-	}
-
 	public LocalDate getDate() {
 		return date;
 	}
@@ -176,7 +161,7 @@ public class Invoice {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(customerId, customerReference, description, date, dueDate, invoiceRows, ourReference, referenceId, totalAmount);
+		return Objects.hash(customerId, customerReference, description, date, dueDate, invoiceRows, ourReference, totalAmount);
 	}
 
 	@Override
@@ -189,7 +174,7 @@ public class Invoice {
 		}
 		final var other = (Invoice) obj;
 		return Objects.equals(customerId, other.customerId) && Objects.equals(customerReference, other.customerReference) && Objects.equals(description, other.description) && Objects.equals(invoiceRows, other.invoiceRows) && Objects.equals(
-			ourReference, other.ourReference) && Objects.equals(referenceId, other.referenceId) && Objects.equals(date, other.date) && Objects.equals(dueDate, other.dueDate) && Objects.equals(totalAmount, other.totalAmount);
+			ourReference, other.ourReference) && Objects.equals(date, other.date) && Objects.equals(dueDate, other.dueDate) && Objects.equals(totalAmount, other.totalAmount);
 	}
 
 	@Override
@@ -199,7 +184,6 @@ public class Invoice {
 			.append(", description=").append(description)
 			.append(", ourReference=").append(ourReference)
 			.append(", customerReference=").append(customerReference)
-			.append(", referenceId=").append(referenceId)
 			.append(", date=").append(date)
 			.append(", dueDate=").append(dueDate)
 			.append(", totalAmount=").append(totalAmount)

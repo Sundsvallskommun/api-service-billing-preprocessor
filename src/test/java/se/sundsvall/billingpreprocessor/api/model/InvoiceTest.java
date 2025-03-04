@@ -44,7 +44,6 @@ class InvoiceTest {
 		final var dueDate = LocalDate.now();
 		final var invoiceRows = List.of(InvoiceRow.create());
 		final var ourReference = "ourReference";
-		final var referenceId = "referenceId";
 		final var totalAmount = BigDecimal.valueOf(12345.67d);
 
 		final var bean = Invoice.create()
@@ -55,7 +54,6 @@ class InvoiceTest {
 			.withDueDate(dueDate)
 			.withInvoiceRows(invoiceRows)
 			.withOurReference(ourReference)
-			.withReferenceId(referenceId)
 			.withTotalAmount(totalAmount);
 
 		assertThat(bean.getCustomerId()).isEqualTo(customerId);
@@ -65,7 +63,6 @@ class InvoiceTest {
 		assertThat(bean.getDueDate()).isEqualTo(dueDate);
 		assertThat(bean.getInvoiceRows()).isEqualTo(invoiceRows);
 		assertThat(bean.getOurReference()).isEqualTo(ourReference);
-		assertThat(bean.getReferenceId()).isEqualTo(referenceId);
 		assertThat(bean.getTotalAmount()).isEqualTo(totalAmount);
 	}
 

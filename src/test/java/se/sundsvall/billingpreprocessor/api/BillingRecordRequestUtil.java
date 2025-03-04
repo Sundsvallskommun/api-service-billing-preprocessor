@@ -57,7 +57,6 @@ public class BillingRecordRequestUtil {
 			.withCustomerReference(type == EXTERNAL && !validInvoice ? null : "customerReference")
 			.withDescription("description")
 			.withOurReference(type == INTERNAL && !validInvoice ? null : "reference")
-			.withReferenceId(type == INTERNAL && !validInvoice ? null : "referenceId")
 			.withTotalAmount(validInvoice ? null : BigDecimal.valueOf(123d));
 	}
 

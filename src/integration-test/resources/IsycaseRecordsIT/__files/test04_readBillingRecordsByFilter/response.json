@@ -12,8 +12,7 @@
 				"description": "Passerkort med foto för Ivan Drago (IVA02DRA)",
 				"ourReference": "MAN22VEG",
 				"customerReference": "JAN00EDO",
-				"referenceId": "IN-1998-1884-42",
-				"totalAmount": 200.0,
+				"totalAmount": 200.00,
 				"invoiceRows": [
 					{
 						"descriptions": [
@@ -24,9 +23,9 @@
 							"Användare: Ivan Drago IVA02DRA",
 							"Passerkort med foto"
 						],
-						"totalAmount": 200.0,
-						"costPerUnit": 200.0,
-						"quantity": 1.0,
+						"totalAmount": 200.00,
+						"costPerUnit": 200.00,
+						"quantity": 1.00,
 						"accountInformation": [
 							{
 								"costCenter": "1620000",
@@ -34,7 +33,7 @@
 								"department": "910300",
 								"activity": "5247000",
 								"counterpart": "MAN22VEG",
-								"amount": 200.0
+								"amount": 200.00
 							}
 						]
 					}
@@ -68,19 +67,18 @@
 				"description": "Faktura för skadebehandling",
 				"ourReference": "MIC00GOL",
 				"customerReference": "YUI10KAR",
-				"referenceId": "X17",
 				"date": "2024-03-18",
 				"dueDate": "2024-05-31",
-				"totalAmount": 200000.0,
+				"totalAmount": 200000.00,
 				"invoiceRows": [
 					{
 						"descriptions": [
 							"Styrka: 100mg"
 						],
-						"totalAmount": 200000.0,
+						"totalAmount": 200000.00,
 						"vatCode": "25",
-						"costPerUnit": 100000.0,
-						"quantity": 2.0,
+						"costPerUnit": 100000.00,
+						"quantity": 2.00,
 						"accountInformation": [
 							{
 								"costCenter": "1455000",
@@ -89,7 +87,7 @@
 								"activity": "3022910",
 								"article": "Sprutor",
 								"counterpart": "YUI10KAR",
-								"amount": 190000.0
+								"amount": 190000.00
 							},
 							{
 								"costCenter": "1455010",
@@ -98,7 +96,7 @@
 								"activity": "3022910",
 								"article": "Injektion",
 								"counterpart": "YUI10KAR",
-								"amount": 10000.0
+								"amount": 10000.00
 							}
 						]
 					}
@@ -118,8 +116,8 @@
 		"unpaged": false
 	},
 	"last": true,
-	"totalPages": 1,
 	"totalElements": 2,
+	"totalPages": 1,
 	"size": 20,
 	"number": 0,
 	"sort": [],

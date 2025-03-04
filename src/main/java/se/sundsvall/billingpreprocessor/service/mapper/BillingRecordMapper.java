@@ -131,7 +131,6 @@ public final class BillingRecordMapper {
 			.withDueDate(i.getDueDate())
 			.withInvoiceRows(toInvoiceRowEntities(invoiceEntity, i.getInvoiceRows()))
 			.withOurReference(i.getOurReference())
-			.withReferenceId(i.getReferenceId())
 			.withTotalAmount(calculateTotalInvoiceAmount(invoiceEntity)));
 
 		return invoiceEntity;
@@ -278,7 +277,6 @@ public final class BillingRecordMapper {
 			.withDueDate(i.getDueDate())
 			.withInvoiceRows(toInvoiceRows(i.getInvoiceRows()))
 			.withOurReference(i.getOurReference())
-			.withReferenceId(i.getReferenceId())
 			.withTotalAmount(i.getTotalAmount()))
 			.orElse(null);
 	}

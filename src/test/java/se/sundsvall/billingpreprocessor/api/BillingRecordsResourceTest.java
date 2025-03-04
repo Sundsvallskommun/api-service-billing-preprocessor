@@ -243,7 +243,7 @@ class BillingRecordsResourceTest {
 			.withCustomerId("16")
 			.withDescription("Errand number: 2113-01784")
 			.withOurReference("Johan Doe")
-			.withReferenceId("22940338")
+			.withCustomerReference("joh01doe")
 			.withInvoiceRows(createInvoiceRowInstances());
 	}
 

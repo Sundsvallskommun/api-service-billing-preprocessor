@@ -20,7 +20,6 @@
 		"description": "Kundfaktura",
 		"ourReference": "Joakim von Anka",
 		"customerReference": "123",
-		"referenceId": "192021",
 		"totalAmount": 6730.0,
 		"invoiceRows": [
 			{
