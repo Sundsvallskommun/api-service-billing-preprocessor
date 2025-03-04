@@ -18,12 +18,10 @@ public class ValidInvoiceConstraintValidator implements ConstraintValidator<Vali
 	public boolean isValid(final BillingRecord billingRecord, final ConstraintValidatorContext context) {
 		var isValid = true;
 
-		if (billingRecord.getType() == INTERNAL && nonNull(billingRecord.getInvoice())) {
-			if (!isValidOurReference(billingRecord.getInvoice())) {
-				context.disableDefaultConstraintViolation();
-				context.buildConstraintViolationWithTemplate(CUSTOM_ERROR_MESSAGE_MISSING_OUR_REFERENCE).addConstraintViolation();
-				isValid = false;
-			}
+		if (billingRecord.getType() == INTERNAL && nonNull(billingRecord.getInvoice()) && !isValidOurReference(billingRecord.getInvoice())) {
+			context.disableDefaultConstraintViolation();
+			context.buildConstraintViolationWithTemplate(CUSTOM_ERROR_MESSAGE_MISSING_OUR_REFERENCE).addConstraintViolation();
+			isValid = false;
 		}
 		return isValid;
 	}
