@@ -30,7 +30,7 @@ public class Invoice {
 	@Schema(description = "Our reference", example = "Harvey Kneeslapper")
 	private String ourReference;
 
-	@Schema(description = "Customer reference", example = "Alice Snuffleupagus")
+	@Schema(description = "Customer reference", example = "Alice Snuffleupagus", requiredMode = REQUIRED)
 	@NotBlank
 	private String customerReference;
 
