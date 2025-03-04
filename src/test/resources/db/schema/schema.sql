@@ -59,7 +59,6 @@
         description varchar(255),
         id varchar(255) not null,
         our_reference varchar(255),
-        reference_id varchar(255),
         primary key (id)
     ) engine=InnoDB;
 

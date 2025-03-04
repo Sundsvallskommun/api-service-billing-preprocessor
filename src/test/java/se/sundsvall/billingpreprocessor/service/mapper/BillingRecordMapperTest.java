@@ -60,7 +60,6 @@ class BillingRecordMapperTest {
 	private static final LocalDate DATE = LocalDate.now().plusDays(15);
 	private static final LocalDate DUE_DATE = LocalDate.now().plusDays(30);
 	private static final String OUR_REFERENCE = "ourReference";
-	private static final String REFERENCE_ID = "referenceId";
 	private static final BigDecimal INVOICE_TOTAL_AMOUNT = BigDecimal.valueOf(2469d);
 
 	// Invoice row constants
@@ -100,7 +99,7 @@ class BillingRecordMapperTest {
 	private static final String POSTAL_CODE = "postalCode";
 
 	@Test
-	void tobillingRecordEntityForFullInstance() {
+	void toBillingRecordEntityForFullInstance() {
 		final var billingRecord = createbillingRecord();
 		final var billingRecordEntity = BillingRecordMapper.toBillingRecordEntity(billingRecord, MUNICIPALITY_ID);
 
@@ -122,12 +121,12 @@ class BillingRecordMapperTest {
 	}
 
 	@Test
-	void tobillingRecordEntityForNull() {
+	void toBillingRecordEntityForNull() {
 		assertThat(BillingRecordMapper.toBillingRecordEntity(null, MUNICIPALITY_ID)).isNull();
 	}
 
 	@Test
-	void tobillingRecordEntityWithNoRecipient() {
+	void toBillingRecordEntityWithNoRecipient() {
 		final var billingRecord = createbillingRecord().withRecipient(null);
 		final var billingRecordEntity = BillingRecordMapper.toBillingRecordEntity(billingRecord, MUNICIPALITY_ID);
 
@@ -153,7 +152,7 @@ class BillingRecordMapperTest {
 		final var billingRecordEntities = BillingRecordMapper.toBillingRecordEntities(records, MUNICIPALITY_ID);
 
 		assertThat(billingRecordEntities).isNotNull().hasSize(1);
-		final var billingRecordEntity = billingRecordEntities.get(0);
+		final var billingRecordEntity = billingRecordEntities.getFirst();
 
 		// Assert billing record entity values
 		assertBillingRecord(billingRecordEntity);
@@ -172,7 +171,7 @@ class BillingRecordMapperTest {
 	}
 
 	@Test
-	void tobillingRecordEntitiesWithNoRecipient() {
+	void toBillingRecordEntitiesWithNoRecipient() {
 		final var billingRecord = createbillingRecord().withRecipient(null);
 		final var billingRecordEntity = BillingRecordMapper.toBillingRecordEntities(List.of(billingRecord), MUNICIPALITY_ID);
 
@@ -180,7 +179,7 @@ class BillingRecordMapperTest {
 	}
 
 	@Test
-	void tobillingRecordEntitiesWithNoInvoice() {
+	void toBillingRecordEntitiesWithNoInvoice() {
 		final var billingRecord = createbillingRecord().withInvoice(null);
 		final var billingRecordEntity = BillingRecordMapper.toBillingRecordEntities(List.of(billingRecord), MUNICIPALITY_ID);
 
@@ -189,7 +188,7 @@ class BillingRecordMapperTest {
 
 	@ParameterizedTest
 	@EnumSource(value = Status.class, names = "APPROVED", mode = EXCLUDE)
-	void updatebillingRecordEntityFromOtherStatusToApprovedStatus(Status status) {
+	void updateBillingRecordEntityFromOtherStatusToApprovedStatus(Status status) {
 		final var billingEntity = BillingRecordMapper.toBillingRecordEntity(createbillingRecord().withStatus(status).withApprovedBy(null), MUNICIPALITY_ID);
 		final var billingRecord = createbillingRecord();
 		final var updatedEntity = BillingRecordMapper.updateEntity(billingEntity, billingRecord);
@@ -202,7 +201,7 @@ class BillingRecordMapperTest {
 	@ParameterizedTest
 	@ValueSource(strings = "RANDOM_APPROVED_BY")
 	@NullSource
-	void updatebillingRecordEntityWhenStatusApproved(String approvedBy) {
+	void updateBillingRecordEntityWhenStatusApproved(String approvedBy) {
 		final var billingEntity = BillingRecordMapper.toBillingRecordEntity(createbillingRecord(), MUNICIPALITY_ID);
 		final var approvedTimestamp = billingEntity.getApproved();
 		final var updatedEntity = BillingRecordMapper.updateEntity(billingEntity, createbillingRecord().withApprovedBy(approvedBy));
@@ -214,7 +213,7 @@ class BillingRecordMapperTest {
 
 	@ParameterizedTest
 	@EnumSource(value = Status.class, names = "APPROVED", mode = EXCLUDE)
-	void updatebillingRecordEntityFromStatusApprovedToOtherStatus(Status status) {
+	void updateBillingRecordEntityFromStatusApprovedToOtherStatus(Status status) {
 		final var billingEntity = BillingRecordMapper.toBillingRecordEntity(createbillingRecord(), MUNICIPALITY_ID);
 		final var approvedTimestamp = billingEntity.getApproved();
 		final var updatedEntity = BillingRecordMapper.updateEntity(billingEntity, createbillingRecord());
@@ -224,7 +223,7 @@ class BillingRecordMapperTest {
 	}
 
 	@Test
-	void tobillingRecordEntityWithNoAccountInformation() {
+	void toBillingRecordEntityWithNoAccountInformation() {
 		final var billingRecord = createbillingRecord();
 		billingRecord.getInvoice().getInvoiceRows().forEach(row -> row.setAccountInformation(null));
 		final var billingRecordEntity = BillingRecordMapper.toBillingRecordEntity(billingRecord, MUNICIPALITY_ID);
@@ -233,7 +232,7 @@ class BillingRecordMapperTest {
 	}
 
 	@Test
-	void tobillingRecordForFullEntity() {
+	void toBillingRecordForFullEntity() {
 		final var billingRecordEntity = createbillingRecordEntity();
 		final var billingRecord = BillingRecordMapper.toBillingRecord(billingRecordEntity);
 
@@ -286,7 +285,6 @@ class BillingRecordMapperTest {
 				Invoice::getDate,
 				Invoice::getDueDate,
 				Invoice::getOurReference,
-				Invoice::getReferenceId,
 				Invoice::getTotalAmount)
 			.containsExactly(
 				CUSTOMER_ID,
@@ -295,7 +293,6 @@ class BillingRecordMapperTest {
 				DATE,
 				DUE_DATE,
 				OUR_REFERENCE,
-				REFERENCE_ID,
 				INVOICE_TOTAL_AMOUNT);
 
 		// Assert invoice row values
@@ -338,12 +335,12 @@ class BillingRecordMapperTest {
 	}
 
 	@Test
-	void tobillingRecordForNull() {
+	void toBillingRecordForNull() {
 		assertThat(BillingRecordMapper.toBillingRecord(null)).isNull();
 	}
 
 	@Test
-	void tobillingRecordWhenNoDescriptions() {
+	void toBillingRecordWhenNoDescriptions() {
 		final var billingRecordEntity = createbillingRecordEntity();
 		billingRecordEntity.getInvoice().getInvoiceRows().forEach(row -> row.setDescriptions(null));
 		final var billingRecord = BillingRecordMapper.toBillingRecord(billingRecordEntity);
@@ -352,7 +349,7 @@ class BillingRecordMapperTest {
 	}
 
 	@Test
-	void tobillingRecordWhenNoRecipient() {
+	void toBillingRecordWhenNoRecipient() {
 		final var billingRecordEntity = createbillingRecordEntity().withRecipient(null);
 		final var billingRecord = BillingRecordMapper.toBillingRecord(billingRecordEntity);
 
@@ -360,7 +357,7 @@ class BillingRecordMapperTest {
 	}
 
 	@Test
-	void tobillingRecordWhenNoAddress() {
+	void toBillingRecordWhenNoAddress() {
 		final var billingRecordEntity = createbillingRecordEntity();
 		billingRecordEntity.getRecipient().setAddressDetails(null);
 		final var billingRecord = BillingRecordMapper.toBillingRecord(billingRecordEntity);
@@ -369,7 +366,7 @@ class BillingRecordMapperTest {
 	}
 
 	@Test
-	void tobillingRecordWhenNoInvoice() {
+	void toBillingRecordWhenNoInvoice() {
 		final var billingRecordEntity = createbillingRecordEntity().withInvoice(null);
 		final var billingRecord = BillingRecordMapper.toBillingRecord(billingRecordEntity);
 
@@ -377,14 +374,14 @@ class BillingRecordMapperTest {
 	}
 
 	@Test
-	void tobillingRecordsForNull() {
+	void toBillingRecordsForNull() {
 		final var billingRecords = BillingRecordMapper.toBillingRecords(null);
 
 		assertThat(billingRecords).isEmpty();
 	}
 
 	@Test
-	void tobillingRecords() {
+	void toBillingRecords() {
 		final var entities = new ArrayList<BillingRecordEntity>();
 		entities.addAll(List.of(createbillingRecordEntity(), createbillingRecordEntity(), createbillingRecordEntity()));
 		entities.add(null);
@@ -461,7 +458,6 @@ class BillingRecordMapperTest {
 			assertThat(entity.getDueDate()).isEqualTo(DUE_DATE);
 			assertThat(entity.getId()).isNull();
 			assertThat(entity.getOurReference()).isEqualTo(OUR_REFERENCE);
-			assertThat(entity.getReferenceId()).isEqualTo(REFERENCE_ID);
 			assertThat(entity.getTotalAmount()).isEqualByComparingTo(INVOICE_TOTAL_AMOUNT);
 		});
 	}
@@ -548,7 +544,6 @@ class BillingRecordMapperTest {
 			.withDueDate(DUE_DATE)
 			.withId(ID)
 			.withOurReference(OUR_REFERENCE)
-			.withReferenceId(REFERENCE_ID)
 			.withTotalAmount(INVOICE_TOTAL_AMOUNT);
 
 		return invoiceEntity.withInvoiceRows(List.of(createInvoiceRowEntity(1, invoiceEntity), createInvoiceRowEntity(2, invoiceEntity)));
@@ -627,8 +622,7 @@ class BillingRecordMapperTest {
 			.withDate(DATE)
 			.withDueDate(DUE_DATE)
 			.withInvoiceRows(List.of(createInvoiceRow(false), createInvoiceRow(true)))
-			.withOurReference(OUR_REFERENCE)
-			.withReferenceId(REFERENCE_ID);
+			.withOurReference(OUR_REFERENCE);
 	}
 
 	private static InvoiceRow createInvoiceRow(boolean withAccountInformation) {

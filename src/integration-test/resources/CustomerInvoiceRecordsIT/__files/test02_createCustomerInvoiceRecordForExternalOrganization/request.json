@@ -52,8 +52,7 @@
 				"costPerUnit": 5650,
 				"vatCode": "25"
 			}
-		],
-		"referenceId": "192021"
+		]
 	},
 	"category": "CUSTOMER_INVOICE",
 	"type": "EXTERNAL",

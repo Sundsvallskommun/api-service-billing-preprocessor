@@ -10,7 +10,6 @@
 		}
 	},
 	"invoice": {
-		"referenceId": "N/A",
 		"customerId": "Seaview Middle School",
 		"description": "Extra löneutbetalning - Systemet",
 		"invoiceRows": [

@@ -47,7 +47,6 @@ class InvoiceEntityTest {
 		final var id = "id";
 		final var invoiceRow = InvoiceRowEntity.create();
 		final var ourReference = "ourReference";
-		final var referenceId = "referenceId";
 		final var totalAmount = BigDecimal.valueOf(123456d);
 
 		final var entity = InvoiceEntity.create()
@@ -60,7 +59,6 @@ class InvoiceEntityTest {
 			.withId(id)
 			.withInvoiceRows(List.of(invoiceRow))
 			.withOurReference(ourReference)
-			.withReferenceId(referenceId)
 			.withTotalAmount(totalAmount);
 
 		assertThat(entity).hasNoNullFieldsOrProperties();
@@ -73,7 +71,6 @@ class InvoiceEntityTest {
 		assertThat(entity.getId()).isEqualTo(id);
 		assertThat(entity.getInvoiceRows()).containsExactly(invoiceRow);
 		assertThat(entity.getOurReference()).isEqualTo(ourReference);
-		assertThat(entity.getReferenceId()).isEqualTo(referenceId);
 		assertThat(entity.getTotalAmount()).isEqualTo(totalAmount);
 	}
 

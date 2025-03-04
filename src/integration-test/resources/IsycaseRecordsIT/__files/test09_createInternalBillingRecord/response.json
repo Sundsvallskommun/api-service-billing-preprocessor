@@ -7,9 +7,9 @@
 		"customerId": "16",
 		"description": "R-row 1: Errand number 1234-54321",
 		"ourReference": "Harvey Kneeslapper",
-		"referenceId": "19-ALI22SNU",
+		"customerReference": "19-ALI22SNU",
 		"dueDate": "2023-12-24",
-		"totalAmount": 395.0,
+		"totalAmount": 395.00,
 		"invoiceRows": [
 			{
 				"descriptions": [
@@ -19,16 +19,16 @@
 					"U-row A",
 					"U-row B"
 				],
-				"totalAmount": 395.0,
-				"costPerUnit": 395.0,
-				"quantity": 1.0,
+				"totalAmount": 395.00,
+				"costPerUnit": 395.00,
+				"quantity": 1.00,
 				"accountInformation": [
 					{
 						"costCenter": "15800100",
 						"subaccount": "936300",
 						"department": "920360",
 						"counterpart": "11830000",
-						"amount": 395.0
+						"amount": 395.00
 					}
 				]
 			}

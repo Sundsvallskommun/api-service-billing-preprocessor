@@ -47,7 +47,6 @@ class InternalInvoiceCreatorTest {
 	private static final LocalDate DATE = LocalDate.of(2024, 3, 6);
 	private static final LocalDate DUE_DATE = LocalDate.of(2024, 3, 30);
 	private static final String OUR_REFERENCE = "Johnny Bråttom";
-	private static final String REFERENCE_ID = "referenceId";
 	private static final BigDecimal INVOICE_TOTAL_AMOUNT = BigDecimal.valueOf(1500d);
 
 	// Invoice row constants
@@ -185,7 +184,6 @@ class InternalInvoiceCreatorTest {
 			.withDate(DATE)
 			.withDueDate(DUE_DATE)
 			.withOurReference(OUR_REFERENCE)
-			.withReferenceId(REFERENCE_ID)
 			.withTotalAmount(INVOICE_TOTAL_AMOUNT);
 
 		return invoiceEntity.withInvoiceRows(List.of(createInvoiceRowEntity(1, invoiceEntity)));

@@ -46,9 +46,6 @@ public class InvoiceEntity implements Serializable {
 	@Column(name = "customer_reference")
 	private String customerReference;
 
-	@Column(name = "reference_id")
-	private String referenceId;
-
 	@Column(name = "`date`", columnDefinition = "date")
 	private LocalDate date;
 
@@ -143,19 +140,6 @@ public class InvoiceEntity implements Serializable {
 		return this;
 	}
 
-	public String getReferenceId() {
-		return referenceId;
-	}
-
-	public void setReferenceId(String referenceId) {
-		this.referenceId = referenceId;
-	}
-
-	public InvoiceEntity withReferenceId(String referenceId) {
-		this.referenceId = referenceId;
-		return this;
-	}
-
 	public LocalDate getDate() {
 		return date;
 	}
@@ -212,7 +196,7 @@ public class InvoiceEntity implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(billingRecord, customerId, customerReference, description, date, dueDate, id, invoiceRows, ourReference, referenceId, totalAmount);
+		return Objects.hash(billingRecord, customerId, customerReference, description, date, dueDate, id, invoiceRows, ourReference, totalAmount);
 	}
 
 	@Override
@@ -225,8 +209,7 @@ public class InvoiceEntity implements Serializable {
 		}
 		final var other = (InvoiceEntity) obj;
 		return Objects.equals(billingRecord, other.billingRecord) && Objects.equals(customerId, other.customerId) && Objects.equals(customerReference, other.customerReference) && Objects.equals(description, other.description) && Objects.equals(date,
-			other.date) && Objects.equals(dueDate, other.dueDate) && Objects.equals(id, other.id) && Objects.equals(invoiceRows, other.invoiceRows) && Objects.equals(ourReference, other.ourReference) && Objects.equals(referenceId, other.referenceId)
-			&& Objects.equals(totalAmount, other.totalAmount);
+			other.date) && Objects.equals(dueDate, other.dueDate) && Objects.equals(id, other.id) && Objects.equals(invoiceRows, other.invoiceRows) && Objects.equals(ourReference, other.ourReference) && Objects.equals(totalAmount, other.totalAmount);
 	}
 
 	@Override
@@ -239,7 +222,6 @@ public class InvoiceEntity implements Serializable {
 			.append(", description=").append(description)
 			.append(", ourReference=").append(ourReference)
 			.append(", customerReference=").append(customerReference)
-			.append(", referenceId=").append(referenceId)
 			.append(", date=").append(date)
 			.append(", dueDate=").append(dueDate)
 			.append(", totalAmount=").append(totalAmount)

@@ -2,7 +2,6 @@ package se.sundsvall.billingpreprocessor.integration.db;
 
 import static java.time.OffsetDateTime.now;
 import static java.time.temporal.ChronoUnit.SECONDS;
-import static java.util.stream.Collectors.toCollection;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 import static org.assertj.core.api.Assertions.within;
@@ -74,7 +73,6 @@ class BillingRecordRepositoryTest {
 	private static final LocalDate DATE = LocalDate.now();
 	private static final LocalDate DUE_DATE = LocalDate.now().plusWeeks(1);
 	private static final String OUR_REFERENCE = "ourReference";
-	private static final String REFERENCE_ID = "referenceId";
 	private static final BigDecimal TOTAL_AMOUNT = COST_PER_UNIT.multiply(TOTAL_ROW_AMOUNT);
 	private static final String CARE_OF = "careOf";
 	private static final String CITY = "city";
@@ -149,12 +147,11 @@ class BillingRecordRepositoryTest {
 		assertThat(invoice.getId()).isEqualTo(billingRecord.getId());
 		assertThat(invoice.getInvoiceRows()).hasSize(1);
 		assertThat(invoice.getOurReference()).isEqualTo(OUR_REFERENCE);
-		assertThat(invoice.getReferenceId()).isEqualTo(REFERENCE_ID);
 		assertThat(invoice.getTotalAmount()).isEqualTo(TOTAL_AMOUNT);
 	}
 
 	private static void verifyInvoiceRow(final BillingRecordEntity billingRecord) {
-		final var invoiceRow = billingRecord.getInvoice().getInvoiceRows().get(0);
+		final var invoiceRow = billingRecord.getInvoice().getInvoiceRows().getFirst();
 
 		assertThat(invoiceRow.getAccountInformation()).hasSize(1).satisfiesExactly(ai -> {
 			assertThat(ai.getAccuralKey()).isEqualTo(ACCURAL_KEY);
@@ -265,10 +262,9 @@ class BillingRecordRepositoryTest {
 	@Test
 	void update() {
 		final var entity = repository.getReferenceByIdAndMunicipalityId("83e4d599-5b4d-431c-8ebc-81192e9401ee", MUNICIPALITY_ID);
-		final var status = REJECTED;
 
 		assertThat(entity.getStatus()).isEqualTo(NEW);
-		final var updatedEntity = repository.saveAndFlush(entity.withStatus(status));
+		final var updatedEntity = repository.saveAndFlush(entity.withStatus(REJECTED));
 		assertThat(updatedEntity.getStatus()).isEqualTo(REJECTED);
 		assertThat(updatedEntity.getModified()).isCloseTo(now(), within(2, SECONDS));
 	}
@@ -295,7 +291,7 @@ class BillingRecordRepositoryTest {
 	}
 
 	private static List<DescriptionEntity> createDescriptions(final InvoiceRowEntity invoiceRow) {
-		return List.of(
+		return new ArrayList<>(List.of(
 			DescriptionEntity.create()
 				.withInvoiceRow(invoiceRow)
 				.withText(STANDARD_TEXT)
@@ -303,19 +299,17 @@ class BillingRecordRepositoryTest {
 			DescriptionEntity.create()
 				.withInvoiceRow(invoiceRow)
 				.withText(DETAILED_TEXT)
-				.withType(DETAILED))
-			.stream().collect(toCollection(ArrayList::new));
+				.withType(DETAILED)));
 	}
 
 	private static List<InvoiceRowEntity> createInvoiceRows(final InvoiceEntity invoice) {
-		return List.of(InvoiceRowEntity.create()
+		return new ArrayList<>(List.of(InvoiceRowEntity.create()
 			.withAccountInformation(List.of(createAccountInformation()))
 			.withCostPerUnit(COST_PER_UNIT)
 			.withInvoice(invoice)
 			.withQuantity(QUANTITY)
 			.withTotalAmount(TOTAL_ROW_AMOUNT)
-			.withVatCode(VAT_CODE))
-			.stream().collect(toCollection(ArrayList::new));
+			.withVatCode(VAT_CODE)));
 	}
 
 	private static InvoiceEntity createInvoice(final BillingRecordEntity billingRecord) {
@@ -327,7 +321,6 @@ class BillingRecordRepositoryTest {
 			.withDate(DATE)
 			.withDueDate(DUE_DATE)
 			.withOurReference(OUR_REFERENCE)
-			.withReferenceId(REFERENCE_ID)
 			.withTotalAmount(TOTAL_AMOUNT);
 	}
 

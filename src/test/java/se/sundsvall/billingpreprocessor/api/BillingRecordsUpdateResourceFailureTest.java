@@ -147,7 +147,6 @@ class BillingRecordsUpdateResourceFailureTest {
 		assertThat(response.getViolations()).extracting(Violation::getField, Violation::getMessage).containsExactlyInAnyOrder(
 			tuple("billingRecord", "can not contain vat code information on invoice rows when billing record is of type INTERNAL"),
 			tuple("billingRecord", "invoice.ourReference is mandatory when billing record is of type INTERNAL"),
-			tuple("billingRecord", "invoice.referenceId is mandatory when billing record is of type INTERNAL"),
 			tuple("billingRecord", "amount, costCenter, subaccount, department and counterpart must be present for invoice rows containing accountInformation"),
 			tuple("category", "must be one of ACCESS_CARD, CUSTOMER_INVOICE, SALARY_AND_PENSION or ISYCASE"),
 			tuple("approved", "must be null"),
@@ -186,7 +185,6 @@ class BillingRecordsUpdateResourceFailureTest {
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations()).extracting(Violation::getField, Violation::getMessage).containsExactlyInAnyOrder(
 			tuple("billingRecord", "Street, postal code and city must all be present in recipient.addressDetails for EXTERNAL billing record"),
-			tuple("billingRecord", "invoice.customerReference is mandatory when billing record is of type EXTERNAL"),
 			tuple("billingRecord", "recipient must either have an organization name or a first and last name defined"),
 			tuple("billingRecord", "recipient must have partyId or legalId when billing record is of type EXTERNAL"),
 			tuple("billingRecord", "must contain vat code information on invoice rows when billing record is of type EXTERNAL"),
@@ -195,6 +193,7 @@ class BillingRecordsUpdateResourceFailureTest {
 			tuple("approved", "must be null"),
 			tuple("created", "must be null"),
 			tuple("id", "must be null"),
+			tuple("invoice.customerReference", "must not be blank"),
 			tuple("invoice.invoiceRows[0].descriptions[0]", "size must be between 1 and 30"),
 			tuple("invoice.invoiceRows[0].totalAmount", "must be null"),
 			tuple("invoice.totalAmount", "must be null"),

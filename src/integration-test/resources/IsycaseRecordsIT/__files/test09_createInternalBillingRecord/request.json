@@ -4,6 +4,7 @@
 		"dueDate": "2023-12-24",
 		"customerId": "16",
 		"description": "R-row 1: Errand number 1234-54321",
+		"customerReference": "19-ALI22SNU",
 		"invoiceRows": [
 			{
 				"quantity": 1,
@@ -25,8 +26,7 @@
 				],
 				"costPerUnit": 395
 			}
-		],
-		"referenceId": "19-ALI22SNU"
+		]
 	},
 	"category": "ISYCASE",
 	"type": "INTERNAL",

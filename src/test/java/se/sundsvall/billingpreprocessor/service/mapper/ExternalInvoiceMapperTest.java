@@ -52,7 +52,6 @@ class ExternalInvoiceMapperTest {
 	private static final LocalDate DATE = LocalDate.now().plusDays(15);
 	private static final LocalDate DUE_DATE = LocalDate.now().plusDays(30);
 	private static final String OUR_REFERENCE = "ourReference";
-	private static final String REFERENCE_ID = "referenceId";
 	private static final BigDecimal INVOICE_TOTAL_AMOUNT = BigDecimal.valueOf(2469d);
 
 	// Invoice row constants
@@ -353,7 +352,6 @@ class ExternalInvoiceMapperTest {
 			.withDueDate(DUE_DATE)
 			.withId(ID)
 			.withOurReference(OUR_REFERENCE)
-			.withReferenceId(REFERENCE_ID)
 			.withTotalAmount(INVOICE_TOTAL_AMOUNT);
 
 		return invoiceEntity.withInvoiceRows(List.of(createInvoiceRowEntity(1, invoiceEntity), createInvoiceRowEntity(2, invoiceEntity)));

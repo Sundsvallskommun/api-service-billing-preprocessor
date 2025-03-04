@@ -9,10 +9,10 @@ VALUES	  ('23af2045-c96e-44d6-b0da-d2f8a38b9711', 'CUSTOMER_INVOICE', '2024-11-1
 -- ---------------------------
 -- Invoices
 -- -----------------------------------
-INSERT INTO invoice (id, customer_id, customer_reference, description, `date`, due_date, our_reference, reference_id, total_amount)
-VALUES	  ('23af2045-c96e-44d6-b0da-d2f8a38b9711', '20', '123', 'Kundfaktura 1', NULL, NULL, 'Joakim von Anka', '192021', 2281),
-          ('6b92f728-8698-47aa-b8c7-c67585df373e', '20', '25Mil', 'Kundfaktura 2', NULL, NULL, 'Joakim von Anka', '192021', 2281),
-          ('6d762c41-6ecb-4306-9594-316240e01a68', '199001012385', 'Kalle Anka', 'Kundfaktura 3', NULL, NULL, 'kalle anka', '185375', 2281);
+INSERT INTO invoice (id, customer_id, customer_reference, description, `date`, due_date, our_reference, total_amount)
+VALUES	  ('23af2045-c96e-44d6-b0da-d2f8a38b9711', '20', '123', 'Kundfaktura 1', NULL, NULL, 'Joakim von Anka',  2281),
+          ('6b92f728-8698-47aa-b8c7-c67585df373e', '20', '25Mil', 'Kundfaktura 2', NULL, NULL, 'Joakim von Anka',  2281),
+          ('6d762c41-6ecb-4306-9594-316240e01a68', '199001012385', 'Kalle Anka', 'Kundfaktura 3', NULL, NULL, 'kalle anka',  2281);
 
 -- -----------------------------------
 -- Invoice rows

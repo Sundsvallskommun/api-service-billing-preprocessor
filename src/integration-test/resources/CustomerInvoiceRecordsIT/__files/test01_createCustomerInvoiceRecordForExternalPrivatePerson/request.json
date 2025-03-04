@@ -54,8 +54,7 @@
 				"costPerUnit": 700,
 				"vatCode": "00"
 			}
-		],
-		"referenceId": "185375"
+		]
 	},
 	"category": "CUSTOMER_INVOICE",
 	"type": "EXTERNAL",

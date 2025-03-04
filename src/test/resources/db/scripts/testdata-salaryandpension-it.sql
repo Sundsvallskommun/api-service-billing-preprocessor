@@ -8,9 +8,9 @@ VALUES	  ('e4ead2ae-daf7-4993-8f64-f9d24417b188', 'SALARY_AND_PENSION', '2025-02
 -- -----------------------------------
 -- Invoices
 -- -----------------------------------
-INSERT INTO invoice (id, customer_id, customer_reference, description, `date`, due_date, our_reference, reference_id, total_amount)
-VALUES	  ('e4ead2ae-daf7-4993-8f64-f9d24417b188', 'Seaview Middle School', 'PRI22LUG', 'Extra löneutbetalning - Systemet', NULL, NULL, 'Hanna Montana', 'N/A', 376.38),
-          ('9d7c72f4-7b18-4a4a-b2ee-4a7007cada3c', '10', 'HAN99MON', 'Extra löneutbetalning - Direktinsättning', NULL, NULL, 'Lola Luftnagle', 'N/A', 1530.0);
+INSERT INTO invoice (id, customer_id, customer_reference, description, `date`, due_date, our_reference, total_amount)
+VALUES	  ('e4ead2ae-daf7-4993-8f64-f9d24417b188', 'Seaview Middle School', 'PRI22LUG', 'Extra löneutbetalning - Systemet', NULL, NULL, 'Hanna Montana',  376.38),
+          ('9d7c72f4-7b18-4a4a-b2ee-4a7007cada3c', '10', 'HAN99MON', 'Extra löneutbetalning - Direktinsättning', NULL, NULL, 'Lola Luftnagle', 1530.0);
 
 -- -----------------------------------
 -- Invoice rows
