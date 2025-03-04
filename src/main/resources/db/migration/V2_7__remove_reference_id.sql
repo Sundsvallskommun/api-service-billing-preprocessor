@@ -1,2 +1,2 @@
-ALTER TABLE invoice
-    DROP COLUMN reference_id;
+ALTER TABLE if exists invoice
+    DROP COLUMN if exists reference_id;
