@@ -7,6 +7,7 @@ import static org.springframework.util.ResourceUtils.getFile;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -53,8 +54,8 @@ class SftpConfigurationTest {
 
 	@Container
 	private static final GenericContainer<?> SFTP_SERVER = new GenericContainer<>("atmoz/sftp:alpine-3.7")
-		.withCopyFileToContainer(MountableFile.forClasspathResource("keys/ssh_host_ed25519_key", 0600), "/etc/ssh/")
-		.withCopyFileToContainer(MountableFile.forClasspathResource("keys/ssh_host_ed25519_key.pub", 0600), "/etc/ssh/")
+		.withCopyFileToContainer(MountableFile.forClasspathResource("keys/ssh_host_rsa_key", 0600), "/etc/ssh/")
+		.withCopyFileToContainer(MountableFile.forClasspathResource("keys/ssh_host_rsa_key.pub", 0600), "/etc/ssh/")
 		.withExposedPorts(22)
 		.withCommand("user:pass:1001::upload");
 
@@ -63,7 +64,7 @@ class SftpConfigurationTest {
 		SFTP_SERVER.start();
 		SFTP_SERVER.followOutput(new Slf4jLogConsumer(LOGGER));
 
-		final var key = readString(getFile("classpath:keys/ssh_host_ed25519_key.pub").toPath());
+		final var key = readString(getFile("classpath:keys/ssh_host_rsa_key.pub").toPath());
 		registry.add("integration.sftp.municipalityIds.2281.host", SFTP_SERVER::getHost);
 		registry.add("integration.sftp.municipalityIds.2281.port", () -> SFTP_SERVER.getMappedPort(22));
 		registry.add("integration.sftp.municipalityIds.2281.knownHosts", () -> String.format("[%s]:%s %s", SFTP_SERVER.getHost(), SFTP_SERVER.getMappedPort(22), key));
@@ -95,7 +96,7 @@ class SftpConfigurationTest {
 
 	private ChannelSftp getSftpChannel() throws JSchException {
 		final var jsch = new JSch();
-		final var jschSession = jsch.getSession(properties.getMap().get("2281").getUser(), properties.getMap().get("2281").getHost(), properties.getMap().get("2281").getPort());
+		final Session jschSession = jsch.getSession(properties.getMap().get("2281").getUser(), properties.getMap().get("2281").getHost(), properties.getMap().get("2281").getPort());
 		jschSession.setPassword(properties.getMap().get("2281").getPassword());
 		jschSession.setConfig("StrictHostKeyChecking", "no");
 		jschSession.connect();
