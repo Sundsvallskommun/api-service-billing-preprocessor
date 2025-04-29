@@ -19,10 +19,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
+
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
+
 import se.sundsvall.billingpreprocessor.Application;
 import se.sundsvall.billingpreprocessor.integration.db.InvoiceFileRepository;
 import se.sundsvall.billingpreprocessor.service.creator.config.InvoiceCreatorProperties;
@@ -71,11 +73,11 @@ class SalaryAndPensionJobsIT extends AbstractAppTest {
 			})
 			.satisfiesExactlyInAnyOrder(file -> {
 				assertThat(file.getContent()).isEqualTo(getResource("/filecontent/expected_internal_content.txt"));
-				assertThat(file.getName()).isEqualTo("%s_ipklop.txt".formatted(LocalDateTime.now().format(DATE_TIME_FORMATTER)));
+				assertThat(file.getName()).isEqualTo("ipklop_%s.txt".formatted(LocalDateTime.now().format(DATE_TIME_FORMATTER)));
 				assertThat(file.getType()).isEqualTo(INTERNAL.name());
 			}, file -> {
 				assertThat(file.getContent()).isEqualTo(getResource("/filecontent/expected_external_content.txt").replace("yyMMdd", LocalDate.now().format(DateTimeFormatter.ofPattern("yyMMdd"))));
-				assertThat(file.getName()).isEqualTo("%s_krlope.txt".formatted(LocalDateTime.now().format(DATE_TIME_FORMATTER)));
+				assertThat(file.getName()).isEqualTo("krlope_%s.txt".formatted(LocalDateTime.now().format(DATE_TIME_FORMATTER)));
 				assertThat(file.getType()).isEqualTo(EXTERNAL.name());
 			});
 
