@@ -7,7 +7,7 @@ info:
     url: https://opensource.org/licenses/MIT
   version: "4.0"
 servers:
-  - url: http://localhost:65274
+  - url: http://localhost:55836
     description: Generated server url
 tags:
   - name: BillingRecord
@@ -424,9 +424,9 @@ components:
             type: object
         status:
           $ref: "#/components/schemas/StatusType"
-        detail:
-          type: string
         title:
+          type: string
+        detail:
           type: string
     StatusType:
       type: object
@@ -559,9 +559,9 @@ components:
             type: object
         status:
           $ref: "#/components/schemas/StatusType"
-        detail:
-          type: string
         title:
+          type: string
+        detail:
           type: string
         suppressed:
           type: array
@@ -734,10 +734,12 @@ components:
       type: object
       properties:
         customerId:
+          minLength: 1
           type: string
           description: Customer number in Raindance
           example: "16"
         description:
+          minLength: 1
           type: string
           description: Description of the invoice
           example: "Errand number: 2113-01784"
@@ -746,6 +748,7 @@ components:
           description: Our reference
           example: Harvey Kneeslapper
         customerReference:
+          minLength: 1
           type: string
           description: Customer reference
           example: Alice Snuffleupagus
@@ -765,6 +768,7 @@ components:
           readOnly: true
           example: 1399.95
         invoiceRows:
+          minItems: 1
           type: array
           items:
             $ref: "#/components/schemas/InvoiceRow"
@@ -783,6 +787,7 @@ components:
         detailedDescriptions:
           type: array
           items:
+            minLength: 1
             type: string
             description: Detailed description of row
             example: Row with detailed description
@@ -869,6 +874,10 @@ components:
         totalElements:
           type: integer
           format: int64
+        first:
+          type: boolean
+        last:
+          type: boolean
         size:
           type: integer
           format: int32
@@ -881,15 +890,11 @@ components:
           format: int32
         sort:
           $ref: "#/components/schemas/SortObject"
-        first:
-          type: boolean
-        last:
-          type: boolean
+        pageable:
+          $ref: "#/components/schemas/PageableObject"
         numberOfElements:
           type: integer
           format: int32
-        pageable:
-          $ref: "#/components/schemas/PageableObject"
         empty:
           type: boolean
     PageableObject:
@@ -900,16 +905,16 @@ components:
           format: int64
         sort:
           $ref: "#/components/schemas/SortObject"
-        pageSize:
-          type: integer
-          format: int32
+        unpaged:
+          type: boolean
+        paged:
+          type: boolean
         pageNumber:
           type: integer
           format: int32
-        paged:
-          type: boolean
-        unpaged:
-          type: boolean
+        pageSize:
+          type: integer
+          format: int32
     SortObject:
       type: object
       properties:
