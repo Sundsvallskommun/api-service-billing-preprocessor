@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>se.sundsvall</groupId>
 	<artifactId>api-service-billing-preprocessor</artifactId>
-	<version>4.0</version>
+	<version>5.0</version>
 	<name>api-service-billing-preprocessor</name>
 	<properties>
 		<!-- Service properties -->
