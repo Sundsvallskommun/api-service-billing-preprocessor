@@ -1,6 +1,7 @@
 package se.sundsvall.billingpreprocessor.service.creator;
 
 import static java.time.OffsetDateTime.now;
+import static java.util.Collections.emptyList;
 import static java.util.UUID.randomUUID;
 import static org.apache.commons.text.StringEscapeUtils.unescapeJava;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -10,6 +11,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
+import static se.sundsvall.billingpreprocessor.Constants.EMPTY_ARRAY;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.DETAILED;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.STANDARD;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.APPROVED;
@@ -171,6 +173,30 @@ class ExternalInvoiceCreatorTest {
 	}
 
 	@Test
+	void createFileFooterWithEmptyList() throws Exception {
+		final var config = InvoiceFileConfigurationEntity.create().withEncoding(StandardCharsets.ISO_8859_1.name());
+		when(invoiceFileConfigurationRepositoryMock.findByCreatorName("ExternalInvoiceCreator")).thenReturn(Optional.of(config));
+
+		final var result = creator.createFileFooter(emptyList());
+
+		assertThat(result).isEqualTo(EMPTY_ARRAY);
+	}
+
+	@Test
+	void createFileFooterWithBillingRecords() throws Exception {
+		final var config = InvoiceFileConfigurationEntity.create().withEncoding(StandardCharsets.ISO_8859_1.name());
+		when(invoiceFileConfigurationRepositoryMock.findByCreatorName("ExternalInvoiceCreator")).thenReturn(Optional.of(config));
+
+		final var billingRecords = List.of(
+			createBillingRecordEntity(),
+			createBillingRecordEntity());
+
+		final var result = creator.createFileFooter(billingRecords);
+
+		assertThat(result).isEqualTo(EMPTY_ARRAY);
+	}
+
+	@Test
 	void createInvoiceDataFromNull() throws Exception {
 		assertThat(creator.createInvoiceData(null)).isEmpty();
 	}
@@ -180,7 +206,7 @@ class ExternalInvoiceCreatorTest {
 		final var config = InvoiceFileConfigurationEntity.create().withEncoding(StandardCharsets.ISO_8859_1.name());
 		when(invoiceFileConfigurationRepositoryMock.findByCreatorName("ExternalInvoiceCreator")).thenReturn(Optional.of(config));
 
-		final var input = createbillingRecordEntity().withInvoice(null);
+		final var input = createBillingRecordEntity().withInvoice(null);
 		final var e = assertThrows(ThrowableProblem.class, () -> creator.createInvoiceData(input));
 
 		assertThat(e.getStatus()).isEqualTo(INTERNAL_SERVER_ERROR);
@@ -192,7 +218,7 @@ class ExternalInvoiceCreatorTest {
 		final var config = InvoiceFileConfigurationEntity.create().withEncoding(StandardCharsets.ISO_8859_1.name());
 		when(invoiceFileConfigurationRepositoryMock.findByCreatorName("ExternalInvoiceCreator")).thenReturn(Optional.of(config));
 
-		final var result = creator.createInvoiceData(createbillingRecordEntity());
+		final var result = creator.createInvoiceData(createBillingRecordEntity());
 		final var expected = getResource("validation/external_invoicedata_expected_format.txt");
 
 		assertThat(new String(result, StandardCharsets.ISO_8859_1)).isEqualTo(expected);
@@ -204,7 +230,7 @@ class ExternalInvoiceCreatorTest {
 		final var config = InvoiceFileConfigurationEntity.create().withEncoding(StandardCharsets.ISO_8859_1.name());
 		when(invoiceFileConfigurationRepositoryMock.findByCreatorName("ExternalInvoiceCreator")).thenReturn(Optional.of(config));
 
-		final var input = createbillingRecordEntity();
+		final var input = createBillingRecordEntity();
 		input.getRecipient().withLegalId(null).withPartyId(PARTY_ID);
 
 		when(legalIdProviderMock.translateToLegalId(MUNICIPALITY_ID, PARTY_ID)).thenReturn(LEGAL_ID);
@@ -221,7 +247,7 @@ class ExternalInvoiceCreatorTest {
 			.replaceAll(System.lineSeparator(), unescapeJava(properties.recordTerminator()));
 	}
 
-	private static BillingRecordEntity createbillingRecordEntity() {
+	private static BillingRecordEntity createBillingRecordEntity() {
 		final var billingRecordEntity = BillingRecordEntity.create()
 			.withMunicipalityId(MUNICIPALITY_ID)
 			.withApproved(APPROVED_TIMESTAMP)

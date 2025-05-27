@@ -1,6 +1,9 @@
 package se.sundsvall.billingpreprocessor.service.creator;
 
+import static se.sundsvall.billingpreprocessor.Constants.EMPTY_ARRAY;
+
 import java.io.IOException;
+import java.util.List;
 import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.enums.Type;
 
@@ -23,11 +26,24 @@ public interface InvoiceCreator {
 
 	/**
 	 * Method for creating a file header
-	 * 
-	 * @return             bytearray representing the file header
-	 * @throws IOException if byte array output stream can not be closed
+	 *
+	 * @return             byte array representing the file header
+	 * @throws IOException if the byte array output stream cannot be closed
 	 */
-	byte[] createFileHeader() throws IOException;
+	default byte[] createFileHeader() throws IOException {
+		return EMPTY_ARRAY;
+	}
+
+	/**
+	 * Method for creating a file footer
+	 *
+	 * @param  billingRecords containing the billing record to produce a file footer section for
+	 * @return                byte array representing the file footer
+	 * @throws IOException    if the byte array output stream cannot be closed
+	 */
+	default byte[] createFileFooter(List<BillingRecordEntity> billingRecords) throws IOException {
+		return EMPTY_ARRAY;
+	}
 
 	/**
 	 * Method for creating an invoice data section

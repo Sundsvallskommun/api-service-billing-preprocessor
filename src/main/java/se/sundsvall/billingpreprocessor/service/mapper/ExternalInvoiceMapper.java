@@ -24,6 +24,7 @@ import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Descri
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.STANDARD;
 import static se.sundsvall.billingpreprocessor.service.util.ProblemUtil.createInternalServerErrorProblem;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
@@ -37,6 +38,7 @@ import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.RecipientEntity;
 import se.sundsvall.billingpreprocessor.service.creator.definition.external.CustomerRow;
+import se.sundsvall.billingpreprocessor.service.creator.definition.external.FileFooterRow;
 import se.sundsvall.billingpreprocessor.service.creator.definition.external.FileHeaderRow;
 import se.sundsvall.billingpreprocessor.service.creator.definition.external.InvoiceAccountingRow;
 import se.sundsvall.billingpreprocessor.service.creator.definition.external.InvoiceDescriptionRow;
@@ -61,6 +63,17 @@ public final class ExternalInvoiceMapper {
 			.withGeneratingSystem(ofNullable(generatingSystem).orElseThrow(createInternalServerErrorProblem(ERROR_GENERATING_SYSTEM_NOT_PRESENT)))
 			.withCreatedDate(LocalDate.now())
 			.withInvoiceType(ofNullable(invoiceType).orElseThrow(createInternalServerErrorProblem(ERROR_INVOICE_TYPE_NOT_PRESENT)));
+	}
+
+	/**
+	 * Method for creating a file footer row for external invoice files
+	 *
+	 * @param  billingRecords entity representing the billingRecordEntity
+	 * @return                FileFooterRow for external invoice files
+	 */
+	public static FileFooterRow toFileFooter(final List<BillingRecordEntity> billingRecords) {
+		return FileFooterRow.create()
+			.withTotalAmount(calculateTotalAmount(billingRecords));
 	}
 
 	/**
@@ -216,5 +229,15 @@ public final class ExternalInvoiceMapper {
 			.filter(StringUtils::isNotBlank)
 			.findFirst()
 			.orElse(null);
+	}
+
+	private static BigDecimal calculateTotalAmount(final List<BillingRecordEntity> billingRecords) {
+		return billingRecords.stream()
+			.map(BillingRecordEntity::getInvoice)
+			.map(InvoiceEntity::getInvoiceRows)
+			.flatMap(List::stream)
+			.map(InvoiceRowEntity::getTotalAmount)
+			.reduce(BigDecimal::add)
+			.orElse(BigDecimal.ZERO);
 	}
 }

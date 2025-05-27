@@ -1,11 +1,13 @@
 package se.sundsvall.billingpreprocessor.service.creator;
 
+import static java.util.Collections.emptyList;
 import static org.apache.commons.text.StringEscapeUtils.unescapeJava;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
+import static se.sundsvall.billingpreprocessor.Constants.EMPTY_ARRAY;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.DETAILED;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.STANDARD;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.INTERNAL;
@@ -134,6 +136,30 @@ class InternalInvoiceCreatorTest {
 		final var expected = getResource("validation/internal_header_expected_format.txt");
 
 		assertThat(new String(result, StandardCharsets.ISO_8859_1)).isEqualTo(expected);
+	}
+
+	@Test
+	void createFileFooterWithEmptyList() throws Exception {
+		final var config = InvoiceFileConfigurationEntity.create().withEncoding(StandardCharsets.ISO_8859_1.name());
+		when(invoiceFileConfigurationRepositoryMock.findByCreatorName("InternalInvoiceCreator")).thenReturn(Optional.of(config));
+
+		final var result = creator.createFileFooter(emptyList());
+
+		assertThat(result).isEqualTo(EMPTY_ARRAY);
+	}
+
+	@Test
+	void createFileFooterWithBillingRecords() throws Exception {
+		final var config = InvoiceFileConfigurationEntity.create().withEncoding(StandardCharsets.ISO_8859_1.name());
+		when(invoiceFileConfigurationRepositoryMock.findByCreatorName("InternalInvoiceCreator")).thenReturn(Optional.of(config));
+
+		final var billingRecords = List.of(
+			createbillingRecordEntity(),
+			createbillingRecordEntity());
+
+		final var result = creator.createFileFooter(billingRecords);
+
+		assertThat(result).isEqualTo(EMPTY_ARRAY);
 	}
 
 	@Test

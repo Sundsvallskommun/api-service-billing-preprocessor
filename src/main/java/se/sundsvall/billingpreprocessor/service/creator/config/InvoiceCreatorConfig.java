@@ -27,7 +27,8 @@ public class InvoiceCreatorConfig {
 			.addRecord(se.sundsvall.billingpreprocessor.service.creator.definition.internal.InvoiceRow.class)
 			.addRecord(se.sundsvall.billingpreprocessor.service.creator.definition.internal.InvoiceRowDescriptionRow.class)
 			.addRecord(se.sundsvall.billingpreprocessor.service.creator.definition.internal.InvoiceAccountingRow.class)
-			.addRecord(se.sundsvall.billingpreprocessor.service.creator.definition.internal.InvoiceFooterRow.class);
+			.addRecord(se.sundsvall.billingpreprocessor.service.creator.definition.internal.InvoiceFooterRow.class)
+			.addRecord(se.sundsvall.billingpreprocessor.service.creator.definition.internal.FileFooterRow.class);
 	}
 
 	@Bean(EXTERNAL_INVOICE_BUILDER)
@@ -43,6 +44,7 @@ public class InvoiceCreatorConfig {
 			.addRecord(se.sundsvall.billingpreprocessor.service.creator.definition.external.InvoiceRow.class)
 			.addRecord(se.sundsvall.billingpreprocessor.service.creator.definition.external.InvoiceDescriptionRow.class)
 			.addRecord(se.sundsvall.billingpreprocessor.service.creator.definition.external.InvoiceAccountingRow.class)
-			.addRecord(se.sundsvall.billingpreprocessor.service.creator.definition.external.InvoiceFooterRow.class);
+			.addRecord(se.sundsvall.billingpreprocessor.service.creator.definition.external.InvoiceFooterRow.class)
+			.addRecord(se.sundsvall.billingpreprocessor.service.creator.definition.external.FileFooterRow.class);
 	}
 }

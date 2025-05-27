@@ -33,9 +33,10 @@ import se.sundsvall.billingpreprocessor.integration.db.model.enums.Type;
 
 @Component
 public class ExternalInvoiceCreator implements InvoiceCreator {
-	private final StreamFactory factory;
-	private final LegalIdProvider legalIdProvider;
-	private final InvoiceFileConfigurationRepository configurationRepository;
+
+	protected final StreamFactory factory;
+	protected final LegalIdProvider legalIdProvider;
+	protected final InvoiceFileConfigurationRepository configurationRepository;
 
 	public ExternalInvoiceCreator(@Qualifier(EXTERNAL_INVOICE_BUILDER) StreamBuilder builder, LegalIdProvider legalIdProvider, InvoiceFileConfigurationRepository configurationRepository) {
 		this.factory = StreamFactory.newInstance();
@@ -44,7 +45,7 @@ public class ExternalInvoiceCreator implements InvoiceCreator {
 		this.configurationRepository = configurationRepository;
 	}
 
-	private InvoiceFileConfigurationEntity getConfiguration() {
+	protected InvoiceFileConfigurationEntity getConfiguration() {
 		return configurationRepository.findByCreatorName(this.getClass().getSimpleName())
 			.orElseThrow(createInternalServerErrorProblem(CONFIGURATION_NOT_PRESENT.formatted(this.getClass().getSimpleName())));
 	}
@@ -108,7 +109,7 @@ public class ExternalInvoiceCreator implements InvoiceCreator {
 		}
 	}
 
-	private void processInvoice(BeanWriter invoiceWriter, BillingRecordEntity billingRecord) {
+	protected void processInvoice(BeanWriter invoiceWriter, BillingRecordEntity billingRecord) {
 		final var recipientLegalId = extractLegalId(billingRecord);
 
 		invoiceWriter.write(toCustomer(recipientLegalId, billingRecord));
@@ -122,13 +123,13 @@ public class ExternalInvoiceCreator implements InvoiceCreator {
 		invoiceWriter.write(toInvoiceFooter(billingRecord));
 	}
 
-	private void processInvoiceRow(BeanWriter invoiceWriter, String recipientLegalId, InvoiceRowEntity invoiceRow) {
+	protected void processInvoiceRow(BeanWriter invoiceWriter, String recipientLegalId, InvoiceRowEntity invoiceRow) {
 		invoiceWriter.write(toInvoiceRow(recipientLegalId, invoiceRow));
 		toInvoiceDescriptionRows(recipientLegalId, invoiceRow).forEach(invoiceWriter::write);
 		toInvoiceAccountingRows(invoiceRow).forEach(invoiceWriter::write);
 	}
 
-	private String extractLegalId(BillingRecordEntity billingRecord) {
+	protected String extractLegalId(BillingRecordEntity billingRecord) {
 		final var legalId = ofNullable(billingRecord.getRecipient().getLegalId())
 			.orElseGet(() -> legalIdProvider.translateToLegalId(billingRecord.getMunicipalityId(), billingRecord.getRecipient().getPartyId()));
 

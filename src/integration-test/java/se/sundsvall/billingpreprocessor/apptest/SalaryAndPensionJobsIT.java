@@ -5,6 +5,7 @@ import static java.time.temporal.ChronoUnit.SECONDS;
 import static org.apache.commons.text.StringEscapeUtils.unescapeJava;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
+import static org.awaitility.Awaitility.await;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.util.ResourceUtils.getFile;
@@ -19,12 +20,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
-
-import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
-
 import se.sundsvall.billingpreprocessor.Application;
 import se.sundsvall.billingpreprocessor.integration.db.InvoiceFileRepository;
 import se.sundsvall.billingpreprocessor.service.creator.config.InvoiceCreatorProperties;
@@ -56,14 +54,14 @@ class SalaryAndPensionJobsIT extends AbstractAppTest {
 			.withExpectedResponseBodyIsNull()
 			.sendRequestAndVerifyResponse();
 
-		Awaitility.await()
+		// Wait until files have been created
+		await()
 			.atMost(Duration.of(5, SECONDS))
-			.ignoreExceptions()
-			.until(this::assertFileEntries);
-	}
+			.until(() -> repository.count() == 2);
 
-	private boolean assertFileEntries() {
-		assertThat(repository.findAll()).hasSize(2)
+		// Verify the results
+		assertThat(repository.findAll())
+			.hasSize(2)
 			.allSatisfy(file -> {
 				assertThat(file.getCreated()).isCloseTo(OffsetDateTime.now(), within(2, SECONDS));
 				assertThat(file.getSent()).isNull();
@@ -80,8 +78,6 @@ class SalaryAndPensionJobsIT extends AbstractAppTest {
 				assertThat(file.getName()).isEqualTo("krlope_%s.txt".formatted(LocalDateTime.now().format(DATE_TIME_FORMATTER)));
 				assertThat(file.getType()).isEqualTo(EXTERNAL.name());
 			});
-
-		return true;
 	}
 
 	private String getResource(final String filePath) throws IOException {
