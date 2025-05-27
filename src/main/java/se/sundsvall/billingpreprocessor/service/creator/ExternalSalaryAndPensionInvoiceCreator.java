@@ -42,7 +42,7 @@ public class ExternalSalaryAndPensionInvoiceCreator extends ExternalInvoiceCreat
 
 		final var encoding = Charset.forName(getConfiguration().getEncoding());
 		try (var byteArrayOutputStream = new ByteArrayOutputStream();
-			var invoiceWriter = factory.createWriter(EXTERNAL_INVOICE_BUILDER, new OutputStreamWriter(byteArrayOutputStream, encoding))) {
+			var invoiceWriter = getFactory().createWriter(EXTERNAL_INVOICE_BUILDER, new OutputStreamWriter(byteArrayOutputStream, encoding))) {
 			invoiceWriter.write(toFileFooter(billingRecords));
 			invoiceWriter.flush();
 			return byteArrayOutputStream.toByteArray();
@@ -50,7 +50,7 @@ public class ExternalSalaryAndPensionInvoiceCreator extends ExternalInvoiceCreat
 	}
 
 	@Override
-	protected void processInvoice(BeanWriter invoiceWriter, BillingRecordEntity billingRecord) {
+	void processInvoice(BeanWriter invoiceWriter, BillingRecordEntity billingRecord) {
 		final var recipientLegalId = extractLegalId(billingRecord);
 
 		invoiceWriter.write(toCustomer(recipientLegalId, billingRecord));

@@ -31,8 +31,8 @@ import se.sundsvall.billingpreprocessor.integration.db.model.enums.Type;
 @Component
 public class InternalInvoiceCreator implements InvoiceCreator {
 
-	protected final InvoiceFileConfigurationRepository configurationRepository;
-	protected final StreamFactory factory;
+	private final InvoiceFileConfigurationRepository configurationRepository;
+	private final StreamFactory factory;
 
 	public InternalInvoiceCreator(@Qualifier(INTERNAL_INVOICE_BUILDER) StreamBuilder builder, InvoiceFileConfigurationRepository configurationRepository) {
 		this.factory = StreamFactory.newInstance();
@@ -40,9 +40,13 @@ public class InternalInvoiceCreator implements InvoiceCreator {
 		this.configurationRepository = configurationRepository;
 	}
 
-	protected InvoiceFileConfigurationEntity getConfiguration() {
+	InvoiceFileConfigurationEntity getConfiguration() {
 		return configurationRepository.findByCreatorName(this.getClass().getSimpleName())
 			.orElseThrow(createInternalServerErrorProblem(CONFIGURATION_NOT_PRESENT.formatted(this.getClass().getSimpleName())));
+	}
+
+	StreamFactory getFactory() {
+		return factory;
 	}
 
 	/**
@@ -104,7 +108,7 @@ public class InternalInvoiceCreator implements InvoiceCreator {
 		}
 	}
 
-	protected void processInvoice(BeanWriter invoiceWriter, BillingRecordEntity billingRecord) {
+	void processInvoice(BeanWriter invoiceWriter, BillingRecordEntity billingRecord) {
 		invoiceWriter.write(toInvoiceHeader(billingRecord));
 		invoiceWriter.write(toInvoiceDescriptionRow(billingRecord));
 
@@ -116,7 +120,7 @@ public class InternalInvoiceCreator implements InvoiceCreator {
 		invoiceWriter.write(toInvoiceFooter(billingRecord));
 	}
 
-	protected void processInvoiceRow(BeanWriter invoiceWriter, InvoiceRowEntity invoiceRow) {
+	void processInvoiceRow(BeanWriter invoiceWriter, InvoiceRowEntity invoiceRow) {
 		invoiceWriter.write(toInvoiceRow(invoiceRow));
 		toInvoiceRowDescriptionRows(invoiceRow).forEach(invoiceWriter::write);
 		toInvoiceAccountingRows(invoiceRow).forEach(invoiceWriter::write);
