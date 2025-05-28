@@ -50,7 +50,7 @@ public final class InternalInvoiceMapper {
 	/**
 	 * Method for creating a file footer row for internal invoice files
 	 *
-	 * @param  billingRecords entity representing the billingRecordEntity
+	 * @param  billingRecords list of billing records present in the file
 	 * @return                FileFooterRow for internal invoice files
 	 */
 	public static FileFooterRow toFileFooter(List<BillingRecordEntity> billingRecords) {

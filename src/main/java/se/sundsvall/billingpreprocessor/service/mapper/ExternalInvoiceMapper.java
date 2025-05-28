@@ -68,7 +68,7 @@ public final class ExternalInvoiceMapper {
 	/**
 	 * Method for creating a file footer row for external invoice files
 	 *
-	 * @param  billingRecords entity representing the billingRecordEntity
+	 * @param  billingRecords list of billing records present in the file
 	 * @return                FileFooterRow for external invoice files
 	 */
 	public static FileFooterRow toFileFooter(final List<BillingRecordEntity> billingRecords) {
