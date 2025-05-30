@@ -22,6 +22,7 @@ import static se.sundsvall.billingpreprocessor.Constants.ERROR_SUBACCOUNT_NOT_PR
 import static se.sundsvall.billingpreprocessor.Constants.ERROR_VAT_CODE_NOT_PRESENT;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.DETAILED;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.STANDARD;
+import static se.sundsvall.billingpreprocessor.service.util.CalculationUtil.calculateTotalAmount;
 import static se.sundsvall.billingpreprocessor.service.util.ProblemUtil.createInternalServerErrorProblem;
 
 import java.time.LocalDate;
@@ -37,6 +38,7 @@ import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.RecipientEntity;
 import se.sundsvall.billingpreprocessor.service.creator.definition.external.CustomerRow;
+import se.sundsvall.billingpreprocessor.service.creator.definition.external.FileFooterRow;
 import se.sundsvall.billingpreprocessor.service.creator.definition.external.FileHeaderRow;
 import se.sundsvall.billingpreprocessor.service.creator.definition.external.InvoiceAccountingRow;
 import se.sundsvall.billingpreprocessor.service.creator.definition.external.InvoiceDescriptionRow;
@@ -61,6 +63,17 @@ public final class ExternalInvoiceMapper {
 			.withGeneratingSystem(ofNullable(generatingSystem).orElseThrow(createInternalServerErrorProblem(ERROR_GENERATING_SYSTEM_NOT_PRESENT)))
 			.withCreatedDate(LocalDate.now())
 			.withInvoiceType(ofNullable(invoiceType).orElseThrow(createInternalServerErrorProblem(ERROR_INVOICE_TYPE_NOT_PRESENT)));
+	}
+
+	/**
+	 * Method for creating a file footer row for external invoice files
+	 *
+	 * @param  billingRecords list of billing records present in the file
+	 * @return                FileFooterRow for external invoice files
+	 */
+	public static FileFooterRow toFileFooter(final List<BillingRecordEntity> billingRecords) {
+		return FileFooterRow.create()
+			.withTotalAmount(calculateTotalAmount(billingRecords));
 	}
 
 	/**

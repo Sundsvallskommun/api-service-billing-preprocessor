@@ -45,7 +45,8 @@ class InvoiceCreatorConfigTest {
 				tuple("invoiceRow", "se.sundsvall.billingpreprocessor.service.creator.definition.external.InvoiceRow"),
 				tuple("invoiceDescriptionRow", "se.sundsvall.billingpreprocessor.service.creator.definition.external.InvoiceDescriptionRow"),
 				tuple("invoiceAccountingRow", "se.sundsvall.billingpreprocessor.service.creator.definition.external.InvoiceAccountingRow"),
-				tuple("invoiceFooterRow", "se.sundsvall.billingpreprocessor.service.creator.definition.external.InvoiceFooterRow"));
+				tuple("invoiceFooterRow", "se.sundsvall.billingpreprocessor.service.creator.definition.external.InvoiceFooterRow"),
+				tuple("fileFooterRow", "se.sundsvall.billingpreprocessor.service.creator.definition.external.FileFooterRow"));
 		});
 	}
 
@@ -71,7 +72,8 @@ class InvoiceCreatorConfigTest {
 				tuple("invoiceRowDescriptionRow", "se.sundsvall.billingpreprocessor.service.creator.definition.internal.InvoiceRowDescriptionRow"),
 				tuple("invoiceDescriptionRow", "se.sundsvall.billingpreprocessor.service.creator.definition.internal.InvoiceDescriptionRow"),
 				tuple("invoiceAccountingRow", "se.sundsvall.billingpreprocessor.service.creator.definition.internal.InvoiceAccountingRow"),
-				tuple("invoiceFooterRow", "se.sundsvall.billingpreprocessor.service.creator.definition.internal.InvoiceFooterRow"));
+				tuple("invoiceFooterRow", "se.sundsvall.billingpreprocessor.service.creator.definition.internal.InvoiceFooterRow"),
+				tuple("fileFooterRow", "se.sundsvall.billingpreprocessor.service.creator.definition.internal.FileFooterRow"));
 		});
 	}
 }

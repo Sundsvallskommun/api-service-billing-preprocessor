@@ -7,7 +7,10 @@ import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.ObjectUtils.allNotNull;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Objects;
 import se.sundsvall.billingpreprocessor.api.model.InvoiceRow;
+import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;
 
@@ -31,5 +34,22 @@ public final class CalculationUtil {
 			.filter(row -> nonNull(row.getTotalAmount()))
 			.map(InvoiceRowEntity::getTotalAmount)
 			.reduce(BigDecimal.ZERO, BigDecimal::add);
+	}
+
+	public static BigDecimal calculateTotalAmount(final List<BillingRecordEntity> billingRecords) {
+		if (isNull(billingRecords)) {
+			return BigDecimal.ZERO;
+		}
+
+		return billingRecords.stream()
+			.map(BillingRecordEntity::getInvoice)
+			.filter(Objects::nonNull)
+			.map(InvoiceEntity::getInvoiceRows)
+			.filter(Objects::nonNull)
+			.flatMap(List::stream)
+			.map(InvoiceRowEntity::getTotalAmount)
+			.filter(Objects::nonNull)
+			.reduce(BigDecimal::add)
+			.orElse(BigDecimal.ZERO);
 	}
 }

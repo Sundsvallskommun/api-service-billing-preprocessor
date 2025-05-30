@@ -30,6 +30,7 @@ import se.sundsvall.billingpreprocessor.integration.db.model.enums.Type;
 
 @Component
 public class InternalInvoiceCreator implements InvoiceCreator {
+
 	private final InvoiceFileConfigurationRepository configurationRepository;
 	private final StreamFactory factory;
 
@@ -39,9 +40,13 @@ public class InternalInvoiceCreator implements InvoiceCreator {
 		this.configurationRepository = configurationRepository;
 	}
 
-	private InvoiceFileConfigurationEntity getConfiguration() {
+	InvoiceFileConfigurationEntity getConfiguration() {
 		return configurationRepository.findByCreatorName(this.getClass().getSimpleName())
 			.orElseThrow(createInternalServerErrorProblem(CONFIGURATION_NOT_PRESENT.formatted(this.getClass().getSimpleName())));
+	}
+
+	StreamFactory getFactory() {
+		return factory;
 	}
 
 	/**
@@ -103,7 +108,7 @@ public class InternalInvoiceCreator implements InvoiceCreator {
 		}
 	}
 
-	private void processInvoice(BeanWriter invoiceWriter, BillingRecordEntity billingRecord) {
+	void processInvoice(BeanWriter invoiceWriter, BillingRecordEntity billingRecord) {
 		invoiceWriter.write(toInvoiceHeader(billingRecord));
 		invoiceWriter.write(toInvoiceDescriptionRow(billingRecord));
 
@@ -115,7 +120,7 @@ public class InternalInvoiceCreator implements InvoiceCreator {
 		invoiceWriter.write(toInvoiceFooter(billingRecord));
 	}
 
-	private void processInvoiceRow(BeanWriter invoiceWriter, InvoiceRowEntity invoiceRow) {
+	void processInvoiceRow(BeanWriter invoiceWriter, InvoiceRowEntity invoiceRow) {
 		invoiceWriter.write(toInvoiceRow(invoiceRow));
 		toInvoiceRowDescriptionRows(invoiceRow).forEach(invoiceWriter::write);
 		toInvoiceAccountingRows(invoiceRow).forEach(invoiceWriter::write);

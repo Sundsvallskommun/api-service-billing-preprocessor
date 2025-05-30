@@ -33,6 +33,7 @@ import se.sundsvall.billingpreprocessor.integration.db.model.enums.Type;
 
 @Component
 public class ExternalInvoiceCreator implements InvoiceCreator {
+
 	private final StreamFactory factory;
 	private final LegalIdProvider legalIdProvider;
 	private final InvoiceFileConfigurationRepository configurationRepository;
@@ -44,9 +45,13 @@ public class ExternalInvoiceCreator implements InvoiceCreator {
 		this.configurationRepository = configurationRepository;
 	}
 
-	private InvoiceFileConfigurationEntity getConfiguration() {
+	InvoiceFileConfigurationEntity getConfiguration() {
 		return configurationRepository.findByCreatorName(this.getClass().getSimpleName())
 			.orElseThrow(createInternalServerErrorProblem(CONFIGURATION_NOT_PRESENT.formatted(this.getClass().getSimpleName())));
+	}
+
+	StreamFactory getFactory() {
+		return factory;
 	}
 
 	/**
@@ -108,7 +113,7 @@ public class ExternalInvoiceCreator implements InvoiceCreator {
 		}
 	}
 
-	private void processInvoice(BeanWriter invoiceWriter, BillingRecordEntity billingRecord) {
+	void processInvoice(BeanWriter invoiceWriter, BillingRecordEntity billingRecord) {
 		final var recipientLegalId = extractLegalId(billingRecord);
 
 		invoiceWriter.write(toCustomer(recipientLegalId, billingRecord));
@@ -122,13 +127,13 @@ public class ExternalInvoiceCreator implements InvoiceCreator {
 		invoiceWriter.write(toInvoiceFooter(billingRecord));
 	}
 
-	private void processInvoiceRow(BeanWriter invoiceWriter, String recipientLegalId, InvoiceRowEntity invoiceRow) {
+	void processInvoiceRow(BeanWriter invoiceWriter, String recipientLegalId, InvoiceRowEntity invoiceRow) {
 		invoiceWriter.write(toInvoiceRow(recipientLegalId, invoiceRow));
 		toInvoiceDescriptionRows(recipientLegalId, invoiceRow).forEach(invoiceWriter::write);
 		toInvoiceAccountingRows(invoiceRow).forEach(invoiceWriter::write);
 	}
 
-	private String extractLegalId(BillingRecordEntity billingRecord) {
+	String extractLegalId(BillingRecordEntity billingRecord) {
 		final var legalId = ofNullable(billingRecord.getRecipient().getLegalId())
 			.orElseGet(() -> legalIdProvider.translateToLegalId(billingRecord.getMunicipalityId(), billingRecord.getRecipient().getPartyId()));
 

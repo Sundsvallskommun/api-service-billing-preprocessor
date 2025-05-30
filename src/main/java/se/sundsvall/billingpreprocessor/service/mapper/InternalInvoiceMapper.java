@@ -15,6 +15,7 @@ import static se.sundsvall.billingpreprocessor.Constants.ERROR_SUBACCOUNT_NOT_PR
 import static se.sundsvall.billingpreprocessor.Constants.ERROR_TOTAL_AMOUNT_NOT_PRESENT;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.DETAILED;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.STANDARD;
+import static se.sundsvall.billingpreprocessor.service.util.CalculationUtil.calculateTotalAmount;
 import static se.sundsvall.billingpreprocessor.service.util.ProblemUtil.createInternalServerErrorProblem;
 
 import java.util.List;
@@ -23,6 +24,7 @@ import org.zalando.problem.ThrowableProblem;
 import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.DescriptionEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;
+import se.sundsvall.billingpreprocessor.service.creator.definition.internal.FileFooterRow;
 import se.sundsvall.billingpreprocessor.service.creator.definition.internal.FileHeaderRow;
 import se.sundsvall.billingpreprocessor.service.creator.definition.internal.InvoiceAccountingRow;
 import se.sundsvall.billingpreprocessor.service.creator.definition.internal.InvoiceDescriptionRow;
@@ -42,6 +44,17 @@ public final class InternalInvoiceMapper {
 	 */
 	public static FileHeaderRow toFileHeader() {
 		return FileHeaderRow.create();
+	}
+
+	/**
+	 * Method for creating a file footer row for internal invoice files
+	 *
+	 * @param  billingRecords list of billing records present in the file
+	 * @return                FileFooterRow for internal invoice files
+	 */
+	public static FileFooterRow toFileFooter(List<BillingRecordEntity> billingRecords) {
+		return FileFooterRow.create()
+			.withTotalAmount(calculateTotalAmount(billingRecords));
 	}
 
 	/**

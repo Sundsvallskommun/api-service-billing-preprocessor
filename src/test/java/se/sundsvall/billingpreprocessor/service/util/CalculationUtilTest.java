@@ -2,6 +2,7 @@ package se.sundsvall.billingpreprocessor.service.util;
 
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static se.sundsvall.billingpreprocessor.service.util.CalculationUtil.calculateTotalAmount;
 import static se.sundsvall.billingpreprocessor.service.util.CalculationUtil.calculateTotalInvoiceAmount;
 import static se.sundsvall.billingpreprocessor.service.util.CalculationUtil.calculateTotalInvoiceRowAmount;
 
@@ -12,6 +13,7 @@ import java.util.Random;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import se.sundsvall.billingpreprocessor.api.model.InvoiceRow;
+import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;
 
@@ -91,5 +93,104 @@ class CalculationUtilTest {
 		}
 
 		return rows;
+	}
+
+	@Test
+	void testCalculateTotalAmountWithSingleBillingRecord() {
+		final var billingRecords = List.of(
+			BillingRecordEntity.create()
+				.withInvoice(InvoiceEntity.create()
+					.withInvoiceRows(
+						List.of(
+							InvoiceRowEntity.create().withTotalAmount(BigDecimal.valueOf(100)),
+							InvoiceRowEntity.create().withTotalAmount(BigDecimal.valueOf(200))))));
+
+		assertThat(calculateTotalAmount(billingRecords)).isEqualTo(BigDecimal.valueOf(300));
+	}
+
+	@Test
+	void testCalculateTotalAmountWithMultipleBillingRecords() {
+		final var billingRecords = List.of(
+			BillingRecordEntity.create()
+				.withInvoice(InvoiceEntity.create()
+					.withInvoiceRows(
+						List.of(
+							InvoiceRowEntity.create().withTotalAmount(BigDecimal.valueOf(100)),
+							InvoiceRowEntity.create().withTotalAmount(BigDecimal.valueOf(200))))),
+			BillingRecordEntity.create()
+				.withInvoice(InvoiceEntity.create()
+					.withInvoiceRows(
+						List.of(
+							InvoiceRowEntity.create().withTotalAmount(BigDecimal.valueOf(300)),
+							InvoiceRowEntity.create().withTotalAmount(BigDecimal.valueOf(400)),
+							InvoiceRowEntity.create().withTotalAmount(BigDecimal.valueOf(500))))));
+
+		assertThat(calculateTotalAmount(billingRecords)).isEqualTo(BigDecimal.valueOf(1500));
+	}
+
+	@Test
+	void testCalculateTotalAmountWithEmptyBilling() {
+		final var billingRecords = List.of(
+			BillingRecordEntity.create());
+
+		assertThat(calculateTotalAmount(billingRecords)).isEqualTo(BigDecimal.valueOf(0));
+	}
+
+	@Test
+	void testCalculateTotalAmountWithEmptyInvoice() {
+		final var billingRecords = List.of(
+			BillingRecordEntity.create()
+				.withInvoice(InvoiceEntity.create()));
+
+		assertThat(calculateTotalAmount(billingRecords)).isEqualTo(BigDecimal.valueOf(0));
+	}
+
+	@Test
+	void testCalculateTotalAmountWithSomeEmptyInvoices() {
+		final var billingRecords = List.of(
+			BillingRecordEntity.create()
+				.withInvoice(InvoiceEntity.create()
+					.withInvoiceRows(
+						List.of(
+							InvoiceRowEntity.create().withTotalAmount(BigDecimal.valueOf(125))))),
+			BillingRecordEntity.create()
+				.withInvoice(InvoiceEntity.create()));
+
+		assertThat(calculateTotalAmount(billingRecords)).isEqualTo(BigDecimal.valueOf(125));
+	}
+
+	@Test
+	void testCalculateTotalAmountWithEmptyInvoiceRowAmounts() {
+		final var billingRecords = List.of(
+			BillingRecordEntity.create()
+				.withInvoice(InvoiceEntity.create()
+					.withInvoiceRows(List.of(
+						InvoiceRowEntity.create(),
+						InvoiceRowEntity.create()))));
+
+		assertThat(calculateTotalAmount(billingRecords)).isEqualTo(BigDecimal.valueOf(0));
+	}
+
+	@Test
+	void testCalculateTotalAmountWithSomeInvoiceRowAmounts() {
+		final var billingRecords = List.of(
+			BillingRecordEntity.create()
+				.withInvoice(InvoiceEntity.create()
+					.withInvoiceRows(List.of(
+						InvoiceRowEntity.create(),
+						InvoiceRowEntity.create()
+							.withTotalAmount(BigDecimal.valueOf(200))))));
+
+		assertThat(calculateTotalAmount(billingRecords)).isEqualTo(BigDecimal.valueOf(200));
+	}
+
+	@Test
+	void testCalculateTotalAmountWithEmptyList() {
+		assertThat(calculateTotalAmount(emptyList())).isEqualTo(BigDecimal.valueOf(0));
+	}
+
+	@Test
+	void testCalculateTotalAmountWithNullList() {
+		assertThat(calculateTotalAmount(null)).isEqualTo(BigDecimal.valueOf(0));
 	}
 }

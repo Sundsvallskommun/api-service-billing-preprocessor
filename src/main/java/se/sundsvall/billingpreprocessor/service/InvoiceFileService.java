@@ -137,6 +137,8 @@ public class InvoiceFileService {
 				billingRecordsToProcess.forEach(billingRecord -> createBillingRecord(outputStream, billingRecord, invoiceCreator)
 					.ifPresent(billingRecordProcessErrors::add));
 
+				outputStream.write(invoiceCreator.createFileFooter(billingRecordsToProcess));
+
 				if (billingRecordsToProcess.size() > billingRecordProcessErrors.size()) { // At least one of the records should be successful for the file to be created
 					invoiceFileRepository.save(toInvoiceFileEntity(filename, type.name(), outputStream.toByteArray(), encoding, municipalityId));
 				}
