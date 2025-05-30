@@ -15,15 +15,14 @@ import static se.sundsvall.billingpreprocessor.Constants.ERROR_SUBACCOUNT_NOT_PR
 import static se.sundsvall.billingpreprocessor.Constants.ERROR_TOTAL_AMOUNT_NOT_PRESENT;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.DETAILED;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.STANDARD;
+import static se.sundsvall.billingpreprocessor.service.util.CalculationUtil.calculateTotalAmount;
 import static se.sundsvall.billingpreprocessor.service.util.ProblemUtil.createInternalServerErrorProblem;
 
-import java.math.BigDecimal;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.zalando.problem.ThrowableProblem;
 import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.DescriptionEntity;
-import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;
 import se.sundsvall.billingpreprocessor.service.creator.definition.internal.FileFooterRow;
 import se.sundsvall.billingpreprocessor.service.creator.definition.internal.FileHeaderRow;
@@ -54,17 +53,8 @@ public final class InternalInvoiceMapper {
 	 * @return                FileFooterRow for internal invoice files
 	 */
 	public static FileFooterRow toFileFooter(List<BillingRecordEntity> billingRecords) {
-		final var total = billingRecords
-			.stream()
-			.map(BillingRecordEntity::getInvoice)
-			.map(InvoiceEntity::getInvoiceRows)
-			.flatMap(List::stream)
-			.map(InvoiceRowEntity::getTotalAmount)
-			.reduce(BigDecimal::add)
-			.orElse(BigDecimal.ZERO);
-
 		return FileFooterRow.create()
-			.withTotalAmount(total);
+			.withTotalAmount(calculateTotalAmount(billingRecords));
 	}
 
 	/**

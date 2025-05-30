@@ -22,9 +22,9 @@ import static se.sundsvall.billingpreprocessor.Constants.ERROR_SUBACCOUNT_NOT_PR
 import static se.sundsvall.billingpreprocessor.Constants.ERROR_VAT_CODE_NOT_PRESENT;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.DETAILED;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.STANDARD;
+import static se.sundsvall.billingpreprocessor.service.util.CalculationUtil.calculateTotalAmount;
 import static se.sundsvall.billingpreprocessor.service.util.ProblemUtil.createInternalServerErrorProblem;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
@@ -229,15 +229,5 @@ public final class ExternalInvoiceMapper {
 			.filter(StringUtils::isNotBlank)
 			.findFirst()
 			.orElse(null);
-	}
-
-	private static BigDecimal calculateTotalAmount(final List<BillingRecordEntity> billingRecords) {
-		return billingRecords.stream()
-			.map(BillingRecordEntity::getInvoice)
-			.map(InvoiceEntity::getInvoiceRows)
-			.flatMap(List::stream)
-			.map(InvoiceRowEntity::getTotalAmount)
-			.reduce(BigDecimal::add)
-			.orElse(BigDecimal.ZERO);
 	}
 }
