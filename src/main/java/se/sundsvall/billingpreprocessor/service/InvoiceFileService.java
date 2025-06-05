@@ -10,7 +10,6 @@ import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Status
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.INVOICED;
 import static se.sundsvall.billingpreprocessor.service.mapper.InvoiceFileMapper.toInvoiceFileEntity;
 
-import jakarta.transaction.Transactional;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.Charset;
 import java.time.OffsetDateTime;
@@ -24,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.integration.file.remote.session.DelegatingSessionFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.zalando.problem.Problem;
 import se.sundsvall.billingpreprocessor.integration.db.BillingRecordRepository;
 import se.sundsvall.billingpreprocessor.integration.db.InvoiceFileRepository;
