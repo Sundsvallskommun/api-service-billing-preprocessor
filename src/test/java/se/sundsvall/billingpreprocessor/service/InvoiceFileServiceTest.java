@@ -113,7 +113,7 @@ class InvoiceFileServiceTest {
 	private InvoiceFileService service;
 
 	@BeforeEach
-	public void setup() {
+	void setup() {
 		service = new InvoiceFileService(
 			billingRecordRepositoryMock,
 			invoiceFileRepositoryMock,

@@ -55,7 +55,7 @@ class SftpConfigurationTest {
 		.withCommand("user:pass:1001::upload");
 
 	@DynamicPropertySource
-	static void registerProperties(final DynamicPropertyRegistry registry) throws IOException {
+	static void registerProperties(final DynamicPropertyRegistry registry) {
 		SFTP_SERVER.start();
 		SFTP_SERVER.followOutput(new Slf4jLogConsumer(LOGGER));
 
