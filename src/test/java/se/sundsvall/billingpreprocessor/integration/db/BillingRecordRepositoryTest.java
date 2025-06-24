@@ -224,7 +224,7 @@ class BillingRecordRepositoryTest {
 
 	@Test
 	void findWithEmptySpecification() {
-		final Specification<BillingRecordEntity> specification = Specification.where(null);
+		final Specification<BillingRecordEntity> specification = null;
 		final Pageable pageable = PageRequest.of(0, 20);
 
 		final var matches = repository.findAll(specification, pageable);
@@ -244,7 +244,7 @@ class BillingRecordRepositoryTest {
 
 	@Test
 	void findWithPagingAndSorting() {
-		final Specification<BillingRecordEntity> specification = Specification.where(null);
+		final Specification<BillingRecordEntity> specification = null;
 		final Pageable pageable = PageRequest.of(0, 1).withSort(Sort.by(Direction.ASC, "created"));
 
 		final var matches = repository.findAll(specification, pageable);

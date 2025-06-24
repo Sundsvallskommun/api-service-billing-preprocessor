@@ -23,7 +23,6 @@ import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
@@ -36,8 +35,6 @@ import org.springframework.test.context.jdbc.Sql;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.output.Slf4jLogConsumer;
 import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.utility.MountableFile;
-
 import se.sundsvall.billingpreprocessor.Application;
 import se.sundsvall.billingpreprocessor.integration.db.InvoiceFileRepository;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceFileEntity;
@@ -59,8 +56,6 @@ class IsycaseJobsIT extends AbstractAppTest {
 
 	@Container
 	private static final GenericContainer<?> SFTP_SERVER = new GenericContainer<>("atmoz/sftp:alpine-3.7")
-		.withCopyFileToContainer(MountableFile.forClasspathResource("keys/ssh_host_rsa_key", 0600), "/etc/ssh/")
-		.withCopyFileToContainer(MountableFile.forClasspathResource("keys/ssh_host_rsa_key.pub", 0600), "/etc/ssh/")
 		.withExposedPorts(22)
 		.withCommand("user:pass:1001::upload");
 
@@ -69,10 +64,9 @@ class IsycaseJobsIT extends AbstractAppTest {
 		SFTP_SERVER.start();
 		SFTP_SERVER.followOutput(new Slf4jLogConsumer(LOGGER));
 
-		final var key = readString(getFile("classpath:keys/ssh_host_rsa_key.pub").toPath());
 		registry.add("integration.sftp.municipalityIds.2281.host", SFTP_SERVER::getHost);
 		registry.add("integration.sftp.municipalityIds.2281.port", () -> SFTP_SERVER.getMappedPort(22));
-		registry.add("integration.sftp.municipalityIds.2281.knownHosts", () -> String.format("[%s]:%s %s", SFTP_SERVER.getHost(), SFTP_SERVER.getMappedPort(22), key));
+		registry.add("integration.sftp.municipalityIds.2281.allowUnknownKeys", () -> true);
 	}
 
 	@Autowired
