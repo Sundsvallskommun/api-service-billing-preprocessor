@@ -16,7 +16,7 @@
 		<!-- Service properties -->
 		<spring-filter.version>3.2.0</spring-filter.version>
 		<beanio.version>3.2.1</beanio.version>
-		<commons-text.version>1.13.1</commons-text.version>
+		<commons-text.version>1.14.0</commons-text.version>
 		<apache.sshd.version>2.14.0</apache.sshd.version>
 		<com.jcraft.version>0.1.55</com.jcraft.version>
 		<sshd-common.version>2.15.0</sshd-common.version>
