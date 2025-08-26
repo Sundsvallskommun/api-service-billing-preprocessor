@@ -19,7 +19,7 @@
 		<commons-text.version>1.14.0</commons-text.version>
 		<apache.sshd.version>2.14.0</apache.sshd.version>
 		<com.jcraft.version>0.1.55</com.jcraft.version>
-		<sshd-common.version>2.15.0</sshd-common.version>
+		<sshd-common.version>2.16.0</sshd-common.version>
 		<generated-sources-path>${project.build.directory}/generated-sources</generated-sources-path>
 	</properties>
 	<dependencies>
