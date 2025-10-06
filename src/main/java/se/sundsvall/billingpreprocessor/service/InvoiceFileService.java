@@ -9,6 +9,7 @@ import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Invoic
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.APPROVED;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.INVOICED;
 import static se.sundsvall.billingpreprocessor.service.mapper.InvoiceFileMapper.toInvoiceFileEntity;
+import static se.sundsvall.dept44.util.LogUtils.sanitizeForLogging;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.Charset;
@@ -89,6 +90,8 @@ public class InvoiceFileService {
 	private Optional<InvoiceFileError> transferFile(InvoiceFileEntity fileEntity, String remoteDir) {
 		try {
 			Charset encoding = Charset.forName(fileEntity.getEncoding());
+
+			LOG.info("Starting to transfer file '{}' with encoding '{}' to remote dir '{}'", fileEntity.getName(), encoding, remoteDir);
 			uploadGateway.sendToSftp(new ByteArrayResource(fileEntity.getContent().getBytes(encoding)), fileEntity.getName(), remoteDir);
 			invoiceFileRepository.save(fileEntity
 				.withSent(OffsetDateTime.now())
@@ -125,6 +128,8 @@ public class InvoiceFileService {
 			final var type = invoiceCreator.getProcessableType();
 			final var category = invoiceCreator.getProcessableCategory();
 
+			LOG.info("Processing type '{}' and category '{}'", type, category);
+
 			final var billingRecordsToProcess = filterByTypeAndCategory(billingRecords, type, category);
 			if (!billingRecordsToProcess.isEmpty()) {
 				billingRecords.removeAll(billingRecordsToProcess); // Remove processed records from the original list and send mail if unprocessed records exists at end of execution
@@ -140,6 +145,8 @@ public class InvoiceFileService {
 				outputStream.write(invoiceCreator.createFileFooter(billingRecordsToProcess));
 
 				if (billingRecordsToProcess.size() > billingRecordProcessErrors.size()) { // At least one of the records should be successful for the file to be created
+					LOG.info("Saving file '{}' with {} successfully processed records for municipality id '{}'",
+						filename, (billingRecordsToProcess.size() - billingRecordProcessErrors.size()), sanitizeForLogging(municipalityId));
 					invoiceFileRepository.save(toInvoiceFileEntity(filename, type.name(), outputStream.toByteArray(), encoding, municipalityId));
 				}
 			}
