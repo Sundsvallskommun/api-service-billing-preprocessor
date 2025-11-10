@@ -14,7 +14,7 @@
 	<name>api-service-billing-preprocessor</name>
 	<properties>
 		<!-- Service properties -->
-		<spring-filter.version>3.2.1</spring-filter.version>
+		<spring-filter.version>3.2.4</spring-filter.version>
 		<beanio.version>3.2.1</beanio.version>
 		<commons-text.version>1.14.0</commons-text.version>
 		<apache.sshd.version>2.16.0</apache.sshd.version>
