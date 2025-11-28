@@ -1,42 +1,44 @@
 openapi: 3.0.1
 info:
   title: api-billing-preprocessor
-  contact: {}
+  contact: { }
   license:
     name: MIT License
     url: https://opensource.org/licenses/MIT
-  version: "4.1"
+  version: "4.2"
 servers:
-- url: http://localhost:52725
-  description: Generated server url
+  - url: http://localhost:61822
+    description: Generated server url
 tags:
-- name: BillingRecord
-  description: Billing record operations
-- name: Jobs
-  description: Jobs resources
+  - name: Status Resource
+    description: Check status operations
+  - name: BillingRecord
+    description: Billing record operations
+  - name: Jobs
+    description: Jobs resources
 paths:
   /{municipalityId}/billingrecords/{id}:
     get:
       tags:
-      - BillingRecord
+        - BillingRecord
       summary: Read billing record
       description: Fetches the billing record that matches the provided id
       operationId: readBillingRecord
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality ID
-        required: true
-        schema:
-          type: string
-        example: 2281
-      - name: id
-        in: path
-        description: BillingRecord id
-        required: true
-        schema:
-          type: string
-        example: b82bd8ac-1507-4d9a-958d-369261eecc15
+        - name: municipalityId
+          in: path
+          description: Municipality ID
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: id
+          in: path
+          description: BillingRecord id
+          required: true
+          schema:
+            type: string
+          example: b82bd8ac-1507-4d9a-958d-369261eecc15
       responses:
         "200":
           description: Successful Operation
@@ -50,8 +52,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
         "404":
           description: Not Found
           content:
@@ -66,26 +68,26 @@ paths:
                 $ref: "#/components/schemas/Problem"
     put:
       tags:
-      - BillingRecord
+        - BillingRecord
       summary: Update billing record
       description: Updates the billing record matching provided id with the supplied
         attributes
       operationId: updateBillingRecord
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality ID
-        required: true
-        schema:
-          type: string
-        example: 2281
-      - name: id
-        in: path
-        description: BillingRecord id
-        required: true
-        schema:
-          type: string
-        example: b82bd8ac-1507-4d9a-958d-369261eecc15
+        - name: municipalityId
+          in: path
+          description: Municipality ID
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: id
+          in: path
+          description: BillingRecord id
+          required: true
+          schema:
+            type: string
+          example: b82bd8ac-1507-4d9a-958d-369261eecc15
       requestBody:
         content:
           application/json:
@@ -105,8 +107,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
         "404":
           description: Not found
           content:
@@ -121,26 +123,26 @@ paths:
                 $ref: "#/components/schemas/Problem"
     delete:
       tags:
-      - BillingRecord
+        - BillingRecord
       summary: Delete billing record
       description: "Deletes the billing record that matches the provided id, but only\
         \ if status of record is 'NEW'. Otherwise a client error is returned."
       operationId: deleteBillingRecord
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality ID
-        required: true
-        schema:
-          type: string
-        example: 2281
-      - name: id
-        in: path
-        description: BillingRecord id
-        required: true
-        schema:
-          type: string
-        example: b82bd8ac-1507-4d9a-958d-369261eecc15
+        - name: municipalityId
+          in: path
+          description: Municipality ID
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: id
+          in: path
+          description: BillingRecord id
+          required: true
+          schema:
+            type: string
+          example: b82bd8ac-1507-4d9a-958d-369261eecc15
       responses:
         "204":
           description: Successful operation
@@ -150,8 +152,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
         "404":
           description: Not Found
           content:
@@ -173,18 +175,18 @@ paths:
   /{municipalityId}/jobs/filetransferrer:
     post:
       tags:
-      - Jobs
+        - Jobs
       summary: Triggers job for transferring files with status CREATED or SEND_FAILED
         to final destination
       operationId: transferFiles
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality ID
-        required: true
-        schema:
-          type: string
-        example: 2281
+        - name: municipalityId
+          in: path
+          description: Municipality ID
+          required: true
+          schema:
+            type: string
+          example: 2281
       responses:
         "202":
           description: Successful Operation
@@ -203,17 +205,17 @@ paths:
   /{municipalityId}/jobs/filecreator:
     post:
       tags:
-      - Jobs
+        - Jobs
       summary: Triggers job for creating files from billing records with status APPROVED
       operationId: createFileEntities
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality ID
-        required: true
-        schema:
-          type: string
-        example: 2281
+        - name: municipalityId
+          in: path
+          description: Municipality ID
+          required: true
+          schema:
+            type: string
+          example: 2281
       responses:
         "202":
           description: Successful Operation
@@ -232,51 +234,51 @@ paths:
   /{municipalityId}/billingrecords:
     get:
       tags:
-      - BillingRecord
+        - BillingRecord
       summary: Read matching billing records
       description: Query for billing records with or without filters. The resource
         allows the client a wide range of variations on how to filter the result.
       operationId: findBillingRecords
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality ID
-        required: true
-        schema:
-          type: string
-        example: 2281
-      - name: filter
-        in: query
-        description: "Syntax description: [spring-filter](https://github.com/turkraft/spring-filter/blob/85730f950a5f8623159cc0eb4d737555f9382bb7/README.md#syntax)"
-        required: false
-        schema:
-          type: string
-        example: "category : 'ACCESS_CARD' and status : 'NEW'"
-      - name: page
-        in: query
-        description: Zero-based page index (0..N)
-        required: false
-        schema:
-          minimum: 0
-          type: integer
-          default: 0
-      - name: size
-        in: query
-        description: The size of the page to be returned
-        required: false
-        schema:
-          minimum: 1
-          type: integer
-          default: 20
-      - name: sort
-        in: query
-        description: "Sorting criteria in the format: property,(asc|desc). Default\
-          \ sort order is ascending. Multiple sort criteria are supported."
-        required: false
-        schema:
-          type: array
-          items:
+        - name: municipalityId
+          in: path
+          description: Municipality ID
+          required: true
+          schema:
             type: string
+          example: 2281
+        - name: filter
+          in: query
+          description: "Syntax description: [spring-filter](https://github.com/turkraft/spring-filter/blob/85730f950a5f8623159cc0eb4d737555f9382bb7/README.md#syntax)"
+          required: false
+          schema:
+            type: string
+          example: "category : 'ACCESS_CARD' and status : 'NEW'"
+        - name: page
+          in: query
+          description: Zero-based page index (0..N)
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          description: The size of the page to be returned
+          required: false
+          schema:
+            minimum: 1
+            type: integer
+            default: 20
+        - name: sort
+          in: query
+          description: "Sorting criteria in the format: property,(asc|desc). Default\
+          \ sort order is ascending. Multiple sort criteria are supported."
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
       responses:
         "200":
           description: Successful Operation
@@ -290,8 +292,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server Error
           content:
@@ -300,18 +302,18 @@ paths:
                 $ref: "#/components/schemas/Problem"
     post:
       tags:
-      - BillingRecord
+        - BillingRecord
       summary: Create billing record
       description: Creates a new billing record defined by the supplied attributes
       operationId: createBillingRecord
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality ID
-        required: true
-        schema:
-          type: string
-        example: 2281
+        - name: municipalityId
+          in: path
+          description: Municipality ID
+          required: true
+          schema:
+            type: string
+          example: 2281
       requestBody:
         content:
           application/json:
@@ -332,8 +334,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server error
           content:
@@ -343,18 +345,18 @@ paths:
   /{municipalityId}/billingrecords/batch:
     post:
       tags:
-      - BillingRecord
+        - BillingRecord
       summary: Create billing records
       description: Creates new billing records defined by the supplied attributes
       operationId: createBillingRecords
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality ID
-        required: true
-        schema:
-          type: string
-        example: 2281
+        - name: municipalityId
+          in: path
+          description: Municipality ID
+          required: true
+          schema:
+            type: string
+          example: 2281
       requestBody:
         content:
           application/json:
@@ -383,18 +385,90 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server error
           content:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/Problem"
+  /{municipalityId}/status:
+    get:
+      tags:
+        - Status Resource
+      summary: "Get the status for invoice files, indicating if they have been sent\
+        \ successfully or not"
+      description: Checks the status of a invoice file matching the given year and
+        month
+      operationId: getFileStatusesForMonth
+      parameters:
+        - name: municipalityId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: year
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: month
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - JANUARY
+              - FEBRUARY
+              - MARCH
+              - APRIL
+              - MAY
+              - JUNE
+              - JULY
+              - AUGUST
+              - SEPTEMBER
+              - OCTOBER
+              - NOVEMBER
+              - DECEMBER
+      responses:
+        "400":
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/InvoiceFileStatus"
+        "500":
+          description: Internal Server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/InvoiceFileStatus"
+        "200":
+          description: Operation successful
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/InvoiceFileStatus"
   /api-docs:
     get:
       tags:
-      - API
+        - API
       summary: OpenAPI
       operationId: getApiDocs
       responses:
@@ -431,11 +505,11 @@ components:
     StatusType:
       type: object
       properties:
+        reasonPhrase:
+          type: string
         statusCode:
           type: integer
           format: int32
-        reasonPhrase:
-          type: string
     ConstraintViolationProblem:
       type: object
       properties:
@@ -665,10 +739,10 @@ components:
       description: Address details model
     BillingRecord:
       required:
-      - category
-      - invoice
-      - status
-      - type
+        - category
+        - invoice
+        - status
+        - type
       type: object
       properties:
         id:
@@ -727,10 +801,10 @@ components:
       description: Billing record model
     Invoice:
       required:
-      - customerId
-      - customerReference
-      - description
-      - invoiceRows
+        - customerId
+        - customerReference
+        - description
+        - invoiceRows
       type: object
       properties:
         customerId:
@@ -817,7 +891,7 @@ components:
       description: Invoice row model
     Recipient:
       required:
-      - addressDetails
+        - addressDetails
       type: object
       properties:
         partyId:
@@ -855,25 +929,45 @@ components:
       description: Billing status model
       example: APPROVED
       enum:
-      - NEW
-      - APPROVED
-      - INVOICED
-      - REJECTED
+        - NEW
+        - APPROVED
+        - INVOICED
+        - REJECTED
     Type:
       type: string
       description: Billing type model
       enum:
-      - EXTERNAL
-      - INTERNAL
+        - EXTERNAL
+        - INTERNAL
+    InvoiceFileStatus:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+        status:
+          type: string
+        municipalityId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        sentAt:
+          type: string
+          format: date-time
+      description: InvoiceFile status model
     PageBillingRecord:
       type: object
       properties:
-        totalPages:
-          type: integer
-          format: int32
         totalElements:
           type: integer
           format: int64
+        totalPages:
+          type: integer
+          format: int32
         first:
           type: boolean
         last:
@@ -890,11 +984,11 @@ components:
           format: int32
         sort:
           $ref: "#/components/schemas/SortObject"
+        pageable:
+          $ref: "#/components/schemas/PageableObject"
         numberOfElements:
           type: integer
           format: int32
-        pageable:
-          $ref: "#/components/schemas/PageableObject"
         empty:
           type: boolean
     PageableObject:
@@ -924,4 +1018,4 @@ components:
           type: boolean
         sorted:
           type: boolean
-  securitySchemes: {}
+  securitySchemes: { }

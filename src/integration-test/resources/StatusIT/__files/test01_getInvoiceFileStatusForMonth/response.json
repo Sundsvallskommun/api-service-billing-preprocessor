@@ -1,0 +1,44 @@
+[
+	{
+		"id": "1",
+		"name": "INVOICE_FILE_1.txt",
+		"type": "INTERNAL",
+		"status": "GENERATED",
+		"municipalityId": "2281",
+		"createdAt": "2024-02-26T10:15:00+01:00"
+	},
+	{
+		"id": "2",
+		"name": "INVOICE_FILE_2.txt",
+		"type": "INTERNAL",
+		"status": "SEND_SUCCESSFUL",
+		"municipalityId": "2281",
+		"createdAt": "2024-02-25T09:30:00+01:00",
+		"sentAt": "2024-02-25T09:35:00+01:00"
+	},
+	{
+		"id": "3",
+		"name": "INVOICE_FILE_3.txt",
+		"type": "INTERNAL",
+		"status": "GENERATED",
+		"municipalityId": "2281",
+		"createdAt": "2024-02-24T14:45:00+01:00"
+	},
+	{
+		"id": "4",
+		"name": "INVOICE_FILE_4.txt",
+		"type": "INTERNAL",
+		"status": "SEND_FAILED",
+		"municipalityId": "2281",
+		"createdAt": "2024-02-23T16:20:00+01:00"
+	},
+	{
+		"id": "5",
+		"name": "INVOICE_FILE_5.txt",
+		"type": "EXTERNAL",
+		"status": "SEND_SUCCESSFUL",
+		"municipalityId": "2281",
+		"createdAt": "2024-02-22T11:10:00+01:00",
+		"sentAt": "2024-02-22T11:15:00+01:00"
+	}
+]
