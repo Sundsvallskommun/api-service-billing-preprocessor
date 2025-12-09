@@ -16,24 +16,24 @@ import java.util.Objects;
 @Schema(description = "Invoice row model")
 public class InvoiceRow {
 
-	@ArraySchema(schema = @Schema(description = "Description of row", example = "Row with description"))
+	@ArraySchema(schema = @Schema(description = "Description of row", examples = "Row with description"))
 	private List<@Size(min = 1, max = 30) String> descriptions;
 
-	@ArraySchema(schema = @Schema(description = "Detailed description of row", example = "Row with detailed description"))
+	@ArraySchema(schema = @Schema(description = "Detailed description of row", examples = "Row with detailed description"))
 	private List<@NotEmpty String> detailedDescriptions;
 
-	@Schema(description = "Total sum of invoice row", example = "1399.95", accessMode = READ_ONLY)
+	@Schema(description = "Total sum of invoice row", examples = "1399.95", accessMode = READ_ONLY)
 	@Null
 	private BigDecimal totalAmount;
 
-	@Schema(description = "VAT code for invoice row", example = "25")
+	@Schema(description = "VAT code for invoice row", examples = "25")
 	@Pattern(regexp = "00|06|12|25", message = "must be one of 00, 06, 12 or 25")
 	private String vatCode;
 
-	@Schema(description = "Cost per unit", example = "155.55")
+	@Schema(description = "Cost per unit", examples = "155.55")
 	private BigDecimal costPerUnit;
 
-	@Schema(description = "Total amount of units", example = "9.0")
+	@Schema(description = "Total amount of units", examples = "9.0")
 	private BigDecimal quantity;
 
 	@ArraySchema(arraySchema = @Schema(implementation = AccountInformation.class, description = "Account information"))
@@ -47,11 +47,11 @@ public class InvoiceRow {
 		return descriptions;
 	}
 
-	public void setDescriptions(List<String> descriptions) {
+	public void setDescriptions(final List<String> descriptions) {
 		this.descriptions = descriptions;
 	}
 
-	public InvoiceRow withDescriptions(List<String> descriptions) {
+	public InvoiceRow withDescriptions(final List<String> descriptions) {
 		this.descriptions = descriptions;
 		return this;
 	}
@@ -60,11 +60,11 @@ public class InvoiceRow {
 		return detailedDescriptions;
 	}
 
-	public void setDetailedDescriptions(List<String> detailedDescriptions) {
+	public void setDetailedDescriptions(final List<String> detailedDescriptions) {
 		this.detailedDescriptions = detailedDescriptions;
 	}
 
-	public InvoiceRow withDetailedDescriptions(List<String> detailedDescriptions) {
+	public InvoiceRow withDetailedDescriptions(final List<String> detailedDescriptions) {
 		this.detailedDescriptions = detailedDescriptions;
 		return this;
 	}
@@ -73,11 +73,11 @@ public class InvoiceRow {
 		return totalAmount;
 	}
 
-	public void setTotalAmount(BigDecimal totalAmount) {
+	public void setTotalAmount(final BigDecimal totalAmount) {
 		this.totalAmount = totalAmount;
 	}
 
-	public InvoiceRow withTotalAmount(BigDecimal totalAmount) {
+	public InvoiceRow withTotalAmount(final BigDecimal totalAmount) {
 		this.totalAmount = totalAmount;
 		return this;
 	}
@@ -86,11 +86,11 @@ public class InvoiceRow {
 		return vatCode;
 	}
 
-	public void setVatCode(String vatCode) {
+	public void setVatCode(final String vatCode) {
 		this.vatCode = vatCode;
 	}
 
-	public InvoiceRow withVatCode(String vatCode) {
+	public InvoiceRow withVatCode(final String vatCode) {
 		this.vatCode = vatCode;
 		return this;
 	}
@@ -99,11 +99,11 @@ public class InvoiceRow {
 		return costPerUnit;
 	}
 
-	public void setCostPerUnit(BigDecimal costPerUnit) {
+	public void setCostPerUnit(final BigDecimal costPerUnit) {
 		this.costPerUnit = costPerUnit;
 	}
 
-	public InvoiceRow withCostPerUnit(BigDecimal costPerUnit) {
+	public InvoiceRow withCostPerUnit(final BigDecimal costPerUnit) {
 		this.costPerUnit = costPerUnit;
 		return this;
 	}
@@ -112,11 +112,11 @@ public class InvoiceRow {
 		return quantity;
 	}
 
-	public void setQuantity(BigDecimal quantity) {
+	public void setQuantity(final BigDecimal quantity) {
 		this.quantity = quantity;
 	}
 
-	public InvoiceRow withQuantity(BigDecimal quantity) {
+	public InvoiceRow withQuantity(final BigDecimal quantity) {
 		this.quantity = quantity;
 		return this;
 	}
@@ -125,11 +125,11 @@ public class InvoiceRow {
 		return accountInformation;
 	}
 
-	public void setAccountInformation(List<AccountInformation> accountInformation) {
+	public void setAccountInformation(final List<AccountInformation> accountInformation) {
 		this.accountInformation = accountInformation;
 	}
 
-	public InvoiceRow withAccountInformation(List<AccountInformation> accountInformation) {
+	public InvoiceRow withAccountInformation(final List<AccountInformation> accountInformation) {
 		this.accountInformation = accountInformation;
 		return this;
 	}
@@ -140,7 +140,7 @@ public class InvoiceRow {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
 		}
@@ -154,14 +154,13 @@ public class InvoiceRow {
 
 	@Override
 	public String toString() {
-		final var builder = new StringBuilder();
-		builder.append("InvoiceRow [descriptions=").append(descriptions)
-			.append(", detailedDescriptions=").append(detailedDescriptions)
-			.append(", totalAmount=").append(totalAmount)
-			.append(", vatCode=").append(vatCode)
-			.append(", costPerUnit=").append(costPerUnit)
-			.append(", quantity=").append(quantity)
-			.append(", accountInformation=").append(accountInformation).append("]");
-		return builder.toString();
+		final String builder = "InvoiceRow [descriptions=" + descriptions
+			+ ", detailedDescriptions=" + detailedDescriptions
+			+ ", totalAmount=" + totalAmount
+			+ ", vatCode=" + vatCode
+			+ ", costPerUnit=" + costPerUnit
+			+ ", quantity=" + quantity
+			+ ", accountInformation=" + accountInformation + "]";
+		return builder;
 	}
 }

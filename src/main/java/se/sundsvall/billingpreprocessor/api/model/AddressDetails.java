@@ -6,16 +6,16 @@ import java.util.Objects;
 @Schema(description = "Address details model")
 public class AddressDetails {
 
-	@Schema(description = "Street name and number. Mandatory for EXTERNAL billing record.", example = "Sesame Street 7")
+	@Schema(description = "Street name and number. Mandatory for EXTERNAL billing record.", examples = "Sesame Street 7")
 	private String street;
 
-	@Schema(description = "Care of name", example = "Abby Cadabby")
+	@Schema(description = "Care of name", examples = "Abby Cadabby")
 	private String careOf;
 
-	@Schema(description = "Postal code. Mandatory for EXTERNAL billing record.", example = "12345")
+	@Schema(description = "Postal code. Mandatory for EXTERNAL billing record.", examples = "12345")
 	private String postalCode;
 
-	@Schema(description = "City. Mandatory for EXTERNAL billing record.", example = "Grouchytown")
+	@Schema(description = "City. Mandatory for EXTERNAL billing record.", examples = "Grouchytown")
 	private String city;
 
 	public static AddressDetails create() {

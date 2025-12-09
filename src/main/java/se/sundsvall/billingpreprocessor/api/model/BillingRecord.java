@@ -29,7 +29,7 @@ import se.sundsvall.billingpreprocessor.api.validation.ValidRecipient;
 @ValidAddressDetails
 public class BillingRecord {
 
-	@Schema(description = "Unique id for the billing record", example = "71258e7d-5285-46ce-b9b2-877f8cad8edd", accessMode = READ_ONLY)
+	@Schema(description = "Unique id for the billing record", examples = "71258e7d-5285-46ce-b9b2-877f8cad8edd", accessMode = READ_ONLY)
 	@Null
 	private String id;
 
@@ -46,10 +46,10 @@ public class BillingRecord {
 	@NotNull
 	private Status status;
 
-	@Schema(description = "Information regarding the person that has approved the billing record", example = "Big Bird")
+	@Schema(description = "Information regarding the person that has approved the billing record", examples = "Big Bird")
 	private String approvedBy;
 
-	@Schema(description = "Timestamp when the billing record got approved status", example = "2022-11-21T16:57:13.988+02:00", accessMode = READ_ONLY)
+	@Schema(description = "Timestamp when the billing record got approved status", examples = "2022-11-21T16:57:13.988+02:00", accessMode = READ_ONLY)
 	@DateTimeFormat(iso = ISO.DATE_TIME)
 	@Null
 	private OffsetDateTime approved;
@@ -63,17 +63,17 @@ public class BillingRecord {
 	@Valid
 	private Invoice invoice;
 
-	@Schema(description = "Timestamp when the billing record was created", example = "2022-10-31T14:30:00.001+02:00", accessMode = READ_ONLY)
+	@Schema(description = "Timestamp when the billing record was created", examples = "2022-10-31T14:30:00.001+02:00", accessMode = READ_ONLY)
 	@DateTimeFormat(iso = ISO.DATE_TIME)
 	@Null
 	private OffsetDateTime created;
 
-	@Schema(description = "Timestamp when the billing record was last modified", example = "2022-11-14T08:57:42.358+02:00", accessMode = READ_ONLY)
+	@Schema(description = "Timestamp when the billing record was last modified", examples = "2022-11-14T08:57:42.358+02:00", accessMode = READ_ONLY)
 	@DateTimeFormat(iso = ISO.DATE_TIME)
 	@Null
 	private OffsetDateTime modified;
 
-	@Schema(description = "A map of extra parameters for custom values on the billing record", example = "{\"caseId\":\"abc123\",\"uuid\":\"82a400cf-eb02-4a18-962d-fde55440868f\"}")
+	@Schema(description = "A map of extra parameters for custom values on the billing record", examples = "{\"caseId\":\"abc123\",\"uuid\":\"82a400cf-eb02-4a18-962d-fde55440868f\"}")
 	private Map<String, String> extraParameters;
 
 	public static BillingRecord create() {

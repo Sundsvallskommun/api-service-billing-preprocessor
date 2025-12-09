@@ -10,23 +10,23 @@ import se.sundsvall.dept44.common.validators.annotation.ValidUuid;
 @Schema(description = "Billing recipient model")
 public class Recipient {
 
-	@Schema(description = "Unique id for the person issuing the billing record. Mandatory for EXTERNAL billing record if legalId is null.", example = "f0882f1d-06bc-47fd-b017-1d8307f5ce95")
+	@Schema(description = "Unique id for the person issuing the billing record. Mandatory for EXTERNAL billing record if legalId is null.", examples = "f0882f1d-06bc-47fd-b017-1d8307f5ce95")
 	@ValidUuid(nullable = true)
 	private String partyId;
 
-	@Schema(description = "LegalId for the organization issuing the billing record. Mandatory for EXTERNAL billing record if partyId is null.", example = "3456789123")
+	@Schema(description = "LegalId for the organization issuing the billing record. Mandatory for EXTERNAL billing record if partyId is null.", examples = "3456789123")
 	private String legalId;
 
-	@Schema(description = "Name of issuing organization of the billing record if the recipient is an organization", example = "Sesame Merc AB")
+	@Schema(description = "Name of issuing organization of the billing record if the recipient is an organization", examples = "Sesame Merc AB")
 	private String organizationName;
 
-	@Schema(description = "First name of the billing record recipient", example = "Alice")
+	@Schema(description = "First name of the billing record recipient", examples = "Alice")
 	private String firstName;
 
-	@Schema(description = "Last name of the billing record recipient", example = "Snuffleupagus")
+	@Schema(description = "Last name of the billing record recipient", examples = "Snuffleupagus")
 	private String lastName;
 
-	@Schema(description = "User id of the billing record recipient", example = "ALI22SNU")
+	@Schema(description = "User id of the billing record recipient", examples = "ALI22SNU")
 	private String userId;
 
 	@Schema(implementation = AddressDetails.class, requiredMode = REQUIRED)
