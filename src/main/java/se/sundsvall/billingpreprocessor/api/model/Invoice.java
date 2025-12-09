@@ -19,30 +19,30 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 @Schema(description = "Invoice model")
 public class Invoice {
 
-	@Schema(description = "Customer number in Raindance", example = "16", requiredMode = REQUIRED)
+	@Schema(description = "Customer number in Raindance", examples = "16", requiredMode = REQUIRED)
 	@NotBlank
 	private String customerId;
 
-	@Schema(description = "Description of the invoice", example = "Errand number: 2113-01784", requiredMode = REQUIRED)
+	@Schema(description = "Description of the invoice", examples = "Errand number: 2113-01784", requiredMode = REQUIRED)
 	@NotBlank
 	private String description;
 
-	@Schema(description = "Our reference", example = "Harvey Kneeslapper")
+	@Schema(description = "Our reference", examples = "Harvey Kneeslapper")
 	private String ourReference;
 
-	@Schema(description = "Customer reference", example = "Alice Snuffleupagus", requiredMode = REQUIRED)
+	@Schema(description = "Customer reference", examples = "Alice Snuffleupagus", requiredMode = REQUIRED)
 	@NotBlank
 	private String customerReference;
 
-	@Schema(description = "Date for the invoice", example = "2022-12-24")
+	@Schema(description = "Date for the invoice", examples = "2022-12-24")
 	@DateTimeFormat(iso = ISO.DATE)
 	private LocalDate date;
 
-	@Schema(description = "Due date for the invoice", example = "2022-12-24")
+	@Schema(description = "Due date for the invoice", examples = "2022-12-24")
 	@DateTimeFormat(iso = ISO.DATE)
 	private LocalDate dueDate;
 
-	@Schema(description = "Total sum of all invoice rows", example = "1399.95", accessMode = READ_ONLY)
+	@Schema(description = "Total sum of all invoice rows", examples = "1399.95", accessMode = READ_ONLY)
 	@Null
 	private BigDecimal totalAmount;
 

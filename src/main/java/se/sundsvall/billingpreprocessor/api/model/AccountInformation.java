@@ -7,31 +7,31 @@ import java.util.Objects;
 @Schema(description = "Account information model")
 public class AccountInformation {
 
-	@Schema(description = "Cost center", example = "15800100")
+	@Schema(description = "Cost center", examples = "15800100")
 	private String costCenter;
 
-	@Schema(description = "Subaccount", example = "936300")
+	@Schema(description = "Subaccount", examples = "936300")
 	private String subaccount;
 
-	@Schema(description = "Department", example = "920360")
+	@Schema(description = "Department", examples = "920360")
 	private String department;
 
-	@Schema(description = "Accural key", example = "5647")
+	@Schema(description = "Accural key", examples = "5647")
 	private String accuralKey;
 
-	@Schema(description = "Activity", example = "5756")
+	@Schema(description = "Activity", examples = "5756")
 	private String activity;
 
-	@Schema(description = "Article", example = "Electric bicycle")
+	@Schema(description = "Article", examples = "Electric bicycle")
 	private String article;
 
-	@Schema(description = "Project", example = "11041")
+	@Schema(description = "Project", examples = "11041")
 	private String project;
 
-	@Schema(description = "Counterpart", example = "11830000")
+	@Schema(description = "Counterpart", examples = "11830000")
 	private String counterpart;
 
-	@Schema(description = "Amount", example = "1399.95")
+	@Schema(description = "Amount", examples = "1399.95")
 	private BigDecimal amount;
 
 	public static AccountInformation create() {
