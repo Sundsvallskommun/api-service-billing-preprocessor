@@ -8,7 +8,7 @@ _The service contains two periodic jobs that are executed at certain intervals, 
 
 ### Prerequisites
 
-- **Java 21 or higher**
+- **Java 25 or higher**
 - **Maven**
 - **MariaDB**
 - **Git**
