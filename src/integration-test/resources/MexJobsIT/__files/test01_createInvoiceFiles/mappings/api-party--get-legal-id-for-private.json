@@ -1,0 +1,14 @@
+{
+	"request": {
+		"method": "GET",
+		"urlPath": "/api-party/2281/PRIVATE/ac653c32-b26c-47e8-8c3d-4d18c1b5111c/legalId"
+	},
+	"response": {
+		"headers": {
+			"content-type": "application/problem+json"
+		},
+		"bodyFileName": "test01_createInvoiceFiles/responses/api-party--get-legal-id-for-private-response.json",
+		"status": 404
+	},
+	"name": "api-party--get-legal-id-for-private"
+}

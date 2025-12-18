@@ -1,0 +1,59 @@
+{
+	"id": "${json-unit.any-string}",
+	"category": "MEX_INVOICE",
+	"type": "EXTERNAL",
+	"status": "NEW",
+	"recipient": {
+		"partyId": "ac653c32-b26c-47e8-8c3d-4d18c1b5111c",
+		"organizationName": "Seaview Middle School",
+		"addressDetails": {
+			"street": "MEX STREET 123",
+			"careOf": "",
+			"postalCode": "90102",
+			"city": "MEX CITY"
+		}
+	},
+	"invoice": {
+		"customerId": "Seaview Middle School",
+		"description": "Extra MEX utbetalning - Systemet",
+		"ourReference": "Hanna Montana",
+		"customerReference": "PRI22LUG",
+		"totalAmount": 376.38,
+		"invoiceRows": [
+			{
+				"descriptions": [
+					"MEX Ärendenummer: MEX-25020125"
+				],
+				"totalAmount": 376.38,
+				"vatCode": "25",
+				"costPerUnit": 306.0,
+				"quantity": 1.23,
+				"accountInformation": [
+					{
+						"costCenter": "15800234",
+						"subaccount": "363000",
+						"department": "920360",
+						"activity": "5757",
+						"counterpart": "510",
+						"amount": 369.0
+					},
+					{
+						"costCenter": "15800234",
+						"subaccount": "363000",
+						"department": "920360",
+						"activity": "5757",
+						"project": "11041",
+						"counterpart": "510",
+						"amount": 7.38
+					}
+				]
+			}
+		]
+	},
+	"created": "${json-unit.any-string}",
+	"extraParameters": {
+		"errandId": "${json-unit.any-string}",
+		"errandNumber": "MEX-25020125",
+		"referenceName": "Principal Luger"
+	}
+}
