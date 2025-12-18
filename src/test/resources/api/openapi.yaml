@@ -7,7 +7,7 @@ info:
     url: https://opensource.org/licenses/MIT
   version: "4.2"
 servers:
-  - url: http://localhost:49918
+  - url: http://localhost:57262
     description: Generated server url
 tags:
   - name: Status Resource
@@ -759,7 +759,7 @@ components:
         category:
           type: string
           description: Billing category
-          pattern: ACCESS_CARD|CUSTOMER_INVOICE|SALARY_AND_PENSION|ISYCASE
+          pattern: ACCESS_CARD|CUSTOMER_INVOICE|SALARY_AND_PENSION|ISYCASE|MEX_INVOICE
         type:
           $ref: "#/components/schemas/Type"
         status:
@@ -1002,11 +1002,11 @@ components:
           type: boolean
         last:
           type: boolean
-        sort:
-          $ref: "#/components/schemas/SortObject"
         numberOfElements:
           type: integer
           format: int32
+        sort:
+          $ref: "#/components/schemas/SortObject"
         pageable:
           $ref: "#/components/schemas/PageableObject"
         size:

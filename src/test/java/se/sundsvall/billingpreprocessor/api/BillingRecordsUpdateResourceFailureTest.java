@@ -148,7 +148,7 @@ class BillingRecordsUpdateResourceFailureTest {
 			tuple("billingRecord", "can not contain vat code information on invoice rows when billing record is of type INTERNAL"),
 			tuple("billingRecord", "invoice.ourReference is mandatory when billing record is of type INTERNAL"),
 			tuple("billingRecord", "amount, costCenter, subaccount, department and counterpart must be present for invoice rows containing accountInformation"),
-			tuple("category", "must be one of ACCESS_CARD, CUSTOMER_INVOICE, SALARY_AND_PENSION or ISYCASE"),
+			tuple("category", "must be one of ACCESS_CARD, CUSTOMER_INVOICE, SALARY_AND_PENSION, ISYCASE or MEX_INVOICE"),
 			tuple("approved", "must be null"),
 			tuple("created", "must be null"),
 			tuple("id", "must be null"),
@@ -189,7 +189,7 @@ class BillingRecordsUpdateResourceFailureTest {
 			tuple("billingRecord", "recipient must have partyId or legalId when billing record is of type EXTERNAL"),
 			tuple("billingRecord", "must contain vat code information on invoice rows when billing record is of type EXTERNAL"),
 			tuple("billingRecord", "amount, costCenter, subaccount, department and counterpart must be present for invoice rows containing accountInformation"),
-			tuple("category", "must be one of ACCESS_CARD, CUSTOMER_INVOICE, SALARY_AND_PENSION or ISYCASE"),
+			tuple("category", "must be one of ACCESS_CARD, CUSTOMER_INVOICE, SALARY_AND_PENSION, ISYCASE or MEX_INVOICE"),
 			tuple("approved", "must be null"),
 			tuple("created", "must be null"),
 			tuple("id", "must be null"),
@@ -205,7 +205,7 @@ class BillingRecordsUpdateResourceFailureTest {
 
 	@ParameterizedTest
 	@EnumSource(value = Type.class)
-	void updateBillingRecordWithStatusApprovedAndNoApprovedBy(Type type) {
+	void updateBillingRecordWithStatusApprovedAndNoApprovedBy(final Type type) {
 		// Parameter values
 		final var uuid = randomUUID().toString();
 		final var request = createBillingRecordInstance(type, true)

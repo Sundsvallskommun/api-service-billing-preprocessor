@@ -34,7 +34,7 @@ public class BillingRecord {
 	private String id;
 
 	@Schema(description = "Billing category", requiredMode = REQUIRED)
-	@Pattern(regexp = "ACCESS_CARD|CUSTOMER_INVOICE|SALARY_AND_PENSION|ISYCASE", message = "must be one of ACCESS_CARD, CUSTOMER_INVOICE, SALARY_AND_PENSION or ISYCASE")
+	@Pattern(regexp = "ACCESS_CARD|CUSTOMER_INVOICE|SALARY_AND_PENSION|ISYCASE|MEX_INVOICE", message = "must be one of ACCESS_CARD, CUSTOMER_INVOICE, SALARY_AND_PENSION, ISYCASE or MEX_INVOICE")
 	@NotNull
 	private String category;
 
@@ -84,11 +84,11 @@ public class BillingRecord {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(final String id) {
 		this.id = id;
 	}
 
-	public BillingRecord withId(String id) {
+	public BillingRecord withId(final String id) {
 		this.id = id;
 		return this;
 	}
@@ -97,11 +97,11 @@ public class BillingRecord {
 		return category;
 	}
 
-	public void setCategory(String category) {
+	public void setCategory(final String category) {
 		this.category = category;
 	}
 
-	public BillingRecord withCategory(String category) {
+	public BillingRecord withCategory(final String category) {
 		this.category = category;
 		return this;
 	}
@@ -110,11 +110,11 @@ public class BillingRecord {
 		return type;
 	}
 
-	public void setType(Type type) {
+	public void setType(final Type type) {
 		this.type = type;
 	}
 
-	public BillingRecord withType(Type type) {
+	public BillingRecord withType(final Type type) {
 		this.type = type;
 		return this;
 	}
@@ -123,11 +123,11 @@ public class BillingRecord {
 		return status;
 	}
 
-	public void setStatus(Status status) {
+	public void setStatus(final Status status) {
 		this.status = status;
 	}
 
-	public BillingRecord withStatus(Status status) {
+	public BillingRecord withStatus(final Status status) {
 		this.status = status;
 		return this;
 	}
@@ -136,11 +136,11 @@ public class BillingRecord {
 		return approvedBy;
 	}
 
-	public void setApprovedBy(String approvedBy) {
+	public void setApprovedBy(final String approvedBy) {
 		this.approvedBy = approvedBy;
 	}
 
-	public BillingRecord withApprovedBy(String approvedBy) {
+	public BillingRecord withApprovedBy(final String approvedBy) {
 		this.approvedBy = approvedBy;
 		return this;
 	}
@@ -149,11 +149,11 @@ public class BillingRecord {
 		return approved;
 	}
 
-	public void setApproved(OffsetDateTime approved) {
+	public void setApproved(final OffsetDateTime approved) {
 		this.approved = approved;
 	}
 
-	public BillingRecord withApproved(OffsetDateTime approved) {
+	public BillingRecord withApproved(final OffsetDateTime approved) {
 		this.approved = approved;
 		return this;
 	}
@@ -162,11 +162,11 @@ public class BillingRecord {
 		return recipient;
 	}
 
-	public void setRecipient(Recipient recipient) {
+	public void setRecipient(final Recipient recipient) {
 		this.recipient = recipient;
 	}
 
-	public BillingRecord withRecipient(Recipient recipient) {
+	public BillingRecord withRecipient(final Recipient recipient) {
 		this.recipient = recipient;
 		return this;
 	}
@@ -175,11 +175,11 @@ public class BillingRecord {
 		return invoice;
 	}
 
-	public void setInvoice(Invoice invoice) {
+	public void setInvoice(final Invoice invoice) {
 		this.invoice = invoice;
 	}
 
-	public BillingRecord withInvoice(Invoice invoice) {
+	public BillingRecord withInvoice(final Invoice invoice) {
 		this.invoice = invoice;
 		return this;
 	}
@@ -188,11 +188,11 @@ public class BillingRecord {
 		return created;
 	}
 
-	public void setCreated(OffsetDateTime created) {
+	public void setCreated(final OffsetDateTime created) {
 		this.created = created;
 	}
 
-	public BillingRecord withCreated(OffsetDateTime created) {
+	public BillingRecord withCreated(final OffsetDateTime created) {
 		this.created = created;
 		return this;
 	}
@@ -201,11 +201,11 @@ public class BillingRecord {
 		return modified;
 	}
 
-	public void setModified(OffsetDateTime modified) {
+	public void setModified(final OffsetDateTime modified) {
 		this.modified = modified;
 	}
 
-	public BillingRecord withModified(OffsetDateTime modified) {
+	public BillingRecord withModified(final OffsetDateTime modified) {
 		this.modified = modified;
 		return this;
 	}
@@ -214,11 +214,11 @@ public class BillingRecord {
 		return extraParameters;
 	}
 
-	public void setExtraParameters(Map<String, String> extraParameters) {
+	public void setExtraParameters(final Map<String, String> extraParameters) {
 		this.extraParameters = extraParameters;
 	}
 
-	public BillingRecord withExtraParameters(Map<String, String> extraParameters) {
+	public BillingRecord withExtraParameters(final Map<String, String> extraParameters) {
 		this.extraParameters = extraParameters;
 		return this;
 	}
@@ -229,7 +229,7 @@ public class BillingRecord {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
 		}
@@ -239,25 +239,23 @@ public class BillingRecord {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		BillingRecord other = (BillingRecord) obj;
+		final BillingRecord other = (BillingRecord) obj;
 		return Objects.equals(category, other.category) && Objects.equals(approved, other.approved) && Objects.equals(approvedBy, other.approvedBy) && Objects.equals(created, other.created) && Objects.equals(id, other.id) && Objects.equals(invoice,
 			other.invoice) && Objects.equals(recipient, other.recipient) && Objects.equals(modified, other.modified) && Objects.equals(status, other.status) && Objects.equals(type, other.type) && Objects.equals(extraParameters, other.extraParameters);
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("BillingRecord[id=").append(id)
-			.append(", category=").append(category)
-			.append(", type=").append(type)
-			.append(", status=").append(status)
-			.append(", approvedBy=").append(approvedBy)
-			.append(", approved=").append(approved)
-			.append(", recipient=").append(recipient)
-			.append(", invoice=").append(invoice)
-			.append(", created=").append(created)
-			.append(", modified=").append(modified)
-			.append(", extraParameters").append(extraParameters).append("]");
-		return builder.toString();
+		return "BillingRecord[id=" + id
+			+ ", category=" + category
+			+ ", type=" + type
+			+ ", status=" + status
+			+ ", approvedBy=" + approvedBy
+			+ ", approved=" + approved
+			+ ", recipient=" + recipient
+			+ ", invoice=" + invoice
+			+ ", created=" + created
+			+ ", modified=" + modified
+			+ ", extraParameters" + extraParameters + "]";
 	}
 }

@@ -1,0 +1,5 @@
+{
+	"title": "Not Found",
+	"status": 404,
+	"detail": "legalentity error: {detail=A LegalEntity with id ac653c32-b26c-47e8-8c3d-4d18c1b5111c was not found for the given municipalityId 2281 and type PRIVATE, status=404, title=Not Found}"
+}

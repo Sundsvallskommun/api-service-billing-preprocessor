@@ -1,0 +1,45 @@
+{
+	"recipient": {
+		"organizationName": "Seaview Middle School",
+		"addressDetails": {
+			"city": "MEX CITY",
+			"street": "MEX STREET 123",
+			"careOf": "",
+			"postalCode": "90102"
+		}
+	},
+	"invoice": {
+		"customerId": "10",
+		"description": "Extra MEX utbetalning - Direktinsättning",
+		"invoiceRows": [
+			{
+				"descriptions": [
+					"MEX Ärendenummer: MEX-25020123"
+				],
+				"detailedDescriptions": [],
+				"costPerUnit": 1500,
+				"quantity": 1,
+				"accountInformation": [
+					{
+						"costCenter": "15810100",
+						"subaccount": "936300",
+						"department": "920360",
+						"activity": "5756",
+						"amount": 1500,
+						"counterpart": "110"
+					}
+				]
+			}
+		],
+		"customerReference": "HAN99MON",
+		"ourReference": "Lola Luftnagle"
+	},
+	"category": "MEX_INVOICE",
+	"type": "INTERNAL",
+	"status": "NEW",
+	"extraParameters": {
+		"errandNumber": "MEX-25020123",
+		"errandId": "cd25a29e-3e58-4fbd-979a-ece33b528d12",
+		"referenceName": "Hanna Montana"
+	}
+}
