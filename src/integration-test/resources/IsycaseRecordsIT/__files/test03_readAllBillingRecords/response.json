@@ -43,7 +43,8 @@
 			"modified": "2022-06-30T08:52:25.112+02:00",
 			"extraParameters": {
 				"aKey": "anotherValue"
-			}
+			},
+			"transferDate": "${json-unit.any-string}"
 		},
 		{
 			"id": "1abc9859-9141-43b0-91d9-43cd7d889690",
@@ -92,7 +93,8 @@
 			},
 			"created": "2024-03-20T11:37:15.997+01:00",
 			"modified": "2024-03-20T11:37:15.997+01:00",
-			"extraParameters": {}
+			"extraParameters": {},
+			"transferDate": "${json-unit.any-string}"
 		},
 		{
 			"id": "200ee4a6-f7bc-4d82-80cb-ecd2d610475c",
@@ -153,7 +155,8 @@
 			},
 			"created": "2024-03-20T11:37:15.997+01:00",
 			"modified": "2024-03-20T11:37:15.997+01:00",
-			"extraParameters": {}
+			"extraParameters": {},
+			"transferDate": "${json-unit.any-string}"
 		},
 		{
 			"id": "71258e7d-5285-46ce-b9b2-877f8cad8edd",

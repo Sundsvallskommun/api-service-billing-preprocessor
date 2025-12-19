@@ -1,10 +1,10 @@
 -- -----------------------------------
 -- Billling records
 -- -----------------------------------
-INSERT INTO billing_record (id, category, approved, approved_by, created, modified, status, `type`, municipality_id)
-VALUES	  ('23af2045-c96e-44d6-b0da-d2f8a38b9711', 'CUSTOMER_INVOICE', '2024-11-13 13:41:07.818882', 'E_SERVICE', '2024-11-13 13:41:07.819000', NULL, 'APPROVED', 'EXTERNAL', '2281'),
-          ('6b92f728-8698-47aa-b8c7-c67585df373e', 'CUSTOMER_INVOICE', '2024-11-13 13:41:15.757000', 'E_SERVICE', '2024-11-13 13:41:15.757000', NULL, 'APPROVED', 'INTERNAL', '2281'),
-          ('6d762c41-6ecb-4306-9594-316240e01a68', 'CUSTOMER_INVOICE', '2024-11-13 13:40:59.473763', 'E_SERVICE', '2024-11-13 13:40:59.479000', NULL, 'APPROVED', 'EXTERNAL', '2281');
+INSERT INTO billing_record (id, category, approved, approved_by, created, modified, status, `type`, municipality_id, transfer_date)
+VALUES	  ('23af2045-c96e-44d6-b0da-d2f8a38b9711', 'CUSTOMER_INVOICE', '2024-11-13 13:41:07.818882', 'E_SERVICE', '2024-11-13 13:41:07.819000', NULL, 'APPROVED', 'EXTERNAL', '2281', '2024-11-15'),
+          ('6b92f728-8698-47aa-b8c7-c67585df373e', 'CUSTOMER_INVOICE', '2024-11-13 13:41:15.757000', 'E_SERVICE', '2024-11-13 13:41:15.757000', NULL, 'APPROVED', 'INTERNAL', '2281', '2024-11-15'),
+          ('6d762c41-6ecb-4306-9594-316240e01a68', 'CUSTOMER_INVOICE', '2024-11-13 13:40:59.473763', 'E_SERVICE', '2024-11-13 13:40:59.479000', NULL, 'APPROVED', 'EXTERNAL', '2281', '2024-11-15');
 
 -- ---------------------------
 -- Invoices

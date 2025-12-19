@@ -1,15 +1,15 @@
 -- -----------------------------------
 -- Billling records
 -- -----------------------------------
-INSERT INTO billing_record (id, category, approved, approved_by, created, modified, status, `type`, municipality_id)
-VALUES ('e4ead2ae-daf7-4993-8f64-f9d24417b189', 'MEX_INVOICE', '2025-02-10 13:37:00.000001', 'MEX',
-        '2025-02-09 13:37:00.000001', '2025-02-10 13:37:00.000001', 'APPROVED', 'EXTERNAL', '2281'),
-       ('61b6f794-10c1-4e3b-8a3d-6d789582e5f9', 'MEX_INVOICE', '2025-02-10 13:37:00.000001', 'MEX',
-        '2025-02-09 13:37:00.000001', '2025-02-10 13:37:00.000001', 'APPROVED', 'EXTERNAL', '2281'),
-       ('9d7c72f4-7b18-4a4a-b2ee-4a7007cada3d', 'MEX_INVOICE', '2025-02-10 13:37:00.000001', 'MEX',
-        '2025-02-09 13:37:00.000001', '2025-02-10 13:37:00.000001', 'APPROVED', 'INTERNAL', '2281'),
-       ('8fe12401-ea81-cdfe-a239-76febb3101de', 'MEX_INVOICE', '2025-02-10 13:37:00.000001', 'MEX',
-        '2025-02-09 13:37:00.000001', '2025-02-10 13:37:00.000001', 'APPROVED', 'INTERNAL', '2281');
+INSERT INTO billing_record (id, category, approved, approved_by, created, modified, status, `type`, municipality_id, transfer_date)
+VALUES ('e4ead2ae-daf7-4993-8f64-f9d24417b189', 'MEX_INVOICE', '2024-02-10 13:37:00.000001', 'MEX',
+        '2024-02-09 13:37:00.000001', '2024-02-10 13:37:00.000001', 'APPROVED', 'EXTERNAL', '2281', '2024-02-15'),
+       ('61b6f794-10c1-4e3b-8a3d-6d789582e5f9', 'MEX_INVOICE', '2024-02-10 13:37:00.000001', 'MEX',
+        '2024-02-09 13:37:00.000001', '2024-02-10 13:37:00.000001', 'APPROVED', 'EXTERNAL', '2281', '2024-02-15'),
+       ('9d7c72f4-7b18-4a4a-b2ee-4a7007cada3d', 'MEX_INVOICE', '2024-02-10 13:37:00.000001', 'MEX',
+        '2024-02-09 13:37:00.000001', '2024-02-10 13:37:00.000001', 'APPROVED', 'INTERNAL', '2281', '2024-02-15'),
+       ('8fe12401-ea81-cdfe-a239-76febb3101de', 'MEX_INVOICE', '2024-02-10 13:37:00.000001', 'MEX',
+        '2024-02-09 13:37:00.000001', '2024-02-10 13:37:00.000001', 'APPROVED', 'INTERNAL', '2281', '2024-02-15');
 
 -- -----------------------------------
 -- Invoices

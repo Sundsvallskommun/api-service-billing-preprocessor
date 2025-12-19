@@ -63,5 +63,6 @@
 	"extraParameters": {
 		"bestFriend": "Big Bird",
 		"snuffle": "trunk"
-	}
+	},
+	"transferDate": "${json-unit.any-string}"
 }

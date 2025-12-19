@@ -13,6 +13,7 @@ import static se.sundsvall.dept44.util.LogUtils.sanitizeForLogging;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.Charset;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -108,7 +109,8 @@ public class InvoiceFileService {
 
 	@Transactional
 	public void createFiles(String municipalityId) {
-		final var billingRecords = new ArrayList<>(billingRecordRepository.findAllByStatusAndMunicipalityId(APPROVED, municipalityId));
+		final var now = LocalDate.now();
+		final var billingRecords = new ArrayList<>(billingRecordRepository.findAllByStatusAndMunicipalityIdAndTransferDateLessThanEqual(APPROVED, municipalityId, now));
 
 		final var creationErrors = invoiceCreators.stream()
 			.map(creator -> processBillingRecords(billingRecords, creator, municipalityId))

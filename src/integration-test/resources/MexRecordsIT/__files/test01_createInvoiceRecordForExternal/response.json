@@ -50,6 +50,7 @@
 			}
 		]
 	},
+	"transferDate": "${json-unit.any-string}",
 	"created": "${json-unit.any-string}",
 	"extraParameters": {
 		"errandId": "${json-unit.any-string}",

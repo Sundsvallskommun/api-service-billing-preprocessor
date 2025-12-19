@@ -48,6 +48,7 @@
 			}
 		]
 	},
+	"transferDate": "${json-unit.any-string}",
 	"created": "${json-unit.regex}^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.?\\d{0,10}(Z|[+-]\\d{2}:\\d{2})?$",
 	"extraParameters": {
 		"errandId": "cd25a29e-3e58-4fbd-979a-ece33b528d12",

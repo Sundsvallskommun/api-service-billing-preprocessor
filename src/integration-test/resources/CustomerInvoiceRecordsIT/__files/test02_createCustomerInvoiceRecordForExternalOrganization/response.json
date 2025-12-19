@@ -61,5 +61,6 @@
 		]
 	},
 	"created": "${json-unit.regex}^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.?\\d{0,10}(Z|[+-]\\d{2}:\\d{2})?$",
-	"extraParameters": {}
+	"extraParameters": {},
+	"transferDate": "${json-unit.any-string}"
 }

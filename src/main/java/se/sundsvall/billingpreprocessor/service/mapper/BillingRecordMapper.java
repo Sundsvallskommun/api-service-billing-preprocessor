@@ -14,6 +14,7 @@ import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Descri
 import static se.sundsvall.billingpreprocessor.service.util.CalculationUtil.calculateTotalInvoiceAmount;
 import static se.sundsvall.billingpreprocessor.service.util.CalculationUtil.calculateTotalInvoiceRowAmount;
 
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,18 +41,38 @@ public final class BillingRecordMapper {
 	private BillingRecordMapper() {}
 
 	/**
+	 * Returns the provided transfer date or defaults to the next 15th of the month if null. If today is before the 15th,
+	 * returns the 15th of the current month. If today is the 15th or later, returns the 15th of the next month.
+	 *
+	 * @param  transferDate the transfer date to default if null
+	 * @return              the provided transfer date or the next 15th
+	 */
+	private static LocalDate defaultTransferDateIfNull(final LocalDate transferDate) {
+		if (transferDate != null) {
+			return transferDate;
+		}
+
+		final LocalDate now = LocalDate.now();
+		if (now.getDayOfMonth() < 15) {
+			return now.withDayOfMonth(15);
+		} else {
+			return now.plusMonths(1).withDayOfMonth(15);
+		}
+	}
+
+	/**
 	 * Method for mapping a BillingRecord object to a BillingRecordEntity object
 	 *
 	 * @param  billingRecord  a billing record represented by the BillingRecord class
 	 * @param  municipalityId municipality ID
-	 * @return                a object of class BillingRecordEntity representing the incoming BillingRecord object
+	 * @return                an object of class BillingRecordEntity representing the incoming BillingRecord object
 	 */
-	public static BillingRecordEntity toBillingRecordEntity(final BillingRecord billingRecord, String municipalityId) {
+	public static BillingRecordEntity toBillingRecordEntity(final BillingRecord billingRecord, final String municipalityId) {
 		if (isNull(billingRecord)) {
 			return null;
 		}
 
-		final var billingRecordEntity = BillingRecordEntity.create() // Create billing record entity
+		final var billingRecordEntity = BillingRecordEntity.create() // Create a billing record entity
 			.withCategory(billingRecord.getCategory())
 			.withStatus(Status.valueOf(billingRecord.getStatus().toString()))
 			.withType(Type.valueOf(billingRecord.getType().toString()))
@@ -59,7 +80,8 @@ public final class BillingRecordMapper {
 
 		billingRecordEntity.setRecipient(toRecipientEntity(billingRecordEntity, billingRecord.getRecipient())); // Add recipient entity to billing record entity
 		billingRecordEntity.setInvoice(toInvoiceEntity(billingRecordEntity, billingRecord.getInvoice())); // Add invoice entity to billing record entity
-		billingRecordEntity.setExtraParameters(billingRecord.getExtraParameters()); // Add extra parameters to billing record entity
+		billingRecordEntity.setExtraParameters(billingRecord.getExtraParameters()); // Add extra parameters to a billing record entity
+		billingRecordEntity.setTransferDate(defaultTransferDateIfNull(billingRecord.getTransferDate())); // Add transfer date to billing record entity, default to next 15th if null
 
 		if (Status.APPROVED == billingRecordEntity.getStatus()) {
 			setApprovedBy(billingRecordEntity, billingRecord.getApprovedBy());
@@ -69,13 +91,13 @@ public final class BillingRecordMapper {
 	}
 
 	/**
-	 * Method for mapping a list of BillingRecordEntity objects to a BillingRecord objects
+	 * Method for mapping a list of BillingRecordEntity objects to BillingRecord objects
 	 *
 	 * @param  billingRecords a list of billing records represented by the BillingRecordEntity class
 	 * @param  municipalityId municipality ID
 	 * @return                a list of objects of class BillingRecord representing the incoming BillingRecordEntity objects
 	 */
-	public static List<BillingRecordEntity> toBillingRecordEntities(final List<BillingRecord> billingRecords, String municipalityId) {
+	public static List<BillingRecordEntity> toBillingRecordEntities(final List<BillingRecord> billingRecords, final String municipalityId) {
 		return ofNullable(billingRecords)
 			.map(records -> records.stream()
 				.map(r -> toBillingRecordEntity(r, municipalityId))
@@ -103,19 +125,21 @@ public final class BillingRecordMapper {
 
 		billingRecordEntity.setRecipient(toRecipientEntity(billingRecordEntity, billingRecord.getRecipient())); // Update recipient entity of billing record entity with new information
 		billingRecordEntity.setInvoice(toInvoiceEntity(billingRecordEntity, billingRecord.getInvoice())); // Update invoice entity of billing record entity with new information
-		billingRecordEntity.setExtraParameters(billingRecord.getExtraParameters()); // Update extra parameters of billing record entity with new information
+		billingRecordEntity.setExtraParameters(billingRecord.getExtraParameters()); // Update extra parameters of a billing record entity with new information
+		ofNullable(billingRecord.getTransferDate()).ifPresent(billingRecordEntity::setTransferDate); // Update transfer date of billing record entity with new information
 
 		// Only set approved by and approved timestamp first time billing record receives approved status
 		if ((Status.APPROVED == billingRecordEntity.getStatus()) && isNull(billingRecordEntity.getApproved())) {
 			setApprovedBy(billingRecordEntity, billingRecord.getApprovedBy());
 		}
 
-		// Need to trigger modified date for billing record manually here as adding or modifying sub entities doesn't trigger
+		// Need to trigger the modified date for billing record manually here as adding or modifying sub entities doesn't
+		// trigger
 		// the @preUpdate annotation
 		return billingRecordEntity.withModified(now(ZoneId.systemDefault()).truncatedTo(MILLIS));
 	}
 
-	private static void setApprovedBy(final BillingRecordEntity billingRecordEntity, String approvedBy) {
+	private static void setApprovedBy(final BillingRecordEntity billingRecordEntity, final String approvedBy) {
 		billingRecordEntity
 			.withApproved(now(ZoneId.systemDefault()).truncatedTo(MILLIS))
 			.withApprovedBy(approvedBy);
@@ -160,7 +184,7 @@ public final class BillingRecordMapper {
 		return descriptionEntities;
 	}
 
-	private static List<DescriptionEntity> toDescriptionEntities(final InvoiceRowEntity invoiceRowEntity, DescriptionType type, final List<String> descriptions) {
+	private static List<DescriptionEntity> toDescriptionEntities(final InvoiceRowEntity invoiceRowEntity, final DescriptionType type, final List<String> descriptions) {
 		return ofNullable(descriptions).orElse(emptyList()).stream()
 			.map(text -> DescriptionEntity.create().withInvoiceRow(invoiceRowEntity).withText(text).withType(type))
 			.collect(toCollection(ArrayList::new));
@@ -229,7 +253,7 @@ public final class BillingRecordMapper {
 	 * Method for mapping a BillingRecordEntity object to a BillingRecord object
 	 *
 	 * @param  billingRecordEntity a billing record represented by the BillingRecordEntity class
-	 * @return                     a object of class BillingRecord representing the incoming BillingRecordEntity object
+	 * @return                     an object of class BillingRecord representing the incoming BillingRecordEntity object
 	 */
 	public static BillingRecord toBillingRecord(final BillingRecordEntity billingRecordEntity) {
 		return ofNullable(billingRecordEntity).map(b -> BillingRecord.create()
@@ -242,12 +266,13 @@ public final class BillingRecordMapper {
 			.withRecipient(toRecipient(b.getRecipient()))
 			.withModified(b.getModified())
 			.withExtraParameters(b.getExtraParameters())
+			.withTransferDate(b.getTransferDate())
 			.withStatus(se.sundsvall.billingpreprocessor.api.model.enums.Status.valueOf(b.getStatus().toString()))
 			.withType(se.sundsvall.billingpreprocessor.api.model.enums.Type.valueOf(b.getType().toString())))
 			.orElse(null);
 	}
 
-	private static Recipient toRecipient(RecipientEntity recipientEntity) {
+	private static Recipient toRecipient(final RecipientEntity recipientEntity) {
 		return ofNullable(recipientEntity).map(r -> Recipient.create()
 			.withAddressDetails(toAddressDetails(r.getAddressDetails()))
 			.withFirstName(r.getFirstName())
@@ -259,8 +284,8 @@ public final class BillingRecordMapper {
 			.orElse(null);
 	}
 
-	private static AddressDetails toAddressDetails(AddressDetailsEmbeddable addressDetailsEmbeddable) {
-		return ofNullable(addressDetailsEmbeddable).map(details -> AddressDetails.create()
+	private static AddressDetails toAddressDetails(final AddressDetailsEmbeddable addressDetailsEmbeddable) {
+		return ofNullable(addressDetailsEmbeddable).map(_ -> AddressDetails.create()
 			.withCareOf(addressDetailsEmbeddable.getCareOf())
 			.withCity(addressDetailsEmbeddable.getCity())
 			.withStreet(addressDetailsEmbeddable.getStreet())
@@ -268,7 +293,7 @@ public final class BillingRecordMapper {
 			.orElse(null);
 	}
 
-	private static Invoice toInvoice(InvoiceEntity invoiceEntity) {
+	private static Invoice toInvoice(final InvoiceEntity invoiceEntity) {
 		return ofNullable(invoiceEntity).map(i -> Invoice.create()
 			.withCustomerId(i.getCustomerId())
 			.withCustomerReference(i.getCustomerReference())
@@ -281,14 +306,14 @@ public final class BillingRecordMapper {
 			.orElse(null);
 	}
 
-	private static List<InvoiceRow> toInvoiceRows(List<InvoiceRowEntity> invoiceRowEntities) {
+	private static List<InvoiceRow> toInvoiceRows(final List<InvoiceRowEntity> invoiceRowEntities) {
 		return ofNullable(invoiceRowEntities).orElse(emptyList()).stream()
 			.map(BillingRecordMapper::toInvoiceRow)
 			.filter(Objects::nonNull)
 			.toList();
 	}
 
-	private static InvoiceRow toInvoiceRow(InvoiceRowEntity invoiceRowEntity) {
+	private static InvoiceRow toInvoiceRow(final InvoiceRowEntity invoiceRowEntity) {
 		return ofNullable(invoiceRowEntity).map(i -> InvoiceRow.create()
 			.withAccountInformation(toAccountInformationList(i.getAccountInformation()))
 			.withCostPerUnit(i.getCostPerUnit())
@@ -300,14 +325,14 @@ public final class BillingRecordMapper {
 			.orElse(null);
 	}
 
-	private static List<AccountInformation> toAccountInformationList(List<AccountInformationEmbeddable> accountInformationEmbeddables) {
+	private static List<AccountInformation> toAccountInformationList(final List<AccountInformationEmbeddable> accountInformationEmbeddables) {
 		return ofNullable(accountInformationEmbeddables).orElse(emptyList()).stream()
 			.map(BillingRecordMapper::toAccountInformation)
 			.filter(Objects::nonNull)
 			.toList();
 	}
 
-	private static AccountInformation toAccountInformation(AccountInformationEmbeddable accountInformationEmbeddable) {
+	private static AccountInformation toAccountInformation(final AccountInformationEmbeddable accountInformationEmbeddable) {
 		return ofNullable(accountInformationEmbeddable)
 			.map(a -> AccountInformation.create()
 				.withAccuralKey(a.getAccuralKey())
@@ -322,7 +347,7 @@ public final class BillingRecordMapper {
 			.orElse(null);
 	}
 
-	private static List<String> toDescription(DescriptionType type, List<DescriptionEntity> descriptionEntities) {
+	private static List<String> toDescription(final DescriptionType type, final List<DescriptionEntity> descriptionEntities) {
 		return ofNullable(descriptionEntities).orElse(emptyList()).stream()
 			.filter(entity -> entity.getType() == type)
 			.map(DescriptionEntity::getText)

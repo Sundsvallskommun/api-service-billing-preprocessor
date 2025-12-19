@@ -1,6 +1,7 @@
 package se.sundsvall.billingpreprocessor.integration.db;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -11,7 +12,8 @@ import se.sundsvall.billingpreprocessor.integration.db.model.enums.Status;
 @Transactional
 @CircuitBreaker(name = "BillingRecordRepository")
 public interface BillingRecordRepository extends JpaRepository<BillingRecordEntity, String>, JpaSpecificationExecutor<BillingRecordEntity> {
-	List<BillingRecordEntity> findAllByStatusAndMunicipalityId(Status status, String municipalityId);
+
+	List<BillingRecordEntity> findAllByStatusAndMunicipalityIdAndTransferDateLessThanEqual(Status status, String municipalityId, LocalDate transferDate);
 
 	boolean existsByIdAndMunicipalityId(String id, String municipalityId);
 
