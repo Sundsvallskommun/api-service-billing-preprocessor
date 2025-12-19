@@ -50,6 +50,7 @@
 			}
 		]
 	},
+	"transferDate": "${json-unit.any-string}",
 	"created": "${json-unit.regex}^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.?\\d{0,10}(Z|[+-]\\d{2}:\\d{2})?$",
 	"extraParameters": {
 		"errandId": "fb19ecf5-a7c2-465e-22ac-c7ea9b4f1c15",

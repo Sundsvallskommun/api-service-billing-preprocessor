@@ -5,9 +5,9 @@ info:
   license:
     name: MIT License
     url: https://opensource.org/licenses/MIT
-  version: "4.2"
+  version: "4.3"
 servers:
-  - url: http://localhost:57262
+  - url: http://localhost:63098
     description: Generated server url
 tags:
   - name: Status Resource
@@ -804,6 +804,13 @@ components:
           examples:
             - "{\"caseId\":\"abc123\",\"uuid\":\"82a400cf-eb02-4a18-962d-fde55440868f\"\
             }"
+        transferDate:
+          type: string
+          format: date
+          description: "The date when the billing record should be transferred to\
+            \ Raindance. If not specified, defaults to the next 15th of the month."
+          examples:
+            - 2023-12-15
       required:
         - category
         - invoice
@@ -998,15 +1005,15 @@ components:
         totalPages:
           type: integer
           format: int32
-        first:
-          type: boolean
-        last:
-          type: boolean
         numberOfElements:
           type: integer
           format: int32
         sort:
           $ref: "#/components/schemas/SortObject"
+        first:
+          type: boolean
+        last:
+          type: boolean
         pageable:
           $ref: "#/components/schemas/PageableObject"
         size:

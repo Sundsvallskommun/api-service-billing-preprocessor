@@ -21,6 +21,7 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.Map;
@@ -34,7 +35,8 @@ import se.sundsvall.billingpreprocessor.integration.db.model.enums.Type;
 @Table(name = "billing_record",
 	indexes = {
 		@Index(name = "idx_billing_record_category_status", columnList = "category, status"),
-		@Index(name = "idx_billing_record_municipality_id", columnList = "municipalityId")
+		@Index(name = "idx_billing_record_municipality_id", columnList = "municipalityId"),
+		@Index(name = "idx_billing_record_status_municipalityId_transfer_date", columnList = "status, municipalityId,transferDate")
 	})
 public class BillingRecordEntity implements Serializable {
 	private static final long serialVersionUID = -1199591346011106014L;
@@ -92,6 +94,13 @@ public class BillingRecordEntity implements Serializable {
 	@Column(name = "`value`")
 	private Map<String, String> extraParameters;
 
+	@Column(name = "transfer_date")
+	private LocalDate transferDate;
+
+	public static BillingRecordEntity create() {
+		return new BillingRecordEntity();
+	}
+
 	@PrePersist
 	void onCreate() {
 		created = now(ZoneId.systemDefault()).truncatedTo(MILLIS);
@@ -102,19 +111,15 @@ public class BillingRecordEntity implements Serializable {
 		modified = now(ZoneId.systemDefault()).truncatedTo(MILLIS);
 	}
 
-	public static BillingRecordEntity create() {
-		return new BillingRecordEntity();
-	}
-
 	public String getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(final String id) {
 		this.id = id;
 	}
 
-	public BillingRecordEntity withId(String id) {
+	public BillingRecordEntity withId(final String id) {
 		this.id = id;
 		return this;
 	}
@@ -123,11 +128,11 @@ public class BillingRecordEntity implements Serializable {
 		return municipalityId;
 	}
 
-	public void setMunicipalityId(String municipalityId) {
+	public void setMunicipalityId(final String municipalityId) {
 		this.municipalityId = municipalityId;
 	}
 
-	public BillingRecordEntity withMunicipalityId(String municipalityId) {
+	public BillingRecordEntity withMunicipalityId(final String municipalityId) {
 		this.municipalityId = municipalityId;
 		return this;
 	}
@@ -136,11 +141,11 @@ public class BillingRecordEntity implements Serializable {
 		return category;
 	}
 
-	public void setCategory(String category) {
+	public void setCategory(final String category) {
 		this.category = category;
 	}
 
-	public BillingRecordEntity withCategory(String category) {
+	public BillingRecordEntity withCategory(final String category) {
 		this.category = category;
 		return this;
 	}
@@ -149,11 +154,11 @@ public class BillingRecordEntity implements Serializable {
 		return type;
 	}
 
-	public void setType(Type type) {
+	public void setType(final Type type) {
 		this.type = type;
 	}
 
-	public BillingRecordEntity withType(Type type) {
+	public BillingRecordEntity withType(final Type type) {
 		this.type = type;
 		return this;
 	}
@@ -162,11 +167,11 @@ public class BillingRecordEntity implements Serializable {
 		return status;
 	}
 
-	public void setStatus(Status status) {
+	public void setStatus(final Status status) {
 		this.status = status;
 	}
 
-	public BillingRecordEntity withStatus(Status status) {
+	public BillingRecordEntity withStatus(final Status status) {
 		this.status = status;
 		return this;
 	}
@@ -175,11 +180,11 @@ public class BillingRecordEntity implements Serializable {
 		return approvedBy;
 	}
 
-	public void setApprovedBy(String approvedBy) {
+	public void setApprovedBy(final String approvedBy) {
 		this.approvedBy = approvedBy;
 	}
 
-	public BillingRecordEntity withApprovedBy(String approvedBy) {
+	public BillingRecordEntity withApprovedBy(final String approvedBy) {
 		this.approvedBy = approvedBy;
 		return this;
 	}
@@ -188,11 +193,11 @@ public class BillingRecordEntity implements Serializable {
 		return approved;
 	}
 
-	public void setApproved(OffsetDateTime approved) {
+	public void setApproved(final OffsetDateTime approved) {
 		this.approved = approved;
 	}
 
-	public BillingRecordEntity withApproved(OffsetDateTime approved) {
+	public BillingRecordEntity withApproved(final OffsetDateTime approved) {
 		this.approved = approved;
 		return this;
 	}
@@ -201,11 +206,11 @@ public class BillingRecordEntity implements Serializable {
 		return created;
 	}
 
-	public void setCreated(OffsetDateTime created) {
+	public void setCreated(final OffsetDateTime created) {
 		this.created = created;
 	}
 
-	public BillingRecordEntity withCreated(OffsetDateTime created) {
+	public BillingRecordEntity withCreated(final OffsetDateTime created) {
 		this.created = created;
 		return this;
 	}
@@ -214,11 +219,11 @@ public class BillingRecordEntity implements Serializable {
 		return modified;
 	}
 
-	public void setModified(OffsetDateTime modified) {
+	public void setModified(final OffsetDateTime modified) {
 		this.modified = modified;
 	}
 
-	public BillingRecordEntity withModified(OffsetDateTime modified) {
+	public BillingRecordEntity withModified(final OffsetDateTime modified) {
 		this.modified = modified;
 		return this;
 	}
@@ -227,11 +232,11 @@ public class BillingRecordEntity implements Serializable {
 		return recipient;
 	}
 
-	public void setRecipient(RecipientEntity recipient) {
+	public void setRecipient(final RecipientEntity recipient) {
 		this.recipient = recipient;
 	}
 
-	public BillingRecordEntity withRecipient(RecipientEntity recipient) {
+	public BillingRecordEntity withRecipient(final RecipientEntity recipient) {
 		this.recipient = recipient;
 		return this;
 	}
@@ -240,11 +245,11 @@ public class BillingRecordEntity implements Serializable {
 		return invoice;
 	}
 
-	public void setInvoice(InvoiceEntity invoice) {
+	public void setInvoice(final InvoiceEntity invoice) {
 		this.invoice = invoice;
 	}
 
-	public BillingRecordEntity withInvoice(InvoiceEntity invoice) {
+	public BillingRecordEntity withInvoice(final InvoiceEntity invoice) {
 		this.invoice = invoice;
 		return this;
 	}
@@ -253,22 +258,35 @@ public class BillingRecordEntity implements Serializable {
 		return extraParameters;
 	}
 
-	public void setExtraParameters(Map<String, String> extraParameters) {
+	public void setExtraParameters(final Map<String, String> extraParameters) {
 		this.extraParameters = extraParameters;
 	}
 
-	public BillingRecordEntity withExtraParameters(Map<String, String> extraParameters) {
+	public BillingRecordEntity withExtraParameters(final Map<String, String> extraParameters) {
 		this.extraParameters = extraParameters;
+		return this;
+	}
+
+	public LocalDate getTransferDate() {
+		return transferDate;
+	}
+
+	public void setTransferDate(final LocalDate transferDate) {
+		this.transferDate = transferDate;
+	}
+
+	public BillingRecordEntity withTransferDate(final LocalDate transferDate) {
+		this.transferDate = transferDate;
 		return this;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(municipalityId, category, approved, approvedBy, created, id, invoice, recipient, modified, status, type, extraParameters);
+		return Objects.hash(municipalityId, category, approved, approvedBy, created, id, invoice, recipient, modified, status, type, extraParameters, transferDate);
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
 		}
@@ -282,24 +300,25 @@ public class BillingRecordEntity implements Serializable {
 		return Objects.equals(municipalityId, other.municipalityId) && Objects.equals(category, other.category) && Objects.equals(approved, other.approved) && Objects.equals(approvedBy, other.approvedBy) && Objects.equals(created, other.created) && Objects
 			.equals(id, other.id) && Objects.equals(
 				invoice, other.invoice) && Objects.equals(recipient, other.recipient) && Objects.equals(modified, other.modified) && Objects.equals(status, other.status) && Objects.equals(type, other.type) && Objects.equals(extraParameters,
-					other.extraParameters);
+					other.extraParameters) && Objects.equals(transferDate, other.transferDate);
 	}
 
 	@Override
 	public String toString() {
-		final StringBuilder builder = new StringBuilder();
-		builder.append("BillingRecordEntity [id=").append(id)
-			.append(", municipalityId=").append(municipalityId)
-			.append(", category=").append(category)
-			.append(", type=").append(type)
-			.append(", status=").append(status)
-			.append(", approvedBy=").append(approvedBy)
-			.append(", approved=").append(approved)
-			.append(", created=").append(created)
-			.append(", modified=").append(modified)
-			.append(", recipient=").append(recipient)
-			.append(", invoice=").append(invoice)
-			.append(", extraParameters").append(extraParameters).append("]");
-		return builder.toString();
+		return "BillingRecordEntity{" +
+			"id='" + id + '\'' +
+			", category='" + category + '\'' +
+			", municipalityId='" + municipalityId + '\'' +
+			", type=" + type +
+			", status=" + status +
+			", approvedBy='" + approvedBy + '\'' +
+			", approved=" + approved +
+			", created=" + created +
+			", modified=" + modified +
+			", recipient=" + recipient +
+			", invoice=" + invoice +
+			", extraParameters=" + extraParameters +
+			", transferDate=" + transferDate +
+			'}';
 	}
 }

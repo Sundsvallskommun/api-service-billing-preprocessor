@@ -13,6 +13,7 @@ import static org.hamcrest.core.AllOf.allOf;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.REJECTED;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.INTERNAL;
 
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.Map;
 import java.util.Random;
@@ -24,6 +25,7 @@ class BillingRecordEntityTest {
 	@BeforeAll
 	static void setup() {
 		registerValueGenerator(() -> now().plusDays(new Random().nextInt()), OffsetDateTime.class);
+		registerValueGenerator(() -> LocalDate.now().plusDays(new Random().nextInt()), LocalDate.class);
 	}
 
 	@Test
@@ -50,6 +52,7 @@ class BillingRecordEntityTest {
 		final var status = REJECTED;
 		final var type = INTERNAL;
 		final var extraParameters = Map.of("key", "value", "key2", "value2");
+		final var transferDate = LocalDate.now();
 
 		final var entity = BillingRecordEntity.create()
 			.withMunicipalityId(municipalityId)
@@ -63,7 +66,8 @@ class BillingRecordEntityTest {
 			.withModified(modified)
 			.withStatus(status)
 			.withType(type)
-			.withExtraParameters(extraParameters);
+			.withExtraParameters(extraParameters)
+			.withTransferDate(transferDate);
 
 		assertThat(entity).hasNoNullFieldsOrProperties();
 		assertThat(entity.getMunicipalityId()).isEqualTo(municipalityId);
@@ -78,6 +82,7 @@ class BillingRecordEntityTest {
 		assertThat(entity.getStatus()).isEqualTo(status);
 		assertThat(entity.getType()).isEqualTo(type);
 		assertThat(entity.getExtraParameters()).isEqualTo(extraParameters);
+		assertThat(entity.getTransferDate()).isEqualTo(transferDate);
 	}
 
 	@Test

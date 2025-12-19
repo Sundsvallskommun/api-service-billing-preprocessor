@@ -1,13 +1,13 @@
 -------------------------------------
 -- Billling records
 -------------------------------------
-INSERT INTO billing_record (id, category, approved, approved_by, created, modified, status, `type`, municipality_id)
-VALUES	('71258e7d-5285-46ce-b9b2-877f8cad8edd', 'ISYCASE', NULL, NULL, '2022-06-20 11:17:36.795', NULL, 'NEW', 'INTERNAL', '2281'),
-		('1310ee8b-ecf9-4fe1-ab9d-f19153b19d06', 'ISYCASE', '2022-06-30 08:52:25.112', 'JOE01DOE', '2022-06-25 16:43:12.553', '2022-06-30 08:52:25.112', 'APPROVED', 'INTERNAL', '2281'),
-		('83e4d599-5b4d-431c-8ebc-81192e9401ee', 'ISYCASE', NULL, NULL, '2022-06-25 16:43:12.553', NULL, 'NEW', 'EXTERNAL', '2281'),
-		('200ee4a6-f7bc-4d82-80cb-ecd2d610475c', 'ISYCASE', '2024-03-20 11:37:15.997', 'JOE01DOE', '2024-03-20 11:37:15.997', '2024-03-20 11:37:15.997', 'APPROVED', 'EXTERNAL', '2281'),
-		('b4ee0334-33c3-4eff-984e-3dd5252760a9', 'ISYCASE', '2024-03-20 11:37:15.997', 'JOE01DOE', '2024-03-20 11:37:15.997', '2024-03-20 11:37:15.997', 'APPROVED', 'EXTERNAL', '2282'),
-		('1abc9859-9141-43b0-91d9-43cd7d889690', 'UNKNOWN', '2024-03-20 11:37:15.997', 'JOE01DOE', '2024-03-20 11:37:15.997', '2024-03-20 11:37:15.997', 'APPROVED', 'EXTERNAL', '2281');
+INSERT INTO billing_record (id, category, approved, approved_by, created, modified, status, `type`, municipality_id, transfer_date)
+VALUES	('71258e7d-5285-46ce-b9b2-877f8cad8edd', 'ISYCASE', NULL, NULL, '2022-06-20 11:17:36.795', NULL, 'NEW', 'INTERNAL', '2281', NULL),
+		('1310ee8b-ecf9-4fe1-ab9d-f19153b19d06', 'ISYCASE', '2022-06-30 08:52:25.112', 'JOE01DOE', '2022-06-25 16:43:12.553', '2022-06-30 08:52:25.112', 'APPROVED', 'INTERNAL', '2281', '2022-07-15'),
+		('83e4d599-5b4d-431c-8ebc-81192e9401ee', 'ISYCASE', NULL, NULL, '2022-06-25 16:43:12.553', NULL, 'NEW', 'EXTERNAL', '2281', NULL),
+		('200ee4a6-f7bc-4d82-80cb-ecd2d610475c', 'ISYCASE', '2024-03-20 11:37:15.997', 'JOE01DOE', '2024-03-20 11:37:15.997', '2024-03-20 11:37:15.997', 'APPROVED', 'EXTERNAL', '2281', '2024-04-15'),
+		('b4ee0334-33c3-4eff-984e-3dd5252760a9', 'ISYCASE', '2024-03-20 11:37:15.997', 'JOE01DOE', '2024-03-20 11:37:15.997', '2024-03-20 11:37:15.997', 'APPROVED', 'EXTERNAL', '2282', '2024-04-15'),
+		('1abc9859-9141-43b0-91d9-43cd7d889690', 'UNKNOWN', '2024-03-20 11:37:15.997', 'JOE01DOE', '2024-03-20 11:37:15.997', '2024-03-20 11:37:15.997', 'APPROVED', 'EXTERNAL', '2281', '2024-04-15');
 
 -------------------------------------
 -- Invoices

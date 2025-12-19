@@ -470,6 +470,8 @@ class BillingRecordMapperTest {
 		assertThat(billingRecordEntity.getType()).isEqualTo(TYPE);
 		assertThat(billingRecordEntity.getMunicipalityId()).isEqualTo(MUNICIPALITY_ID);
 		assertThat(billingRecordEntity.getExtraParameters()).isEqualTo(EXTRA_PARAMETERS);
+		assertThat(billingRecordEntity.getTransferDate()).isNotNull();
+		assertThat(billingRecordEntity.getTransferDate().getDayOfMonth()).isEqualTo(15);
 
 		assertThat(billingRecordEntity)
 			.extracting(
@@ -525,7 +527,8 @@ class BillingRecordMapperTest {
 			.withId(ID)
 			.withModified(MODIFIED_TIMESTAMP)
 			.withStatus(STATUS)
-			.withType(TYPE);
+			.withType(TYPE)
+			.withTransferDate(APPROVED_TIMESTAMP.toLocalDate().withDayOfMonth(15));
 
 		billingRecordEntity
 			.withInvoice(createInvoiceEntity(billingRecordEntity))

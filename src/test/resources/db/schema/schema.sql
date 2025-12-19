@@ -13,6 +13,7 @@
     ) engine=InnoDB;
 
     create table billing_record (
+        transfer_date date,
         approved datetime(6),
         created datetime(6),
         modified datetime(6),
@@ -108,6 +109,9 @@
 
     create index idx_billing_record_municipality_id 
        on billing_record (municipality_id);
+
+    create index idx_billing_record_status_municipalityId_transfer_date 
+       on billing_record (status, municipality_id, transfer_date);
 
     create index idx_extra_parameter_key 
        on extra_parameter (`key`);

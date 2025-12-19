@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.Pattern;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.Map;
 import java.util.Objects;
@@ -75,6 +76,10 @@ public class BillingRecord {
 
 	@Schema(description = "A map of extra parameters for custom values on the billing record", examples = "{\"caseId\":\"abc123\",\"uuid\":\"82a400cf-eb02-4a18-962d-fde55440868f\"}")
 	private Map<String, String> extraParameters;
+
+	@Schema(description = "The date when the billing record should be transferred to Raindance. If not specified, defaults to the next 15th of the month.", examples = "2023-12-15")
+	@DateTimeFormat(iso = ISO.DATE)
+	private LocalDate transferDate;
 
 	public static BillingRecord create() {
 		return new BillingRecord();
@@ -223,9 +228,22 @@ public class BillingRecord {
 		return this;
 	}
 
+	public LocalDate getTransferDate() {
+		return transferDate;
+	}
+
+	public void setTransferDate(final LocalDate transferDate) {
+		this.transferDate = transferDate;
+	}
+
+	public BillingRecord withTransferDate(final LocalDate transferDate) {
+		this.transferDate = transferDate;
+		return this;
+	}
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(category, approved, approvedBy, created, id, invoice, recipient, modified, status, type, extraParameters);
+		return Objects.hash(category, approved, approvedBy, created, id, invoice, recipient, modified, status, type, extraParameters, transferDate);
 	}
 
 	@Override
@@ -241,7 +259,8 @@ public class BillingRecord {
 		}
 		final BillingRecord other = (BillingRecord) obj;
 		return Objects.equals(category, other.category) && Objects.equals(approved, other.approved) && Objects.equals(approvedBy, other.approvedBy) && Objects.equals(created, other.created) && Objects.equals(id, other.id) && Objects.equals(invoice,
-			other.invoice) && Objects.equals(recipient, other.recipient) && Objects.equals(modified, other.modified) && Objects.equals(status, other.status) && Objects.equals(type, other.type) && Objects.equals(extraParameters, other.extraParameters);
+			other.invoice) && Objects.equals(recipient, other.recipient) && Objects.equals(modified, other.modified) && Objects.equals(status, other.status) && Objects.equals(type, other.type) && Objects.equals(extraParameters, other.extraParameters)
+			&& Objects.equals(transferDate, other.transferDate);
 	}
 
 	@Override
@@ -256,6 +275,7 @@ public class BillingRecord {
 			+ ", invoice=" + invoice
 			+ ", created=" + created
 			+ ", modified=" + modified
-			+ ", extraParameters" + extraParameters + "]";
+			+ ", extraParameters" + extraParameters
+			+ ", transferDate=" + transferDate + "]";
 	}
 }

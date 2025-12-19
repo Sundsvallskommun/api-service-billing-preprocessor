@@ -43,7 +43,8 @@
 			"modified": "2022-06-30T08:52:25.112+02:00",
 			"extraParameters": {
 				"aKey": "anotherValue"
-			}
+			},
+			"transferDate": "${json-unit.any-string}"
 		},
 		{
 			"id": "200ee4a6-f7bc-4d82-80cb-ecd2d610475c",
@@ -104,7 +105,8 @@
 			},
 			"created": "2024-03-20T11:37:15.997+01:00",
 			"modified": "2024-03-20T11:37:15.997+01:00",
-			"extraParameters": {}
+			"extraParameters": {},
+			"transferDate": "${json-unit.any-string}"
 		}
 	],
 	"pageable": {

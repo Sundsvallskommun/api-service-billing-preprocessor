@@ -41,5 +41,6 @@
 	},
 	"category": "ISYCASE",
 	"type": "INTERNAL",
-	"status": "APPROVED"
+	"status": "APPROVED",
+	"transferDate": "${json-unit.any-string}"
 }
