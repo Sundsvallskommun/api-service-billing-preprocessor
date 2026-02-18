@@ -1,15 +1,5 @@
 package se.sundsvall.billingpreprocessor.service.mapper;
 
-import static java.time.OffsetDateTime.now;
-import static java.util.UUID.randomUUID;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
-import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.DETAILED;
-import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.STANDARD;
-import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.APPROVED;
-import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.INTERNAL;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
@@ -31,6 +21,16 @@ import se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionTy
 import se.sundsvall.billingpreprocessor.integration.db.model.enums.Status;
 import se.sundsvall.billingpreprocessor.integration.db.model.enums.Type;
 import se.sundsvall.billingpreprocessor.service.creator.definition.internal.FileHeaderRow;
+
+import static java.time.OffsetDateTime.now;
+import static java.util.UUID.randomUUID;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.DETAILED;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.STANDARD;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.APPROVED;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.INTERNAL;
 
 class InternalInvoiceMapperTest {
 

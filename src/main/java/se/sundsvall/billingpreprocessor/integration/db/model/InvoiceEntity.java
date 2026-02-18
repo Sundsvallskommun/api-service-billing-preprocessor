@@ -1,9 +1,5 @@
 package se.sundsvall.billingpreprocessor.integration.db.model;
 
-import static jakarta.persistence.CascadeType.ALL;
-import static jakarta.persistence.FetchType.LAZY;
-import static java.util.Optional.ofNullable;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ForeignKey;
@@ -19,6 +15,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import static jakarta.persistence.CascadeType.ALL;
+import static jakarta.persistence.FetchType.LAZY;
+import static java.util.Optional.ofNullable;
 
 @Entity
 @Table(name = "invoice")

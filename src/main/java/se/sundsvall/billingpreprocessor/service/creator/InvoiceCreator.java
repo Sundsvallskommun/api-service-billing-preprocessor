@@ -1,11 +1,11 @@
 package se.sundsvall.billingpreprocessor.service.creator;
 
-import static se.sundsvall.billingpreprocessor.Constants.EMPTY_ARRAY;
-
 import java.io.IOException;
 import java.util.List;
 import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.enums.Type;
+
+import static se.sundsvall.billingpreprocessor.Constants.EMPTY_ARRAY;
 
 public interface InvoiceCreator {
 	static final String CONFIGURATION_NOT_PRESENT = "No configuration present for invoice creator with name %s";

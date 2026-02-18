@@ -1,14 +1,14 @@
 package se.sundsvall.billingpreprocessor.api.validation.impl;
 
-import static java.util.Objects.nonNull;
-import static org.apache.commons.lang3.StringUtils.isNoneBlank;
-import static se.sundsvall.billingpreprocessor.api.model.enums.Type.INTERNAL;
-
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
 import se.sundsvall.billingpreprocessor.api.model.Invoice;
 import se.sundsvall.billingpreprocessor.api.validation.ValidInvoice;
+
+import static java.util.Objects.nonNull;
+import static org.apache.commons.lang3.StringUtils.isNoneBlank;
+import static se.sundsvall.billingpreprocessor.api.model.enums.Type.INTERNAL;
 
 public class ValidInvoiceConstraintValidator implements ConstraintValidator<ValidInvoice, BillingRecord> {
 

@@ -1,10 +1,10 @@
 package se.sundsvall.billingpreprocessor.service.mapper;
 
-import static java.util.Optional.ofNullable;
-import static se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileStatus.GENERATED;
-
 import java.nio.charset.Charset;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceFileEntity;
+
+import static java.util.Optional.ofNullable;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileStatus.GENERATED;
 
 public final class InvoiceFileMapper {
 

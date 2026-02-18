@@ -1,8 +1,5 @@
 package se.sundsvall.billingpreprocessor.integration.db.model;
 
-import static jakarta.persistence.FetchType.EAGER;
-import static java.util.Optional.ofNullable;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -23,6 +20,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import static jakarta.persistence.FetchType.EAGER;
+import static java.util.Optional.ofNullable;
 
 @Entity
 @Table(name = "invoice_row")

@@ -1,17 +1,5 @@
 package se.sundsvall.billingpreprocessor.api;
 
-import static java.util.Collections.emptyMap;
-import static java.util.UUID.randomUUID;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.http.MediaType.ALL;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static se.sundsvall.billingpreprocessor.api.model.enums.Status.NEW;
-import static se.sundsvall.billingpreprocessor.api.model.enums.Type.INTERNAL;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +26,18 @@ import se.sundsvall.billingpreprocessor.api.model.Invoice;
 import se.sundsvall.billingpreprocessor.api.model.InvoiceRow;
 import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
 import se.sundsvall.billingpreprocessor.service.BillingRecordService;
+
+import static java.util.Collections.emptyMap;
+import static java.util.UUID.randomUUID;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.http.MediaType.ALL;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static se.sundsvall.billingpreprocessor.api.model.enums.Status.NEW;
+import static se.sundsvall.billingpreprocessor.api.model.enums.Type.INTERNAL;
 
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("junit")

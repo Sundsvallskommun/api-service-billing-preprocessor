@@ -1,15 +1,5 @@
 package se.sundsvall.billingpreprocessor.service.creator;
 
-import static java.util.Collections.emptyList;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.MOCK;
-import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
-import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.STANDARD;
-import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.INTERNAL;
-
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
@@ -30,6 +20,16 @@ import se.sundsvall.billingpreprocessor.integration.db.model.DescriptionEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceFileConfigurationEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;
+
+import static java.util.Collections.emptyList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.MOCK;
+import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.STANDARD;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.INTERNAL;
 
 @SpringBootTest(webEnvironment = MOCK)
 @ActiveProfiles("junit")

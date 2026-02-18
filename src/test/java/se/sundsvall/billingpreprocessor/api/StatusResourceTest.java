@@ -1,11 +1,5 @@
 package se.sundsvall.billingpreprocessor.api;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.groups.Tuple.tuple;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-
 import java.time.Month;
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -19,6 +13,12 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import se.sundsvall.billingpreprocessor.Application;
 import se.sundsvall.billingpreprocessor.api.model.InvoiceFileStatus;
 import se.sundsvall.billingpreprocessor.service.StatusService;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.groups.Tuple.tuple;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("junit")

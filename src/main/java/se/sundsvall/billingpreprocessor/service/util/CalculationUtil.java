@@ -1,11 +1,5 @@
 package se.sundsvall.billingpreprocessor.service.util;
 
-import static java.util.Collections.emptyList;
-import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
-import static java.util.Optional.ofNullable;
-import static org.apache.commons.lang3.ObjectUtils.allNotNull;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
@@ -13,6 +7,12 @@ import se.sundsvall.billingpreprocessor.api.model.InvoiceRow;
 import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;
+
+import static java.util.Collections.emptyList;
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+import static java.util.Optional.ofNullable;
+import static org.apache.commons.lang3.ObjectUtils.allNotNull;
 
 public final class CalculationUtil {
 

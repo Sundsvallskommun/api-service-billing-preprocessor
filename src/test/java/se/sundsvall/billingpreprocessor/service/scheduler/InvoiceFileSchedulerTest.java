@@ -1,9 +1,5 @@
 package se.sundsvall.billingpreprocessor.service.scheduler;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +12,10 @@ import se.sundsvall.billingpreprocessor.integration.sftp.SftpProperties;
 import se.sundsvall.billingpreprocessor.integration.sftp.SftpPropertiesConfig;
 import se.sundsvall.billingpreprocessor.service.InvoiceFileService;
 import se.sundsvall.dept44.requestid.RequestId;
+
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class InvoiceFileSchedulerTest {

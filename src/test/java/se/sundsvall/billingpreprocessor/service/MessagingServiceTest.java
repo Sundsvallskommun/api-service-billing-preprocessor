@@ -1,13 +1,5 @@
 package se.sundsvall.billingpreprocessor.service;
 
-import static java.util.Collections.emptyList;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-
 import generated.se.sundsvall.messaging.EmailRequest;
 import generated.se.sundsvall.messaging.EmailSender;
 import java.nio.charset.StandardCharsets;
@@ -27,6 +19,14 @@ import se.sundsvall.billingpreprocessor.integration.messaging.config.ErrorMessag
 import se.sundsvall.billingpreprocessor.integration.messaging.config.ErrorMessageProperties.ErrorMailTemplate;
 import se.sundsvall.billingpreprocessor.service.error.InvoiceFileError;
 import se.sundsvall.dept44.requestid.RequestId;
+
+import static java.util.Collections.emptyList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = {
 	MessagingService.class, ErrorMessageProperties.class

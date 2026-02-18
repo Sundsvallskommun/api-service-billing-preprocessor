@@ -1,13 +1,5 @@
 package se.sundsvall.billingpreprocessor.service.creator;
 
-import static java.util.Optional.ofNullable;
-import static se.sundsvall.billingpreprocessor.Constants.EMPTY_ARRAY;
-import static se.sundsvall.billingpreprocessor.service.creator.config.InvoiceCreatorConfig.INTERNAL_INVOICE_BUILDER;
-import static se.sundsvall.billingpreprocessor.service.mapper.InternalInvoiceMapper.toFileFooter;
-import static se.sundsvall.billingpreprocessor.service.mapper.InternalInvoiceMapper.toInvoiceDescriptionRow;
-import static se.sundsvall.billingpreprocessor.service.mapper.InternalInvoiceMapper.toInvoiceHeader;
-import static se.sundsvall.billingpreprocessor.service.util.ProblemUtil.createInternalServerErrorProblem;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -19,6 +11,14 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import se.sundsvall.billingpreprocessor.integration.db.InvoiceFileConfigurationRepository;
 import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
+
+import static java.util.Optional.ofNullable;
+import static se.sundsvall.billingpreprocessor.Constants.EMPTY_ARRAY;
+import static se.sundsvall.billingpreprocessor.service.creator.config.InvoiceCreatorConfig.INTERNAL_INVOICE_BUILDER;
+import static se.sundsvall.billingpreprocessor.service.mapper.InternalInvoiceMapper.toFileFooter;
+import static se.sundsvall.billingpreprocessor.service.mapper.InternalInvoiceMapper.toInvoiceDescriptionRow;
+import static se.sundsvall.billingpreprocessor.service.mapper.InternalInvoiceMapper.toInvoiceHeader;
+import static se.sundsvall.billingpreprocessor.service.util.ProblemUtil.createInternalServerErrorProblem;
 
 @Component
 public class InternalSalaryAndPensionInvoiceCreator extends InternalInvoiceCreator {

@@ -1,13 +1,13 @@
 package se.sundsvall.billingpreprocessor.service.creator;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static se.sundsvall.billingpreprocessor.Constants.EMPTY_ARRAY;
-
 import java.io.IOException;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.enums.Type;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static se.sundsvall.billingpreprocessor.Constants.EMPTY_ARRAY;
 
 class InvoiceCreatorTest {
 

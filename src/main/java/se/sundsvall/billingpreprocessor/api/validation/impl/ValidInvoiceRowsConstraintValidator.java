@@ -1,11 +1,5 @@
 package se.sundsvall.billingpreprocessor.api.validation.impl;
 
-import static java.util.Objects.nonNull;
-import static org.apache.commons.lang3.StringUtils.isNoneBlank;
-import static org.springframework.util.ObjectUtils.isEmpty;
-import static se.sundsvall.billingpreprocessor.api.model.enums.Type.EXTERNAL;
-import static se.sundsvall.billingpreprocessor.api.model.enums.Type.INTERNAL;
-
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import java.util.List;
@@ -13,6 +7,12 @@ import java.util.Objects;
 import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
 import se.sundsvall.billingpreprocessor.api.model.InvoiceRow;
 import se.sundsvall.billingpreprocessor.api.validation.ValidInvoiceRows;
+
+import static java.util.Objects.nonNull;
+import static org.apache.commons.lang3.StringUtils.isNoneBlank;
+import static org.springframework.util.ObjectUtils.isEmpty;
+import static se.sundsvall.billingpreprocessor.api.model.enums.Type.EXTERNAL;
+import static se.sundsvall.billingpreprocessor.api.model.enums.Type.INTERNAL;
 
 public class ValidInvoiceRowsConstraintValidator implements ConstraintValidator<ValidInvoiceRows, BillingRecord> {
 	private static final String CUSTOM_ERROR_INTERNAL_TYPE = "can not contain vat code information on invoice rows when billing record is of type " + INTERNAL;

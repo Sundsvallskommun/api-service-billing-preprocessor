@@ -1,11 +1,5 @@
 package se.sundsvall.billingpreprocessor.service.util;
 
-import static java.util.Collections.emptyList;
-import static org.assertj.core.api.Assertions.assertThat;
-import static se.sundsvall.billingpreprocessor.service.util.CalculationUtil.calculateTotalAmount;
-import static se.sundsvall.billingpreprocessor.service.util.CalculationUtil.calculateTotalInvoiceAmount;
-import static se.sundsvall.billingpreprocessor.service.util.CalculationUtil.calculateTotalInvoiceRowAmount;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +10,12 @@ import se.sundsvall.billingpreprocessor.api.model.InvoiceRow;
 import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;
+
+import static java.util.Collections.emptyList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static se.sundsvall.billingpreprocessor.service.util.CalculationUtil.calculateTotalAmount;
+import static se.sundsvall.billingpreprocessor.service.util.CalculationUtil.calculateTotalInvoiceAmount;
+import static se.sundsvall.billingpreprocessor.service.util.CalculationUtil.calculateTotalInvoiceRowAmount;
 
 class CalculationUtilTest {
 	private BigDecimal costPerUnit;

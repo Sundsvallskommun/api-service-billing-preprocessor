@@ -1,13 +1,13 @@
 package se.sundsvall.billingpreprocessor.service.creator.definition.external;
 
-import static org.beanio.builder.Align.RIGHT;
-
 import java.math.BigDecimal;
 import java.util.Objects;
 import org.beanio.annotation.Field;
 import org.beanio.annotation.Fields;
 import org.beanio.annotation.Record;
 import se.sundsvall.billingpreprocessor.service.creator.config.ExternalInvoiceBigDecimalTypeHandler;
+
+import static org.beanio.builder.Align.RIGHT;
 
 @Record
 @Fields({

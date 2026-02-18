@@ -1,12 +1,5 @@
 package se.sundsvall.billingpreprocessor.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-
 import java.time.Month;
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -19,6 +12,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import se.sundsvall.billingpreprocessor.integration.db.InvoiceFileRepository;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceFileEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileStatus;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class StatusServiceTest {

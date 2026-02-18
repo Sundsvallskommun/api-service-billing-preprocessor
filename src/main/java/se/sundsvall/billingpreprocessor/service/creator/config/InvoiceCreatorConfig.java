@@ -1,11 +1,11 @@
 package se.sundsvall.billingpreprocessor.service.creator.config;
 
-import static org.apache.commons.text.StringEscapeUtils.unescapeJava;
-
 import org.beanio.builder.FixedLengthParserBuilder;
 import org.beanio.builder.StreamBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import static org.apache.commons.text.StringEscapeUtils.unescapeJava;
 
 @Configuration
 public class InvoiceCreatorConfig {

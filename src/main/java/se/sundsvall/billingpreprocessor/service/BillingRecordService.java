@@ -1,14 +1,5 @@
 package se.sundsvall.billingpreprocessor.service;
 
-import static org.zalando.problem.Status.BAD_REQUEST;
-import static org.zalando.problem.Status.METHOD_NOT_ALLOWED;
-import static org.zalando.problem.Status.NOT_FOUND;
-import static se.sundsvall.billingpreprocessor.service.mapper.BillingRecordMapper.toBillingRecord;
-import static se.sundsvall.billingpreprocessor.service.mapper.BillingRecordMapper.toBillingRecordEntities;
-import static se.sundsvall.billingpreprocessor.service.mapper.BillingRecordMapper.toBillingRecordEntity;
-import static se.sundsvall.billingpreprocessor.service.mapper.BillingRecordMapper.toBillingRecords;
-import static se.sundsvall.billingpreprocessor.service.mapper.BillingRecordMapper.updateEntity;
-
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -21,6 +12,15 @@ import se.sundsvall.billingpreprocessor.integration.db.BillingRecordRepository;
 import se.sundsvall.billingpreprocessor.integration.db.InvoiceFileConfigurationRepository;
 import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity_;
+
+import static org.zalando.problem.Status.BAD_REQUEST;
+import static org.zalando.problem.Status.METHOD_NOT_ALLOWED;
+import static org.zalando.problem.Status.NOT_FOUND;
+import static se.sundsvall.billingpreprocessor.service.mapper.BillingRecordMapper.toBillingRecord;
+import static se.sundsvall.billingpreprocessor.service.mapper.BillingRecordMapper.toBillingRecordEntities;
+import static se.sundsvall.billingpreprocessor.service.mapper.BillingRecordMapper.toBillingRecordEntity;
+import static se.sundsvall.billingpreprocessor.service.mapper.BillingRecordMapper.toBillingRecords;
+import static se.sundsvall.billingpreprocessor.service.mapper.BillingRecordMapper.updateEntity;
 
 @Service
 public class BillingRecordService {

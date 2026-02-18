@@ -1,13 +1,5 @@
 package se.sundsvall.billingpreprocessor.service.mapper;
 
-import static java.time.LocalDate.now;
-import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
-import static java.util.Collections.emptyList;
-import static java.util.Objects.isNull;
-import static java.util.Optional.ofNullable;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
-
 import generated.se.sundsvall.messaging.EmailRequest;
 import generated.se.sundsvall.messaging.EmailSender;
 import java.nio.charset.StandardCharsets;
@@ -21,6 +13,14 @@ import se.sundsvall.billingpreprocessor.integration.messaging.config.ErrorMessag
 import se.sundsvall.billingpreprocessor.service.error.InvoiceFileError;
 import se.sundsvall.dept44.common.validators.annotation.impl.ValidBase64ConstraintValidator;
 import se.sundsvall.dept44.requestid.RequestId;
+
+import static java.time.LocalDate.now;
+import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
+import static java.util.Collections.emptyList;
+import static java.util.Objects.isNull;
+import static java.util.Optional.ofNullable;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
 
 public final class MessagingMapper {
 

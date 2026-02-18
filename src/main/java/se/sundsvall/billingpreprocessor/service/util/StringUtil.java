@@ -1,8 +1,8 @@
 package se.sundsvall.billingpreprocessor.service.util;
 
-import static java.util.Optional.ofNullable;
-
 import org.apache.commons.lang3.StringUtils;
+
+import static java.util.Optional.ofNullable;
 
 public final class StringUtil {
 

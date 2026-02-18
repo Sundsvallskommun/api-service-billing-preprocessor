@@ -1,15 +1,5 @@
 package se.sundsvall.billingpreprocessor.api.validation.impl;
 
-import static java.util.Collections.emptyList;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.when;
-import static se.sundsvall.billingpreprocessor.api.BillingRecordRequestUtil.createAccountInformationInstance;
-import static se.sundsvall.billingpreprocessor.api.model.enums.Type.EXTERNAL;
-import static se.sundsvall.billingpreprocessor.api.model.enums.Type.INTERNAL;
-
 import jakarta.validation.ConstraintValidatorContext;
 import jakarta.validation.ConstraintValidatorContext.ConstraintViolationBuilder;
 import java.math.BigDecimal;
@@ -30,6 +20,16 @@ import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
 import se.sundsvall.billingpreprocessor.api.model.Invoice;
 import se.sundsvall.billingpreprocessor.api.model.InvoiceRow;
 import se.sundsvall.billingpreprocessor.api.model.enums.Type;
+
+import static java.util.Collections.emptyList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
+import static se.sundsvall.billingpreprocessor.api.BillingRecordRequestUtil.createAccountInformationInstance;
+import static se.sundsvall.billingpreprocessor.api.model.enums.Type.EXTERNAL;
+import static se.sundsvall.billingpreprocessor.api.model.enums.Type.INTERNAL;
 
 @ExtendWith(MockitoExtension.class)
 class ValidInvoiceRowsConstraintValidatorTest {

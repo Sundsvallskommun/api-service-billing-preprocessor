@@ -1,16 +1,5 @@
 package se.sundsvall.billingpreprocessor.service.mapper;
 
-import static java.time.OffsetDateTime.now;
-import static java.time.temporal.ChronoUnit.SECONDS;
-import static java.util.UUID.randomUUID;
-import static org.apache.commons.lang3.ObjectUtils.allNull;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.within;
-import static org.assertj.core.groups.Tuple.tuple;
-import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
-import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.DETAILED;
-import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.STANDARD;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
@@ -37,6 +26,17 @@ import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.RecipientEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType;
+
+import static java.time.OffsetDateTime.now;
+import static java.time.temporal.ChronoUnit.SECONDS;
+import static java.util.UUID.randomUUID;
+import static org.apache.commons.lang3.ObjectUtils.allNull;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
+import static org.assertj.core.groups.Tuple.tuple;
+import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.DETAILED;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.STANDARD;
 
 class BillingRecordMapperTest {
 
