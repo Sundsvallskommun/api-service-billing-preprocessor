@@ -1,11 +1,11 @@
 package se.sundsvall.billingpreprocessor.service.creator.config;
 
-import static java.util.Objects.isNull;
-import static java.util.Optional.ofNullable;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import org.beanio.types.BigDecimalTypeHandler;
+
+import static java.util.Objects.isNull;
+import static java.util.Optional.ofNullable;
 
 public class ExternalInvoiceBigDecimalTypeHandler extends BigDecimalTypeHandler {
 	public static final String NAME = "externalInvoiceBigDecimalTypeHandler";

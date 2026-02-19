@@ -1,5 +1,26 @@
 package se.sundsvall.billingpreprocessor.service.mapper;
 
+import java.time.LocalDate;
+import java.util.List;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.zalando.problem.ThrowableProblem;
+import se.sundsvall.billingpreprocessor.integration.db.model.AccountInformationEmbeddable;
+import se.sundsvall.billingpreprocessor.integration.db.model.AddressDetailsEmbeddable;
+import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
+import se.sundsvall.billingpreprocessor.integration.db.model.DescriptionEntity;
+import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceEntity;
+import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;
+import se.sundsvall.billingpreprocessor.integration.db.model.RecipientEntity;
+import se.sundsvall.billingpreprocessor.service.creator.definition.external.CustomerRow;
+import se.sundsvall.billingpreprocessor.service.creator.definition.external.FileFooterRow;
+import se.sundsvall.billingpreprocessor.service.creator.definition.external.FileHeaderRow;
+import se.sundsvall.billingpreprocessor.service.creator.definition.external.InvoiceAccountingRow;
+import se.sundsvall.billingpreprocessor.service.creator.definition.external.InvoiceDescriptionRow;
+import se.sundsvall.billingpreprocessor.service.creator.definition.external.InvoiceFooterRow;
+import se.sundsvall.billingpreprocessor.service.creator.definition.external.InvoiceHeaderRow;
+import se.sundsvall.billingpreprocessor.service.creator.definition.external.InvoiceRow;
+
 import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.ObjectUtils.allNotNull;
@@ -24,27 +45,6 @@ import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Descri
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.STANDARD;
 import static se.sundsvall.billingpreprocessor.service.util.CalculationUtil.calculateTotalAmount;
 import static se.sundsvall.billingpreprocessor.service.util.ProblemUtil.createInternalServerErrorProblem;
-
-import java.time.LocalDate;
-import java.util.List;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.zalando.problem.ThrowableProblem;
-import se.sundsvall.billingpreprocessor.integration.db.model.AccountInformationEmbeddable;
-import se.sundsvall.billingpreprocessor.integration.db.model.AddressDetailsEmbeddable;
-import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
-import se.sundsvall.billingpreprocessor.integration.db.model.DescriptionEntity;
-import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceEntity;
-import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;
-import se.sundsvall.billingpreprocessor.integration.db.model.RecipientEntity;
-import se.sundsvall.billingpreprocessor.service.creator.definition.external.CustomerRow;
-import se.sundsvall.billingpreprocessor.service.creator.definition.external.FileFooterRow;
-import se.sundsvall.billingpreprocessor.service.creator.definition.external.FileHeaderRow;
-import se.sundsvall.billingpreprocessor.service.creator.definition.external.InvoiceAccountingRow;
-import se.sundsvall.billingpreprocessor.service.creator.definition.external.InvoiceDescriptionRow;
-import se.sundsvall.billingpreprocessor.service.creator.definition.external.InvoiceFooterRow;
-import se.sundsvall.billingpreprocessor.service.creator.definition.external.InvoiceHeaderRow;
-import se.sundsvall.billingpreprocessor.service.creator.definition.external.InvoiceRow;
 
 public final class ExternalInvoiceMapper {
 

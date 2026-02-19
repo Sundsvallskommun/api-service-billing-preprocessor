@@ -1,11 +1,5 @@
 package se.sundsvall.billingpreprocessor.service.mapper;
 
-import static java.util.Collections.emptyList;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
-import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
-
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -23,6 +17,12 @@ import se.sundsvall.billingpreprocessor.integration.messaging.config.ErrorMessag
 import se.sundsvall.billingpreprocessor.integration.messaging.config.ErrorMessageProperties.ErrorMailTemplate;
 import se.sundsvall.billingpreprocessor.service.error.InvoiceFileError;
 import se.sundsvall.dept44.requestid.RequestId;
+
+import static java.util.Collections.emptyList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
 
 @ExtendWith(MockitoExtension.class)
 class MessagingMapperTest {

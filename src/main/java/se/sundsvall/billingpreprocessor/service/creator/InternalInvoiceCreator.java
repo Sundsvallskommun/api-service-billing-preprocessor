@@ -1,18 +1,5 @@
 package se.sundsvall.billingpreprocessor.service.creator;
 
-import static java.util.Objects.isNull;
-import static java.util.Optional.ofNullable;
-import static se.sundsvall.billingpreprocessor.Constants.EMPTY_ARRAY;
-import static se.sundsvall.billingpreprocessor.service.creator.config.InvoiceCreatorConfig.INTERNAL_INVOICE_BUILDER;
-import static se.sundsvall.billingpreprocessor.service.mapper.InternalInvoiceMapper.toFileHeader;
-import static se.sundsvall.billingpreprocessor.service.mapper.InternalInvoiceMapper.toInvoiceAccountingRows;
-import static se.sundsvall.billingpreprocessor.service.mapper.InternalInvoiceMapper.toInvoiceDescriptionRow;
-import static se.sundsvall.billingpreprocessor.service.mapper.InternalInvoiceMapper.toInvoiceFooter;
-import static se.sundsvall.billingpreprocessor.service.mapper.InternalInvoiceMapper.toInvoiceHeader;
-import static se.sundsvall.billingpreprocessor.service.mapper.InternalInvoiceMapper.toInvoiceRow;
-import static se.sundsvall.billingpreprocessor.service.mapper.InternalInvoiceMapper.toInvoiceRowDescriptionRows;
-import static se.sundsvall.billingpreprocessor.service.util.ProblemUtil.createInternalServerErrorProblem;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -27,6 +14,19 @@ import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceFileConfigurationEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.enums.Type;
+
+import static java.util.Objects.isNull;
+import static java.util.Optional.ofNullable;
+import static se.sundsvall.billingpreprocessor.Constants.EMPTY_ARRAY;
+import static se.sundsvall.billingpreprocessor.service.creator.config.InvoiceCreatorConfig.INTERNAL_INVOICE_BUILDER;
+import static se.sundsvall.billingpreprocessor.service.mapper.InternalInvoiceMapper.toFileHeader;
+import static se.sundsvall.billingpreprocessor.service.mapper.InternalInvoiceMapper.toInvoiceAccountingRows;
+import static se.sundsvall.billingpreprocessor.service.mapper.InternalInvoiceMapper.toInvoiceDescriptionRow;
+import static se.sundsvall.billingpreprocessor.service.mapper.InternalInvoiceMapper.toInvoiceFooter;
+import static se.sundsvall.billingpreprocessor.service.mapper.InternalInvoiceMapper.toInvoiceHeader;
+import static se.sundsvall.billingpreprocessor.service.mapper.InternalInvoiceMapper.toInvoiceRow;
+import static se.sundsvall.billingpreprocessor.service.mapper.InternalInvoiceMapper.toInvoiceRowDescriptionRows;
+import static se.sundsvall.billingpreprocessor.service.util.ProblemUtil.createInternalServerErrorProblem;
 
 @Component
 public class InternalInvoiceCreator implements InvoiceCreator {

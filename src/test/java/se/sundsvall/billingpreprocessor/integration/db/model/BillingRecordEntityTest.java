@@ -1,5 +1,12 @@
 package se.sundsvall.billingpreprocessor.integration.db.model;
 
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.util.Map;
+import java.util.Random;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanEquals;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanHashCode;
@@ -12,13 +19,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.AllOf.allOf;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.REJECTED;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.INTERNAL;
-
-import java.time.LocalDate;
-import java.time.OffsetDateTime;
-import java.util.Map;
-import java.util.Random;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 
 class BillingRecordEntityTest {
 

@@ -1,22 +1,5 @@
 package se.sundsvall.billingpreprocessor.service.creator;
 
-import static java.time.OffsetDateTime.now;
-import static java.util.Collections.emptyList;
-import static java.util.UUID.randomUUID;
-import static org.apache.commons.text.StringEscapeUtils.unescapeJava;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
-import static se.sundsvall.billingpreprocessor.Constants.EMPTY_ARRAY;
-import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.DETAILED;
-import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.STANDARD;
-import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.APPROVED;
-import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.EXTERNAL;
-
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URISyntaxException;
@@ -49,6 +32,23 @@ import se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionTy
 import se.sundsvall.billingpreprocessor.integration.db.model.enums.Status;
 import se.sundsvall.billingpreprocessor.integration.db.model.enums.Type;
 import se.sundsvall.billingpreprocessor.service.creator.config.InvoiceCreatorProperties;
+
+import static java.time.OffsetDateTime.now;
+import static java.util.Collections.emptyList;
+import static java.util.UUID.randomUUID;
+import static org.apache.commons.text.StringEscapeUtils.unescapeJava;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
+import static se.sundsvall.billingpreprocessor.Constants.EMPTY_ARRAY;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.DETAILED;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.STANDARD;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.APPROVED;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.EXTERNAL;
 
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
 @ActiveProfiles("junit")

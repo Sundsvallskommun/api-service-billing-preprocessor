@@ -1,8 +1,5 @@
 package se.sundsvall.billingpreprocessor.api.model;
 
-import static io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY;
-import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -21,6 +18,9 @@ import se.sundsvall.billingpreprocessor.api.validation.ValidApprovedBy;
 import se.sundsvall.billingpreprocessor.api.validation.ValidInvoice;
 import se.sundsvall.billingpreprocessor.api.validation.ValidInvoiceRows;
 import se.sundsvall.billingpreprocessor.api.validation.ValidRecipient;
+
+import static io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY;
+import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 @Schema(description = "Billing record model")
 @ValidApprovedBy

@@ -1,5 +1,20 @@
 package se.sundsvall.billingpreprocessor.service.creator;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
+import org.beanio.BeanWriter;
+import org.beanio.StreamFactory;
+import org.beanio.builder.StreamBuilder;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+import se.sundsvall.billingpreprocessor.integration.db.InvoiceFileConfigurationRepository;
+import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
+import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceFileConfigurationEntity;
+import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;
+import se.sundsvall.billingpreprocessor.integration.db.model.enums.Type;
+
 import static java.util.Objects.isNull;
 import static java.util.Optional.ofNullable;
 import static se.sundsvall.billingpreprocessor.Constants.EMPTY_ARRAY;
@@ -15,21 +30,6 @@ import static se.sundsvall.billingpreprocessor.service.mapper.ExternalInvoiceMap
 import static se.sundsvall.billingpreprocessor.service.mapper.ExternalInvoiceMapper.toInvoiceRow;
 import static se.sundsvall.billingpreprocessor.service.util.ProblemUtil.createInternalServerErrorProblem;
 import static se.sundsvall.billingpreprocessor.service.util.StringUtil.formatLegalId;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.nio.charset.Charset;
-import org.beanio.BeanWriter;
-import org.beanio.StreamFactory;
-import org.beanio.builder.StreamBuilder;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
-import se.sundsvall.billingpreprocessor.integration.db.InvoiceFileConfigurationRepository;
-import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
-import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceFileConfigurationEntity;
-import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;
-import se.sundsvall.billingpreprocessor.integration.db.model.enums.Type;
 
 @Component
 public class ExternalInvoiceCreator implements InvoiceCreator {

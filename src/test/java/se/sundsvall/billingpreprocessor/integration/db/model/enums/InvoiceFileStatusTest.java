@@ -1,11 +1,11 @@
 package se.sundsvall.billingpreprocessor.integration.db.model.enums;
 
+import org.junit.jupiter.api.Test;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileStatus.GENERATED;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileStatus.SEND_FAILED;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileStatus.SEND_SUCCESSFUL;
-
-import org.junit.jupiter.api.Test;
 
 class InvoiceFileStatusTest {
 

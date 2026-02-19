@@ -1,18 +1,5 @@
 package se.sundsvall.billingpreprocessor.api;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.groups.Tuple.tuple;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.zalando.problem.Status.BAD_REQUEST;
-import static se.sundsvall.billingpreprocessor.api.BillingRecordRequestUtil.createAddressDetailsInstance;
-import static se.sundsvall.billingpreprocessor.api.BillingRecordRequestUtil.createBillingRecordInstance;
-import static se.sundsvall.billingpreprocessor.api.BillingRecordRequestUtil.createInvoiceInstance;
-import static se.sundsvall.billingpreprocessor.api.BillingRecordRequestUtil.createInvoiceRowInstance;
-import static se.sundsvall.billingpreprocessor.api.BillingRecordRequestUtil.createRecipientInstance;
-import static se.sundsvall.billingpreprocessor.api.model.enums.Type.EXTERNAL;
-import static se.sundsvall.billingpreprocessor.api.model.enums.Type.INTERNAL;
-
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -30,6 +17,19 @@ import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
 import se.sundsvall.billingpreprocessor.api.model.Recipient;
 import se.sundsvall.billingpreprocessor.api.model.enums.Type;
 import se.sundsvall.billingpreprocessor.service.BillingRecordService;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.groups.Tuple.tuple;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.zalando.problem.Status.BAD_REQUEST;
+import static se.sundsvall.billingpreprocessor.api.BillingRecordRequestUtil.createAddressDetailsInstance;
+import static se.sundsvall.billingpreprocessor.api.BillingRecordRequestUtil.createBillingRecordInstance;
+import static se.sundsvall.billingpreprocessor.api.BillingRecordRequestUtil.createInvoiceInstance;
+import static se.sundsvall.billingpreprocessor.api.BillingRecordRequestUtil.createInvoiceRowInstance;
+import static se.sundsvall.billingpreprocessor.api.BillingRecordRequestUtil.createRecipientInstance;
+import static se.sundsvall.billingpreprocessor.api.model.enums.Type.EXTERNAL;
+import static se.sundsvall.billingpreprocessor.api.model.enums.Type.INTERNAL;
 
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("junit")

@@ -1,19 +1,5 @@
 package se.sundsvall.billingpreprocessor.service.mapper;
 
-import static java.time.OffsetDateTime.now;
-import static java.time.temporal.ChronoUnit.MILLIS;
-import static java.util.Collections.emptyList;
-import static java.util.Objects.isNull;
-import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.collectingAndThen;
-import static java.util.stream.Collectors.toCollection;
-import static java.util.stream.Collectors.toList;
-import static org.springframework.util.ObjectUtils.isEmpty;
-import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.DETAILED;
-import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.STANDARD;
-import static se.sundsvall.billingpreprocessor.service.util.CalculationUtil.calculateTotalInvoiceAmount;
-import static se.sundsvall.billingpreprocessor.service.util.CalculationUtil.calculateTotalInvoiceRowAmount;
-
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -35,6 +21,20 @@ import se.sundsvall.billingpreprocessor.integration.db.model.RecipientEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType;
 import se.sundsvall.billingpreprocessor.integration.db.model.enums.Status;
 import se.sundsvall.billingpreprocessor.integration.db.model.enums.Type;
+
+import static java.time.OffsetDateTime.now;
+import static java.time.temporal.ChronoUnit.MILLIS;
+import static java.util.Collections.emptyList;
+import static java.util.Objects.isNull;
+import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toCollection;
+import static java.util.stream.Collectors.toList;
+import static org.springframework.util.ObjectUtils.isEmpty;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.DETAILED;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.STANDARD;
+import static se.sundsvall.billingpreprocessor.service.util.CalculationUtil.calculateTotalInvoiceAmount;
+import static se.sundsvall.billingpreprocessor.service.util.CalculationUtil.calculateTotalInvoiceRowAmount;
 
 public final class BillingRecordMapper {
 

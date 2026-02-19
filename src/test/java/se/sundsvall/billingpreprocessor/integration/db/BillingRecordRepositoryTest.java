@@ -1,17 +1,5 @@
 package se.sundsvall.billingpreprocessor.integration.db;
 
-import static java.time.OffsetDateTime.now;
-import static java.time.temporal.ChronoUnit.SECONDS;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.tuple;
-import static org.assertj.core.api.Assertions.within;
-import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.DETAILED;
-import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.STANDARD;
-import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.APPROVED;
-import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.NEW;
-import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.REJECTED;
-import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.EXTERNAL;
-
 import com.turkraft.springfilter.converter.FilterSpecificationConverter;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -39,6 +27,18 @@ import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.RecipientEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.enums.Status;
 import se.sundsvall.billingpreprocessor.integration.db.model.enums.Type;
+
+import static java.time.OffsetDateTime.now;
+import static java.time.temporal.ChronoUnit.SECONDS;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
+import static org.assertj.core.api.Assertions.within;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.DETAILED;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.STANDARD;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.APPROVED;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.NEW;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.REJECTED;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.EXTERNAL;
 
 /**
  * billingRecord repository tests

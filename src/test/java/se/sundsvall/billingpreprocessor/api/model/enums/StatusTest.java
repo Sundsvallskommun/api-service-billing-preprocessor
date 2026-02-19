@@ -1,12 +1,12 @@
 package se.sundsvall.billingpreprocessor.api.model.enums;
 
+import org.junit.jupiter.api.Test;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static se.sundsvall.billingpreprocessor.api.model.enums.Status.APPROVED;
 import static se.sundsvall.billingpreprocessor.api.model.enums.Status.INVOICED;
 import static se.sundsvall.billingpreprocessor.api.model.enums.Status.NEW;
 import static se.sundsvall.billingpreprocessor.api.model.enums.Status.REJECTED;
-
-import org.junit.jupiter.api.Test;
 
 class StatusTest {
 

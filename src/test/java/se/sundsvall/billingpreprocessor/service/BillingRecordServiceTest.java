@@ -1,22 +1,5 @@
 package se.sundsvall.billingpreprocessor.service;
 
-import static java.util.Collections.emptyList;
-import static java.util.UUID.randomUUID;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-import static org.springframework.data.domain.Sort.Direction.DESC;
-import static org.zalando.problem.Status.BAD_REQUEST;
-import static org.zalando.problem.Status.METHOD_NOT_ALLOWED;
-import static org.zalando.problem.Status.NOT_FOUND;
-import static se.sundsvall.billingpreprocessor.api.model.enums.Status.NEW;
-import static se.sundsvall.billingpreprocessor.api.model.enums.Type.INTERNAL;
-
 import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -42,6 +25,23 @@ import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.enums.Status;
 import se.sundsvall.billingpreprocessor.integration.db.model.enums.Type;
+
+import static java.util.Collections.emptyList;
+import static java.util.UUID.randomUUID;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+import static org.springframework.data.domain.Sort.Direction.DESC;
+import static org.zalando.problem.Status.BAD_REQUEST;
+import static org.zalando.problem.Status.METHOD_NOT_ALLOWED;
+import static org.zalando.problem.Status.NOT_FOUND;
+import static se.sundsvall.billingpreprocessor.api.model.enums.Status.NEW;
+import static se.sundsvall.billingpreprocessor.api.model.enums.Type.INTERNAL;
 
 @ExtendWith(MockitoExtension.class)
 class BillingRecordServiceTest {

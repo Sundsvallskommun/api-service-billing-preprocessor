@@ -1,11 +1,5 @@
 package se.sundsvall.billingpreprocessor.api;
 
-import static java.time.OffsetDateTime.now;
-import static java.util.UUID.randomUUID;
-import static se.sundsvall.billingpreprocessor.api.model.enums.Status.APPROVED;
-import static se.sundsvall.billingpreprocessor.api.model.enums.Type.EXTERNAL;
-import static se.sundsvall.billingpreprocessor.api.model.enums.Type.INTERNAL;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +11,12 @@ import se.sundsvall.billingpreprocessor.api.model.Invoice;
 import se.sundsvall.billingpreprocessor.api.model.InvoiceRow;
 import se.sundsvall.billingpreprocessor.api.model.Recipient;
 import se.sundsvall.billingpreprocessor.api.model.enums.Type;
+
+import static java.time.OffsetDateTime.now;
+import static java.util.UUID.randomUUID;
+import static se.sundsvall.billingpreprocessor.api.model.enums.Status.APPROVED;
+import static se.sundsvall.billingpreprocessor.api.model.enums.Type.EXTERNAL;
+import static se.sundsvall.billingpreprocessor.api.model.enums.Type.INTERNAL;
 
 public class BillingRecordRequestUtil {
 

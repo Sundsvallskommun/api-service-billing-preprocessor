@@ -1,13 +1,13 @@
 package se.sundsvall.billingpreprocessor.service.creator.config;
 
-import static java.util.Objects.isNull;
-
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 import java.util.Optional;
 import org.beanio.types.BigDecimalTypeHandler;
+
+import static java.util.Objects.isNull;
 
 public class InternalInvoiceBigDecimalTypeHandler extends BigDecimalTypeHandler {
 	public static final String NAME = "internalInvoiceBigDecimalTypeHandler";

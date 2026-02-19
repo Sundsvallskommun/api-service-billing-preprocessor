@@ -1,7 +1,5 @@
 package se.sundsvall.billingpreprocessor.integration.sftp;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
@@ -25,6 +23,8 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.output.Slf4jLogConsumer;
 import org.testcontainers.junit.jupiter.Container;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("junit")
 @SpringBootTest

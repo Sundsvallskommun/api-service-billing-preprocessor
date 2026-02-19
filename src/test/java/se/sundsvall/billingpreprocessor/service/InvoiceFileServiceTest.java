@@ -1,25 +1,5 @@
 package se.sundsvall.billingpreprocessor.service;
 
-import static java.util.UUID.randomUUID;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.groups.Tuple.tuple;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.atMostOnce;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
-import static se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileStatus.GENERATED;
-import static se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileStatus.SEND_FAILED;
-import static se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileStatus.SEND_SUCCESSFUL;
-import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.APPROVED;
-import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.INVOICED;
-import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.EXTERNAL;
-import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.INTERNAL;
-
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -48,6 +28,26 @@ import se.sundsvall.billingpreprocessor.service.creator.ExternalInvoiceCreator;
 import se.sundsvall.billingpreprocessor.service.creator.InternalInvoiceCreator;
 import se.sundsvall.billingpreprocessor.service.creator.InvoiceCreator;
 import se.sundsvall.billingpreprocessor.service.error.InvoiceFileError;
+
+import static java.util.UUID.randomUUID;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.groups.Tuple.tuple;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.atMostOnce;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileStatus.GENERATED;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileStatus.SEND_FAILED;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileStatus.SEND_SUCCESSFUL;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.APPROVED;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.INVOICED;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.EXTERNAL;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.INTERNAL;
 
 @ExtendWith(MockitoExtension.class)
 class InvoiceFileServiceTest {

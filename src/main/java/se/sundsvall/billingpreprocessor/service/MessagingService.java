@@ -1,11 +1,5 @@
 package se.sundsvall.billingpreprocessor.service;
 
-import static org.apache.commons.collections4.CollectionUtils.isEmpty;
-import static org.apache.commons.lang3.StringUtils.isBlank;
-import static se.sundsvall.billingpreprocessor.service.mapper.MessagingMapper.composeCreationErrorMailBody;
-import static se.sundsvall.billingpreprocessor.service.mapper.MessagingMapper.composeTransferErrorMailBody;
-import static se.sundsvall.billingpreprocessor.service.mapper.MessagingMapper.toEmail;
-
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +8,12 @@ import org.springframework.stereotype.Service;
 import se.sundsvall.billingpreprocessor.integration.messaging.MessagingClient;
 import se.sundsvall.billingpreprocessor.integration.messaging.config.ErrorMessageProperties;
 import se.sundsvall.billingpreprocessor.service.error.InvoiceFileError;
+
+import static org.apache.commons.collections4.CollectionUtils.isEmpty;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static se.sundsvall.billingpreprocessor.service.mapper.MessagingMapper.composeCreationErrorMailBody;
+import static se.sundsvall.billingpreprocessor.service.mapper.MessagingMapper.composeTransferErrorMailBody;
+import static se.sundsvall.billingpreprocessor.service.mapper.MessagingMapper.toEmail;
 
 @Service
 public class MessagingService {

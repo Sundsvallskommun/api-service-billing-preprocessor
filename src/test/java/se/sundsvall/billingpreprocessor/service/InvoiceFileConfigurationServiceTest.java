@@ -1,13 +1,5 @@
 package se.sundsvall.billingpreprocessor.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.util.ReflectionTestUtils.setField;
-
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
 import java.time.Clock;
@@ -23,6 +15,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.zalando.problem.ThrowableProblem;
 import se.sundsvall.billingpreprocessor.integration.db.InvoiceFileConfigurationRepository;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceFileConfigurationEntity;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.util.ReflectionTestUtils.setField;
 
 @ExtendWith(MockitoExtension.class)
 class InvoiceFileConfigurationServiceTest {

@@ -1,13 +1,13 @@
 package se.sundsvall.billingpreprocessor.api.validation.impl;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static se.sundsvall.billingpreprocessor.api.model.enums.Type.EXTERNAL;
-import static se.sundsvall.billingpreprocessor.api.model.enums.Type.INTERNAL;
-
 import org.junit.jupiter.api.Test;
 import se.sundsvall.billingpreprocessor.api.model.AddressDetails;
 import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
 import se.sundsvall.billingpreprocessor.api.model.Recipient;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static se.sundsvall.billingpreprocessor.api.model.enums.Type.EXTERNAL;
+import static se.sundsvall.billingpreprocessor.api.model.enums.Type.INTERNAL;
 
 class ValidAddressDetailsConstraintValidatorTest {
 

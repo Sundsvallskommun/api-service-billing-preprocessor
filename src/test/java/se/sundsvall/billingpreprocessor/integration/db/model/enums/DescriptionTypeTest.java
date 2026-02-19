@@ -1,10 +1,10 @@
 package se.sundsvall.billingpreprocessor.integration.db.model.enums;
 
+import org.junit.jupiter.api.Test;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.DETAILED;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.STANDARD;
-
-import org.junit.jupiter.api.Test;
 
 class DescriptionTypeTest {
 

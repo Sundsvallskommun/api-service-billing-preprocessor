@@ -1,12 +1,12 @@
 package se.sundsvall.billingpreprocessor.service.creator.config;
 
-import static java.util.Objects.isNull;
-
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 import java.util.Optional;
 import org.beanio.types.IntegerTypeHandler;
+
+import static java.util.Objects.isNull;
 
 public class InternalInvoiceIntegerTypeHandler extends IntegerTypeHandler {
 	public static final String NAME = "internalInvoiceIntegerTypeHandler";

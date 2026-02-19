@@ -1,16 +1,5 @@
 package se.sundsvall.billingpreprocessor.service;
 
-import static org.zalando.problem.Status.BAD_REQUEST;
-import static se.sundsvall.billingpreprocessor.Constants.ERROR_INVOICE_FILE_GENERATION_FAILURE;
-import static se.sundsvall.billingpreprocessor.Constants.ERROR_INVOICE_FILE_TRANSFER_FAILURE;
-import static se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileStatus.GENERATED;
-import static se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileStatus.SEND_FAILED;
-import static se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileStatus.SEND_SUCCESSFUL;
-import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.APPROVED;
-import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.INVOICED;
-import static se.sundsvall.billingpreprocessor.service.mapper.InvoiceFileMapper.toInvoiceFileEntity;
-import static se.sundsvall.dept44.util.LogUtils.sanitizeForLogging;
-
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.Charset;
 import java.time.LocalDate;
@@ -36,6 +25,17 @@ import se.sundsvall.billingpreprocessor.integration.sftp.SftpConfiguration.Uploa
 import se.sundsvall.billingpreprocessor.integration.sftp.SftpPropertiesConfig;
 import se.sundsvall.billingpreprocessor.service.creator.InvoiceCreator;
 import se.sundsvall.billingpreprocessor.service.error.InvoiceFileError;
+
+import static org.zalando.problem.Status.BAD_REQUEST;
+import static se.sundsvall.billingpreprocessor.Constants.ERROR_INVOICE_FILE_GENERATION_FAILURE;
+import static se.sundsvall.billingpreprocessor.Constants.ERROR_INVOICE_FILE_TRANSFER_FAILURE;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileStatus.GENERATED;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileStatus.SEND_FAILED;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileStatus.SEND_SUCCESSFUL;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.APPROVED;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.INVOICED;
+import static se.sundsvall.billingpreprocessor.service.mapper.InvoiceFileMapper.toInvoiceFileEntity;
+import static se.sundsvall.dept44.util.LogUtils.sanitizeForLogging;
 
 @Service
 public class InvoiceFileService {

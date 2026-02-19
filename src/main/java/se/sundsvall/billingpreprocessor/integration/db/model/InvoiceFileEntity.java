@@ -1,12 +1,5 @@
 package se.sundsvall.billingpreprocessor.integration.db.model;
 
-import static jakarta.persistence.GenerationType.IDENTITY;
-import static java.time.OffsetDateTime.now;
-import static java.time.ZoneId.systemDefault;
-import static java.time.temporal.ChronoUnit.MILLIS;
-import static org.hibernate.annotations.TimeZoneStorageType.NORMALIZE;
-import static se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileStatus.GENERATED;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,6 +14,13 @@ import java.util.Objects;
 import org.hibernate.Length;
 import org.hibernate.annotations.TimeZoneStorage;
 import se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileStatus;
+
+import static jakarta.persistence.GenerationType.IDENTITY;
+import static java.time.OffsetDateTime.now;
+import static java.time.ZoneId.systemDefault;
+import static java.time.temporal.ChronoUnit.MILLIS;
+import static org.hibernate.annotations.TimeZoneStorageType.NORMALIZE;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileStatus.GENERATED;
 
 @Entity
 @Table(name = "invoice_file",

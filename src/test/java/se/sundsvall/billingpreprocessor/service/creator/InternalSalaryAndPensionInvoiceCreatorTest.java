@@ -1,10 +1,5 @@
 package se.sundsvall.billingpreprocessor.service.creator;
 
-import static java.util.Collections.emptyList;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.MOCK;
-
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
@@ -22,6 +17,11 @@ import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceFileConfigurationEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;
+
+import static java.util.Collections.emptyList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.MOCK;
 
 @SpringBootTest(webEnvironment = MOCK)
 @ActiveProfiles("junit")
