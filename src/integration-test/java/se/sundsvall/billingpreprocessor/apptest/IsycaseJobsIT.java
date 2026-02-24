@@ -35,7 +35,7 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.output.Slf4jLogConsumer;
-import org.testcontainers.junit.jupiter.Container;
+
 import org.testcontainers.utility.MountableFile;
 
 import se.sundsvall.billingpreprocessor.Application;
@@ -57,7 +57,6 @@ class IsycaseJobsIT extends AbstractAppTest {
 	private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyMMddHHmm");
 	private static final Logger LOGGER = LoggerFactory.getLogger(IsycaseJobsIT.class);
 
-	@Container
 	private static final GenericContainer<?> SFTP_SERVER = new GenericContainer<>("atmoz/sftp:alpine-3.7")
 		.withCopyFileToContainer(MountableFile.forClasspathResource("keys/ssh_host_ed25519_key", 0600), "/etc/ssh/")
 		.withCopyFileToContainer(MountableFile.forClasspathResource("keys/ssh_host_ed25519_key.pub", 0600), "/etc/ssh/")

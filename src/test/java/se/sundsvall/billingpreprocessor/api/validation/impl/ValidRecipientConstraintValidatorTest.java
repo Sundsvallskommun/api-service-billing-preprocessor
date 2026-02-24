@@ -2,6 +2,7 @@ package se.sundsvall.billingpreprocessor.api.validation.impl;
 
 import jakarta.validation.ConstraintValidatorContext;
 import jakarta.validation.ConstraintValidatorContext.ConstraintViolationBuilder;
+import jakarta.validation.ConstraintValidatorContext.ConstraintViolationBuilder.NodeBuilderCustomizableContext;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -26,7 +27,10 @@ class ValidRecipientConstraintValidatorTest {
 	@Mock
 	private ConstraintViolationBuilder builderMock;
 
-	private ValidRecipientConstraintValidator validator = new ValidRecipientConstraintValidator();
+	@Mock
+	private NodeBuilderCustomizableContext nodeBuilderMock;
+
+	private final ValidRecipientConstraintValidator validator = new ValidRecipientConstraintValidator();
 
 	@Test
 	void withExternalTypeAndValidRecipient() {
@@ -49,57 +53,62 @@ class ValidRecipientConstraintValidatorTest {
 	@Test
 	void withExternalTypeAndRecipientWithNoName() {
 		when(contextMock.buildConstraintViolationWithTemplate(any())).thenReturn(builderMock);
+		when(builderMock.addPropertyNode(any())).thenReturn(nodeBuilderMock);
 
 		assertThat(validator.isValid(BillingRecord.create().withType(EXTERNAL).withRecipient(Recipient.create().withPartyId("partyId").withLegalId("legalId")), contextMock)).isFalse();
 
 		verify(contextMock).disableDefaultConstraintViolation();
 		verify(contextMock).buildConstraintViolationWithTemplate("recipient must either have an organization name or a first and last name defined");
-		verify(builderMock).addConstraintViolation();
+		verify(nodeBuilderMock).addConstraintViolation();
 	}
 
 	@Test
 	void withExternalTypeAndRecipientWithNoFirstName() {
 		when(contextMock.buildConstraintViolationWithTemplate(any())).thenReturn(builderMock);
+		when(builderMock.addPropertyNode(any())).thenReturn(nodeBuilderMock);
 
 		assertThat(validator.isValid(BillingRecord.create().withType(EXTERNAL).withRecipient(Recipient.create().withPartyId("partyId").withLegalId("legalId").withFirstName("firstName")), contextMock)).isFalse();
 
 		verify(contextMock).disableDefaultConstraintViolation();
 		verify(contextMock).buildConstraintViolationWithTemplate("recipient must either have an organization name or a first and last name defined");
-		verify(builderMock).addConstraintViolation();
+		verify(nodeBuilderMock).addConstraintViolation();
 	}
 
 	@Test
 	void withExternalTypeAndRecipientWithNoLastName() {
 		when(contextMock.buildConstraintViolationWithTemplate(any())).thenReturn(builderMock);
+		when(builderMock.addPropertyNode(any())).thenReturn(nodeBuilderMock);
 
 		assertThat(validator.isValid(BillingRecord.create().withType(EXTERNAL).withRecipient(Recipient.create().withPartyId("partyId").withLegalId("legalId").withLastName("lastName")), contextMock)).isFalse();
 
 		verify(contextMock).disableDefaultConstraintViolation();
 		verify(contextMock).buildConstraintViolationWithTemplate("recipient must either have an organization name or a first and last name defined");
-		verify(builderMock).addConstraintViolation();
+		verify(nodeBuilderMock).addConstraintViolation();
 	}
 
 	@Test
 	void withExternalTypeAndRecipientWithPrivateAndOrganizationName() {
 		when(contextMock.buildConstraintViolationWithTemplate(any())).thenReturn(builderMock);
+		when(builderMock.addPropertyNode(any())).thenReturn(nodeBuilderMock);
 
 		assertThat(validator.isValid(BillingRecord.create().withType(EXTERNAL).withRecipient(Recipient.create().withPartyId("partyId").withLegalId("legalId").withFirstName("firstName").withLastName("lastName")
 			.withOrganizationName("organizationName")), contextMock)).isFalse();
 
 		verify(contextMock).disableDefaultConstraintViolation();
 		verify(contextMock).buildConstraintViolationWithTemplate("recipient must either have an organization name or a first and last name defined");
-		verify(builderMock).addConstraintViolation();
+		verify(nodeBuilderMock).addConstraintViolation();
 	}
 
 	@Test
 	void withExternalTypeAndRecipientNotPresent() {
 		when(contextMock.buildConstraintViolationWithTemplate(any())).thenReturn(builderMock);
+		when(builderMock.addPropertyNode(any())).thenReturn(nodeBuilderMock);
 
 		assertThat(validator.isValid(BillingRecord.create().withType(EXTERNAL), contextMock)).isFalse();
 
 		verify(contextMock).disableDefaultConstraintViolation();
 		verify(contextMock).buildConstraintViolationWithTemplate("recipient can not be null when billing record is of type EXTERNAL");
-		verify(builderMock).addConstraintViolation();
+		verify(nodeBuilderMock).addConstraintViolation();
 	}
 
 	@Test
@@ -113,12 +122,13 @@ class ValidRecipientConstraintValidatorTest {
 	@Test
 	void withExternalTypeAndRecipientWithNoLegalIdOrNoPartyId() {
 		when(contextMock.buildConstraintViolationWithTemplate(any())).thenReturn(builderMock);
+		when(builderMock.addPropertyNode(any())).thenReturn(nodeBuilderMock);
 
 		assertThat(validator.isValid(BillingRecord.create().withType(EXTERNAL).withRecipient(Recipient.create()
 			.withOrganizationName("organizationName")), contextMock)).isFalse();
 
 		verify(contextMock).disableDefaultConstraintViolation();
 		verify(contextMock).buildConstraintViolationWithTemplate("recipient must have partyId or legalId when billing record is of type EXTERNAL");
-		verify(builderMock).addConstraintViolation();
+		verify(nodeBuilderMock).addConstraintViolation();
 	}
 }

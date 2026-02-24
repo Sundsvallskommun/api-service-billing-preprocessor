@@ -2,6 +2,8 @@ package se.sundsvall.billingpreprocessor.integration.db.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
@@ -49,10 +51,11 @@ public class InvoiceFileEntity implements Serializable {
 	@Column(name = "content", length = Length.LONG32)
 	private String content;
 
-	@Column(name = "encoding")
+	@Column(name = "encoding", nullable = false)
 	private String encoding;
 
-	@Column(name = "status")
+	@Column(name = "status", columnDefinition = "varchar(255)")
+	@Enumerated(EnumType.STRING)
 	private InvoiceFileStatus status;
 
 	@Column(name = "type")

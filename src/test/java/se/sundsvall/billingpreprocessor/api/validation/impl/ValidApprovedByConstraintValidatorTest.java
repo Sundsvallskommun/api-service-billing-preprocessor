@@ -2,6 +2,7 @@ package se.sundsvall.billingpreprocessor.api.validation.impl;
 
 import jakarta.validation.ConstraintValidatorContext;
 import jakarta.validation.ConstraintValidatorContext.ConstraintViolationBuilder;
+import jakarta.validation.ConstraintValidatorContext.ConstraintViolationBuilder.NodeBuilderCustomizableContext;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -28,6 +29,9 @@ class ValidApprovedByConstraintValidatorTest {
 	@Mock
 	private ConstraintViolationBuilder builderMock;
 
+	@Mock
+	private NodeBuilderCustomizableContext nodeBuilderMock;
+
 	private ValidApprovedByConstraintValidator validator = new ValidApprovedByConstraintValidator();
 
 	@ParameterizedTest
@@ -48,11 +52,12 @@ class ValidApprovedByConstraintValidatorTest {
 	@Test
 	void withStatusEqualToApprovedAndNoApprovedByDefined() {
 		when(contextMock.buildConstraintViolationWithTemplate(any())).thenReturn(builderMock);
+		when(builderMock.addPropertyNode(any())).thenReturn(nodeBuilderMock);
 
 		assertThat(validator.isValid(BillingRecord.create().withStatus(APPROVED), contextMock)).isFalse();
 
 		verify(contextMock).disableDefaultConstraintViolation();
 		verify(contextMock).buildConstraintViolationWithTemplate("approvedBy must be present when status is APPROVED");
-		verify(builderMock).addConstraintViolation();
+		verify(nodeBuilderMock).addConstraintViolation();
 	}
 }

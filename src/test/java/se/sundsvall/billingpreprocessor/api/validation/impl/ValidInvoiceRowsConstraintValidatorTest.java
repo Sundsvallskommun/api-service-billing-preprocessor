@@ -2,6 +2,7 @@ package se.sundsvall.billingpreprocessor.api.validation.impl;
 
 import jakarta.validation.ConstraintValidatorContext;
 import jakarta.validation.ConstraintValidatorContext.ConstraintViolationBuilder;
+import jakarta.validation.ConstraintValidatorContext.ConstraintViolationBuilder.NodeBuilderCustomizableContext;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,6 +47,9 @@ class ValidInvoiceRowsConstraintValidatorTest {
 	@Mock
 	private ConstraintViolationBuilder builderMock;
 
+	@Mock
+	private NodeBuilderCustomizableContext nodeBuilderMock;
+
 	private final ValidInvoiceRowsConstraintValidator validator = new ValidInvoiceRowsConstraintValidator();
 
 	@Test
@@ -81,12 +85,13 @@ class ValidInvoiceRowsConstraintValidatorTest {
 				.withVatCode("25"))));
 
 		when(contextMock.buildConstraintViolationWithTemplate(any())).thenReturn(builderMock);
+		when(builderMock.addPropertyNode(any())).thenReturn(nodeBuilderMock);
 
 		assertThat(validator.isValid(billingRecord, contextMock)).isFalse();
 
 		verify(contextMock).disableDefaultConstraintViolation();
 		verify(contextMock).buildConstraintViolationWithTemplate("can not contain vat code information on invoice rows when billing record is of type INTERNAL");
-		verify(builderMock).addConstraintViolation();
+		verify(nodeBuilderMock).addConstraintViolation();
 	}
 
 	@Test
@@ -96,12 +101,13 @@ class ValidInvoiceRowsConstraintValidatorTest {
 			.withCostPerUnit(BigDecimal.valueOf(10d)))));
 
 		when(contextMock.buildConstraintViolationWithTemplate(any())).thenReturn(builderMock);
+		when(builderMock.addPropertyNode(any())).thenReturn(nodeBuilderMock);
 
 		assertThat(validator.isValid(billingRecord, contextMock)).isFalse();
 
 		verify(contextMock).disableDefaultConstraintViolation();
 		verify(contextMock).buildConstraintViolationWithTemplate("must contain vat code information on invoice rows when billing record is of type EXTERNAL");
-		verify(builderMock).addConstraintViolation();
+		verify(nodeBuilderMock).addConstraintViolation();
 	}
 
 	@ParameterizedTest
@@ -110,12 +116,13 @@ class ValidInvoiceRowsConstraintValidatorTest {
 		final var billingRecord = BillingRecord.create().withType(type).withInvoice(Invoice.create().withInvoiceRows(List.of(InvoiceRow.create())));
 
 		when(contextMock.buildConstraintViolationWithTemplate(any())).thenReturn(builderMock);
+		when(builderMock.addPropertyNode(any())).thenReturn(nodeBuilderMock);
 
 		assertThat(validator.isValid(billingRecord, contextMock)).isFalse();
 
 		verify(contextMock).disableDefaultConstraintViolation();
 		verify(contextMock).buildConstraintViolationWithTemplate("at least one invoice row must have accountInformation");
-		verify(builderMock).addConstraintViolation();
+		verify(nodeBuilderMock).addConstraintViolation();
 	}
 
 	@ParameterizedTest
@@ -124,12 +131,13 @@ class ValidInvoiceRowsConstraintValidatorTest {
 		final var billingRecord = BillingRecord.create().withType(type).withInvoice(Invoice.create().withInvoiceRows(List.of(InvoiceRow.create().withAccountInformation(emptyList()))));
 
 		when(contextMock.buildConstraintViolationWithTemplate(any())).thenReturn(builderMock);
+		when(builderMock.addPropertyNode(any())).thenReturn(nodeBuilderMock);
 
 		assertThat(validator.isValid(billingRecord, contextMock)).isFalse();
 
 		verify(contextMock).disableDefaultConstraintViolation();
 		verify(contextMock).buildConstraintViolationWithTemplate("at least one invoice row must have accountInformation");
-		verify(builderMock).addConstraintViolation();
+		verify(nodeBuilderMock).addConstraintViolation();
 	}
 
 	@ParameterizedTest
@@ -138,12 +146,13 @@ class ValidInvoiceRowsConstraintValidatorTest {
 		final var billingRecord = BillingRecord.create().withType(type).withInvoice(Invoice.create().withInvoiceRows(List.of(InvoiceRow.create().withAccountInformation(new ArrayList<>(Collections.nCopies(3, null))))));
 
 		when(contextMock.buildConstraintViolationWithTemplate(any())).thenReturn(builderMock);
+		when(builderMock.addPropertyNode(any())).thenReturn(nodeBuilderMock);
 
 		assertThat(validator.isValid(billingRecord, contextMock)).isFalse();
 
 		verify(contextMock).disableDefaultConstraintViolation();
 		verify(contextMock).buildConstraintViolationWithTemplate("at least one invoice row must have accountInformation");
-		verify(builderMock).addConstraintViolation();
+		verify(nodeBuilderMock).addConstraintViolation();
 	}
 
 	@ParameterizedTest
@@ -153,12 +162,13 @@ class ValidInvoiceRowsConstraintValidatorTest {
 			.withAccountInformation(List.of(accountInformation)))));
 
 		when(contextMock.buildConstraintViolationWithTemplate(any())).thenReturn(builderMock);
+		when(builderMock.addPropertyNode(any())).thenReturn(nodeBuilderMock);
 
 		assertThat(validator.isValid(billingRecord, contextMock)).isFalse();
 
 		verify(contextMock).disableDefaultConstraintViolation();
 		verify(contextMock).buildConstraintViolationWithTemplate("amount, costCenter, subaccount, department and counterpart must be present for invoice rows containing accountInformation");
-		verify(builderMock).addConstraintViolation();
+		verify(nodeBuilderMock).addConstraintViolation();
 	}
 
 	private static Stream<Arguments> faultyAccountInformationArgumentProvider() {
@@ -219,11 +229,12 @@ class ValidInvoiceRowsConstraintValidatorTest {
 				InvoiceRow.create().withAccountInformation(List.of(createAccountInformationInstance(true).withCounterpart(null))))));
 
 		when(contextMock.buildConstraintViolationWithTemplate(any())).thenReturn(builderMock);
+		when(builderMock.addPropertyNode(any())).thenReturn(nodeBuilderMock);
 
 		assertThat(validator.isValid(billingRecord, contextMock)).isFalse();
 
 		verify(contextMock).disableDefaultConstraintViolation();
 		verify(contextMock).buildConstraintViolationWithTemplate("amount, costCenter, subaccount, department and counterpart must be present for invoice rows containing accountInformation");
-		verify(builderMock).addConstraintViolation();
+		verify(nodeBuilderMock).addConstraintViolation();
 	}
 }

@@ -10,17 +10,24 @@ import static org.apache.commons.lang3.StringUtils.isNoneBlank;
 import static se.sundsvall.billingpreprocessor.api.model.enums.Type.EXTERNAL;
 
 public class ValidAddressDetailsConstraintValidator implements ConstraintValidator<ValidAddressDetails, BillingRecord> {
-	@Override
-	public boolean isValid(final BillingRecord billingRecord, final ConstraintValidatorContext constraintValidatorContext) {
 
-		if (EXTERNAL == billingRecord.getType()) {
-			return Optional.ofNullable(billingRecord)
-				.filter(this::isNonNullAddressDetails)
-				.filter(this::isValidStreet)
-				.filter(this::isValidPostalCode)
-				.filter(this::isValidCity)
-				.isPresent();
+	private static final String VALIDATED_NODE = "recipient";
+
+	@Override
+	public boolean isValid(final BillingRecord billingRecord, final ConstraintValidatorContext context) {
+		if (EXTERNAL == billingRecord.getType() && Optional.of(billingRecord)
+			.filter(this::isNonNullAddressDetails)
+			.filter(this::isValidStreet)
+			.filter(this::isValidPostalCode)
+			.filter(this::isValidCity)
+			.isEmpty()) {
+			context.disableDefaultConstraintViolation();
+			context.buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate())
+				.addPropertyNode(VALIDATED_NODE)
+				.addConstraintViolation();
+			return false;
 		}
+
 		return true;
 	}
 

@@ -1,5 +1,6 @@
 package se.sundsvall.billingpreprocessor.integration.db;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,7 @@ class InvoiceFileRepositoryTest {
 		final var content = "content";
 		final var invoiceFileEntity = InvoiceFileEntity.create()
 			.withContent(content)
+			.withEncoding(StandardCharsets.ISO_8859_1.toString())
 			.withMunicipalityId(MUNICIPALITY_ID)
 			.withName("file.txt");
 
@@ -66,11 +68,13 @@ class InvoiceFileRepositoryTest {
 		// Arrange
 		final var invoiceFileEntity1 = InvoiceFileEntity.create()
 			.withName("file.txt")
+			.withEncoding(StandardCharsets.ISO_8859_1.toString())
 			.withMunicipalityId(MUNICIPALITY_ID)
 			.withStatus(GENERATED);
 
 		final var invoiceFileEntity2 = InvoiceFileEntity.create()
 			.withName("file.txt")
+			.withEncoding(StandardCharsets.ISO_8859_1.toString())
 			.withMunicipalityId(MUNICIPALITY_ID)
 			.withStatus(GENERATED);
 

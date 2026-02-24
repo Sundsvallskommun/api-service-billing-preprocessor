@@ -14,8 +14,8 @@ import static se.sundsvall.billingpreprocessor.api.model.enums.Type.EXTERNAL;
 public class ValidRecipientConstraintValidator implements ConstraintValidator<ValidRecipient, BillingRecord> {
 	private static final String CUSTOM_ERROR_RECIPIENT_MISSING_MESSAGE = "recipient can not be null when billing record is of type " + EXTERNAL;
 	private static final String CUSTOM_ERROR_INVALID_PARTY_ID_OR_LEGAL_ID_MESSAGE = "recipient must have partyId or legalId when billing record is of type " + EXTERNAL;
-
 	private static final String CUSTOM_ERROR_INVALID_RECIPIENT_NAME_MESSAGE = "recipient must either have an organization name or a first and last name defined";
+	private static final String VALIDATED_NODE = "recipient";
 
 	@Override
 	public boolean isValid(final BillingRecord billingRecord, final ConstraintValidatorContext context) {
@@ -58,6 +58,6 @@ public class ValidRecipientConstraintValidator implements ConstraintValidator<Va
 
 	private void useCustomMessageForValidation(ConstraintValidatorContext constraintContext, String customMessage) {
 		constraintContext.disableDefaultConstraintViolation();
-		constraintContext.buildConstraintViolationWithTemplate(customMessage).addConstraintViolation();
+		constraintContext.buildConstraintViolationWithTemplate(customMessage).addPropertyNode(VALIDATED_NODE).addConstraintViolation();
 	}
 }

@@ -2,7 +2,6 @@ package se.sundsvall.billingpreprocessor.service.mapper;
 
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
-import org.zalando.problem.ThrowableProblem;
 import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.DescriptionEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;
@@ -14,6 +13,7 @@ import se.sundsvall.billingpreprocessor.service.creator.definition.internal.Invo
 import se.sundsvall.billingpreprocessor.service.creator.definition.internal.InvoiceHeaderRow;
 import se.sundsvall.billingpreprocessor.service.creator.definition.internal.InvoiceRow;
 import se.sundsvall.billingpreprocessor.service.creator.definition.internal.InvoiceRowDescriptionRow;
+import se.sundsvall.dept44.problem.ThrowableProblem;
 
 import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;

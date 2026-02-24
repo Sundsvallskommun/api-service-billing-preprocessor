@@ -1,11 +1,11 @@
 package se.sundsvall.billingpreprocessor.service.util;
 
 import java.util.function.Supplier;
-import org.zalando.problem.Problem;
-import org.zalando.problem.Status;
-import org.zalando.problem.ThrowableProblem;
+import org.springframework.http.HttpStatus;
+import se.sundsvall.dept44.problem.Problem;
+import se.sundsvall.dept44.problem.ThrowableProblem;
 
-import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 public final class ProblemUtil {
 	private ProblemUtil() {}
@@ -14,7 +14,7 @@ public final class ProblemUtil {
 		return createProblem(INTERNAL_SERVER_ERROR, message);
 	}
 
-	public static Supplier<ThrowableProblem> createProblem(Status status, String message) {
+	public static Supplier<ThrowableProblem> createProblem(HttpStatus status, String message) {
 		return () -> Problem.valueOf(status, message);
 	}
 }

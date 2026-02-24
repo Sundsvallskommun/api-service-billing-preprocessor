@@ -19,6 +19,7 @@ public class ValidInvoiceRowsConstraintValidator implements ConstraintValidator<
 	private static final String CUSTOM_ERROR_EXTERNAL_TYPE = "must contain vat code information on invoice rows when billing record is of type " + EXTERNAL;
 	private static final String CUSTOM_ERROR_ACCOUNT_INFORMATION_NOT_PRESENT = "at least one invoice row must have accountInformation";
 	private static final String CUSTOM_ERROR_ACCOUNT_INFORMATION_INCOMPLETE = "amount, costCenter, subaccount, department and counterpart must be present for invoice rows containing accountInformation";
+	private static final String VALIDATED_NODE = "invoice.invoiceRows";
 
 	@Override
 	public boolean isValid(final BillingRecord billingRecord, final ConstraintValidatorContext context) {
@@ -99,6 +100,6 @@ public class ValidInvoiceRowsConstraintValidator implements ConstraintValidator<
 
 	private void useCustomMessageForValidation(final ConstraintValidatorContext constraintContext, final String message) {
 		constraintContext.disableDefaultConstraintViolation();
-		constraintContext.buildConstraintViolationWithTemplate(message).addConstraintViolation();
+		constraintContext.buildConstraintViolationWithTemplate(message).addPropertyNode(VALIDATED_NODE).addConstraintViolation();
 	}
 }
