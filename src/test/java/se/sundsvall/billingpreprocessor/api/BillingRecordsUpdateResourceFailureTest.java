@@ -7,24 +7,25 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.zalando.problem.Problem;
-import org.zalando.problem.violations.ConstraintViolationProblem;
-import org.zalando.problem.violations.Violation;
 import se.sundsvall.billingpreprocessor.Application;
 import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
 import se.sundsvall.billingpreprocessor.api.model.Recipient;
 import se.sundsvall.billingpreprocessor.api.model.enums.Type;
 import se.sundsvall.billingpreprocessor.service.BillingRecordService;
+import se.sundsvall.dept44.problem.Problem;
+import se.sundsvall.dept44.problem.violations.ConstraintViolationProblem;
+import se.sundsvall.dept44.problem.violations.Violation;
 
 import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 import static org.mockito.Mockito.verifyNoInteractions;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.zalando.problem.Status.BAD_REQUEST;
 import static se.sundsvall.billingpreprocessor.api.BillingRecordRequestUtil.createAddressDetailsInstance;
 import static se.sundsvall.billingpreprocessor.api.BillingRecordRequestUtil.createBillingRecordInstance;
 import static se.sundsvall.billingpreprocessor.api.BillingRecordRequestUtil.createInvoiceInstance;
@@ -35,6 +36,7 @@ import static se.sundsvall.billingpreprocessor.api.model.enums.Type.INTERNAL;
 
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("junit")
+@AutoConfigureWebTestClient
 class BillingRecordsUpdateResourceFailureTest {
 	private static final String PATH = "/{municipalityId}/billingrecords/{id}";
 
@@ -64,7 +66,7 @@ class BillingRecordsUpdateResourceFailureTest {
 		assertThat(response).isNotNull();
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
-		assertThat(response.getViolations()).extracting(Violation::getField, Violation::getMessage).containsExactlyInAnyOrder(
+		assertThat(response.getViolations()).extracting(Violation::field, Violation::message).containsExactlyInAnyOrder(
 			tuple("updateBillingRecord.id", "not a valid UUID"));
 
 		// Verification
@@ -89,7 +91,7 @@ class BillingRecordsUpdateResourceFailureTest {
 		assertThat(response.getTitle()).isEqualTo("Bad Request");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getDetail()).isEqualTo(
-			"Required request body is missing: org.springframework.http.ResponseEntity<se.sundsvall.billingpreprocessor.api.model.BillingRecord> se.sundsvall.billingpreprocessor.api.BillingRecordsResource.updateBillingRecord(java.lang.String,java.lang.String,se.sundsvall.billingpreprocessor.api.model.BillingRecord)");
+			"Failed to read request");
 
 		// Verification
 		verifyNoInteractions(serviceMock);
@@ -113,7 +115,7 @@ class BillingRecordsUpdateResourceFailureTest {
 		assertThat(response).isNotNull();
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
-		assertThat(response.getViolations()).extracting(Violation::getField, Violation::getMessage).containsExactlyInAnyOrder(
+		assertThat(response.getViolations()).extracting(Violation::field, Violation::message).containsExactlyInAnyOrder(
 			tuple("category", "must not be null"),
 			tuple("invoice", "must not be null"),
 			tuple("status", "must not be null"),
@@ -144,10 +146,10 @@ class BillingRecordsUpdateResourceFailureTest {
 		assertThat(response).isNotNull();
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
-		assertThat(response.getViolations()).extracting(Violation::getField, Violation::getMessage).containsExactlyInAnyOrder(
-			tuple("billingRecord", "can not contain vat code information on invoice rows when billing record is of type INTERNAL"),
-			tuple("billingRecord", "invoice.ourReference is mandatory when billing record is of type INTERNAL"),
-			tuple("billingRecord", "amount, costCenter, subaccount, department and counterpart must be present for invoice rows containing accountInformation"),
+		assertThat(response.getViolations()).extracting(Violation::field, Violation::message).containsExactlyInAnyOrder(
+			tuple("invoice.invoiceRows", "can not contain vat code information on invoice rows when billing record is of type INTERNAL"),
+			tuple("invoice.ourReference", "invoice.ourReference is mandatory when billing record is of type INTERNAL"),
+			tuple("invoice.invoiceRows", "amount, costCenter, subaccount, department and counterpart must be present for invoice rows containing accountInformation"),
 			tuple("category", "must be one of ACCESS_CARD, CUSTOMER_INVOICE, SALARY_AND_PENSION, ISYCASE or MEX_INVOICE"),
 			tuple("approved", "must be null"),
 			tuple("created", "must be null"),
@@ -183,12 +185,12 @@ class BillingRecordsUpdateResourceFailureTest {
 		assertThat(response).isNotNull();
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
-		assertThat(response.getViolations()).extracting(Violation::getField, Violation::getMessage).containsExactlyInAnyOrder(
-			tuple("billingRecord", "Street, postal code and city must all be present in recipient.addressDetails for EXTERNAL billing record"),
-			tuple("billingRecord", "recipient must either have an organization name or a first and last name defined"),
-			tuple("billingRecord", "recipient must have partyId or legalId when billing record is of type EXTERNAL"),
-			tuple("billingRecord", "must contain vat code information on invoice rows when billing record is of type EXTERNAL"),
-			tuple("billingRecord", "amount, costCenter, subaccount, department and counterpart must be present for invoice rows containing accountInformation"),
+		assertThat(response.getViolations()).extracting(Violation::field, Violation::message).containsExactlyInAnyOrder(
+			tuple("recipient", "Street, postal code and city must all be present in recipient.addressDetails for EXTERNAL billing record"),
+			tuple("recipient", "recipient must either have an organization name or a first and last name defined"),
+			tuple("recipient", "recipient must have partyId or legalId when billing record is of type EXTERNAL"),
+			tuple("invoice.invoiceRows", "must contain vat code information on invoice rows when billing record is of type EXTERNAL"),
+			tuple("invoice.invoiceRows", "amount, costCenter, subaccount, department and counterpart must be present for invoice rows containing accountInformation"),
 			tuple("category", "must be one of ACCESS_CARD, CUSTOMER_INVOICE, SALARY_AND_PENSION, ISYCASE or MEX_INVOICE"),
 			tuple("approved", "must be null"),
 			tuple("created", "must be null"),
@@ -226,8 +228,8 @@ class BillingRecordsUpdateResourceFailureTest {
 		assertThat(response).isNotNull();
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
-		assertThat(response.getViolations()).extracting(Violation::getField, Violation::getMessage).containsExactlyInAnyOrder(
-			tuple("billingRecord", "approvedBy must be present when status is APPROVED"));
+		assertThat(response.getViolations()).extracting(Violation::field, Violation::message).containsExactlyInAnyOrder(
+			tuple("approvedBy", "approvedBy must be present when status is APPROVED"));
 
 		// Verification
 		verifyNoInteractions(serviceMock);
@@ -253,9 +255,9 @@ class BillingRecordsUpdateResourceFailureTest {
 		assertThat(response).isNotNull();
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
-		assertThat(response.getViolations()).extracting(Violation::getField, Violation::getMessage).containsExactlyInAnyOrder(
-			tuple("billingRecord", "Street, postal code and city must all be present in recipient.addressDetails for EXTERNAL billing record"),
-			tuple("billingRecord", "recipient can not be null when billing record is of type EXTERNAL"));
+		assertThat(response.getViolations()).extracting(Violation::field, Violation::message).containsExactlyInAnyOrder(
+			tuple("recipient", "Street, postal code and city must all be present in recipient.addressDetails for EXTERNAL billing record"),
+			tuple("recipient", "recipient can not be null when billing record is of type EXTERNAL"));
 
 		// Verification
 		verifyNoInteractions(serviceMock);
@@ -282,7 +284,7 @@ class BillingRecordsUpdateResourceFailureTest {
 		assertThat(response).isNotNull();
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
-		assertThat(response.getViolations()).extracting(Violation::getField, Violation::getMessage).containsExactlyInAnyOrder(
+		assertThat(response.getViolations()).extracting(Violation::field, Violation::message).containsExactlyInAnyOrder(
 			tuple("invoice.invoiceRows[0].vatCode", "must be one of 00, 06, 12 or 25"));
 
 		// Verification
@@ -310,8 +312,8 @@ class BillingRecordsUpdateResourceFailureTest {
 		assertThat(response).isNotNull();
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
-		assertThat(response.getViolations()).extracting(Violation::getField, Violation::getMessage).containsExactlyInAnyOrder(
-			tuple("billingRecord", "Street, postal code and city must all be present in recipient.addressDetails for EXTERNAL billing record"));
+		assertThat(response.getViolations()).extracting(Violation::field, Violation::message).containsExactlyInAnyOrder(
+			tuple("recipient", "Street, postal code and city must all be present in recipient.addressDetails for EXTERNAL billing record"));
 
 		// Verification
 		verifyNoInteractions(serviceMock);

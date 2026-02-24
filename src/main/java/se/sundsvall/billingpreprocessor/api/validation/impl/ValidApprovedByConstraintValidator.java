@@ -10,6 +10,7 @@ import static se.sundsvall.billingpreprocessor.api.model.enums.Status.APPROVED;
 
 public class ValidApprovedByConstraintValidator implements ConstraintValidator<ValidApprovedBy, BillingRecord> {
 	private static final String CUSTOM_ERROR_MESSAGE = "approvedBy must be present when status is " + APPROVED;
+	private static final String VALIDATED_NODE = "approvedBy";
 
 	@Override
 	public boolean isValid(final BillingRecord billingRecord, final ConstraintValidatorContext context) {
@@ -24,6 +25,6 @@ public class ValidApprovedByConstraintValidator implements ConstraintValidator<V
 
 	private void useCustomMessageForValidation(ConstraintValidatorContext constraintContext) {
 		constraintContext.disableDefaultConstraintViolation();
-		constraintContext.buildConstraintViolationWithTemplate(CUSTOM_ERROR_MESSAGE).addConstraintViolation();
+		constraintContext.buildConstraintViolationWithTemplate(CUSTOM_ERROR_MESSAGE).addPropertyNode(VALIDATED_NODE).addConstraintViolation();
 	}
 }

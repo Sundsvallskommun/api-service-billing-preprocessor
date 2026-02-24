@@ -2,6 +2,8 @@ package se.sundsvall.billingpreprocessor.integration.db.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
@@ -25,10 +27,11 @@ public class DescriptionEntity implements Serializable {
 	private long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "invoice_row.id", nullable = false, foreignKey = @ForeignKey(name = "fk_invoice_row_id_description"))
+	@JoinColumn(name = "invoice_row_id", nullable = false, foreignKey = @ForeignKey(name = "fk_invoice_row_id_description"))
 	private InvoiceRowEntity invoiceRow;
 
 	@Column(name = "type", columnDefinition = "ENUM('DETAILED', 'STANDARD')")
+	@Enumerated(EnumType.STRING)
 	private DescriptionType type;
 
 	@Column(name = "text")

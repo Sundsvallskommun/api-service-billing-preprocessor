@@ -15,7 +15,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.integration.file.remote.session.DelegatingSessionFactory;
-import org.zalando.problem.Problem;
 import se.sundsvall.billingpreprocessor.integration.db.BillingRecordRepository;
 import se.sundsvall.billingpreprocessor.integration.db.InvoiceFileRepository;
 import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
@@ -28,6 +27,7 @@ import se.sundsvall.billingpreprocessor.service.creator.ExternalInvoiceCreator;
 import se.sundsvall.billingpreprocessor.service.creator.InternalInvoiceCreator;
 import se.sundsvall.billingpreprocessor.service.creator.InvoiceCreator;
 import se.sundsvall.billingpreprocessor.service.error.InvoiceFileError;
+import se.sundsvall.dept44.problem.Problem;
 
 import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -40,7 +40,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileStatus.GENERATED;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileStatus.SEND_FAILED;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileStatus.SEND_SUCCESSFUL;
@@ -195,7 +195,7 @@ class InvoiceFileServiceTest {
 		assertThat(invoiceFileArgumentCaptor.getValue()).isSameAs(invoiceFileEntityMock);
 		assertThat(creationErrorArgumentCaptor.getValue()).hasSize(1)
 			.extracting(InvoiceFileError::getEntityId, InvoiceFileError::getMessage)
-			.containsExactly(tuple(null, "Could not transfer file with filename: 'fileName' due to DefaultProblem: Internal Server Error"));
+			.containsExactly(tuple(null, "Could not transfer file with filename: 'fileName' due to ThrowableProblem: Internal Server Error"));
 	}
 
 	@Test

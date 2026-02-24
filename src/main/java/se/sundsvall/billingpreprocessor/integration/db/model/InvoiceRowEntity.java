@@ -35,7 +35,7 @@ public class InvoiceRowEntity implements Serializable {
 	private long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "invoice.id", nullable = false, foreignKey = @ForeignKey(name = "fk_invoice_id_invoice_row"))
+	@JoinColumn(name = "invoice_id", nullable = false, foreignKey = @ForeignKey(name = "fk_invoice_id_invoice_row"))
 	private InvoiceEntity invoice;
 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "invoiceRow", cascade = CascadeType.ALL, orphanRemoval = true)

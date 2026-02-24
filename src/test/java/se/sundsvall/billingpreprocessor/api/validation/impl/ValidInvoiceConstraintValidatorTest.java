@@ -2,6 +2,7 @@ package se.sundsvall.billingpreprocessor.api.validation.impl;
 
 import jakarta.validation.ConstraintValidatorContext;
 import jakarta.validation.ConstraintValidatorContext.ConstraintViolationBuilder;
+import jakarta.validation.ConstraintValidatorContext.ConstraintViolationBuilder.NodeBuilderCustomizableContext;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,6 +29,9 @@ class ValidInvoiceConstraintValidatorTest {
 
 	@Mock
 	private ConstraintViolationBuilder builderMock;
+
+	@Mock
+	private NodeBuilderCustomizableContext nodeBuilderMock;
 
 	private final ValidInvoiceConstraintValidator validator = new ValidInvoiceConstraintValidator();
 
@@ -71,11 +75,12 @@ class ValidInvoiceConstraintValidatorTest {
 	@Test
 	void withInternalTypeAndOurReferenceNotPresent() {
 		when(contextMock.buildConstraintViolationWithTemplate(any())).thenReturn(builderMock);
+		when(builderMock.addPropertyNode(any())).thenReturn(nodeBuilderMock);
 
 		assertThat(validator.isValid(BillingRecord.create().withType(INTERNAL).withInvoice(Invoice.create().withInvoiceRows(List.of(InvoiceRow.create()))), contextMock)).isFalse();
 
 		verify(contextMock).disableDefaultConstraintViolation();
 		verify(contextMock).buildConstraintViolationWithTemplate("invoice.ourReference is mandatory when billing record is of type INTERNAL");
-		verify(builderMock).addConstraintViolation();
+		verify(nodeBuilderMock).addConstraintViolation();
 	}
 }

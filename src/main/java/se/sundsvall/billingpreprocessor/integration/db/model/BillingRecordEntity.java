@@ -4,6 +4,8 @@ import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
@@ -52,10 +54,12 @@ public class BillingRecordEntity implements Serializable {
 	@Column(name = "municipality_id", nullable = false)
 	private String municipalityId;
 
-	@Column(name = "type", nullable = false)
+	@Column(name = "type", nullable = false, columnDefinition = "varchar(255)")
+	@Enumerated(EnumType.STRING)
 	private Type type;
 
-	@Column(name = "status", nullable = false)
+	@Column(name = "status", nullable = false, columnDefinition = "varchar(255)")
+	@Enumerated(EnumType.STRING)
 	private Status status;
 
 	@Column(name = "approved_by")

@@ -13,6 +13,7 @@ import static se.sundsvall.billingpreprocessor.api.model.enums.Type.INTERNAL;
 public class ValidInvoiceConstraintValidator implements ConstraintValidator<ValidInvoice, BillingRecord> {
 
 	private static final String CUSTOM_ERROR_MESSAGE_MISSING_OUR_REFERENCE = "invoice.ourReference is mandatory when billing record is of type " + INTERNAL;
+	private static final String VALIDATED_NODE = "invoice.ourReference";
 
 	@Override
 	public boolean isValid(final BillingRecord billingRecord, final ConstraintValidatorContext context) {
@@ -20,7 +21,7 @@ public class ValidInvoiceConstraintValidator implements ConstraintValidator<Vali
 
 		if (billingRecord.getType() == INTERNAL && nonNull(billingRecord.getInvoice()) && !isValidOurReference(billingRecord.getInvoice())) {
 			context.disableDefaultConstraintViolation();
-			context.buildConstraintViolationWithTemplate(CUSTOM_ERROR_MESSAGE_MISSING_OUR_REFERENCE).addConstraintViolation();
+			context.buildConstraintViolationWithTemplate(CUSTOM_ERROR_MESSAGE_MISSING_OUR_REFERENCE).addPropertyNode(VALIDATED_NODE).addConstraintViolation();
 			isValid = false;
 		}
 		return isValid;

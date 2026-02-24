@@ -4,22 +4,23 @@
 	<parent>
 		<groupId>se.sundsvall.dept44</groupId>
 		<artifactId>dept44-service-parent</artifactId>
-		<version>7.0.1</version>
+		<version>8.0.0</version>
 		<relativePath />
 		<!-- lookup parent from repository -->
 	</parent>
 	<groupId>se.sundsvall</groupId>
 	<artifactId>api-service-billing-preprocessor</artifactId>
-	<version>4.3</version>
+	<version>4.4</version>
 	<name>api-service-billing-preprocessor</name>
 	<properties>
 		<!-- Service properties -->
-		<spring-filter.version>3.2.5</spring-filter.version>
-		<beanio.version>3.2.1</beanio.version>
-		<commons-text.version>1.15.0</commons-text.version>
 		<apache.sshd.version>2.17.1</apache.sshd.version>
+		<beanio.version>3.2.1</beanio.version>
 		<com.jcraft.version>0.1.55</com.jcraft.version>
+		<commons-text.version>1.15.0</commons-text.version>
+		<junit-jupiter.version>1.21.4</junit-jupiter.version>
 		<sshd-common.version>2.17.1</sshd-common.version>
+		<spring-filter.version>3.2.5</spring-filter.version>
 		<generated-sources-path>${project.build.directory}/generated-sources</generated-sources-path>
 	</properties>
 	<dependencies>
@@ -58,6 +59,10 @@
 			<artifactId>flyway-mysql</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-flyway</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.turkraft.springfilter</groupId>
 			<artifactId>jpa</artifactId>
 			<version>${spring-filter.version}</version>
@@ -83,8 +88,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate.orm</groupId>
-			<artifactId>hibernate-jpamodelgen</artifactId>
-			<scope>provided</scope>
+			<artifactId>hibernate-processor</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.sshd</groupId>
@@ -105,6 +109,7 @@
 		<dependency>
 			<groupId>org.testcontainers</groupId>
 			<artifactId>junit-jupiter</artifactId>
+			<version>${junit-jupiter.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

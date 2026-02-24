@@ -8,8 +8,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
@@ -35,6 +37,7 @@ import static org.mockito.Mockito.when;
 	"spring.application.name=applicationName",
 	"spring.profiles.active=junit"
 })
+@ExtendWith(MockitoExtension.class)
 class MessagingServiceTest {
 
 	private static final List<InvoiceFileError> ERRORS = List.of(InvoiceFileError.create("error"));

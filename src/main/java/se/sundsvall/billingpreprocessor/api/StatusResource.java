@@ -15,12 +15,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.zalando.problem.Problem;
-import org.zalando.problem.violations.ConstraintViolationProblem;
 import se.sundsvall.billingpreprocessor.api.model.InvoiceFileStatus;
 import se.sundsvall.billingpreprocessor.service.StatusService;
 import se.sundsvall.dept44.common.validators.annotation.ValidMunicipalityId;
+import se.sundsvall.dept44.problem.Problem;
+import se.sundsvall.dept44.problem.violations.ConstraintViolationProblem;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
 import static org.springframework.http.ResponseEntity.ok;
 
@@ -42,7 +43,7 @@ class StatusResource {
 
 	@Operation(summary = "Get the status for invoice files, indicating if they have been sent successfully or not", description = "Checks the status of a invoice file matching the given year and month")
 	@ApiResponse(responseCode = "200", description = "Operation successful", useReturnTypeSchema = true)
-	@GetMapping
+	@GetMapping(produces = APPLICATION_JSON_VALUE)
 	ResponseEntity<List<InvoiceFileStatus>> getFileStatusesForMonth(
 		@ValidMunicipalityId @PathVariable final String municipalityId,
 		@RequestParam @NotNull final Integer year,

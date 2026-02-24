@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.zalando.problem.ThrowableProblem;
 import se.sundsvall.billingpreprocessor.integration.db.model.AccountInformationEmbeddable;
 import se.sundsvall.billingpreprocessor.integration.db.model.AddressDetailsEmbeddable;
 import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
@@ -20,6 +19,7 @@ import se.sundsvall.billingpreprocessor.service.creator.definition.external.Invo
 import se.sundsvall.billingpreprocessor.service.creator.definition.external.InvoiceFooterRow;
 import se.sundsvall.billingpreprocessor.service.creator.definition.external.InvoiceHeaderRow;
 import se.sundsvall.billingpreprocessor.service.creator.definition.external.InvoiceRow;
+import se.sundsvall.dept44.problem.ThrowableProblem;
 
 import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;

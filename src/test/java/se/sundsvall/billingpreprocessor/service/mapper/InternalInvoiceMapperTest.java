@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.zalando.problem.ThrowableProblem;
 import se.sundsvall.billingpreprocessor.integration.db.model.AccountInformationEmbeddable;
 import se.sundsvall.billingpreprocessor.integration.db.model.AddressDetailsEmbeddable;
 import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
@@ -21,12 +20,13 @@ import se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionTy
 import se.sundsvall.billingpreprocessor.integration.db.model.enums.Status;
 import se.sundsvall.billingpreprocessor.integration.db.model.enums.Type;
 import se.sundsvall.billingpreprocessor.service.creator.definition.internal.FileHeaderRow;
+import se.sundsvall.dept44.problem.ThrowableProblem;
 
 import static java.time.OffsetDateTime.now;
 import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.DETAILED;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.DescriptionType.STANDARD;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.APPROVED;

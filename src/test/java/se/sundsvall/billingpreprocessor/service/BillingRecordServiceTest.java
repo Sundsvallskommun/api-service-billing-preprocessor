@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -14,7 +15,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.zalando.problem.ThrowableProblem;
 import se.sundsvall.billingpreprocessor.api.model.AccountInformation;
 import se.sundsvall.billingpreprocessor.api.model.BillingRecord;
 import se.sundsvall.billingpreprocessor.api.model.Invoice;
@@ -25,6 +25,7 @@ import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.enums.Status;
 import se.sundsvall.billingpreprocessor.integration.db.model.enums.Type;
+import se.sundsvall.dept44.problem.ThrowableProblem;
 
 import static java.util.Collections.emptyList;
 import static java.util.UUID.randomUUID;
@@ -37,9 +38,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.data.domain.Sort.Direction.DESC;
-import static org.zalando.problem.Status.BAD_REQUEST;
-import static org.zalando.problem.Status.METHOD_NOT_ALLOWED;
-import static org.zalando.problem.Status.NOT_FOUND;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.METHOD_NOT_ALLOWED;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static se.sundsvall.billingpreprocessor.api.model.enums.Status.NEW;
 import static se.sundsvall.billingpreprocessor.api.model.enums.Type.INTERNAL;
 
@@ -146,7 +147,7 @@ class BillingRecordServiceTest {
 
 		// Mock
 		when(billingRecordRepositoryMock.findAll(specificationMock, pageable)).thenReturn(new PageImpl<>(List.of(createBillingRecordEntityInstance(), createBillingRecordEntityInstance()), pageable, 10L));
-		when(specificationMock.and(any())).thenReturn(specificationMock);
+		when(specificationMock.and(ArgumentMatchers.<Specification<BillingRecordEntity>>any())).thenReturn(specificationMock);
 
 		// Call
 		final var matches = service.findBillingRecords(specificationMock, pageable, MUNICIPALITY_ID);
@@ -160,7 +161,7 @@ class BillingRecordServiceTest {
 		assertThat(matches.getSort()).usingRecursiveComparison().isEqualTo(sort);
 
 		verify(billingRecordRepositoryMock).findAll(specificationMock, pageable);
-		verify(specificationMock).and(any());
+		verify(specificationMock).and(ArgumentMatchers.<Specification<BillingRecordEntity>>any());
 		verifyNoMoreInteractions(billingRecordRepositoryMock, specificationMock);
 	}
 
@@ -172,7 +173,7 @@ class BillingRecordServiceTest {
 
 		// Mock
 		when(billingRecordRepositoryMock.findAll(specificationMock, pageable)).thenReturn(new PageImpl<>(emptyList()));
-		when(specificationMock.and(any())).thenReturn(specificationMock);
+		when(specificationMock.and(ArgumentMatchers.<Specification<BillingRecordEntity>>any())).thenReturn(specificationMock);
 
 		// Call
 		final var matches = service.findBillingRecords(specificationMock, pageable, MUNICIPALITY_ID);
@@ -186,7 +187,7 @@ class BillingRecordServiceTest {
 		assertThat(matches.getSort()).usingRecursiveComparison().isEqualTo(sort);
 
 		verify(billingRecordRepositoryMock).findAll(specificationMock, pageable);
-		verify(specificationMock).and(any());
+		verify(specificationMock).and(ArgumentMatchers.<Specification<BillingRecordEntity>>any());
 		verifyNoMoreInteractions(billingRecordRepositoryMock, specificationMock);
 	}
 
