@@ -22,8 +22,6 @@ import se.sundsvall.billingpreprocessor.Application;
 import se.sundsvall.dept44.util.ResourceUtils;
 
 import net.javacrumbs.jsonunit.core.Option;
-import tools.jackson.core.JacksonException;
-import tools.jackson.databind.ObjectMapper;
 import tools.jackson.dataformat.yaml.YAMLMapper;
 
 @ActiveProfiles("it")
@@ -82,10 +80,6 @@ class OpenApiSpecificationIT {
 	 * @return      a JSON string
 	 */
 	private String toJson(final String yaml) {
-		try {
-			return YAML_MAPPER.readTree(yaml).toString();
-		} catch (final JacksonException e) {
-			throw new IllegalStateException("Unable to convert YAML to JSON", e);
-		}
+		return YAML_MAPPER.readTree(yaml).toString();
 	}
 }

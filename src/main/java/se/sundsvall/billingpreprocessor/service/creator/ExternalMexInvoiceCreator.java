@@ -13,10 +13,12 @@ import se.sundsvall.billingpreprocessor.integration.db.InvoiceFileConfigurationR
 import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity;
 import se.sundsvall.billingpreprocessor.service.mapper.ExternalInvoiceMapper;
 
+import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
 import static se.sundsvall.billingpreprocessor.Constants.EMPTY_ARRAY;
 import static se.sundsvall.billingpreprocessor.service.creator.config.InvoiceCreatorConfig.EXTERNAL_INVOICE_BUILDER;
 import static se.sundsvall.billingpreprocessor.service.mapper.ExternalInvoiceMapper.toCustomer;
+import static se.sundsvall.billingpreprocessor.service.mapper.ExternalInvoiceMapper.toFacilityDescriptionRows;
 import static se.sundsvall.billingpreprocessor.service.mapper.ExternalInvoiceMapper.toFileFooter;
 import static se.sundsvall.billingpreprocessor.service.util.ProblemUtil.createInternalServerErrorProblem;
 
@@ -52,13 +54,17 @@ public class ExternalMexInvoiceCreator extends ExternalInvoiceCreator {
 	@Override
 	void processInvoice(final BeanWriter invoiceWriter, final BillingRecordEntity billingRecord) {
 		final var recipientLegalId = extractLegalId(billingRecord);
+		final var facilityDescriptionRows = toFacilityDescriptionRows(recipientLegalId, billingRecord.getExtraParameters());
 
 		invoiceWriter.write(toCustomer(recipientLegalId, billingRecord));
 		invoiceWriter.write(ExternalInvoiceMapper.toInvoiceHeader(recipientLegalId, billingRecord));
 
-		ofNullable(billingRecord.getInvoice())
+		final var invoiceRows = ofNullable(billingRecord.getInvoice())
 			.orElseThrow(createInternalServerErrorProblem("Invoice is not present"))
-			.getInvoiceRows()
-			.forEach(row -> processInvoiceRow(invoiceWriter, recipientLegalId, row));
+			.getInvoiceRows();
+
+		for (var i = 0; i < invoiceRows.size(); i++) {
+			processInvoiceRow(invoiceWriter, recipientLegalId, invoiceRows.get(i), i == 0 ? facilityDescriptionRows : emptyList());
+		}
 	}
 }

@@ -65,4 +65,26 @@ class MexRecordsIT extends AbstractAppTest {
 			.withExpectedResponse(RESPONSE_FILE)
 			.sendRequestAndVerifyResponse();
 	}
+	
+	@Test
+	void test03_createInvoiceRecordForExternalWithExtraParametersForFacilities() {
+		final var location = setupCall()
+			.withServicePath("/2281/billingrecords")
+			.withHttpMethod(POST)
+			.withRequest(REQUEST_FILE)
+			.withExpectedResponseStatus(CREATED)
+			.withExpectedResponseHeader(LOCATION, of("^/2281/billingrecords/(.*)$"))
+			.sendRequestAndVerifyResponse()
+			.getResponseHeaders()
+			.getLocation();
+
+		// Execute get on location to verify saved values
+		setupCall()
+			.withServicePath(location.getPath())
+			.withHttpMethod(GET)
+			.withExpectedResponseStatus(OK)
+			.withExpectedResponseHeader(CONTENT_TYPE, CONTENT_TYPE_JSON)
+			.withExpectedResponse(RESPONSE_FILE)
+			.sendRequestAndVerifyResponse();
+	}
 }

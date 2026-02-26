@@ -64,7 +64,7 @@ public class BillingRecordService {
 	}
 
 	public Page<BillingRecord> findBillingRecords(final Specification<BillingRecordEntity> filter, final Pageable pageable, String municipalityId) {
-		final var matches = billingRecordRepository.findAll(filter.and((root, query, cb) -> cb.equal(root.get(BillingRecordEntity_.MUNICIPALITY_ID), municipalityId)), pageable);
+		final var matches = billingRecordRepository.findAll(filter.and((root, _, cb) -> cb.equal(root.get(BillingRecordEntity_.MUNICIPALITY_ID), municipalityId)), pageable);
 		return new PageImpl<>(toBillingRecords(matches.getContent()), pageable, matches.getTotalElements());
 	}
 
