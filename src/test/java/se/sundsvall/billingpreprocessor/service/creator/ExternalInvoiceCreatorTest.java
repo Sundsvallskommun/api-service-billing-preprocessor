@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -240,6 +241,21 @@ class ExternalInvoiceCreatorTest {
 
 		assertThat(new String(result, StandardCharsets.ISO_8859_1)).isEqualTo(expected);
 		verify(legalIdProviderMock).translateToLegalId(MUNICIPALITY_ID, PARTY_ID);
+	}
+
+	@Test
+	void createInvoiceDataWithFacilityDescriptionRows() throws Exception {
+		final var config = InvoiceFileConfigurationEntity.create().withEncoding(StandardCharsets.ISO_8859_1.name());
+		when(invoiceFileConfigurationRepositoryMock.findByCreatorName("ExternalInvoiceCreator")).thenReturn(Optional.of(config));
+
+		final var input = createBillingRecordEntity()
+			.withExtraParameters(Map.of("facilities", "SUNDSVALL BALDER 4| SUNDSVALL BALDER 2"));
+
+		final var result = creator.createInvoiceData(input);
+		final var expected = getResource("validation/external_invoicedata_with_facilities_expected_format.txt");
+
+		assertThat(new String(result, StandardCharsets.ISO_8859_1)).isEqualTo(expected);
+		verify(legalIdProviderMock, never()).translateToLegalId(any(), any());
 	}
 
 	private String getResource(final String fileName) throws IOException, URISyntaxException {
