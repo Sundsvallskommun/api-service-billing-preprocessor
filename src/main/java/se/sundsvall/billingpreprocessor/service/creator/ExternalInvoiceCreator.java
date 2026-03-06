@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
+import java.util.List;
 import org.beanio.BeanWriter;
 import org.beanio.StreamFactory;
 import org.beanio.builder.StreamBuilder;
@@ -14,7 +15,9 @@ import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceFileConfigurationEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.InvoiceRowEntity;
 import se.sundsvall.billingpreprocessor.integration.db.model.enums.Type;
+import se.sundsvall.billingpreprocessor.service.creator.definition.external.InvoiceDescriptionRow;
 
+import static java.util.Collections.emptyList;
 import static java.util.Objects.isNull;
 import static java.util.Optional.ofNullable;
 import static se.sundsvall.billingpreprocessor.Constants.EMPTY_ARRAY;
@@ -22,6 +25,7 @@ import static se.sundsvall.billingpreprocessor.Constants.EXTERNAL_INVOICE_TYPE;
 import static se.sundsvall.billingpreprocessor.Constants.GENERATING_SYSTEM;
 import static se.sundsvall.billingpreprocessor.service.creator.config.InvoiceCreatorConfig.EXTERNAL_INVOICE_BUILDER;
 import static se.sundsvall.billingpreprocessor.service.mapper.ExternalInvoiceMapper.toCustomer;
+import static se.sundsvall.billingpreprocessor.service.mapper.ExternalInvoiceMapper.toFacilityDescriptionRows;
 import static se.sundsvall.billingpreprocessor.service.mapper.ExternalInvoiceMapper.toFileHeader;
 import static se.sundsvall.billingpreprocessor.service.mapper.ExternalInvoiceMapper.toInvoiceAccountingRows;
 import static se.sundsvall.billingpreprocessor.service.mapper.ExternalInvoiceMapper.toInvoiceDescriptionRows;
@@ -115,20 +119,29 @@ public class ExternalInvoiceCreator implements InvoiceCreator {
 
 	void processInvoice(BeanWriter invoiceWriter, BillingRecordEntity billingRecord) {
 		final var recipientLegalId = extractLegalId(billingRecord);
+		final var facilityDescriptionRows = toFacilityDescriptionRows(recipientLegalId, billingRecord.getExtraParameters());
 
 		invoiceWriter.write(toCustomer(recipientLegalId, billingRecord));
 		invoiceWriter.write(toInvoiceHeader(recipientLegalId, billingRecord));
 
-		ofNullable(billingRecord.getInvoice())
+		final var invoiceRows = ofNullable(billingRecord.getInvoice())
 			.orElseThrow(createInternalServerErrorProblem("Invoice is not present"))
-			.getInvoiceRows()
-			.forEach(row -> processInvoiceRow(invoiceWriter, recipientLegalId, row));
+			.getInvoiceRows();
+
+		for (var i = 0; i < invoiceRows.size(); i++) {
+			processInvoiceRow(invoiceWriter, recipientLegalId, invoiceRows.get(i), i == 0 ? facilityDescriptionRows : emptyList());
+		}
 
 		invoiceWriter.write(toInvoiceFooter(billingRecord));
 	}
 
 	void processInvoiceRow(BeanWriter invoiceWriter, String recipientLegalId, InvoiceRowEntity invoiceRow) {
+		processInvoiceRow(invoiceWriter, recipientLegalId, invoiceRow, emptyList());
+	}
+
+	void processInvoiceRow(BeanWriter invoiceWriter, String recipientLegalId, InvoiceRowEntity invoiceRow, List<InvoiceDescriptionRow> facilityDescriptionRows) {
 		invoiceWriter.write(toInvoiceRow(recipientLegalId, invoiceRow));
+		facilityDescriptionRows.forEach(invoiceWriter::write);
 		toInvoiceDescriptionRows(recipientLegalId, invoiceRow).forEach(invoiceWriter::write);
 		toInvoiceAccountingRows(invoiceRow).forEach(invoiceWriter::write);
 	}

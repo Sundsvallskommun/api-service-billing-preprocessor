@@ -6,5 +6,8 @@ K15800234363000920360575711041       510000000000738
 S6512345678Seaview Middle School                                                 MEX STREET 123                     90102 MEX CITY                     510
 H6512345678      PRI22LUG                      Hanna Montana                 
 R6512345678MEX Ärendenummer: MEX-25020125123     30600    37638          25
+U6512345678SUNDSVALL BALDER 4                                 
+U6512345678SUNDSVALL BALDER 2                                 
+U6512345678SUNDSVALL GLÄDJEN 3                                
 K158002343630009203605757            510000000036900             
 T+00000000086638
