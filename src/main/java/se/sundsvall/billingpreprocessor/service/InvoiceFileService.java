@@ -138,17 +138,18 @@ public class InvoiceFileService {
 
 				final var filename = invoiceFileConfigurationService.getInvoiceFileNameBy(type.name(), category);
 				final var encoding = invoiceFileConfigurationService.getEncoding(type.name(), category);
+				final List<BillingRecordEntity> successfulRecords = new ArrayList<>();
 
 				outputStream.write(invoiceCreator.createFileHeader());
 
-				billingRecordsToProcess.forEach(billingRecord -> createBillingRecord(outputStream, billingRecord, invoiceCreator)
+				billingRecordsToProcess.forEach(billingRecord -> createBillingRecord(outputStream, billingRecord, invoiceCreator, successfulRecords)
 					.ifPresent(billingRecordProcessErrors::add));
 
-				outputStream.write(invoiceCreator.createFileFooter(billingRecordsToProcess));
+				outputStream.write(invoiceCreator.createFileFooter(successfulRecords));
 
-				if (billingRecordsToProcess.size() > billingRecordProcessErrors.size()) { // At least one of the records should be successful for the file to be created
+				if (!successfulRecords.isEmpty()) { // At least one of the records should be successful for the file to be created
 					LOG.info("Saving file '{}' with {} successfully processed records for municipality id '{}'",
-						filename, (billingRecordsToProcess.size() - billingRecordProcessErrors.size()), sanitizeForLogging(municipalityId));
+						filename, successfulRecords.size(), sanitizeForLogging(municipalityId));
 					invoiceFileRepository.save(toInvoiceFileEntity(filename, type.name(), outputStream.toByteArray(), encoding, municipalityId));
 				}
 			}
@@ -161,10 +162,11 @@ public class InvoiceFileService {
 		return Stream.concat(commonErrors.stream(), billingRecordProcessErrors.stream()).toList();
 	}
 
-	private Optional<InvoiceFileError> createBillingRecord(final ByteArrayOutputStream outputStream, BillingRecordEntity entity, InvoiceCreator invoiceCreator) {
+	private Optional<InvoiceFileError> createBillingRecord(final ByteArrayOutputStream outputStream, BillingRecordEntity entity, InvoiceCreator invoiceCreator, List<BillingRecordEntity> successfulRecords) {
 		try {
 			outputStream.write(invoiceCreator.createInvoiceData(entity));
 			billingRecordRepository.save(entity.withStatus(INVOICED));
+			successfulRecords.add(entity);
 			return Optional.empty();
 		} catch (Exception e) {
 			LOG.warn("{} occurred when persisting record with id {} to file'", e.getClass().getSimpleName(), entity.getId(), e);

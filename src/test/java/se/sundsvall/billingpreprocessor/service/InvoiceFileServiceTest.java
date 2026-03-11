@@ -309,7 +309,7 @@ class InvoiceFileServiceTest {
 		when(invoiceFileConfigurationServiceMock.getInvoiceFileNameBy(EXTERNAL.name(), CATEGORY)).thenReturn(externalFileName);
 		when(invoiceFileConfigurationServiceMock.getEncoding(EXTERNAL.name(), CATEGORY)).thenReturn(ENCODING);
 		when(externalInvoiceCreatorMock.createFileHeader()).thenReturn(externalFileHeader);
-		when(externalInvoiceCreatorMock.createFileFooter(billingRecords)).thenReturn(externalFileFooter);
+		when(externalInvoiceCreatorMock.createFileFooter(List.of(externalEntity))).thenReturn(externalFileFooter);
 		when(externalInvoiceCreatorMock.createInvoiceData(externalEntity)).thenReturn(externalInvoiceData);
 		when(externalInvoiceCreatorMock.createInvoiceData(invalidExternalEntity)).thenThrow(Problem.valueOf(INTERNAL_SERVER_ERROR));
 		when(externalInvoiceCreatorMock.getProcessableType()).thenReturn(EXTERNAL);
@@ -361,7 +361,7 @@ class InvoiceFileServiceTest {
 		when(invoiceFileConfigurationServiceMock.getInvoiceFileNameBy(INTERNAL.name(), CATEGORY)).thenReturn(internalFileName);
 		when(invoiceFileConfigurationServiceMock.getEncoding(INTERNAL.name(), CATEGORY)).thenReturn(ENCODING);
 		when(internalInvoiceCreatorMock.createFileHeader()).thenReturn(internalFileHeader);
-		when(internalInvoiceCreatorMock.createFileFooter(billingRecords)).thenReturn(internalFileFooter);
+		when(internalInvoiceCreatorMock.createFileFooter(List.of(internalEntity))).thenReturn(internalFileFooter);
 		when(internalInvoiceCreatorMock.createInvoiceData(internalEntity)).thenReturn(internalInvoiceData);
 		when(internalInvoiceCreatorMock.createInvoiceData(invalidInternalEntity)).thenThrow(Problem.valueOf(INTERNAL_SERVER_ERROR));
 		when(internalInvoiceCreatorMock.getProcessableType()).thenReturn(INTERNAL);
@@ -414,7 +414,7 @@ class InvoiceFileServiceTest {
 		when(internalInvoiceCreatorMock.getProcessableType()).thenReturn(INTERNAL);
 		when(internalInvoiceCreatorMock.getProcessableCategory()).thenReturn(CATEGORY);
 		when(internalInvoiceCreatorMock.createFileHeader()).thenReturn(internalFileHeader);
-		when(internalInvoiceCreatorMock.createFileFooter(billingRecords)).thenReturn(internalFileFooter);
+		when(internalInvoiceCreatorMock.createFileFooter(List.of())).thenReturn(internalFileFooter);
 		when(internalInvoiceCreatorMock.createInvoiceData(invalidInternalEntity)).thenThrow(Problem.valueOf(INTERNAL_SERVER_ERROR));
 		when(invoiceFileConfigurationServiceMock.getEncoding(INTERNAL.name(), CATEGORY)).thenReturn(ENCODING);
 
@@ -525,7 +525,7 @@ class InvoiceFileServiceTest {
 		verify(invoiceCreatorMock).createFileHeader();
 		verify(invoiceCreatorMock).createInvoiceData(invalidBillingRecord);
 		verify(invoiceCreatorMock).createInvoiceData(validBillingRecord);
-		verify(invoiceCreatorMock).createFileFooter(List.of(invalidBillingRecord, validBillingRecord));
+		verify(invoiceCreatorMock).createFileFooter(List.of(validBillingRecord));
 	}
 
 	private void verifyNoMoreInterationsOnMocks() {

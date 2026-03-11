@@ -77,6 +77,47 @@ class MexJobsIT extends AbstractAppTest {
 			});
 	}
 
+	@Test
+	@Sql({
+		"/db/scripts/truncate.sql",
+		"/db/scripts/testdata-mex-partial-failure-it.sql"
+	})
+	void test02_createInvoiceFilesWhenOneBillingRecordFails() {
+		assertThat(repository.findAll()).isEmpty();
+
+		setupCall()
+			.withServicePath("/2281/jobs/filecreator")
+			.withHttpMethod(POST)
+			.withExpectedResponseStatus(ACCEPTED)
+			.withExpectedResponseBodyIsNull()
+			.sendRequestAndVerifyResponse();
+
+		// Wait until files have been created (2 files: one external with only successful records, one internal)
+		await()
+			.atMost(Duration.of(10, SECONDS))
+			.until(() -> repository.count() == 2);
+
+		// Verify the results - the failed record's amount should NOT be included in the T-row total
+		assertThat(repository.findAll())
+			.hasSize(2)
+			.allSatisfy(file -> {
+				assertThat(file.getCreated()).isCloseTo(now(), within(10, SECONDS));
+				assertThat(file.getSent()).isNull();
+				assertThat(file.getStatus()).isEqualTo(GENERATED);
+				assertThat(file.getEncoding()).isEqualTo(StandardCharsets.ISO_8859_1.toString());
+				assertThat(file.getMunicipalityId()).isEqualTo("2281");
+			})
+			.satisfiesExactlyInAnyOrder(file -> {
+				assertThat(file.getContent().trim()).isEqualTo(getResource("/filecontent/expected_internal_content.txt").trim());
+				assertThat(file.getName()).isEqualTo("IPKMEX_%s.txt".formatted(LocalDate.now().format(DateTimeFormatter.ofPattern("yyMMdd"))));
+				assertThat(file.getType()).isEqualTo(INTERNAL.name());
+			}, file -> {
+				assertThat(file.getContent().trim()).isEqualTo(getResource("/filecontent/expected_external_content.txt").replace("yyMMdd", LocalDate.now().format(DateTimeFormatter.ofPattern("yyMMdd"))).trim());
+				assertThat(file.getName()).isEqualTo("KRPMEX_%s.txt".formatted(LocalDate.now().format(DateTimeFormatter.ofPattern("yyMMdd"))));
+				assertThat(file.getType()).isEqualTo(EXTERNAL.name());
+			});
+	}
+
 	private String getResource(final String filePath) throws IOException {
 		final var path = getFile(getTestDirectoryPath() + filePath).toPath();
 		return readString(path, StandardCharsets.ISO_8859_1)
