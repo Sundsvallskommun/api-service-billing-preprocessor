@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -135,6 +136,47 @@ class ExternalMexInvoiceCreatorTest {
 		final var content = new String(result, ISO_8859_1);
 
 		assertThat(content).contains("S7001011234").contains("H7001011234").doesNotContain("\nT");
+	}
+
+	@Test
+	void createInvoiceDataWithFacilities() throws Exception {
+		final var legalId = "197001011234";
+		when(legalIdProviderMock.translateToLegalId(any(), any())).thenReturn(legalId);
+
+		final var billingRecord = createBillingRecord(BigDecimal.valueOf(100));
+		billingRecord.withExtraParameters(Map.of("facilities", "SUNDSVALL BALDER 4| SUNDSVALL BALDER 2"));
+
+		billingRecord.getInvoice()
+			.withCustomerReference("customerReference")
+			.withTotalAmount(BigDecimal.valueOf(100));
+
+		billingRecord.getInvoice().getInvoiceRows().getFirst()
+			.withVatCode("00")
+			.withDescriptions(List.of(DescriptionEntity.create()
+				.withType(STANDARD)
+				.withText("text")))
+			.withAccountInformation(List.of(AccountInformationEmbeddable.create()
+				.withCostCenter("costCenter")
+				.withSubaccount("subaccount")
+				.withDepartment("operation")
+				.withAmount(BigDecimal.valueOf(100))
+				.withCounterpart("counter")));
+
+		billingRecord.withRecipient(RecipientEntity.create()
+			.withFirstName("firstName")
+			.withLastName("lastName")
+			.withAddressDetails(create()
+				.withStreet("street")
+				.withPostalCode("zipCode")
+				.withCity("city"))
+			.withPartyId("partyId"));
+
+		final var result = creator.createInvoiceData(billingRecord);
+		final var content = new String(result, ISO_8859_1);
+
+		assertThat(content)
+			.contains("U7001011234SUNDSVALL BALDER 4")
+			.contains("U7001011234SUNDSVALL BALDER 2");
 	}
 
 	@Test

@@ -3,7 +3,9 @@ package se.sundsvall.billingpreprocessor.service.mapper;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -322,6 +324,68 @@ class ExternalInvoiceMapperTest {
 
 		assertThat(e.getStatus()).isEqualTo(INTERNAL_SERVER_ERROR);
 		assertThat(e.getMessage()).isEqualTo("Internal Server Error: Invoice is not present");
+	}
+
+	@Test
+	void toFacilityDescriptionRows() {
+		final var extraParameters = Map.of("facilities", "SUNDSVALL BALDER 4| SUNDSVALL BALDER 2| SUNDSVALL GLÄDJEN 3");
+
+		final var result = ExternalInvoiceMapper.toFacilityDescriptionRows(LEGAL_ID, extraParameters);
+
+		assertThat(result).hasSize(3)
+			.extracting(
+				InvoiceDescriptionRow::getLegalId,
+				InvoiceDescriptionRow::getDescription)
+			.containsExactly(
+				tuple(LEGAL_ID, "SUNDSVALL BALDER 4"),
+				tuple(LEGAL_ID, "SUNDSVALL BALDER 2"),
+				tuple(LEGAL_ID, "SUNDSVALL GLÄDJEN 3"));
+	}
+
+	@Test
+	void toFacilityDescriptionRowsWithSingleFacility() {
+		final var extraParameters = Map.of("facilities", "SUNDSVALL BALDER 4");
+
+		final var result = ExternalInvoiceMapper.toFacilityDescriptionRows(LEGAL_ID, extraParameters);
+
+		assertThat(result).hasSize(1)
+			.extracting(
+				InvoiceDescriptionRow::getLegalId,
+				InvoiceDescriptionRow::getDescription)
+			.containsExactly(
+				tuple(LEGAL_ID, "SUNDSVALL BALDER 4"));
+	}
+
+	@Test
+	void toFacilityDescriptionRowsWithNullMap() {
+		final var result = ExternalInvoiceMapper.toFacilityDescriptionRows(LEGAL_ID, null);
+
+		assertThat(result).isEmpty();
+	}
+
+	@Test
+	void toFacilityDescriptionRowsWithEmptyMap() {
+		final var result = ExternalInvoiceMapper.toFacilityDescriptionRows(LEGAL_ID, Collections.emptyMap());
+
+		assertThat(result).isEmpty();
+	}
+
+	@Test
+	void toFacilityDescriptionRowsWithBlankFacilitiesValue() {
+		final var extraParameters = Map.of("facilities", "   ");
+
+		final var result = ExternalInvoiceMapper.toFacilityDescriptionRows(LEGAL_ID, extraParameters);
+
+		assertThat(result).isEmpty();
+	}
+
+	@Test
+	void toFacilityDescriptionRowsWithNoFacilitiesKey() {
+		final var extraParameters = Map.of("someOtherKey", "someValue");
+
+		final var result = ExternalInvoiceMapper.toFacilityDescriptionRows(LEGAL_ID, extraParameters);
+
+		assertThat(result).isEmpty();
 	}
 
 	private static BillingRecordEntity createbillingRecordEntity() {

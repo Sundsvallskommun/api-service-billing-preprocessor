@@ -1,7 +1,9 @@
 package se.sundsvall.billingpreprocessor.service.mapper;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import se.sundsvall.billingpreprocessor.integration.db.model.AccountInformationEmbeddable;
@@ -169,6 +171,25 @@ public final class ExternalInvoiceMapper {
 				.withAmount(ofNullable(ai.getAmount()).orElseThrow(createInternalServerErrorProblem(ERROR_ACCOUNT_INFORMATION_AMOUNT_NOT_PRESENT)))
 				.withAccuralKey(ai.getAccuralKey()))
 			.toList();
+	}
+
+	/**
+	 * Method for mapping facility information from extra parameters to invoice description rows
+	 *
+	 * @param  legalId         legal id of invoice recipient
+	 * @param  extraParameters map of extra parameters potentially containing a "facilities" entry
+	 * @return                 A list of InvoiceDescriptionRows, one per facility
+	 */
+	public static List<InvoiceDescriptionRow> toFacilityDescriptionRows(final String legalId, final Map<String, String> extraParameters) {
+		return ofNullable(extraParameters)
+			.map(params -> params.get("facilities"))
+			.filter(StringUtils::isNotBlank)
+			.map(facilities -> Arrays.stream(facilities.split("\\|"))
+				.map(String::trim)
+				.filter(StringUtils::isNotBlank)
+				.map(text -> toInvoiceDescriptionRow(legalId, text))
+				.toList())
+			.orElse(emptyList());
 	}
 
 	/**
