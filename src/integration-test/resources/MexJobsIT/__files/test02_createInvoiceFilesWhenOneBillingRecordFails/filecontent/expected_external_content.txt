@@ -1,0 +1,10 @@
+!BillingPreProcessor yyMMdd Extern debitering                                                                                                             
+S6512345678Acme Corporation                                                      MEX BAR BAZ 860                    42012 MEX TOWN                     510
+H6512345678      BOB99                         Lola Macarola                 
+R6512345678MEX Utvecklingskostnad 2%     200     24500    49000          25
+K15800234363000920360575711041       510000000000738             
+S6512345678Seaview Middle School                                                 MEX STREET 123                     90102 MEX CITY                     510
+H6512345678      PRI22LUG                      Hanna Montana                 
+R6512345678MEX Ärendenummer: MEX-25020125123     30600    37638          25
+K158002343630009203605757            510000000036900             
+T+00000000086638
