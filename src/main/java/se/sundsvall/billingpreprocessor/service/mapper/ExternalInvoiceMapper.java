@@ -135,8 +135,8 @@ public final class ExternalInvoiceMapper {
 	}
 
 	/**
-	 * Method for mapping invoice-level description to an invoice row for an external invoice file.
-	 * This row is placed before all other R-rows and contains the overarching description of the invoice.
+	 * Method for mapping invoice-level description to an invoice row for an external invoice file. This row is placed
+	 * before all other R-rows and contains the overarching description of the invoice.
 	 *
 	 * @param  legalId             legal id of invoice recipient
 	 * @param  billingRecordEntity entity representing the billing record
@@ -150,6 +150,7 @@ public final class ExternalInvoiceMapper {
 			.map(description -> InvoiceRow.create()
 				.withLegalId(legalId)
 				.withText(description)
+				// VatCode is mandatory, even if this is just a description. "00" is handled properly.
 				.withVatCode("00"))
 			.orElse(null);
 	}
