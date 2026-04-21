@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Null;
+import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -23,8 +24,8 @@ public class Invoice {
 	@NotBlank
 	private String customerId;
 
-	@Schema(description = "Description of the invoice", examples = "Errand number: 2113-01784", requiredMode = REQUIRED)
-	@NotBlank
+	@Schema(description = "Description of the invoice", examples = "Errand number: 2113-01784")
+	@Size(max = 30)
 	private String description;
 
 	@Schema(description = "Our reference", examples = "Harvey Kneeslapper")

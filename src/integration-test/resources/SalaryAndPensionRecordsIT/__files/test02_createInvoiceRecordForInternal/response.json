@@ -5,7 +5,7 @@
 	"status": "NEW",
 	"invoice": {
 		"customerId": "10",
-		"description": "Extra löneutbetalning - Direktinsättning",
+		"description": "Extra löneutbet. - Direkt",
 		"ourReference": "Lola Luftnagle",
 		"customerReference": "HAN99MON",
 		"totalAmount": 1530.0,

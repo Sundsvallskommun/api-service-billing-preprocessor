@@ -135,6 +135,26 @@ public final class ExternalInvoiceMapper {
 	}
 
 	/**
+	 * Method for mapping invoice-level description to an invoice row for an external invoice file.
+	 * This row is placed before all other R-rows and contains the overarching description of the invoice.
+	 *
+	 * @param  legalId             legal id of invoice recipient
+	 * @param  billingRecordEntity entity representing the billing record
+	 * @return                     InvoiceRow for external invoice files representing the invoice description, or null if
+	 *                             description is absent
+	 */
+	public static InvoiceRow toInvoiceDescriptionRow(String legalId, BillingRecordEntity billingRecordEntity) {
+		return ofNullable(billingRecordEntity.getInvoice())
+			.map(InvoiceEntity::getDescription)
+			.filter(StringUtils::isNotBlank)
+			.map(description -> InvoiceRow.create()
+				.withLegalId(legalId)
+				.withText(description)
+				.withVatCode("00"))
+			.orElse(null);
+	}
+
+	/**
 	 * Method for mapping invoice row data to an invoice description row for an external invoice file
 	 *
 	 * @param  legalId          legal id of invoice recipient

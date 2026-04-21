@@ -1,7 +1,7 @@
 {
 	"invoice": {
 		"customerId": "10",
-		"description": "Extra löneutbetalning - Direktinsättning",
+		"description": "Extra löneutbet. - Direkt",
 		"invoiceRows": [
 			{
 				"descriptions": [

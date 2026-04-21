@@ -11,10 +11,10 @@ VALUES	  ('e4ead2ae-daf7-4993-8f64-f9d24417b188', 'SALARY_AND_PENSION', '2024-02
 -- Invoices
 -- -----------------------------------
 INSERT INTO invoice (id, customer_id, customer_reference, description, `date`, due_date, our_reference, total_amount)
-VALUES	  ('e4ead2ae-daf7-4993-8f64-f9d24417b188', 'Seaview Middle School', 'PRI22LUG', 'Extra löneutbetalning - Systemet', NULL, NULL, 'Hanna Montana',  376.38),
+VALUES	  ('e4ead2ae-daf7-4993-8f64-f9d24417b188', 'Seaview Middle School', 'PRI22LUG', 'Extra löneutbet. - Systemet', NULL, NULL, 'Hanna Montana',  376.38),
           ('61b6f794-10c1-4e3b-8a3d-6d789582e5f8', 'Acme Corporation', 'BOB99', 'Utvecklingskostnad 2%', NULL, NULL, 'Lola Macarola',  490.00),
-          ('9d7c72f4-7b18-4a4a-b2ee-4a7007cada3c', '10', 'HAN99MON', 'Extra löneutbetalning - Direktinsättning', NULL, NULL, 'Lola Luftnagle', 1530.0),
-          ('8fe12401-ea81-cdfe-a239-76febb3101dd', '20', 'ZXZ99YXY', 'Extra löneutbetalning - Direktinsättning', NULL, NULL, 'John Doe', 306.0);
+          ('9d7c72f4-7b18-4a4a-b2ee-4a7007cada3c', '10', 'HAN99MON', 'Extra löneutbet. - Direkt', NULL, NULL, 'Lola Luftnagle', 1530.0),
+          ('8fe12401-ea81-cdfe-a239-76febb3101dd', '20', 'ZXZ99YXY', 'Extra löneutbet. - Direkt', NULL, NULL, 'John Doe', 306.0);
 
 -- -----------------------------------
 -- Invoice rows
