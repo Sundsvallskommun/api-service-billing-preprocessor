@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.Optional;
 import org.beanio.BeanWriter;
 import org.beanio.StreamFactory;
 import org.beanio.builder.StreamBuilder;
@@ -28,6 +29,7 @@ import static se.sundsvall.billingpreprocessor.service.mapper.ExternalInvoiceMap
 import static se.sundsvall.billingpreprocessor.service.mapper.ExternalInvoiceMapper.toFacilityDescriptionRows;
 import static se.sundsvall.billingpreprocessor.service.mapper.ExternalInvoiceMapper.toFileHeader;
 import static se.sundsvall.billingpreprocessor.service.mapper.ExternalInvoiceMapper.toInvoiceAccountingRows;
+import static se.sundsvall.billingpreprocessor.service.mapper.ExternalInvoiceMapper.toInvoiceDescriptionRow;
 import static se.sundsvall.billingpreprocessor.service.mapper.ExternalInvoiceMapper.toInvoiceDescriptionRows;
 import static se.sundsvall.billingpreprocessor.service.mapper.ExternalInvoiceMapper.toInvoiceFooter;
 import static se.sundsvall.billingpreprocessor.service.mapper.ExternalInvoiceMapper.toInvoiceHeader;
@@ -82,7 +84,7 @@ public class ExternalInvoiceCreator implements InvoiceCreator {
 	 * Method creates a file header according to the specification for external invoices
 	 *
 	 * @return             bytearray representing the file header
-	 * @throws IOException if byte array output stream can not be closed
+	 * @throws IOException if the byte array output stream cannot be closed
 	 */
 	@Override
 	public byte[] createFileHeader() throws IOException {
@@ -96,11 +98,11 @@ public class ExternalInvoiceCreator implements InvoiceCreator {
 	}
 
 	/**
-	 * Method creates a invoice data section according to the specification for external invoices
+	 * Method creates an invoice data section according to the specification for external invoices
 	 *
-	 * @param  billingRecord containing the billing record to produce a invoice data section for
+	 * @param  billingRecord containing the billing record to produce an invoice data section for
 	 * @return               bytearray representing the invoice data section
-	 * @throws IOException   if byte array output stream can not be closed
+	 * @throws IOException   if the byte array output stream cannot be closed
 	 */
 	@Override
 	public byte[] createInvoiceData(BillingRecordEntity billingRecord) throws IOException {
@@ -123,6 +125,7 @@ public class ExternalInvoiceCreator implements InvoiceCreator {
 
 		invoiceWriter.write(toCustomer(recipientLegalId, billingRecord));
 		invoiceWriter.write(toInvoiceHeader(recipientLegalId, billingRecord));
+		Optional.ofNullable(toInvoiceDescriptionRow(recipientLegalId, billingRecord)).ifPresent(invoiceWriter::write);
 
 		final var invoiceRows = ofNullable(billingRecord.getInvoice())
 			.orElseThrow(createInternalServerErrorProblem("Invoice is not present"))

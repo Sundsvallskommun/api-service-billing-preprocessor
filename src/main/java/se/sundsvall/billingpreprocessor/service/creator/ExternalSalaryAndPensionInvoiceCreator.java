@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.Optional;
 import org.beanio.BeanWriter;
 import org.beanio.builder.StreamBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -55,6 +56,7 @@ public class ExternalSalaryAndPensionInvoiceCreator extends ExternalInvoiceCreat
 
 		invoiceWriter.write(toCustomer(recipientLegalId, billingRecord));
 		invoiceWriter.write(ExternalInvoiceMapper.toInvoiceHeader(recipientLegalId, billingRecord));
+		Optional.ofNullable(ExternalInvoiceMapper.toInvoiceDescriptionRow(recipientLegalId, billingRecord)).ifPresent(invoiceWriter::write);
 
 		ofNullable(billingRecord.getInvoice())
 			.orElseThrow(createInternalServerErrorProblem("Invoice is not present"))

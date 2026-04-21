@@ -51,21 +51,21 @@ class ValidInvoiceConstraintValidatorTest {
 
 	@Test
 	void withInternalTypeAndInvoiceRowsNotPresent() {
-		assertThat(validator.isValid(BillingRecord.create().withType(INTERNAL).withInvoice(Invoice.create().withOurReference("ourRef")), contextMock)).isTrue();
+		assertThat(validator.isValid(BillingRecord.create().withType(INTERNAL).withInvoice(Invoice.create().withOurReference("ourRef").withDescription("description")), contextMock)).isTrue();
 
 		verifyNoInteractions(contextMock, builderMock);
 	}
 
 	@Test
 	void withInternalTypeAndDetailDescriptionsNotPresent() {
-		assertThat(validator.isValid(BillingRecord.create().withType(INTERNAL).withInvoice(Invoice.create().withOurReference("ourRef").withInvoiceRows(List.of(InvoiceRow.create()))), contextMock)).isTrue();
+		assertThat(validator.isValid(BillingRecord.create().withType(INTERNAL).withInvoice(Invoice.create().withOurReference("ourRef").withDescription("description").withInvoiceRows(List.of(InvoiceRow.create()))), contextMock)).isTrue();
 
 		verifyNoInteractions(contextMock, builderMock);
 	}
 
 	@Test
 	void withInternalTypeAndEmptyListAsDetailDescriptions() {
-		final var billingRecord = BillingRecord.create().withType(INTERNAL).withInvoice(Invoice.create().withOurReference("ourRef").withInvoiceRows(List.of(InvoiceRow.create().withDetailedDescriptions(emptyList()))));
+		final var billingRecord = BillingRecord.create().withType(INTERNAL).withInvoice(Invoice.create().withOurReference("ourRef").withDescription("description").withInvoiceRows(List.of(InvoiceRow.create().withDetailedDescriptions(emptyList()))));
 
 		assertThat(validator.isValid(billingRecord, contextMock)).isTrue();
 
@@ -77,10 +77,48 @@ class ValidInvoiceConstraintValidatorTest {
 		when(contextMock.buildConstraintViolationWithTemplate(any())).thenReturn(builderMock);
 		when(builderMock.addPropertyNode(any())).thenReturn(nodeBuilderMock);
 
-		assertThat(validator.isValid(BillingRecord.create().withType(INTERNAL).withInvoice(Invoice.create().withInvoiceRows(List.of(InvoiceRow.create()))), contextMock)).isFalse();
+		assertThat(validator.isValid(BillingRecord.create().withType(INTERNAL).withInvoice(Invoice.create().withDescription("description").withInvoiceRows(List.of(InvoiceRow.create()))), contextMock)).isFalse();
 
 		verify(contextMock).disableDefaultConstraintViolation();
 		verify(contextMock).buildConstraintViolationWithTemplate("invoice.ourReference is mandatory when billing record is of type INTERNAL");
 		verify(nodeBuilderMock).addConstraintViolation();
+	}
+
+	@Test
+	void withInternalTypeAndDescriptionNotPresent() {
+		when(contextMock.buildConstraintViolationWithTemplate(any())).thenReturn(builderMock);
+		when(builderMock.addPropertyNode(any())).thenReturn(nodeBuilderMock);
+
+		assertThat(validator.isValid(BillingRecord.create().withType(INTERNAL).withInvoice(Invoice.create().withOurReference("ourRef").withInvoiceRows(List.of(InvoiceRow.create()))), contextMock)).isFalse();
+
+		verify(contextMock).disableDefaultConstraintViolation();
+		verify(contextMock).buildConstraintViolationWithTemplate("invoice.description is mandatory when billing record is of type INTERNAL");
+		verify(nodeBuilderMock).addConstraintViolation();
+	}
+
+	@Test
+	void withInternalTypeAndDescriptionBlank() {
+		when(contextMock.buildConstraintViolationWithTemplate(any())).thenReturn(builderMock);
+		when(builderMock.addPropertyNode(any())).thenReturn(nodeBuilderMock);
+
+		assertThat(validator.isValid(BillingRecord.create().withType(INTERNAL).withInvoice(Invoice.create().withOurReference("ourRef").withDescription("  ").withInvoiceRows(List.of(InvoiceRow.create()))), contextMock)).isFalse();
+
+		verify(contextMock).disableDefaultConstraintViolation();
+		verify(contextMock).buildConstraintViolationWithTemplate("invoice.description is mandatory when billing record is of type INTERNAL");
+		verify(nodeBuilderMock).addConstraintViolation();
+	}
+
+	@Test
+	void withExternalTypeAndNullDescription() {
+		assertThat(validator.isValid(BillingRecord.create().withType(EXTERNAL).withInvoice(Invoice.create()), contextMock)).isTrue();
+
+		verifyNoInteractions(contextMock, builderMock);
+	}
+
+	@Test
+	void withExternalTypeAndDescriptionPresent() {
+		assertThat(validator.isValid(BillingRecord.create().withType(EXTERNAL).withInvoice(Invoice.create().withDescription("Short desc")), contextMock)).isTrue();
+
+		verifyNoInteractions(contextMock, builderMock);
 	}
 }

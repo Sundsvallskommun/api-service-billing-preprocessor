@@ -17,15 +17,15 @@ VALUES ('e4ead2ae-daf7-4993-8f64-f9d24417b189', 'MEX_INVOICE', '2024-02-10 13:37
 -- Invoices
 -- -----------------------------------
 INSERT INTO invoice (id, customer_id, customer_reference, description, `date`, due_date, our_reference, total_amount)
-VALUES ('e4ead2ae-daf7-4993-8f64-f9d24417b189', 'Seaview Middle School', 'PRI22LUG', 'Extra MEX utbetalning - Systemet',
+VALUES ('e4ead2ae-daf7-4993-8f64-f9d24417b189', 'Seaview Middle School', 'PRI22LUG', 'Extra MEX utbet. - Systemet',
         NULL, NULL, 'Hanna Montana', 376.38),
        ('61b6f794-10c1-4e3b-8a3d-6d789582e5f9', 'Acme Corporation', 'BOB99', 'MEX Utvecklingskostnad 2%', NULL, NULL,
         'Lola Macarola', 490.00),
        ('aaaa1111-bbbb-cccc-dddd-eeee2222ffff', 'Deceased Estate', 'DEC01REF', 'MEX Fastighetsförsäljning', NULL, NULL,
         'Case Worker', 2236.84),
-       ('9d7c72f4-7b18-4a4a-b2ee-4a7007cada3d', '10', 'HAN99MON', 'Extra MEX utbetalning - Direktinsättning', NULL,
+       ('9d7c72f4-7b18-4a4a-b2ee-4a7007cada3d', '10', 'HAN99MON', 'Extra MEX utbet. - Direkt', NULL,
         NULL, 'Lola Luftnagle', 1530.0),
-       ('8fe12401-ea81-cdfe-a239-76febb3101de', '20', 'ZXZ99YXY', 'Extra MEX utbetalning - Direktinsättning', NULL,
+       ('8fe12401-ea81-cdfe-a239-76febb3101de', '20', 'ZXZ99YXY', 'Extra MEX utbet. - Direkt', NULL,
         NULL, 'John Doe', 306.0);
 
 -- -----------------------------------

@@ -5,7 +5,7 @@
 	"status": "NEW",
 	"invoice": {
 		"customerId": "16",
-		"description": "R-row 1: Errand number 1234-54321",
+		"description": "Errand number 1234-54321",
 		"ourReference": "Harvey Kneeslapper",
 		"customerReference": "19-ALI22SNU",
 		"dueDate": "2023-12-24",

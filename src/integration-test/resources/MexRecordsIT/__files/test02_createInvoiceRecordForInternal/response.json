@@ -11,7 +11,7 @@
 	},
 	"invoice": {
 		"customerId": "10",
-		"description": "Extra MEX utbetalning - Direktinsättning",
+		"description": "Extra MEX utbet. - Direkt",
 		"totalAmount": 1500.0,
 		"invoiceRows": [
 			{

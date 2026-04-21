@@ -13,22 +13,33 @@ import static se.sundsvall.billingpreprocessor.api.model.enums.Type.INTERNAL;
 public class ValidInvoiceConstraintValidator implements ConstraintValidator<ValidInvoice, BillingRecord> {
 
 	private static final String CUSTOM_ERROR_MESSAGE_MISSING_OUR_REFERENCE = "invoice.ourReference is mandatory when billing record is of type " + INTERNAL;
-	private static final String VALIDATED_NODE = "invoice.ourReference";
+	private static final String CUSTOM_ERROR_MESSAGE_MISSING_DESCRIPTION = "invoice.description is mandatory when billing record is of type " + INTERNAL;
 
 	@Override
 	public boolean isValid(final BillingRecord billingRecord, final ConstraintValidatorContext context) {
 		var isValid = true;
 
-		if (billingRecord.getType() == INTERNAL && nonNull(billingRecord.getInvoice()) && !isValidOurReference(billingRecord.getInvoice())) {
-			context.disableDefaultConstraintViolation();
-			context.buildConstraintViolationWithTemplate(CUSTOM_ERROR_MESSAGE_MISSING_OUR_REFERENCE).addPropertyNode(VALIDATED_NODE).addConstraintViolation();
-			isValid = false;
+		if (billingRecord.getType() == INTERNAL && nonNull(billingRecord.getInvoice())) {
+			if (!isValidOurReference(billingRecord.getInvoice())) {
+				context.disableDefaultConstraintViolation();
+				context.buildConstraintViolationWithTemplate(CUSTOM_ERROR_MESSAGE_MISSING_OUR_REFERENCE).addPropertyNode("invoice.ourReference").addConstraintViolation();
+				isValid = false;
+			}
+			if (!isValidDescription(billingRecord.getInvoice())) {
+				context.disableDefaultConstraintViolation();
+				context.buildConstraintViolationWithTemplate(CUSTOM_ERROR_MESSAGE_MISSING_DESCRIPTION).addPropertyNode("invoice.description").addConstraintViolation();
+				isValid = false;
+			}
 		}
 		return isValid;
 	}
 
 	private boolean isValidOurReference(Invoice invoice) {
 		return isNoneBlank(invoice.getOurReference());
+	}
+
+	private boolean isValidDescription(Invoice invoice) {
+		return isNoneBlank(invoice.getDescription());
 	}
 
 }

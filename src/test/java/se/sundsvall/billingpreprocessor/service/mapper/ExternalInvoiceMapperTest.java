@@ -311,6 +311,41 @@ class ExternalInvoiceMapperTest {
 	}
 
 	@Test
+	void toInvoiceDescriptionRow() {
+		final var bean = ExternalInvoiceMapper.toInvoiceDescriptionRow(LEGAL_ID, createbillingRecordEntity());
+
+		assertThat(bean.getLegalId()).isEqualTo(LEGAL_ID);
+		assertThat(bean.getText()).isEqualTo(DESCRIPTION);
+		assertThat(bean.getVatCode()).isEqualTo("00");
+		assertThat(bean.getQuantity()).isNull();
+		assertThat(bean.getCostPerUnit()).isNull();
+		assertThat(bean.getTotalAmount()).isNull();
+	}
+
+	@Test
+	void toInvoiceDescriptionRowWhenDescriptionIsNull() {
+		final var billingRecordEntity = createbillingRecordEntity();
+		billingRecordEntity.getInvoice().setDescription(null);
+
+		assertThat(ExternalInvoiceMapper.toInvoiceDescriptionRow(LEGAL_ID, billingRecordEntity)).isNull();
+	}
+
+	@Test
+	void toInvoiceDescriptionRowWhenDescriptionIsBlank() {
+		final var billingRecordEntity = createbillingRecordEntity();
+		billingRecordEntity.getInvoice().setDescription("   ");
+
+		assertThat(ExternalInvoiceMapper.toInvoiceDescriptionRow(LEGAL_ID, billingRecordEntity)).isNull();
+	}
+
+	@Test
+	void toInvoiceDescriptionRowWhenInvoiceIsNull() {
+		final var billingRecordEntity = createbillingRecordEntity().withInvoice(null);
+
+		assertThat(ExternalInvoiceMapper.toInvoiceDescriptionRow(LEGAL_ID, billingRecordEntity)).isNull();
+	}
+
+	@Test
 	void toInvoiceFooter() {
 		final var bean = ExternalInvoiceMapper.toInvoiceFooter(createbillingRecordEntity());
 

@@ -9,7 +9,7 @@
 			"approved": "2022-06-30T08:52:25.112+02:00",
 			"invoice": {
 				"customerId": "15",
-				"description": "Passerkort med foto för Ivan Drago (IVA02DRA)",
+				"description": "Passerkort med foto IVA02DRA",
 				"ourReference": "MAN22VEG",
 				"customerReference": "JAN00EDO",
 				"totalAmount": 200.00,
@@ -65,7 +65,7 @@
 			},
 			"invoice": {
 				"customerId": "02",
-				"description": "En faktura som ej kan behandlas",
+				"description": "Faktura ej kan behandlas",
 				"ourReference": "MIC00GOL",
 				"customerReference": "YUI10KAR",
 				"date": "2024-03-18",
@@ -165,7 +165,7 @@
 			"status": "NEW",
 			"invoice": {
 				"customerId": "15",
-				"description": "Passerkort utan foto för Rocky Balboa (ROC01BAL)",
+				"description": "Passerkort utan foto ROC01BAL",
 				"ourReference": "MIC00GOL",
 				"customerReference": "JAN00EDO",
 				"totalAmount": 150.00,
