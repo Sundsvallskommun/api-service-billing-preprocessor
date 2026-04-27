@@ -33,7 +33,7 @@ class ValidInvoiceConstraintValidatorTest {
 	@Mock
 	private NodeBuilderCustomizableContext nodeBuilderMock;
 
-	private final ValidInvoiceConstraintValidator validator = new ValidInvoiceConstraintValidator();
+	private final ValidInvoiceConstraintValidator validator = new ValidInvoiceConstraintValidator(50, 30);
 
 	@Test
 	void withExternalType() {
@@ -120,5 +120,47 @@ class ValidInvoiceConstraintValidatorTest {
 		assertThat(validator.isValid(BillingRecord.create().withType(EXTERNAL).withInvoice(Invoice.create().withDescription("Short desc")), contextMock)).isTrue();
 
 		verifyNoInteractions(contextMock, builderMock);
+	}
+
+	@Test
+	void withInternalTypeAndDescriptionAtMaxLength() {
+		final var description = "x".repeat(50);
+		assertThat(validator.isValid(BillingRecord.create().withType(INTERNAL).withInvoice(Invoice.create().withOurReference("ourRef").withDescription(description).withInvoiceRows(List.of(InvoiceRow.create()))), contextMock)).isTrue();
+
+		verifyNoInteractions(contextMock, builderMock);
+	}
+
+	@Test
+	void withInternalTypeAndDescriptionTooLong() {
+		when(contextMock.buildConstraintViolationWithTemplate(any())).thenReturn(builderMock);
+		when(builderMock.addPropertyNode(any())).thenReturn(nodeBuilderMock);
+
+		final var description = "x".repeat(51);
+		assertThat(validator.isValid(BillingRecord.create().withType(INTERNAL).withInvoice(Invoice.create().withOurReference("ourRef").withDescription(description).withInvoiceRows(List.of(InvoiceRow.create()))), contextMock)).isFalse();
+
+		verify(contextMock).disableDefaultConstraintViolation();
+		verify(contextMock).buildConstraintViolationWithTemplate("invoice.description must not exceed 50 characters when billing record is of type INTERNAL");
+		verify(nodeBuilderMock).addConstraintViolation();
+	}
+
+	@Test
+	void withExternalTypeAndDescriptionAtMaxLength() {
+		final var description = "x".repeat(30);
+		assertThat(validator.isValid(BillingRecord.create().withType(EXTERNAL).withInvoice(Invoice.create().withDescription(description)), contextMock)).isTrue();
+
+		verifyNoInteractions(contextMock, builderMock);
+	}
+
+	@Test
+	void withExternalTypeAndDescriptionTooLong() {
+		when(contextMock.buildConstraintViolationWithTemplate(any())).thenReturn(builderMock);
+		when(builderMock.addPropertyNode(any())).thenReturn(nodeBuilderMock);
+
+		final var description = "x".repeat(31);
+		assertThat(validator.isValid(BillingRecord.create().withType(EXTERNAL).withInvoice(Invoice.create().withDescription(description)), contextMock)).isFalse();
+
+		verify(contextMock).disableDefaultConstraintViolation();
+		verify(contextMock).buildConstraintViolationWithTemplate("invoice.description must not exceed 30 characters when billing record is of type EXTERNAL");
+		verify(nodeBuilderMock).addConstraintViolation();
 	}
 }
