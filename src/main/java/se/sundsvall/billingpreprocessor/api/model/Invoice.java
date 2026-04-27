@@ -6,7 +6,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Null;
-import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -24,8 +23,7 @@ public class Invoice {
 	@NotBlank
 	private String customerId;
 
-	@Schema(description = "Description of the invoice", examples = "Errand number: 2113-01784")
-	@Size(max = 30)
+	@Schema(description = "Description of the invoice. Maximum length depends on billing record type: 50 characters for INTERNAL, 30 characters for EXTERNAL.", examples = "Errand number: 2113-01784")
 	private String description;
 
 	@Schema(description = "Our reference", examples = "Harvey Kneeslapper")

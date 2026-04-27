@@ -29,6 +29,13 @@ spring:
           party:
             authorization-grant-type: client_credentials
             provider: party
+
+validation:
+  invoice:
+    description:
+      max-length:
+        internal: 50
+        external: 30
 invoicecreator:
   record-terminator: \n
 mdc:
