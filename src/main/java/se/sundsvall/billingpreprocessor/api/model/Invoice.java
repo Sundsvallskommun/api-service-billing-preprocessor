@@ -23,7 +23,7 @@ public class Invoice {
 	@NotBlank
 	private String customerId;
 
-	@Schema(description = "Description of the invoice. Maximum length depends on billing record type: 50 characters for INTERNAL, 30 characters for EXTERNAL.", examples = "Errand number: 2113-01784")
+	@Schema(description = "Description of the invoice. Maximum length is configurable and depends on the billing record type (INTERNAL or EXTERNAL).", examples = "Errand number: 2113-01784")
 	private String description;
 
 	@Schema(description = "Our reference", examples = "Harvey Kneeslapper")

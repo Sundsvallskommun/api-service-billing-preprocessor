@@ -690,8 +690,8 @@ components:
           minLength: 1
         description:
           type: string
-          description: "Description of the invoice. Maximum length depends on billing\
-            \ record type: 50 characters for INTERNAL, 30 characters for EXTERNAL."
+          description: Description of the invoice. Maximum length is configurable
+            and depends on the billing record type (INTERNAL or EXTERNAL).
           examples:
             - "Errand number: 2113-01784"
         ourReference:
