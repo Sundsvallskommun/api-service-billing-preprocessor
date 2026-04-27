@@ -24,8 +24,8 @@ public class ValidInvoiceConstraintValidator implements ConstraintValidator<Vali
 	private final int maxDescriptionLengthExternal;
 
 	public ValidInvoiceConstraintValidator(
-		@Value("${validation.invoice.description.max-length.internal}") final int maxDescriptionLengthInternal,
-		@Value("${validation.invoice.description.max-length.external}") final int maxDescriptionLengthExternal) {
+		@Value("${validation.invoice.description.max-length.internal:50}") final int maxDescriptionLengthInternal,
+		@Value("${validation.invoice.description.max-length.external:30}") final int maxDescriptionLengthExternal) {
 		this.maxDescriptionLengthInternal = maxDescriptionLengthInternal;
 		this.maxDescriptionLengthExternal = maxDescriptionLengthExternal;
 	}
