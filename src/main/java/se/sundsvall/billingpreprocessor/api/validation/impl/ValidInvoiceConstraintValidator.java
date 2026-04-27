@@ -17,6 +17,8 @@ public class ValidInvoiceConstraintValidator implements ConstraintValidator<Vali
 	private static final String CUSTOM_ERROR_MESSAGE_MISSING_OUR_REFERENCE = "invoice.ourReference is mandatory when billing record is of type " + INTERNAL;
 	private static final String CUSTOM_ERROR_MESSAGE_MISSING_DESCRIPTION = "invoice.description is mandatory when billing record is of type " + INTERNAL;
 	private static final String CUSTOM_ERROR_MESSAGE_DESCRIPTION_TOO_LONG_TEMPLATE = "invoice.description must not exceed %d characters when billing record is of type %s";
+	private static final String INVOICE_DESCRIPTION_NODE = "invoice.description";
+	private static final String INVOICE_OUR_REFERENCE_NODE = "invoice.ourReference";
 
 	private final int maxDescriptionLengthInternal;
 	private final int maxDescriptionLengthExternal;
@@ -35,24 +37,22 @@ public class ValidInvoiceConstraintValidator implements ConstraintValidator<Vali
 		if (billingRecord.getType() == INTERNAL && nonNull(billingRecord.getInvoice())) {
 			if (!isValidOurReference(billingRecord.getInvoice())) {
 				context.disableDefaultConstraintViolation();
-				context.buildConstraintViolationWithTemplate(CUSTOM_ERROR_MESSAGE_MISSING_OUR_REFERENCE).addPropertyNode("invoice.ourReference").addConstraintViolation();
+				context.buildConstraintViolationWithTemplate(CUSTOM_ERROR_MESSAGE_MISSING_OUR_REFERENCE).addPropertyNode(INVOICE_OUR_REFERENCE_NODE).addConstraintViolation();
 				isValid = false;
 			}
 			if (!isValidDescription(billingRecord.getInvoice())) {
 				context.disableDefaultConstraintViolation();
-				context.buildConstraintViolationWithTemplate(CUSTOM_ERROR_MESSAGE_MISSING_DESCRIPTION).addPropertyNode("invoice.description").addConstraintViolation();
+				context.buildConstraintViolationWithTemplate(CUSTOM_ERROR_MESSAGE_MISSING_DESCRIPTION).addPropertyNode(INVOICE_DESCRIPTION_NODE).addConstraintViolation();
 				isValid = false;
 			} else if (!isValidDescriptionLength(billingRecord.getInvoice(), maxDescriptionLengthInternal)) {
 				context.disableDefaultConstraintViolation();
-				context.buildConstraintViolationWithTemplate(CUSTOM_ERROR_MESSAGE_DESCRIPTION_TOO_LONG_TEMPLATE.formatted(maxDescriptionLengthInternal, INTERNAL)).addPropertyNode("invoice.description").addConstraintViolation();
+				context.buildConstraintViolationWithTemplate(CUSTOM_ERROR_MESSAGE_DESCRIPTION_TOO_LONG_TEMPLATE.formatted(maxDescriptionLengthInternal, INTERNAL)).addPropertyNode(INVOICE_DESCRIPTION_NODE).addConstraintViolation();
 				isValid = false;
 			}
-		} else if (billingRecord.getType() == EXTERNAL && nonNull(billingRecord.getInvoice())) {
-			if (!isValidDescriptionLength(billingRecord.getInvoice(), maxDescriptionLengthExternal)) {
-				context.disableDefaultConstraintViolation();
-				context.buildConstraintViolationWithTemplate(CUSTOM_ERROR_MESSAGE_DESCRIPTION_TOO_LONG_TEMPLATE.formatted(maxDescriptionLengthExternal, EXTERNAL)).addPropertyNode("invoice.description").addConstraintViolation();
-				isValid = false;
-			}
+		} else if (billingRecord.getType() == EXTERNAL && nonNull(billingRecord.getInvoice()) && !isValidDescriptionLength(billingRecord.getInvoice(), maxDescriptionLengthExternal)) {
+			context.disableDefaultConstraintViolation();
+			context.buildConstraintViolationWithTemplate(CUSTOM_ERROR_MESSAGE_DESCRIPTION_TOO_LONG_TEMPLATE.formatted(maxDescriptionLengthExternal, EXTERNAL)).addPropertyNode(INVOICE_DESCRIPTION_NODE).addConstraintViolation();
+			isValid = false;
 		}
 		return isValid;
 	}
