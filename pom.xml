@@ -14,7 +14,7 @@
 	<name>api-service-billing-preprocessor</name>
 	<properties>
 		<!-- Service properties -->
-		<apache.sshd.version>2.17.1</apache.sshd.version>
+		<apache.sshd.version>2.18.0</apache.sshd.version>
 		<beanio.version>3.2.1</beanio.version>
 		<com.jcraft.version>0.1.55</com.jcraft.version>
 		<commons-text.version>1.15.0</commons-text.version>
