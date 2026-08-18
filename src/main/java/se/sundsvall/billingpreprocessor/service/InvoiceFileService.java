@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -95,7 +96,7 @@ public class InvoiceFileService {
 			LOG.info("Starting to transfer file '{}' with encoding '{}' to remote dir '{}'", fileEntity.getName(), encoding, remoteDir);
 			uploadGateway.sendToSftp(new ByteArrayResource(fileEntity.getContent().getBytes(encoding)), fileEntity.getName(), remoteDir);
 			invoiceFileRepository.save(fileEntity
-				.withSent(OffsetDateTime.now())
+				.withSent(OffsetDateTime.now(ZoneId.systemDefault()))
 				.withStatus(SEND_SUCCESSFUL));
 
 			return Optional.empty();
@@ -109,7 +110,7 @@ public class InvoiceFileService {
 
 	@Transactional
 	public void createFiles(String municipalityId) {
-		final var now = LocalDate.now();
+		final var now = LocalDate.now(ZoneId.systemDefault());
 		final var billingRecords = new ArrayList<>(billingRecordRepository.findAllByStatusAndMunicipalityIdAndTransferDateLessThanEqual(APPROVED, municipalityId, now));
 
 		final var creationErrors = invoiceCreators.stream()

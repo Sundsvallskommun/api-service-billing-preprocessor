@@ -1,6 +1,7 @@
 package se.sundsvall.billingpreprocessor.service.mapper;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -63,7 +64,7 @@ public final class ExternalInvoiceMapper {
 	public static FileHeaderRow toFileHeader(String generatingSystem, String invoiceType) {
 		return FileHeaderRow.create()
 			.withGeneratingSystem(ofNullable(generatingSystem).orElseThrow(createInternalServerErrorProblem(ERROR_GENERATING_SYSTEM_NOT_PRESENT)))
-			.withCreatedDate(LocalDate.now())
+			.withCreatedDate(LocalDate.now(ZoneId.systemDefault()))
 			.withInvoiceType(ofNullable(invoiceType).orElseThrow(createInternalServerErrorProblem(ERROR_INVOICE_TYPE_NOT_PRESENT)));
 	}
 

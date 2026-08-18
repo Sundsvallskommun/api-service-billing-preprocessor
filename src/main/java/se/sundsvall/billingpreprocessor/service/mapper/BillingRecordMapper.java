@@ -52,7 +52,7 @@ public final class BillingRecordMapper {
 			return transferDate;
 		}
 
-		final LocalDate now = LocalDate.now();
+		final LocalDate now = LocalDate.now(ZoneId.systemDefault());
 		if (now.getDayOfMonth() < 15) {
 			return now.withDayOfMonth(15);
 		} else {
