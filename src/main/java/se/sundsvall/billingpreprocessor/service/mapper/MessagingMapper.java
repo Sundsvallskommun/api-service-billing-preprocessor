@@ -3,6 +3,7 @@ package se.sundsvall.billingpreprocessor.service.mapper;
 import generated.se.sundsvall.messaging.EmailRequest;
 import generated.se.sundsvall.messaging.EmailSender;
 import java.nio.charset.StandardCharsets;
+import java.time.ZoneId;
 import java.util.Base64;
 import java.util.Base64.Encoder;
 import java.util.Collection;
@@ -35,7 +36,7 @@ public final class MessagingMapper {
 		}
 
 		final var bodyBuilder = new StringBuilder(properties.creationErrorMailTemplate().htmlPrefix())
-			.append(properties.creationErrorMailTemplate().bodyPrefix().formatted(now().format(ISO_LOCAL_DATE)));
+			.append(properties.creationErrorMailTemplate().bodyPrefix().formatted(now(ZoneId.systemDefault()).format(ISO_LOCAL_DATE)));
 
 		final var commonErrors = ofNullable(errors).orElse(emptyList()).stream()
 			.filter(InvoiceFileError::isCommonError)
@@ -61,7 +62,7 @@ public final class MessagingMapper {
 		}
 
 		final var bodyBuilder = new StringBuilder(properties.transferErrorMailTemplate().htmlPrefix())
-			.append(properties.transferErrorMailTemplate().bodyPrefix().formatted(now().format(ISO_LOCAL_DATE)));
+			.append(properties.transferErrorMailTemplate().bodyPrefix().formatted(now(ZoneId.systemDefault()).format(ISO_LOCAL_DATE)));
 
 		if (!errors.isEmpty()) {
 			bodyBuilder.append(properties.transferErrorMailTemplate().listPrefix());
