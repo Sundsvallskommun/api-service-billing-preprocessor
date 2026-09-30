@@ -52,7 +52,9 @@ class SalaryAndPensionJobsIT extends AbstractAppTest {
 			.withHttpMethod(POST)
 			.withExpectedResponseStatus(ACCEPTED)
 			.withExpectedResponseBodyIsNull()
-			.sendRequestAndVerifyResponse();
+			.sendRequest()
+			.andVerifyThat(() -> repository.count() == 2)
+			.verifyStubs();
 
 		// Wait until files have been created
 		await()

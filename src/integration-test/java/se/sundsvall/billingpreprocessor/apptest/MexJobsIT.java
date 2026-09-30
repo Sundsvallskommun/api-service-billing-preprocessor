@@ -49,7 +49,9 @@ class MexJobsIT extends AbstractAppTest {
 			.withHttpMethod(POST)
 			.withExpectedResponseStatus(ACCEPTED)
 			.withExpectedResponseBodyIsNull()
-			.sendRequestAndVerifyResponse();
+			.sendRequest()
+			.andVerifyThat(() -> repository.count() == 2)
+			.verifyStubs();
 
 		// Wait until files have been created
 		await()
@@ -90,7 +92,9 @@ class MexJobsIT extends AbstractAppTest {
 			.withHttpMethod(POST)
 			.withExpectedResponseStatus(ACCEPTED)
 			.withExpectedResponseBodyIsNull()
-			.sendRequestAndVerifyResponse();
+			.sendRequest()
+			.andVerifyThat(() -> repository.count() == 2)
+			.verifyStubs();
 
 		// Wait until files have been created (2 files: one external with only successful records, one internal)
 		await()
