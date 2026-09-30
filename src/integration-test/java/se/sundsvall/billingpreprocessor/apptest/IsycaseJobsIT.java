@@ -86,7 +86,9 @@ class IsycaseJobsIT extends AbstractAppTest {
 			.withHttpMethod(POST)
 			.withExpectedResponseStatus(ACCEPTED)
 			.withExpectedResponseBodyIsNull()
-			.sendRequestAndVerifyResponse();
+			.sendRequest()
+			.andVerifyThat(() -> repository.count() == 2)
+			.verifyStubs();
 
 		Awaitility.await()
 			.atMost(Duration.of(5, SECONDS))
