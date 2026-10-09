@@ -1,5 +1,21 @@
 package se.sundsvall.billingpreprocessor.apptest;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
+import org.awaitility.Awaitility;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.jdbc.Sql;
+import se.sundsvall.billingpreprocessor.Application;
+import se.sundsvall.billingpreprocessor.integration.db.InvoiceFileRepository;
+import se.sundsvall.billingpreprocessor.service.creator.config.InvoiceCreatorProperties;
+import se.sundsvall.dept44.test.AbstractAppTest;
+import se.sundsvall.dept44.test.annotation.wiremock.WireMockAppTestSuite;
+
 import static java.nio.file.Files.readString;
 import static java.time.temporal.ChronoUnit.SECONDS;
 import static org.apache.commons.text.StringEscapeUtils.unescapeJava;
@@ -11,24 +27,6 @@ import static org.springframework.util.ResourceUtils.getFile;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileStatus.GENERATED;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.EXTERNAL;
 import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.INTERNAL;
-
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
-
-import org.awaitility.Awaitility;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.jdbc.Sql;
-
-import se.sundsvall.billingpreprocessor.Application;
-import se.sundsvall.billingpreprocessor.integration.db.InvoiceFileRepository;
-import se.sundsvall.billingpreprocessor.service.creator.config.InvoiceCreatorProperties;
-import se.sundsvall.dept44.test.AbstractAppTest;
-import se.sundsvall.dept44.test.annotation.wiremock.WireMockAppTestSuite;
 
 @WireMockAppTestSuite(files = "classpath:/CustomerInvoiceJobsIT/", classes = Application.class)
 @Sql({

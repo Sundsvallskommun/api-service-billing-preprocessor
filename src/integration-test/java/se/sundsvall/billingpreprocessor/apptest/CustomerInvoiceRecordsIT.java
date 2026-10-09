@@ -1,5 +1,11 @@
 package se.sundsvall.billingpreprocessor.apptest;
 
+import java.util.List;
+import org.junit.jupiter.api.Test;
+import se.sundsvall.billingpreprocessor.Application;
+import se.sundsvall.dept44.test.AbstractAppTest;
+import se.sundsvall.dept44.test.annotation.wiremock.WireMockAppTestSuite;
+
 import static java.util.List.of;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.HttpHeaders.LOCATION;
@@ -8,14 +14,6 @@ import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-
-import java.util.List;
-
-import org.junit.jupiter.api.Test;
-
-import se.sundsvall.billingpreprocessor.Application;
-import se.sundsvall.dept44.test.AbstractAppTest;
-import se.sundsvall.dept44.test.annotation.wiremock.WireMockAppTestSuite;
 
 @WireMockAppTestSuite(files = "classpath:/CustomerInvoiceRecordsIT/", classes = Application.class)
 class CustomerInvoiceRecordsIT extends AbstractAppTest {
