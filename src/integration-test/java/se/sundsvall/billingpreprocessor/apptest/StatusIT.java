@@ -1,13 +1,13 @@
 package se.sundsvall.billingpreprocessor.apptest;
 
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpStatus.OK;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.jdbc.Sql;
 import se.sundsvall.billingpreprocessor.Application;
 import se.sundsvall.dept44.test.AbstractAppTest;
 import se.sundsvall.dept44.test.annotation.wiremock.WireMockAppTestSuite;
+
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpStatus.OK;
 
 /**
  * Billing Records IT tests.

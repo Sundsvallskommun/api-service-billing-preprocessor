@@ -1,19 +1,5 @@
 package se.sundsvall.billingpreprocessor.apptest;
 
-import static java.nio.file.Files.readString;
-import static java.time.OffsetDateTime.now;
-import static java.time.temporal.ChronoUnit.SECONDS;
-import static org.apache.commons.text.StringEscapeUtils.unescapeJava;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.within;
-import static org.awaitility.Awaitility.await;
-import static org.springframework.http.HttpMethod.POST;
-import static org.springframework.http.HttpStatus.ACCEPTED;
-import static org.springframework.util.ResourceUtils.getFile;
-import static se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileStatus.GENERATED;
-import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.EXTERNAL;
-import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.INTERNAL;
-
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
@@ -27,6 +13,20 @@ import se.sundsvall.billingpreprocessor.integration.db.InvoiceFileRepository;
 import se.sundsvall.billingpreprocessor.service.creator.config.InvoiceCreatorProperties;
 import se.sundsvall.dept44.test.AbstractAppTest;
 import se.sundsvall.dept44.test.annotation.wiremock.WireMockAppTestSuite;
+
+import static java.nio.file.Files.readString;
+import static java.time.OffsetDateTime.now;
+import static java.time.temporal.ChronoUnit.SECONDS;
+import static org.apache.commons.text.StringEscapeUtils.unescapeJava;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
+import static org.awaitility.Awaitility.await;
+import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpStatus.ACCEPTED;
+import static org.springframework.util.ResourceUtils.getFile;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.InvoiceFileStatus.GENERATED;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.EXTERNAL;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Type.INTERNAL;
 
 @WireMockAppTestSuite(files = "classpath:/MexJobsIT/", classes = Application.class)
 @Sql({
