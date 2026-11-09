@@ -1,14 +1,15 @@
 package se.sundsvall.billingpreprocessor.integration.sftp;
 
-import com.jcraft.jsch.ChannelSftp;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
-import com.jcraft.jsch.SftpException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Vector;
+import java.time.Duration;
+import java.util.List;
+import java.util.stream.StreamSupport;
+import org.apache.sshd.client.SshClient;
+import org.apache.sshd.client.keyverifier.AcceptAllServerKeyVerifier;
+import org.apache.sshd.sftp.client.SftpClient;
+import org.apache.sshd.sftp.client.SftpClientFactory;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -29,6 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 class SftpConfigurationTest {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SftpConfigurationTest.class);
+	private static final Duration TIMEOUT = Duration.ofSeconds(10);
 	private static final Path TEST_FILE;
 
 	@Autowired
@@ -48,7 +50,7 @@ class SftpConfigurationTest {
 		}
 	}
 
-	private static final GenericContainer<?> SFTP_SERVER = new GenericContainer<>("atmoz/sftp:alpine-3.7")
+	private static final GenericContainer<?> SFTP_SERVER = new GenericContainer<>("atmoz/sftp:alpine")
 		.withExposedPorts(22)
 		.withCommand("user:pass:1001::upload");
 
@@ -69,32 +71,35 @@ class SftpConfigurationTest {
 	}
 
 	@Test
-	void testUpload() throws IOException, JSchException, SftpException {
+	void testUpload() throws IOException {
 		final var resource = new ByteArrayResource(Files.readAllBytes(TEST_FILE));
-		final var channel = getSftpChannel();
+		final var sftpProperties = properties.getMap().get("2281");
+		final var fileName = TEST_FILE.getFileName().toString();
 
-		try {
-			assertThat((Vector<?>) channel.ls(properties.getMap().get("2281").getRemoteDir())).noneMatch(item -> item.toString().contains(TEST_FILE.getFileName().toString()));
+		assertThat(listRemoteDir(sftpProperties)).noneMatch(item -> item.contains(fileName));
 
-			sessionFactory.setThreadKey("2281");
-			gateway.sendToSftp(resource, TEST_FILE.toFile().getName(), properties.getMap().get("2281").getRemoteDir());
-			sessionFactory.clearThreadKey();
+		sessionFactory.setThreadKey("2281");
+		gateway.sendToSftp(resource, TEST_FILE.toFile().getName(), sftpProperties.getRemoteDir());
+		sessionFactory.clearThreadKey();
 
-			assertThat((Vector<?>) channel.ls(properties.getMap().get("2281").getRemoteDir())).anyMatch(item -> item.toString().contains(TEST_FILE.getFileName().toString()));
-		} finally {
-			channel.disconnect();
-		}
+		assertThat(listRemoteDir(sftpProperties)).anyMatch(item -> item.contains(fileName));
 	}
 
-	private ChannelSftp getSftpChannel() throws JSchException {
-		final var jsch = new JSch();
-		final Session jschSession = jsch.getSession(properties.getMap().get("2281").getUser(), properties.getMap().get("2281").getHost(), properties.getMap().get("2281").getPort());
-		jschSession.setPassword(properties.getMap().get("2281").getPassword());
-		jschSession.setConfig("StrictHostKeyChecking", "no");
-		jschSession.connect();
+	private static List<String> listRemoteDir(final SftpProperties sftpProperties) throws IOException {
+		try (final var client = SshClient.setUpDefaultClient()) {
+			client.setServerKeyVerifier(AcceptAllServerKeyVerifier.INSTANCE);
+			client.start();
 
-		final var channel = (ChannelSftp) jschSession.openChannel("sftp");
-		channel.connect();
-		return channel;
+			try (final var session = client.connect(sftpProperties.getUser(), sftpProperties.getHost(), sftpProperties.getPort()).verify(TIMEOUT).getSession()) {
+				session.addPasswordIdentity(sftpProperties.getPassword());
+				session.auth().verify(TIMEOUT);
+
+				try (final var sftpClient = SftpClientFactory.instance().createSftpClient(session)) {
+					return StreamSupport.stream(sftpClient.readDir(sftpProperties.getRemoteDir()).spliterator(), false)
+						.map(SftpClient.DirEntry::getFilename)
+						.toList();
+				}
+			}
+		}
 	}
 }
