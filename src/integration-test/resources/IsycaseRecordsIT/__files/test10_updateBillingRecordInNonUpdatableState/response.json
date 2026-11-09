@@ -1,0 +1,5 @@
+{
+	"detail": "The billing record has status INVOICED or its transfer date has passed and is therefore not possible to update!",
+	"title": "Method Not Allowed",
+	"status": 405
+}

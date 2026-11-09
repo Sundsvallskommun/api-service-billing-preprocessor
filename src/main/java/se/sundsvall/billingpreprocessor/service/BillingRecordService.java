@@ -1,5 +1,7 @@
 package se.sundsvall.billingpreprocessor.service;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -13,9 +15,11 @@ import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity
 import se.sundsvall.billingpreprocessor.integration.db.model.BillingRecordEntity_;
 import se.sundsvall.dept44.problem.Problem;
 
+import static java.util.Optional.ofNullable;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.METHOD_NOT_ALLOWED;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.INVOICED;
 import static se.sundsvall.billingpreprocessor.service.mapper.BillingRecordMapper.toBillingRecord;
 import static se.sundsvall.billingpreprocessor.service.mapper.BillingRecordMapper.toBillingRecordEntities;
 import static se.sundsvall.billingpreprocessor.service.mapper.BillingRecordMapper.toBillingRecordEntity;
@@ -25,7 +29,9 @@ import static se.sundsvall.billingpreprocessor.service.mapper.BillingRecordMappe
 @Service
 public class BillingRecordService {
 	private static final String ENTITY_NOT_FOUND = "A billing record with id '%s' and municipality ID '%s' could not be found!";
-	private static final String ENTITY_CAN_NOT_BE_DELETED = "The billing record does not have status NEW and is therefore not possible to delete!";
+	private static final String ENTITY_CAN_NOT_BE_MODIFIED = "The billing record has status INVOICED or its transfer date has passed and is therefore not possible to %s!";
+	private static final String OPERATION_DELETE = "delete";
+	private static final String OPERATION_UPDATE = "update";
 	private static final String ENTITY_CAN_NOT_BE_CREATED = "One or more billing records contain an unknown type or category!";
 
 	private final BillingRecordRepository billingRecordRepository;
@@ -70,21 +76,31 @@ public class BillingRecordService {
 
 	public BillingRecord updateBillingRecord(final String id, final BillingRecord billingRecord, String municipalityId) {
 		verifyExistingId(id, municipalityId);
-		final var entity = updateEntity(billingRecordRepository.getReferenceByIdAndMunicipalityId(id, municipalityId), billingRecord);
-		return toBillingRecord(billingRecordRepository.save(entity));
+		final var entity = billingRecordRepository.getReferenceByIdAndMunicipalityId(id, municipalityId);
+		verifyModifiable(entity, OPERATION_UPDATE);
+
+		return toBillingRecord(billingRecordRepository.save(updateEntity(entity, billingRecord)));
 	}
 
 	public void deleteBillingRecord(final String id, String municipalityId) {
-		verifyDeletionAvailability(id, municipalityId);
+		verifyExistingId(id, municipalityId);
+		verifyModifiable(billingRecordRepository.getReferenceByIdAndMunicipalityId(id, municipalityId), OPERATION_DELETE);
+
 		billingRecordRepository.deleteByIdAndMunicipalityId(id, municipalityId);
 	}
 
-	private void verifyDeletionAvailability(final String id, String municipalityId) {
-		verifyExistingId(id, municipalityId);
+	/**
+	 * A billing record can be modified (updated or deleted) as long as it has not been invoiced and its transfer date
+	 * has not been reached (records are picked up for invoicing at midnight on the transfer date).
+	 */
+	private void verifyModifiable(final BillingRecordEntity entity, final String operation) {
+		final var today = LocalDate.now(ZoneId.systemDefault());
+		final var transferDatePassed = ofNullable(entity.getTransferDate())
+			.map(transferDate -> !transferDate.isAfter(today))
+			.orElse(false);
 
-		final var status = billingRecordRepository.getReferenceByIdAndMunicipalityId(id, municipalityId).getStatus();
-		if (se.sundsvall.billingpreprocessor.integration.db.model.enums.Status.NEW != status) {
-			throw Problem.valueOf(METHOD_NOT_ALLOWED, ENTITY_CAN_NOT_BE_DELETED);
+		if ((INVOICED == entity.getStatus()) || transferDatePassed) {
+			throw Problem.valueOf(METHOD_NOT_ALLOWED, ENTITY_CAN_NOT_BE_MODIFIED.formatted(operation));
 		}
 	}
 

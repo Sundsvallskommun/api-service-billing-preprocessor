@@ -5,7 +5,7 @@ info:
   license:
     name: MIT License
     url: https://opensource.org/licenses/MIT
-  version: "4.5"
+  version: "4.6"
 servers:
 - url: http://localhost:62655
   description: Generated server url
@@ -70,8 +70,9 @@ paths:
       tags:
       - BillingRecord
       summary: Update billing record
-      description: Updates the billing record matching provided id with the supplied
-        attributes
+      description: "Updates the billing record matching provided id with the supplied\
+        \ attributes, but only if the record does not have status 'INVOICED' and its\
+        \ transfer date has not been reached. Otherwise a client error is returned."
       operationId: updateBillingRecord
       parameters:
       - name: municipalityId
@@ -115,6 +116,12 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/Problem"
+        "405":
+          description: Method not allowed
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
         "500":
           description: Internal Server error
           content:
@@ -126,7 +133,8 @@ paths:
       - BillingRecord
       summary: Delete billing record
       description: "Deletes the billing record that matches the provided id, but only\
-        \ if status of record is 'NEW'. Otherwise a client error is returned."
+        \ if the record does not have status 'INVOICED' and its transfer date has\
+        \ not been reached. Otherwise a client error is returned."
       operationId: deleteBillingRecord
       parameters:
       - name: municipalityId
