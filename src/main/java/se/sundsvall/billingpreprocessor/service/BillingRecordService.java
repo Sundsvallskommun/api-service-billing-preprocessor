@@ -95,7 +95,7 @@ public class BillingRecordService {
 	 */
 	private void verifyModifiable(final BillingRecordEntity entity, final String operation) {
 		final var today = LocalDate.now(ZoneId.systemDefault());
-		final var transferDatePassed = ofNullable(entity.getTransferDate())
+		final boolean transferDatePassed = ofNullable(entity.getTransferDate())
 			.map(transferDate -> !transferDate.isAfter(today))
 			.orElse(false);
 
