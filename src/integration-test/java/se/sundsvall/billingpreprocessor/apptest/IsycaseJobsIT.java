@@ -54,7 +54,7 @@ class IsycaseJobsIT extends AbstractAppTest {
 	private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyMMddHHmm");
 	private static final Logger LOGGER = LoggerFactory.getLogger(IsycaseJobsIT.class);
 
-	private static final GenericContainer<?> SFTP_SERVER = new GenericContainer<>("atmoz/sftp:alpine-3.7")
+	private static final GenericContainer<?> SFTP_SERVER = new GenericContainer<>("atmoz/sftp:alpine")
 		.withCopyFileToContainer(MountableFile.forClasspathResource("keys/ssh_host_ed25519_key", 0600), "/etc/ssh/")
 		.withCopyFileToContainer(MountableFile.forClasspathResource("keys/ssh_host_ed25519_key.pub", 0600), "/etc/ssh/")
 		.withExposedPorts(22)

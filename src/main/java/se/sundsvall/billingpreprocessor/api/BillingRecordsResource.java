@@ -127,14 +127,17 @@ class BillingRecordsResource {
 	}
 
 	@PutMapping(path = "/{id}", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-	@Operation(summary = "Update billing record", description = "Updates the billing record matching provided id with the supplied attributes", responses = {
-		@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true),
-		@ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(oneOf = {
-			Problem.class, ConstraintViolationProblem.class
-		}))),
-		@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class))),
-		@ApiResponse(responseCode = "500", description = "Internal Server error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
-	})
+	@Operation(summary = "Update billing record",
+		description = "Updates the billing record matching provided id with the supplied attributes, but only if the record does not have status 'INVOICED' and its transfer date has not been reached. Otherwise a client error is returned.",
+		responses = {
+			@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true),
+			@ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(oneOf = {
+				Problem.class, ConstraintViolationProblem.class
+			}))),
+			@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class))),
+			@ApiResponse(responseCode = "405", description = "Method not allowed", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class))),
+			@ApiResponse(responseCode = "500", description = "Internal Server error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
+		})
 	ResponseEntity<BillingRecord> updateBillingRecord(
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @PathVariable @ValidMunicipalityId String municipalityId,
 		@Parameter(name = "id", description = "BillingRecord id", example = "b82bd8ac-1507-4d9a-958d-369261eecc15") @ValidUuid @PathVariable final String id,
@@ -144,15 +147,17 @@ class BillingRecordsResource {
 	}
 
 	@DeleteMapping(path = "/{id}")
-	@Operation(summary = "Delete billing record", description = "Deletes the billing record that matches the provided id, but only if status of record is 'NEW'. Otherwise a client error is returned.", responses = {
-		@ApiResponse(responseCode = "204", description = "Successful operation", useReturnTypeSchema = true),
-		@ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(oneOf = {
-			Problem.class, ConstraintViolationProblem.class
-		}))),
-		@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class))),
-		@ApiResponse(responseCode = "405", description = "Method not allowed", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class))),
-		@ApiResponse(responseCode = "500", description = "Internal Server error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
-	})
+	@Operation(summary = "Delete billing record",
+		description = "Deletes the billing record that matches the provided id, but only if the record does not have status 'INVOICED' and its transfer date has not been reached. Otherwise a client error is returned.",
+		responses = {
+			@ApiResponse(responseCode = "204", description = "Successful operation", useReturnTypeSchema = true),
+			@ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(oneOf = {
+				Problem.class, ConstraintViolationProblem.class
+			}))),
+			@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class))),
+			@ApiResponse(responseCode = "405", description = "Method not allowed", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class))),
+			@ApiResponse(responseCode = "500", description = "Internal Server error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
+		})
 	ResponseEntity<Void> deleteBillingRecord(
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @PathVariable @ValidMunicipalityId String municipalityId,
 		@Parameter(name = "id", description = "BillingRecord id", example = "b82bd8ac-1507-4d9a-958d-369261eecc15") @ValidUuid @PathVariable final String id) {

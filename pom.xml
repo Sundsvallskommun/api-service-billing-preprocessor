@@ -10,13 +10,12 @@
 	</parent>
 	<groupId>se.sundsvall</groupId>
 	<artifactId>api-service-billing-preprocessor</artifactId>
-	<version>4.5</version>
+	<version>4.6</version>
 	<name>api-service-billing-preprocessor</name>
 	<properties>
 		<!-- Service properties -->
 		<apache.sshd.version>2.20.1</apache.sshd.version>
 		<beanio.version>3.2.1</beanio.version>
-		<com.jcraft.version>0.1.55</com.jcraft.version>
 		<commons-text.version>1.15.0</commons-text.version>
 		<junit-jupiter.version>1.21.4</junit-jupiter.version>
 		<sshd-common.version>2.20.1</sshd-common.version>
@@ -94,12 +93,6 @@
 		<dependency>
 			<groupId>se.sundsvall.dept44</groupId>
 			<artifactId>dept44-starter-jpa-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.jcraft</groupId>
-			<artifactId>jsch</artifactId>
-			<version>${com.jcraft.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

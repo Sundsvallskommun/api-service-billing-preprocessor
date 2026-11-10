@@ -1,11 +1,15 @@
 package se.sundsvall.billingpreprocessor.service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -31,7 +35,6 @@ import static java.util.Collections.emptyList;
 import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.verify;
@@ -243,6 +246,52 @@ class BillingRecordServiceTest {
 		verifyNoMoreInteractions(billingRecordRepositoryMock);
 	}
 
+	@ParameterizedTest
+	@MethodSource("modifiableStateArguments")
+	void updateBillingRecordInModifiableState(final Status status, final LocalDate transferDate) {
+		// Setup
+		final var entity = createBillingRecordEntityInstance().withStatus(status).withTransferDate(transferDate);
+
+		// Mock
+		when(billingRecordRepositoryMock.existsByIdAndMunicipalityId(ID, MUNICIPALITY_ID)).thenReturn(true);
+		when(billingRecordRepositoryMock.getReferenceByIdAndMunicipalityId(ID, MUNICIPALITY_ID)).thenReturn(entity);
+		when(billingRecordRepositoryMock.save(entity)).thenReturn(entity);
+
+		// Call
+		final var response = service.updateBillingRecord(ID, createBillingRecordInstance(), MUNICIPALITY_ID);
+
+		// Assertions and verifications
+		assertThat(response.getId()).isEqualTo(ID);
+
+		verify(billingRecordRepositoryMock).existsByIdAndMunicipalityId(ID, MUNICIPALITY_ID);
+		verify(billingRecordRepositoryMock).getReferenceByIdAndMunicipalityId(ID, MUNICIPALITY_ID);
+		verify(billingRecordRepositoryMock).save(entity);
+		verifyNoMoreInteractions(billingRecordRepositoryMock);
+	}
+
+	@ParameterizedTest
+	@MethodSource("nonModifiableStateArguments")
+	void updateBillingRecordInNonModifiableState(final Status status, final LocalDate transferDate) {
+		// Setup
+		final var billingRecord = createBillingRecordInstance();
+
+		// Mock
+		when(billingRecordRepositoryMock.existsByIdAndMunicipalityId(ID, MUNICIPALITY_ID)).thenReturn(true);
+		when(billingRecordRepositoryMock.getReferenceByIdAndMunicipalityId(ID, MUNICIPALITY_ID)).thenReturn(createBillingRecordEntityInstance().withStatus(status).withTransferDate(transferDate));
+
+		// Call
+		final var exception = assertThrows(ThrowableProblem.class, () -> service.updateBillingRecord(ID, billingRecord, MUNICIPALITY_ID));
+
+		// Assertions and verifications
+		assertThat(exception.getStatus()).isEqualTo(METHOD_NOT_ALLOWED);
+		assertThat(exception.getTitle()).isEqualTo(METHOD_NOT_ALLOWED.getReasonPhrase());
+		assertThat(exception.getMessage()).isEqualTo("Method Not Allowed: The billing record has status INVOICED or its transfer date has passed and is therefore not possible to update!");
+
+		verify(billingRecordRepositoryMock).existsByIdAndMunicipalityId(ID, MUNICIPALITY_ID);
+		verify(billingRecordRepositoryMock).getReferenceByIdAndMunicipalityId(ID, MUNICIPALITY_ID);
+		verifyNoMoreInteractions(billingRecordRepositoryMock);
+	}
+
 	@Test
 	void updateNonExistingBillingRecord() {
 		// Setup
@@ -260,11 +309,12 @@ class BillingRecordServiceTest {
 		verifyNoMoreInteractions(billingRecordRepositoryMock);
 	}
 
-	@Test
-	void deleteBillingRecordWithDeletableStatus() {
+	@ParameterizedTest
+	@MethodSource("modifiableStateArguments")
+	void deleteBillingRecordInModifiableState(final Status status, final LocalDate transferDate) {
 		// Mock
 		when(billingRecordRepositoryMock.existsByIdAndMunicipalityId(ID, MUNICIPALITY_ID)).thenReturn(true);
-		when(billingRecordRepositoryMock.getReferenceByIdAndMunicipalityId(ID, MUNICIPALITY_ID)).thenReturn(createBillingRecordEntityInstance().withStatus(Status.NEW));
+		when(billingRecordRepositoryMock.getReferenceByIdAndMunicipalityId(ID, MUNICIPALITY_ID)).thenReturn(createBillingRecordEntityInstance().withStatus(status).withTransferDate(transferDate));
 
 		// Call
 		service.deleteBillingRecord(ID, MUNICIPALITY_ID);
@@ -277,11 +327,11 @@ class BillingRecordServiceTest {
 	}
 
 	@ParameterizedTest
-	@EnumSource(value = Status.class, names = "NEW", mode = EXCLUDE)
-	void deleteBillingRecordWithNonDeletableStatus(Status status) {
+	@MethodSource("nonModifiableStateArguments")
+	void deleteBillingRecordInNonModifiableState(final Status status, final LocalDate transferDate) {
 		// Mock
 		when(billingRecordRepositoryMock.existsByIdAndMunicipalityId(ID, MUNICIPALITY_ID)).thenReturn(true);
-		when(billingRecordRepositoryMock.getReferenceByIdAndMunicipalityId(ID, MUNICIPALITY_ID)).thenReturn(createBillingRecordEntityInstance().withStatus(status));
+		when(billingRecordRepositoryMock.getReferenceByIdAndMunicipalityId(ID, MUNICIPALITY_ID)).thenReturn(createBillingRecordEntityInstance().withStatus(status).withTransferDate(transferDate));
 
 		// Call
 		final var exception = assertThrows(ThrowableProblem.class, () -> service.deleteBillingRecord(ID, MUNICIPALITY_ID));
@@ -289,10 +339,34 @@ class BillingRecordServiceTest {
 		// Assertions and verifications
 		assertThat(exception.getStatus()).isEqualTo(METHOD_NOT_ALLOWED);
 		assertThat(exception.getTitle()).isEqualTo(METHOD_NOT_ALLOWED.getReasonPhrase());
-		assertThat(exception.getMessage()).isEqualTo("Method Not Allowed: The billing record does not have status NEW and is therefore not possible to delete!");
+		assertThat(exception.getMessage()).isEqualTo("Method Not Allowed: The billing record has status INVOICED or its transfer date has passed and is therefore not possible to delete!");
 
 		verify(billingRecordRepositoryMock).existsByIdAndMunicipalityId(ID, MUNICIPALITY_ID);
+		verify(billingRecordRepositoryMock).getReferenceByIdAndMunicipalityId(ID, MUNICIPALITY_ID);
 		verifyNoMoreInteractions(billingRecordRepositoryMock);
+	}
+
+	private static Stream<Arguments> modifiableStateArguments() {
+		final var tomorrow = LocalDate.now(ZoneId.systemDefault()).plusDays(1);
+
+		return Stream.of(
+			Arguments.of(Status.NEW, tomorrow),
+			Arguments.of(Status.APPROVED, tomorrow),
+			Arguments.of(Status.REJECTED, tomorrow),
+			Arguments.of(Status.NEW, null),
+			Arguments.of(Status.APPROVED, null));
+	}
+
+	private static Stream<Arguments> nonModifiableStateArguments() {
+		final var today = LocalDate.now(ZoneId.systemDefault());
+
+		return Stream.of(
+			Arguments.of(Status.INVOICED, today.plusDays(1)),
+			Arguments.of(Status.INVOICED, null),
+			Arguments.of(Status.NEW, today),
+			Arguments.of(Status.APPROVED, today),
+			Arguments.of(Status.APPROVED, today.minusDays(1)),
+			Arguments.of(Status.REJECTED, today.minusDays(1)));
 	}
 
 	@Test

@@ -169,4 +169,21 @@ class IsycaseRecordsIT extends AbstractAppTest {
 			.withExpectedResponse(RESPONSE_FILE)
 			.sendRequestAndVerifyResponse();
 	}
+
+	@Test
+	void test10_updateBillingRecordInNonUpdatableState() {
+		final var id = "1310ee8b-ecf9-4fe1-ab9d-f19153b19d06"; // Status APPROVED with transfer date in the past
+		final var modifiedBefore = repository.findById(id).orElseThrow().getModified();
+
+		setupCall()
+			.withServicePath("/2281/billingrecords/" + id)
+			.withHttpMethod(PUT)
+			.withRequest(REQUEST_FILE)
+			.withExpectedResponseStatus(METHOD_NOT_ALLOWED)
+			.withExpectedResponseHeader(CONTENT_TYPE, of(APPLICATION_PROBLEM_JSON_VALUE))
+			.withExpectedResponse(RESPONSE_FILE)
+			.sendRequestAndVerifyResponse();
+
+		assertThat(repository.findById(id).orElseThrow().getModified()).isEqualTo(modifiedBefore);
+	}
 }

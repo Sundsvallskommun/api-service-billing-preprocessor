@@ -1,0 +1,63 @@
+{
+	"recipient": {
+		"firstName": "Yuri",
+		"lastName": "Karpov",
+		"addressDetails": {
+			"city": "Louiseville",
+			"street": "Beachland avenue 3303",
+			"postalCode": "KY 40211"
+		},
+		"partyId": "970cd619-51b0-40b9-9132-579e2f937c07"
+	},
+	"invoice": {
+		"customerReference": "YUI10KAR",
+		"dueDate": "2022-08-30",
+		"customerId": "02",
+		"description": "Faktura tjugo Boxercise-pass",
+		"invoiceRows": [
+			{
+				"quantity": 20,
+				"accountInformation": [
+					{
+						"costCenter": "1455000",
+						"subaccount": "485223",
+						"department": "899700",
+						"activity": "3022910",
+						"article": "Lokalhyra",
+						"counterpart": "YUI10KAR",
+						"amount": 16000.0
+					},
+					{
+						"costCenter": "1455000",
+						"subaccount": "485223",
+						"department": "899700",
+						"activity": "3022910",
+						"article": "Hyra utrustning",
+						"counterpart": "YUI10KAR",
+						"amount": 6000.0
+					},
+					{
+						"costCenter": "1456000",
+						"subaccount": "485223",
+						"department": "899710",
+						"activity": "3022920",
+						"article": "Instruktör",
+						"counterpart": "YUI10KAR",
+						"amount": 8000.0
+					}
+				],
+				"detailedDescriptions": [
+					"Testar stränglängd över 30 chars"
+				],
+				"descriptions": [
+					"Testar stränglängd på 30 chars"
+				],
+				"vatCode": "06",
+				"costPerUnit": 1500
+			}
+		]
+	},
+	"category": "ISYCASE",
+	"type": "EXTERNAL",
+	"status": "NEW"
+}
